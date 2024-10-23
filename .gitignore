@@ -2,3 +2,4 @@ node_modules/
 .next
 Archive.zip
 .vercel
+.env
