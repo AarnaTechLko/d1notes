@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rounded-lg {
+    border-radius: .5px !important;
+}
+img.logo {
+    height: 51px;
+    width: auto;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: linear-gradient(180deg, #1e1e1e, #121212);
+    color: white;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  
+  .profile-image {
+    margin-bottom: 1rem;
+  }
+  
+  .profile-name {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .profile-website {
+    color: #0af;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  
+  .profile-info {
+    margin-top: 1rem;
+  }
+  
+  .completion-time,
+  .join-date {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  .book-button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #0af;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .book-button:hover {
+    background-color: #08d;
+  }
+
+
+
+
+
+  /* components/Loading.module.css */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.spinner {
+  border: 8px solid rgba(255, 255, 255, 0.3);
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  cursor: pointer; /* Optional: for sorting */
+}
+
+.icon {
+  color: rgb(59 130 246 / var(--tw-bg-opacity)); /* Example for icon color */
+  cursor: pointer; /* Optional: to indicate clickable */
+}
+input.searchBar {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 0px 5px 5px 0px;
+}
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  background-color: #3498db;;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #bfbfbf;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #3498db;;
+}
+
+.pagination span {
+  font-size: 16px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceOnce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.animate-fadeInDelay {
+  animation: fadeIn 0.6s ease-in-out 0.2s forwards;
+  opacity: 0; /* Ensures opacity is 0 until animation starts */
+}
+
+.animate-bounce-once {
+  animation: bounceOnce 1s ease-in-out;
+}
+
+
+  
