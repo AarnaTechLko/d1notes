@@ -71,8 +71,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: {
-    secret:SECRET_KEY,
-    //secret: process.env.NEXTAUTH_SECRET, 
+    ///secret:SECRET_KEY,
+    secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {
