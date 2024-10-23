@@ -70,7 +70,7 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  jwt: {
+  jwt: { 
     ///secret:SECRET_KEY,
     secret: process.env.NEXTAUTH_SECRET, 
   },
