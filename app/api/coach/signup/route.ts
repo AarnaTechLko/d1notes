@@ -5,7 +5,7 @@ import { coaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq } from 'drizzle-orm';
+import { eq,isNotNull } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
   const logError = debug('app:error');
@@ -107,6 +107,7 @@ export async function GET(req: NextRequest) {
         rating:coaches.rating,
       })
       .from(coaches)
+      .where(isNotNull(coaches.firstName))
       .execute();
       const formattedCoachList = coachlist.map(coach => ({
         firstName: coach.firstName,
