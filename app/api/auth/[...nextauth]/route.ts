@@ -71,8 +71,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-    ///secret:SECRET_KEY,
-    secret: process.env.NEXTAUTH_SECRET, 
+    secret:SECRET_KEY,
+    ////secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -89,6 +89,7 @@ const handler = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.type = token.type as string; // Add the type to the session
+        session.user.name = token.name as string; // Add the type to the session
         session.user.image = token.image as string | null;
       }
       return session;

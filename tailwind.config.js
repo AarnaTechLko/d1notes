@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        customBlue: 'rgb(156, 185, 231)',
+      },
       keyframes: {
         'bounce-continuous': {
           '0%, 100%': {
