@@ -41,7 +41,7 @@ interface FormErrors {
   password?: string;
   country?: string;
   state?: string;
-  city?: string;
+  city?: string| null;
   image: string | null;
   
 }
@@ -470,7 +470,7 @@ export default function Register() {
           <select
             name="country"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.country}
+            value={formValues.country  ?? ""}
             onChange={handleChange}
           >
             <option value="">Select</option>
@@ -487,7 +487,7 @@ export default function Register() {
           <select
         name="state"
         id="state"
-        value={formValues.state}
+        value={formValues.state  ?? ""}
         onChange={handleChange}
         className="border border-gray-300 rounded-lg py-2 px-4 w-full"
       >
@@ -506,7 +506,7 @@ export default function Register() {
             type="text"
             name="city"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.city}
+            value={formValues.city  ?? ""}
             onChange={handleChange}
           />
           {formErrors.city && <p className="text-red-500 text-sm">{formErrors.city}</p>}
