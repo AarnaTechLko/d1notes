@@ -63,7 +63,9 @@ export const coaches = pgTable(
     expectedCharge: decimal("expectedCharge", { precision: 10, scale: 2 }), // Decimal type with precision and scale
     image: text("image"),
     slug: text("slug"),
-   
+    country:varchar("country"),
+    state:varchar("state"),
+    city:varchar("city"),
     rating: integer("rating").default(0),
     password: text("password").notNull(),
     certificate:text("certificate"),

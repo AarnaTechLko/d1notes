@@ -67,8 +67,13 @@ export async function PUT(req: NextRequest) {
   const coachId = formData.get('coachId') as string;
   const imageFile = formData.get('image') as string | null;
   const certificate = formData.get('certificate') as string | null;
+  const country = formData.get('country') as string | null;
+  const state = formData.get('state') as string | null;
+  const city = formData.get('city') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
+  const timestamp = Date.now(); 
+  const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${lastName.trim().toLowerCase().replace(/\s+/g, '-')}${timestamp}`;
 
   const updatedUser = await db
   .update(coaches)
@@ -83,6 +88,10 @@ export async function PUT(req: NextRequest) {
     qualifications: qualifications || null,
     expectedCharge: expectedCharge || null,
     certificate: certificate || null,
+    country: country || null,
+    state: state || null,
+    city: city || null,
+    slug: slug || null, 
     image:imageFile
   })
   .where(eq(coaches.id, coachIdAsNumber))

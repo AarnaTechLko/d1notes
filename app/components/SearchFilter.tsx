@@ -45,17 +45,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ searchQuery, setSearchQuery
     <div className="flex flex-col md:flex-row items-center justify-between w-full">
       {/* Sign In Button */}
 
-      {!session && (
-      <button className="mb-2 md:mb-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Book
-      </button>
-       )}
-
-{session && (
-         <button className="mb-2 md:mb-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Search Your Coach
-       </button>
-      )}
 
 
       {/* Search Input and Button */}

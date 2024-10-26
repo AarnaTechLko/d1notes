@@ -21,6 +21,9 @@ interface FormValues {
   expectedCharge: string;
   password: string;
   image: string | null; 
+  country: string | null; 
+  state: string | null; 
+  city: string | null; 
   certificate: string | null; 
 }
 
@@ -36,6 +39,9 @@ interface FormErrors {
   qualifications?: string;
   expectedCharge?: string;
   password?: string;
+  country?: string;
+  state?: string;
+  city?: string;
   image: string | null;
   
 }
@@ -53,6 +59,9 @@ export default function Register() {
     qualifications: '',
     expectedCharge: '',
     password: '',
+    country: '',
+    state: '',
+    city: '',
     image: null,
     certificate:null
   });
@@ -69,6 +78,9 @@ export default function Register() {
     qualifications: undefined,
     expectedCharge: undefined,
     password: undefined,
+    country: undefined,
+    state: undefined,
+    city: undefined,
     image: null,
     
   });
@@ -79,7 +91,58 @@ export default function Register() {
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const { data: session } = useSession();
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
-
+  const states = [
+    { name: "Alabama", abbreviation: "AL" },
+    { name: "Alaska", abbreviation: "AK" },
+    { name: "Arizona", abbreviation: "AZ" },
+    { name: "Arkansas", abbreviation: "AR" },
+    { name: "California", abbreviation: "CA" },
+    { name: "Colorado", abbreviation: "CO" },
+    { name: "Connecticut", abbreviation: "CT" },
+    { name: "Delaware", abbreviation: "DE" },
+    { name: "Florida", abbreviation: "FL" },
+    { name: "Georgia", abbreviation: "GA" },
+    { name: "Hawaii", abbreviation: "HI" },
+    { name: "Idaho", abbreviation: "ID" },
+    { name: "Illinois", abbreviation: "IL" },
+    { name: "Indiana", abbreviation: "IN" },
+    { name: "Iowa", abbreviation: "IA" },
+    { name: "Kansas", abbreviation: "KS" },
+    { name: "Kentucky", abbreviation: "KY" },
+    { name: "Louisiana", abbreviation: "LA" },
+    { name: "Maine", abbreviation: "ME" },
+    { name: "Maryland", abbreviation: "MD" },
+    { name: "Massachusetts", abbreviation: "MA" },
+    { name: "Michigan", abbreviation: "MI" },
+    { name: "Minnesota", abbreviation: "MN" },
+    { name: "Mississippi", abbreviation: "MS" },
+    { name: "Missouri", abbreviation: "MO" },
+    { name: "Montana", abbreviation: "MT" },
+    { name: "Nebraska", abbreviation: "NE" },
+    { name: "Nevada", abbreviation: "NV" },
+    { name: "New Hampshire", abbreviation: "NH" },
+    { name: "New Jersey", abbreviation: "NJ" },
+    { name: "New Mexico", abbreviation: "NM" },
+    { name: "New York", abbreviation: "NY" },
+    { name: "North Carolina", abbreviation: "NC" },
+    { name: "North Dakota", abbreviation: "ND" },
+    { name: "Ohio", abbreviation: "OH" },
+    { name: "Oklahoma", abbreviation: "OK" },
+    { name: "Oregon", abbreviation: "OR" },
+    { name: "Pennsylvania", abbreviation: "PA" },
+    { name: "Rhode Island", abbreviation: "RI" },
+    { name: "South Carolina", abbreviation: "SC" },
+    { name: "South Dakota", abbreviation: "SD" },
+    { name: "Tennessee", abbreviation: "TN" },
+    { name: "Texas", abbreviation: "TX" },
+    { name: "Utah", abbreviation: "UT" },
+    { name: "Vermont", abbreviation: "VT" },
+    { name: "Virginia", abbreviation: "VA" },
+    { name: "Washington", abbreviation: "WA" },
+    { name: "West Virginia", abbreviation: "WV" },
+    { name: "Wisconsin", abbreviation: "WI" },
+    { name: "Wyoming", abbreviation: "WY" }
+  ];
   // Validation function
   const validateForm = (): boolean => {
     const errors: FormErrors = {
@@ -119,6 +182,12 @@ export default function Register() {
     } else if (!/^\d+(\.\d{1,2})?$/.test(formValues.expectedCharge)) {
       errors.expectedCharge = 'Expected Charge must be a valid number with up to 2 decimal places';
     }
+
+    if (!formValues.country) errors.country = 'Country  is required';
+
+    if (!formValues.state) errors.state = 'State is required';
+
+    if (!formValues.city) errors.city = 'City is required';
    
     setFormErrors(errors); // Set errors once validation is done
     return Object.keys(errors).every(key => errors[key as keyof FormErrors] === undefined || errors[key as keyof FormErrors] === null);
@@ -395,7 +464,55 @@ export default function Register() {
               
              
 
-              {/* Password */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+        <div>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <select
+            name="country"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.country}
+            onChange={handleChange}
+          >
+            <option value="">Select</option>
+            <option value="Freshman">United States of America</option>
+           
+          </select>
+          
+          {formErrors.country && <p className="text-red-500 text-sm">{formErrors.country}</p>}
+        </div>
+        <div>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          
+        
+          <select
+        name="state"
+        id="state"
+        value={formValues.state}
+        onChange={handleChange}
+        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+      >
+        <option value="">Select a state</option>
+        {states.map((state) => (
+          <option key={state.abbreviation} value={state.abbreviation}>
+            {state.name}
+          </option>
+        ))}
+      </select>
+          {formErrors.state && <p className="text-red-500 text-sm">{formErrors.state}</p>}
+        </div>
+        <div>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <input
+            type="text"
+            name="city"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.city}
+            onChange={handleChange}
+          />
+          {formErrors.city && <p className="text-red-500 text-sm">{formErrors.city}</p>}
+        </div>
+
+        </div>
              
  
 <div className="mb-4">
