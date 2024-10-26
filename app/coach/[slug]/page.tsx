@@ -27,6 +27,9 @@ interface CoachData {
   sport: string;
   clubName: string;
   qualifications: string;
+  country: string;
+  state: string;
+  city: string;
   certificate: string;
   image:string;
 }
@@ -187,14 +190,18 @@ setEvaluationList(responseData.evaluationlist || []);
         <li><strong>Expected Charge:</strong> ${coachData.expectedCharge}/Session</li>
         <li><strong>Sport {coachData.gender === 'Male' ? 'He' : 'She'} Coaches:</strong> {coachData.sport}</li>
         <li><strong>Club/Company Name:</strong> {coachData.clubName}</li>
+        <li><strong>Gender:</strong> {coachData.gender}</li>
+        
       </ul>
     </div>
     
     {/* Column 2 */}
     <div className="flex-1">
       <ul className="space-y-4">
-        <li><strong>Gender:</strong> {coachData.gender}</li>
-        <li><strong>Location:</strong> {coachData.location}</li>
+      <li><strong>Location:</strong> {coachData.location}</li>
+        <li><strong>Country:</strong> {coachData.country}</li>
+        <li><strong>State:</strong> {coachData.state}</li>
+        <li><strong>City:</strong> {coachData.city}</li>
       </ul>
     </div>
   </div>
