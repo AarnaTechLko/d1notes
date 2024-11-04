@@ -27,9 +27,6 @@ interface CoachData {
   sport: string;
   clubName: string;
   qualifications: string;
-  country: string;
-  state: string;
-  city: string;
   certificate: string;
   image:string;
 }
@@ -157,7 +154,7 @@ setEvaluationList(responseData.evaluationlist || []);
               <>
                 <button
                   onClick={() => setIsModalOpen(true)} // Open modal on click
-                  className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                  className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                 >
                   Sign in to book
                 </button>
@@ -165,7 +162,7 @@ setEvaluationList(responseData.evaluationlist || []);
             ) : (
               <button
                 onClick={() => setIsevaluationModalOpen(true)} // Open modal on click
-                className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+                className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Proceed to Evaluation
               </button>
@@ -177,7 +174,7 @@ setEvaluationList(responseData.evaluationlist || []);
 
 
         {/* Contact Info Section */}
-        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+        <h2 className="text-lg font-semibold mt-5  bg-blue-500 text-white p-4 rounded-lg">
     General Information
   </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
@@ -190,24 +187,20 @@ setEvaluationList(responseData.evaluationlist || []);
         <li><strong>Expected Charge:</strong> ${coachData.expectedCharge}/Session</li>
         <li><strong>Sport {coachData.gender === 'Male' ? 'He' : 'She'} Coaches:</strong> {coachData.sport}</li>
         <li><strong>Club/Company Name:</strong> {coachData.clubName}</li>
-        <li><strong>Gender:</strong> {coachData.gender}</li>
-        
       </ul>
     </div>
     
     {/* Column 2 */}
     <div className="flex-1">
       <ul className="space-y-4">
-      <li><strong>Location:</strong> {coachData.location}</li>
-        <li><strong>Country:</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
-        <li><strong>City:</strong> {coachData.city}</li>
+        <li><strong>Gender:</strong> {coachData.gender}</li>
+        <li><strong>Location:</strong> {coachData.location}</li>
       </ul>
     </div>
   </div>
 </section>
 
-<h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
+<h2 className="text-lg font-semibold mt-5  bg-blue-500 text-white p-4 rounded-lg">
 Qualification & Certifications
   </h2>
 <section className="bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
@@ -247,7 +240,7 @@ Qualification & Certifications
     
   )}
 
-<h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
+<h2 className="text-lg font-semibold mt-5  bg-blue-500 text-white p-4 rounded-lg">
 Previous Evaluations
   </h2>
   <section className="mt-8 bg-gray-50 p-0 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">

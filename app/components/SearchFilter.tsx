@@ -42,9 +42,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ searchQuery, setSearchQuery
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between w-full">
-      {/* Sign In Button */}
-
+    <div className="flex flex-col md:flex-row items-center justify-center w-full">
+     
 
 
       {/* Search Input and Button */}

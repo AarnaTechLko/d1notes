@@ -3,7 +3,7 @@ import React from 'react';
 
 
 const Loading: React.FC = () => {
-  const text = "D1 Notes";
+  const text = "D1 NOTES";
   return (
     <div className="flex justify-center items-center h-screen bg-white-100">
       <div className="flex space-x-1">

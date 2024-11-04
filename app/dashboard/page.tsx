@@ -76,12 +76,18 @@ const Dashboard: React.FC = () => {
         
       },
       {
-        Header: "Coach Name",
-        accessor: "first_name",
-        Cell: ({ row }) =>
-          `${row.original.first_name} ${row.original.last_name}`, // Show full name
+        Header: "Coach Name",  // Combine all video links under this column
+        accessor: "first_name",  // Or just leave it as undefined if it's not needed
+        Cell: ({ row }: CellProps<Evaluation>) => (
+          <div className="space-y-2"> {/* Stack links vertically with spacing */}
+           <a href={`coach/${row.original.slug}`} target="_blank" rel="noopener noreferrer">
+    {row.original.first_name} {row.original.last_name}
+</a>
+          </div>
+        ),
       },
-      { Header: "Evaluation Title", accessor: "review_title" }, // Use the correct accessor
+ 
+      { Header: "Review Title", accessor: "review_title" }, // Use the correct accessor
       {
         Header: "Video Links",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
@@ -99,7 +105,7 @@ const Dashboard: React.FC = () => {
           </div>
         ),
       },
-      { Header: "Description", accessor: "video_description" },
+      { Header: "Video Description", accessor: "video_description" },
       { Header: "Payment Status", accessor: "payment_status" },
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [

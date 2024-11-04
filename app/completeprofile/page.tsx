@@ -263,7 +263,7 @@ export default function Register() {
   <div className="flex flex-col justify-center bg-white p-4 w-full">
     <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
       <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-      <p className="text-red-500">( All fiels are mandatory including photo upload.)</p>
+      <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <form onSubmit={handleSubmit} >
@@ -330,9 +330,58 @@ export default function Register() {
         </div>
 
        </div>
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+        <div>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <select
+            name="country"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.country}
+            onChange={handleChange}
+          >
+            <option value="">Select</option>
+            <option value="Freshman">United States of America</option>
+           
+          </select>
+          
+          {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
+        </div>
+        <div>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          
+        
+          <select
+        name="state"
+        id="state"
+        value={formValues.state}
+        onChange={handleChange}
+        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+      >
+        <option value="">Select a state</option>
+        {states.map((state) => (
+          <option key={state.abbreviation} value={state.abbreviation}>
+            {state.name}
+          </option>
+        ))}
+      </select>
+          {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
+        </div>
+        <div>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <input
+            type="text"
+            name="city"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.city}
+            onChange={handleChange}
+          />
+          {validationErrors.city && <p className="text-red-500 text-sm">{validationErrors.city}</p>}
+        </div>
+
+        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birthday</label>
+          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
           <input
             type="date"
             name="birthday"
@@ -400,15 +449,15 @@ export default function Register() {
             <option value="Soccer">Soccer</option>
             
           </select>
-          <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
+          <p className="text-xs text-gray-500">( Right now, D1 NOTES is only available for soccer coaching )</p>
           {validationErrors.sport && <p className="text-red-500 text-sm">{validationErrors.sport}</p>}
         </div>
 
         {/* Team */}
         <div>
-          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
+          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name</label>
           <input
-          placeholder="Team Name/ 2024"
+          placeholder="Team Name"
             type="text"
             name="team"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -420,7 +469,7 @@ export default function Register() {
 
         {/* Position */}
         <div>
-          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position</label>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)</label>
           <Select
             isMulti
             options={positionOptions}
@@ -434,7 +483,7 @@ export default function Register() {
 
         {/* Number */}
         <div>
-          <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Phone Number</label>
+          <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number <span className="text-xs text-gray-500">(Optional)</span></label>
           <input
           placeholder="(342) 342-3423"
           type="text"
@@ -475,55 +524,7 @@ export default function Register() {
           {validationErrors.bio && <p className="text-red-500 text-sm">{validationErrors.bio}</p>}
         </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
-        <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
-          <select
-            name="country"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.country}
-            onChange={handleChange}
-          >
-            <option value="">Select</option>
-            <option value="Freshman">United States of America</option>
-           
-          </select>
-          
-          {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
-        </div>
-        <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
-          
-        
-          <select
-        name="state"
-        id="state"
-        value={formValues.state}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-      >
-        <option value="">Select a state</option>
-        {states.map((state) => (
-          <option key={state.abbreviation} value={state.abbreviation}>
-            {state.name}
-          </option>
-        ))}
-      </select>
-          {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
-        </div>
-        <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
-          <input
-            type="text"
-            name="city"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.city}
-            onChange={handleChange}
-          />
-          {validationErrors.city && <p className="text-red-500 text-sm">{validationErrors.city}</p>}
-        </div>
-
-        </div>
+       
         
 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
   <button

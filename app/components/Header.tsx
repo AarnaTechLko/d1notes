@@ -153,7 +153,7 @@ const Header: React.FC = () => {
                   {session?.user?.type !== 'coach' && isUserImageAvailable && (
                     <li className="pt-[8px]">
                       <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
-                        Browse Coach
+                        Browse Coaches
                       </Link>
                     </li>
                   )}
@@ -226,7 +226,7 @@ const Header: React.FC = () => {
                 <>
                   <li>
                     <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Coach
+                      Browse Coaches
                     </Link>
                   </li>
                   <li>
@@ -252,7 +252,7 @@ const Header: React.FC = () => {
                 </button>
                 {helpOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
-                    <p>For technical difficulties and general site feedback, Email us at </p>
+                    <p>For technical difficulties and general site feedback, email us at </p>
                     <a className="font-bold" href='mailto:team@d1notes.com'>team@d1notes.com</a>
                     <button onClick={toggleHelp} className="text-blue-500 mt-2">
                       Close

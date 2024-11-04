@@ -38,9 +38,6 @@ import { SECRET_KEY } from '@/lib/constants';
           clubName:coach.clubName,
           qualifications:coach.qualifications,
           certificate:coach.certificate,
-          country:coach.country,
-          state:coach.state,
-          city:coach.city,
           
           image: coach.image ? `${coach.image}` : null,
         }));

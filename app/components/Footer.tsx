@@ -1,5 +1,5 @@
 "use client"
-import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa'; // You can install react-icons for icons
+import { FaFacebook, FaTwitter, FaInstagram, FaTimes } from 'react-icons/fa'; // You can install react-icons for icons
 
 export default function Footer() {
   return (
@@ -25,7 +25,16 @@ export default function Footer() {
               <FaFacebook className="h-6 w-6 hover:text-blue-600" />
             </a>
             <a href="#" aria-label="Twitter">
-              <FaTwitter className="h-6 w-6 hover:text-blue-400" />
+            <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M3 3L21 21M3 21L21 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+              
             </a>
             <a href="#" aria-label="Instagram">
               <FaInstagram className="h-6 w-6 hover:text-pink-500" />

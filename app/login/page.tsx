@@ -166,6 +166,12 @@ export default function Login() {
                 Register
               </a>
             </p>
+            <p className="text-center text-gray-600 text-sm mt-4">
+              Forgot Password?{' '}
+              <a href="/register" className="text-blue-500 hover:underline">
+                Reset Password
+              </a>
+            </p>
           </div>
         </div>
 

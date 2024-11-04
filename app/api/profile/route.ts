@@ -49,7 +49,7 @@ import { SECRET_KEY } from '@/lib/constants';
             last_name:user.last_name,
             grade_level:user.grade_level,
             location:user.location,
-            birthday:user.birthday,
+            birthday: user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : null, // Format as YYYY-MM-DD
             gender:user.gender,
             
             sport:user.sport,
@@ -81,7 +81,8 @@ import { SECRET_KEY } from '@/lib/constants';
     try {
       const body = await req.json();
       const finalBody = body.profileData;
-  const playerId = body.playerId;
+      const playerId = body.playerId;
+  
       const {
         first_name,
         last_name,
@@ -102,34 +103,32 @@ import { SECRET_KEY } from '@/lib/constants';
         jersey,
         password
       } = finalBody;
-
-
+  
       let updateData: any = {
         first_name: first_name || null,
         last_name: last_name || null,
         grade_level: grade_level || null,
-        birthday:birthday  || null,
+        birthday: birthday || null,
         team: team || null,
-        email: email  || null,
+        email: email || null,
         position: position || null,
         gender: gender || null,
         image: image || null,
         location: location || null,
-        number:number || null,
+        number: number || null,
         sport: sport || null,
         bio: bio || null,
         country: country || null,
         state: state || null,
         city: city || null,
-        jersey:jersey || null,
-        password: password || null
+        jersey: jersey || null,
       };
   
       if (password) {
         const hashedPassword = await hash(password, 10); // Hash the password with bcrypt
         updateData.password = hashedPassword; // Add the hashed password to the update data
       }
-
+  
       // Update the coach's profile
       const updatedUser = await db
         .update(users)
@@ -137,28 +136,27 @@ import { SECRET_KEY } from '@/lib/constants';
         .where(eq(users.id, playerId))
         .execute();
   
-        const updateduser = await db
+      const updateduser = await db
         .select({
-            first_name:users.first_name,
-          last_name:users.last_name,
-          grade_level:users.grade_level,
-          location:users.location,
-          birthday:users.birthday,
-          gender:users.gender,
-          
-          sport:users.sport,
-          team:users.team,
-          position:users.position,
-          number:users.number,
-          email:users.email,
-          image:users.image,
-          bio:users.bio,
-          country:users.country,
-          state:users.state,
-          city:users.city,
-          jersey:users.jersey,
-  
-          }).from(users)
+          first_name: users.first_name,
+          last_name: users.last_name,
+          grade_level: users.grade_level,
+          location: users.location,
+          birthday: users.birthday,
+          gender: users.gender,
+          sport: users.sport,
+          team: users.team,
+          position: users.position,
+          number: users.number,
+          email: users.email,
+          image: users.image,
+          bio: users.bio,
+          country: users.country,
+          state: users.state,
+          city: users.city,
+          jersey: users.jersey,
+        })
+        .from(users)
         .where(eq(users.id, playerId))
         .execute();
   
@@ -166,6 +164,7 @@ import { SECRET_KEY } from '@/lib/constants';
       return NextResponse.json(updateduser);
     } catch (error) {
       console.error("Error updating profile:", error);
-      return NextResponse.json({ success: false, message: 'Failed to update profile.' }, { status: 500 });
+      return NextResponse.json({ success: false, message: error }, { status: 500 });
     }
   }
+  

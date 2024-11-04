@@ -37,7 +37,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
   />
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold">{name}</h3>
-    <p className="text-gray-500">{organization}</p>
+   {/* <p className="text-gray-500">{organization}</p>*/}
     <div className="mt-2 flex justify-center">
       <div className="mt-1">{stars}</div>
     </div>

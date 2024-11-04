@@ -202,346 +202,332 @@ const Profile: React.FC = () => {
     const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
     setProfileData({ ...profileData, position: positions });
   };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long", // Use "numeric" for numeric month
+      day: "numeric",
+    });
+  };
   return (
     <>
-      <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
-        <Sidebar />
-        <main className="flex-grow p-8">
-          <div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-6xl">
-            {/* Profile Header */}
-            <div className="flex justify-between items-center mb-6">
-            
-              <button
-                onClick={() => {
-                  if (isEditMode) {
-                    handleSubmit(); // Call the submit function when in edit mode
-                  }
-                  setIsEditMode(!isEditMode);
-                }}
-                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${
-                  isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                {isEditMode ? 'Save Profile' : 'Edit Profile'}
-              </button>
-            </div>
-
-            {/* Profile Image Section */}
-            <div className="flex flex-col items-center mb-8">
-              <label className="block text-lg font-medium text-gray-700">Profile Image</label>
-              <div
-                onClick={triggerImageUpload}
-                className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
-              >
-                {profileData.image ? (
-                  <img
-                    src={profileData.image}
-                    alt="Profile"
-                    className="h-32 w-32 object-cover rounded-full"
-                  />
-                ) : (
-                  <div className="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full">
-                    <span className="text-gray-500">Upload Image</span>
-                  </div>
-                )}
-              </div>
-              {isEditMode && (
-                <input
-                  type="file"
-                  name="image"
-                  accept="image/*"
-                  ref={imageInputRef}
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              )}
-            </div>
-
-            {/* Profile Information Form */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* First Name */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">First Name</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="first_name"
-                    value={profileData.first_name}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.first_name}</p>
-                )}
-              </div>
-
-              {/* Last Name */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Last Name</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="last_name"
-                    value={profileData.last_name}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.last_name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Location</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="location"
-                    value={profileData.location}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.location}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Email</label>
-                {isEditMode ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileData.email}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.email}</p>
-                )}
-              </div>
-
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Phone Number</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="number"
-                    value={profileData.number}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.number}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Birthday</label>
-                {isEditMode ? (
-                  <input
-                    type="date"
-                    name="birthday"
-                    value={profileData.birthday}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.birthday}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Grade Level</label>
-                {isEditMode ? (
-                  <select
-                  name="grade_level"
-                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  value={profileData.grade_level}
-                  onChange={handleChange}
-                >
-                  <option value="">Select  Level</option>
-                  <option value="Club">Club</option>
-                  <option value="League">League</option>
-                  <option value="Academy">Academy</option>
-                  <option value="Organization">Organization</option>
-                </select>
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.grade_level}</p>
-                )}
-              </div>
-
-             
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Gender</label>
-                {isEditMode ? (
-                  <select
-                    name="gender"
-                    value={profileData.gender}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.gender}</p>
-                )}
-              </div>
-
-              {/* Location */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Jersey No (Optional)</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="jersey"
-                    value={profileData.jersey}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.jersey}</p>
-                )}
-              </div>
-
-              {/* Sport */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Sport</label>
-                {isEditMode ? (
-                  <select
-                    name="sport"
-                    value={profileData.sport}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  >
-                    <option value="">Select Sport</option>
-                    <option value="Soccer">Soccer</option>
-                    {/* Add other sports as options */}
-                  </select>
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.sport}</p>
-                )}
-              </div>
-
-              {/* Club Name */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Team Name/ Year</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="team"
-                    value={profileData.team}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.team}</p>
-                )}
-              </div>
-
-
-             
-
-              {/* Qualifications */}
-              <div className="col-span-1 md:col-span-2">
-                <label className="block text-lg font-medium text-gray-700">Tell us about your player’s experience/ competition level, any accolades and goals.</label>
-                {isEditMode ? (
-                  <textarea
-                    name="bio"
-                    rows={4}
-                    value={profileData.bio}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
-                    {profileData.bio}
-                  </p>
-                )}
-              </div>
-              <div className="grid grid-cols- sm:grid-cols- lg:grid-cols-4 gap-6 pb-5">
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Country</label>
-                {isEditMode ? (
-                 <select
-                 name="country"
-                 className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 value={profileData.country}
-                 onChange={handleChange}
-               >
-                 <option value="">Select</option>
-                 <option value="Freshman">United States of America</option>
-                
-               </select>
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">State</label>
-                {isEditMode ? (
-                  <select
-                  name="state"
-                  id="state"
-                  value={profileData.state}
-                  onChange={handleChange}
-                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                >
-                  <option value="">Select a state</option>
-                  {states.map((state) => (
-                    <option key={state.abbreviation} value={state.abbreviation}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">City</label>
-                {isEditMode ? (
-                   <input
-                   type="text"
-                   name="city"
-                   value={profileData.city}
-                   onChange={handleChange}
-                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 />
-                ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.city}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Password</label>
-                {isEditMode ? (
-                   <input
-                   type="password"
-                   name="password"
-                   value={profileData.password}
-                   onChange={handleChange}
-                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 />
-                ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">************</p>
-                )}
-              </div>
-              </div>
-            </div>
-
-            {/* Certificate Image Thumbnail */}
-             
-          </div>
-        </main>
+      <div className="flex bg-gradient-to-r from-blue-50 to-indigo-100">
+  <Sidebar />
+  <main className="flex-grow p-8">
+    <div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-6xl">
+      {/* Profile Header */}
+      <div className="flex justify-between items-center mb-6">
+        <button
+          onClick={() => {
+            if (isEditMode) {
+              handleSubmit(); // Call the submit function when in edit mode
+            }
+            setIsEditMode(!isEditMode);
+          }}
+          className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${
+            isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
+          }`}
+        >
+          {isEditMode ? 'Save Profile' : 'Edit Profile'}
+        </button>
       </div>
+
+      {/* Profile Image Section */}
+      <div className="flex flex-col items-center mb-8">
+        <label className="block text-lg font-medium text-gray-700">Profile Image</label>
+        <div
+          onClick={triggerImageUpload}
+          className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
+        >
+          {profileData.image ? (
+            <img
+              src={profileData.image}
+              alt="Profile"
+              className="h-32 w-32 object-cover rounded-full"
+            />
+          ) : (
+            <div className="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full">
+              <span className="text-gray-500">Upload Image</span>
+            </div>
+          )}
+        </div>
+        {isEditMode && (
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            ref={imageInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        )}
+      </div>
+
+      {/* Profile Information Form */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* First Name */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">First Name</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="first_name"
+              value={profileData.first_name}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.first_name}</p>
+          )}
+        </div>
+
+        {/* Last Name */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Last Name</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="last_name"
+              value={profileData.last_name}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.last_name}</p>
+          )}
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Location</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="location"
+              value={profileData.location}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.location}</p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Email</label>
+          {isEditMode ? (
+            <input
+              type="email"
+              name="email"
+              value={profileData.email}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.email}</p>
+          )}
+        </div>
+
+        {/* Mobile Number */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Mobile Number</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="number"
+              value={profileData.number}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.number}</p>
+          )}
+        </div>
+
+        {/* Birth Date */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Birth Date</label>
+          {isEditMode ? (
+            <input
+              type="date"
+              name="birthday"
+              value={formatDate(profileData.birthday)}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{formatDate(profileData.birthday)}</p>
+          )}
+        </div>
+
+        {/* Grade Level */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Grade Level</label>
+          {isEditMode ? (
+            <select
+              name="grade_level"
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+              value={profileData.grade_level}
+              onChange={handleChange}
+            >
+              <option value="">Select Level</option>
+              <option value="Club">Club</option>
+              <option value="League">League</option>
+              <option value="Academy">Academy</option>
+              <option value="Organization">Organization</option>
+            </select>
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.grade_level}</p>
+          )}
+        </div>
+
+        {/* Gender */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Gender</label>
+          {isEditMode ? (
+            <select
+              name="gender"
+              value={profileData.gender}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.gender}</p>
+          )}
+        </div>
+
+        {/* Jersey No (Optional) */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Jersey No (Optional)</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="jersey"
+              value={profileData.jersey}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.jersey}</p>
+          )}
+        </div>
+
+        {/* Sport */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Sport</label>
+          {isEditMode ? (
+            <select
+              name="sport"
+              value={profileData.sport}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            >
+              <option value="">Select Sport</option>
+              <option value="Soccer">Soccer</option>
+              {/* Add other sports as options */}
+            </select>
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.sport}</p>
+          )}
+        </div>
+
+        {/* Team Name/ Year */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Team Name/ Year</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="team"
+              value={profileData.team}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.team}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Last Row with Country, State, City, Password */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        {/* Country */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Country</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="country"
+              value={profileData.country}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
+          )}
+        </div>
+
+        {/* State */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">State</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="state"
+              value={profileData.state}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
+          )}
+        </div>
+
+        {/* City */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">City</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="city"
+              value={profileData.city}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.city}</p>
+          )}
+        </div>
+
+        {/* Password */}
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Password</label>
+          {isEditMode ? (
+            <input
+              type="password"
+              name="password"
+              value={profileData.password}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">********</p>
+          )}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
     </>
   );
 };
