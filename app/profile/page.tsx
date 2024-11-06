@@ -299,7 +299,49 @@ const Profile: React.FC = () => {
             <p className="mt-2 text-sm font-medium text-gray-800">{profileData.last_name}</p>
           )}
         </div>
+        <div>
+          <label className="block text-lg font-medium text-gray-700">Country</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="country"
+              value={profileData.country}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
+          )}
+        </div>
 
+        <div>
+          <label className="block text-lg font-medium text-gray-700">State</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="state"
+              value={profileData.state}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
+          )}
+        </div>
+        <div>
+          <label className="block text-lg font-medium text-gray-700">City</label>
+          {isEditMode ? (
+            <input
+              type="text"
+              name="city"
+              value={profileData.city}
+              onChange={handleChange}
+              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+            />
+          ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.city}</p>
+          )}
+        </div>
         {/* Location */}
         <div>
           <label className="block text-lg font-medium text-gray-700">Location</label>
@@ -457,72 +499,7 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      {/* Last Row with Country, State, City, Password */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        {/* Country */}
-        <div>
-          <label className="block text-lg font-medium text-gray-700">Country</label>
-          {isEditMode ? (
-            <input
-              type="text"
-              name="country"
-              value={profileData.country}
-              onChange={handleChange}
-              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-            />
-          ) : (
-            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
-          )}
-        </div>
-
-        {/* State */}
-        <div>
-          <label className="block text-lg font-medium text-gray-700">State</label>
-          {isEditMode ? (
-            <input
-              type="text"
-              name="state"
-              value={profileData.state}
-              onChange={handleChange}
-              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-            />
-          ) : (
-            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
-          )}
-        </div>
-
-        {/* City */}
-        <div>
-          <label className="block text-lg font-medium text-gray-700">City</label>
-          {isEditMode ? (
-            <input
-              type="text"
-              name="city"
-              value={profileData.city}
-              onChange={handleChange}
-              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-            />
-          ) : (
-            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.city}</p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div>
-          <label className="block text-lg font-medium text-gray-700">Password</label>
-          {isEditMode ? (
-            <input
-              type="password"
-              name="password"
-              value={profileData.password}
-              onChange={handleChange}
-              className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-            />
-          ) : (
-            <p className="mt-2 text-sm font-medium text-gray-800">********</p>
-          )}
-        </div>
-      </div>
+     
     </div>
   </main>
 </div>
