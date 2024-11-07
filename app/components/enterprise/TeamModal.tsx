@@ -337,8 +337,10 @@ export default function TeamModal({
       // }
 
       if (!formValues.logo) {
-        showError("Logo is required.");
-        return;
+        formValues.logo = session?.user.image || '';
+         //setFormValues({ ...formValues, logo: session?.user.image || '' });
+        // showError("Logo is required.");
+        // return;
       }
   
       // if (!formValues.cover_image) {
@@ -370,7 +372,7 @@ export default function TeamModal({
         <div>
       <div onClick={handleImageClick} className="cursor-pointer relative">
           <label className="block text-sm font-medium text-gray-700">
-            Team Logo<span className="mandatory">*</span>
+            Team Logo
           </label>
           <div className="relative">
             <Image

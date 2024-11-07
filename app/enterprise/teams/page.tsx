@@ -100,7 +100,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }),
       };
-
+ 
       await fetch("/api/teams", {
         method,
         headers: { "Content-Type": "application/json" },
@@ -277,7 +277,7 @@ export default function TeamsPage() {
                           </a>
                         </td>
 
-                        <td className="px-4 py-2">{team.age_group ? "Age Group: "+team.age_group : team.team_year}</td>
+                        <td className="px-4 py-2">{team.age_group ? "Age Group: "+team.age_group : "Birth Year: "+team.team_year}</td>
                         <td className="px-4 py-2">{team.team_type}</td>
                         <td className="px-4 py-2">
                           <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
