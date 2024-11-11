@@ -28,7 +28,6 @@ export const users = pgTable(
     team: varchar("team"),
     jersey:varchar("jersey"),
     position: varchar("position"),
-    countrycode:varchar("countrycode"),
     number: varchar("number"),
     email: varchar("email").notNull().unique(),
     image: text("image"),
@@ -37,6 +36,7 @@ export const users = pgTable(
     state:varchar("state"),
     city:varchar("city"),
     league:text("league"),
+    countrycode:text("countrycode"),
     password: text("password").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -55,7 +55,6 @@ export const coaches = pgTable(
     firstName: varchar("firstName"),
     lastName: varchar("lastName"),
     email: varchar("email"),
-    countrycode:varchar("countrycode"),
     phoneNumber: varchar("phoneNumber"),
     gender: varchar("gender"),
     location: varchar("location"),
@@ -71,6 +70,7 @@ export const coaches = pgTable(
     rating: integer("rating").default(0),
     password: text("password").notNull(),
     certificate:text("certificate"),
+    countrycode:text("countrycode"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (coaches) => {
@@ -96,6 +96,7 @@ export const playerEvaluation = pgTable(
     video_link_three: text("video_link_three"),
     video_description: text("video_description").notNull(),
     status: integer("status").notNull(), // Use enum type here
+    turnaroundTime: varchar("turnaroundTime"), // Use enum type here
     payment_status: varchar("payment_status"),
     created_at: timestamp("created_at").defaultNow().notNull(),
     rating: integer("rating"), // New field for rating, nullable by default
@@ -151,4 +152,3 @@ export const otps = pgTable('otps', {
   email: text('email').notNull(),
   otp: text('otp').notNull()
 });
-
