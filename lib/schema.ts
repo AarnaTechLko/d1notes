@@ -145,3 +145,10 @@ export const evaluationResults = pgTable('evaluation_results', {
   tacticalScores: text('tacticalScores').notNull(), // JSON field for tactical scores
   technicalScores: text('technicalScores').notNull(), // JSON field for technical scores
 });
+
+export const otps = pgTable('otps', {
+  id: serial('id').primaryKey(),
+  email: text('email').notNull(),
+  otp: text('otp').notNull()
+});
+
