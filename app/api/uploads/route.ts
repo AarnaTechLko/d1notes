@@ -22,7 +22,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             // optional, sent to your server on upload completion
             // you could pass a user id from auth, or a value from clientPayload
           }),
-        };
+        }; 
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         // Get notified of client upload completion
