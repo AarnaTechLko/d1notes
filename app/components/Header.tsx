@@ -58,17 +58,7 @@ const Header: React.FC = () => {
   };
   const toggleCreateAccount = () => setCreateAccountOpen(!createAccountOpen);
 
-  useEffect(() => {
-    const userImage = localStorage.getItem('userImage');
-    if (userImage) {
-      setIsUserImageAvailable(true);
-      setProfilepic(userImage);
-    } else if (session?.user) {
-      fetchUserImage();
-    }
 
-   
-  }, [session]);
 
 
   useEffect(() => {
@@ -92,34 +82,7 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const fetchUserImage = async () => {
-    try {
-      const response = await fetch('/api/userimage', {  
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: session?.user?.id, 
-          type: session?.user?.type, 
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-
-      if (data.image) {
-        localStorage.setItem('userImage', data.image);
-        setProfilepic(data.image);
-        setIsUserImageAvailable(true);
-      }
-    } catch (error) {
-      
-    }
-  };
+  
 
   return (
     <header className="bg-white shadow-md">
@@ -213,7 +176,7 @@ const Header: React.FC = () => {
                   <li className="relative" ref={dropdownRef}>
                     <button onClick={toggleDropdown} className="flex items-center">
                       <Image
-                        src={localStorage.getItem('userImage') || defaultImage}
+                        src={session?.user?.image || ''}
                         alt="Profile"
                         width={40}
                         height={40}

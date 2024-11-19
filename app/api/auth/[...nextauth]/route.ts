@@ -47,7 +47,7 @@ const handler = NextAuth({
               name: coach[0].firstName,
               email: coach[0].email,
               type: 'coach', // Custom field indicating coach or player
-              //image: coach[0].image,
+              image: coach[0].image,
             };
           }
         } else if (loginAs === 'player') {
@@ -60,7 +60,7 @@ const handler = NextAuth({
               name: user[0].first_name,
               email: user[0].email,
               type: 'player', // Custom field indicating player
-              //image: user[0].image,
+              image: user[0].image,
             };
           }
         }
@@ -75,7 +75,7 @@ const handler = NextAuth({
               email: enterprise[0].email,
               package_id: enterprise[0].package_id,
               type: 'enterprise', // Custom field indicating player
-              //image: user[0].image,
+              image:enterprise[0].logo,
             };
           }
         }
@@ -87,8 +87,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-    secret:SECRET_KEY,
-    ////secret: process.env.NEXTAUTH_SECRET, 
+  //secret:SECRET_KEY,
+  secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {
