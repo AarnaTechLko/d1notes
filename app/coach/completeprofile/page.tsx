@@ -7,7 +7,9 @@ import Brand from '../../public/images/brand.jpg';
 import CertificateImage from '../../public/certificate.png'
 import Image from 'next/image';
 import { FaCheck, FaSpinner } from 'react-icons/fa';
-
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
+import FileUploader from '@/app/components/FileUploader';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -94,6 +96,8 @@ export default function Register() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const { data: session } = useSession();
+  const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
+  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const states = [
     { name: "Alabama", abbreviation: "AL" },
@@ -330,21 +334,27 @@ export default function Register() {
       setFormErrors({ ...formErrors, [name]: undefined });
     }
   };
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-  
-      reader.onloadend = () => {
-        setFormValues({ ...formValues, image: reader.result as string }); // Set the base64 string
-      };
-  
-      if (file) {
-        reader.readAsDataURL(file); // Convert the image file to base64
+  const handleImageChange = async () => {
+    if (!fileInputRef.current?.files) {
+        throw new Error('No file selected');
       }
-    }
-  };
+      setPhotoUpoading(true);
+      const file = fileInputRef.current.files[0];
+  
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/uploads',
+        });
+        setPhotoUpoading(false);
+        const imageUrl = newBlob.url;
+        setFormValues({ ...formValues, image: imageUrl });
+        
+      } catch (error) {
+        setPhotoUpoading(false);
+        console.error('Error uploading file:', error);
+      }
+};
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -378,20 +388,27 @@ export default function Register() {
   };
 
 
-  const handleCertificateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-  
-      reader.onloadend = () => {
-        setFormValues({ ...formValues, certificate: reader.result as string }); // Set the base64 string
-      };
-  
-      if (file) {
-        reader.readAsDataURL(file); // Convert the image file to base64
+  const handleCertificateChange = async() => {
+    if (!certificateInputRef.current?.files) {
+        throw new Error('No file selected');
       }
-    }
-  };
+      setCertificateUploading(true);
+      const file = certificateInputRef.current.files[0];
+  
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/uploads',
+        });
+        setCertificateUploading(false);
+        const certificate = newBlob.url;
+        setFormValues({ ...formValues, certificate: certificate });
+        
+      } catch (error) {
+        setCertificateUploading(false);
+        console.error('Error uploading file:', error);
+      }
+};
 
   useEffect(() => {
     if (session) {
@@ -412,7 +429,7 @@ export default function Register() {
         <div className="flex-1 bg-white p-1 md:p-8">
           <div className="bg-white rounded-lg p-4  mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-          <p className="text-red-500">( All fiels are mandatory including photo upload.)</p>
+          <p className="text-red-500">( All fields are mandatory including coach&lsquo;s photo upload.)</p>
             {error && <p className="text-red-600">{error}</p>}
             {successMessage && <p className="text-green-600">{successMessage}</p>}
             {loading && <p className="text-blue-600">Submitting your information... Please wait.</p>}
@@ -439,6 +456,15 @@ export default function Register() {
                     className="hidden"
                     ref={fileInputRef}
                   />
+                   {photoUpoading ? (
+                                            <>
+                                                <FileUploader/>
+                                            </>
+                                        ) : (
+                                            <>
+                                                
+                                            </>
+                                        )}
                   {formErrors.image && <p className="text-red-600 text-sm text-center">{formErrors.image}</p>}
                 </div>
               </div>
@@ -649,7 +675,15 @@ relevant soccer affiliations, personal soccer links (eg, training business, curr
                     className="hidden"
                     ref={certificateInputRef}
                   />
-                 
+                 {certificateUploading ? (
+                                            <>
+                                                <FileUploader/>
+                                            </>
+                                        ) : (
+                                            <>
+                                                
+                                            </>
+                                        )}
                 </div>
               </div>
               {/* Submit Button */}

@@ -6,9 +6,11 @@ import Brand from "../public/images/brand.jpg";
 import Image from "next/image";
 import DefaultPic from "../public/default.jpg";
 import { useSession } from "next-auth/react";
-
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
 import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
+import FileUploader from "../components/FileUploader";
 interface FormValues {
   first_name: string;
   last_name: string;
@@ -58,6 +60,7 @@ export default function Register() {
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false); 
+  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false); 
   const [maxDate, setMaxDate] = useState('');
   const positionOptions = [
     { value: "Goalkeeper", label: "Goalkeeper" },
@@ -290,20 +293,27 @@ export default function Register() {
     setValidationErrors({ ...validationErrors, [name]: "" }); // Clear error when input is changed
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setFormValues({ ...formValues, image: reader.result as string });
-      };
-
-      if (file) {
-        reader.readAsDataURL(file); // Convert the image file to base64
+  const handleImageChange = async () => {
+    if (!fileInputRef.current?.files) {
+        throw new Error('No file selected');
       }
-    }
-  };
+      setPhotoUpoading(true);
+      const file = fileInputRef.current.files[0];
+  
+      try {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/uploads',
+        });
+        setPhotoUpoading(false);
+        const imageUrl = newBlob.url;
+        setFormValues({ ...formValues, image: imageUrl });
+        
+      } catch (error) {
+        setPhotoUpoading(false);
+        console.error('Error uploading file:', error);
+      }
+};
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -341,7 +351,7 @@ export default function Register() {
   <div className="flex flex-col justify-center bg-white p-4 w-full">
     <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
       <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-      <p className="text-red-500">( All fiels are mandatory including player&lsquo;s photo upload.)</p>
+      <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <form onSubmit={handleSubmit} >
@@ -362,6 +372,15 @@ export default function Register() {
               className="hidden"
               ref={fileInputRef}
             />
+            {photoUpoading ? (
+                                            <>
+                                                <FileUploader/>
+                                            </>
+                                        ) : (
+                                            <>
+                                                
+                                            </>
+                                        )}
             {validationErrors.image && <p className="text-red-500 text-sm text-center mt-2">{validationErrors.image}</p>}
           </div>
         </div>
@@ -425,14 +444,16 @@ export default function Register() {
         {/* Grade Level */}
         <div>
           <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level</label>
-          <input
-          placeholder="Specify level"
-            type="text"
-            name="grade_level"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.grade_level}
-            onChange={handleChange}
-          />
+
+          <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
+            <option value="">Select</option>
+            <option value="Rec">Rec</option>
+            <option value="Club">Club</option>
+            <option value="School">School</option>
+            <option value="Semi Pro">Semi Pro</option>
+            <option value="Pro">Pro</option>
+          </select>
+ 
           
           {validationErrors.grade_level && <p className="text-red-500 text-sm">{validationErrors.grade_level}</p>}
         </div>
@@ -548,7 +569,7 @@ export default function Register() {
           <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League</label>
           <input
           type="text"
-            placeholder="Specify experience league (AYSO, club, school, etc.)"
+            placeholder="Rec, AYSO, Club, Pre EcnL, Ercl, Acedemy, NPL, BPC, MSL, High School and College"
             name="league"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.league}
@@ -561,8 +582,7 @@ export default function Register() {
         <div>
           <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
           <textarea
-            placeholder="Tell us about your player’s experience/ competition level, any 
-          accolades and goals."
+            placeholder="Tell us about your player’s experience/competition level, any accolades and aspirations."
             name="bio"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.bio}

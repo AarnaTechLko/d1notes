@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                             defaultSort={defaultSort} 
                         />
                     ) : (
-                        <p>No coach selected.</p> // Render something else when coachId is null
+                        <p>Loading..</p> // Render something else when coachId is null
                     )}
                 </div>
             </main>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches } from '../../../../lib/schema';
+import { coaches, otps } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -17,13 +17,27 @@ export async function POST(req: NextRequest) {
     
     // Parse the form data
     const body = await req.json();
-    const { email, password } = body;
+    const { email, password, otp } = body;
 
     if (!email || !password) {
       logError('Missing required fields');
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
-   
+
+    
+  const existingOtp = await db
+  .select()
+  .from(otps)
+  .where(and(
+    eq(otps.email, email),
+    eq(otps.otp, otp)
+  ))
+  .limit(1)
+  .execute();
+  if(existingOtp.length < 1)
+    {
+      return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
+    }
     const hashedPassword = await hash(password, 10);
     
     const insertedUser = await db.insert(coaches).values({

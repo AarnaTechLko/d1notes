@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db'; // Adjust path based on your directory
-import { users, coaches } from '@/lib/schema';
+import { users, coaches, enterprises } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
  
@@ -16,6 +16,7 @@ interface ExtendedUser {
   name: string | null;
   email: string | null;
   image: string | null;
+  package_id?: string | null;
 }
   
 const handler = NextAuth({
@@ -63,6 +64,21 @@ const handler = NextAuth({
             };
           }
         }
+        else if (loginAs === 'enterprise') {
+          const enterprise = await db.select().from(enterprises).where(eq(enterprises.email, email)).execute();
+          if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
+            return null; // Invalid credentials
+          } else {
+            return {
+              id: enterprise[0].id.toString(),
+              name: enterprise[0].organizationName,
+              email: enterprise[0].email,
+              package_id: enterprise[0].package_id,
+              type: 'enterprise', // Custom field indicating player
+              //image: user[0].image,
+            };
+          }
+        }
         return null;
       },
     }),
@@ -82,6 +98,9 @@ const handler = NextAuth({
         token.id = extendedUser.id;
         token.type = extendedUser.type; // Add user type (coach or player) to the token
         token.image = extendedUser.image;
+        if (extendedUser.package_id) {
+          token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
+        }
       }
       return token;
     },
@@ -91,6 +110,9 @@ const handler = NextAuth({
         session.user.type = token.type as string; // Add the type to the session
         session.user.name = token.name as string; // Add the type to the session
         session.user.image = token.image as string | null;
+        if (token.package_id) {
+          session.user.package_id = token.package_id as string | null; // Add package_id to the session
+        }
       }
       return session;
     },

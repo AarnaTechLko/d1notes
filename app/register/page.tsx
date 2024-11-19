@@ -6,25 +6,31 @@ import Image from 'next/image';
 import { showError, showSuccess } from '../components/Toastr';
 import { z } from 'zod';
 import { FaCheck, FaSpinner } from 'react-icons/fa';
+import TermsAndConditions from '../components/TermsAndConditions';
 
-// Zod schema for validation
+// Zod schema for validation - Removed .optional() to make 'otp' a required string
 const formSchema = z.object({
   email: z.string().email('Invalid email format.'),
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
-  otp: z.string().optional(), // Add optional OTP
+  otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required to be 6 characters
   loginAs: z.literal('player'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Register() {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', otp: '', loginAs: 'player' });
+  const [formValues, setFormValues] = useState<FormValues>({
+    email: '',
+    password: '',
+    otp: '', // Ensure otp is always a string
+    loginAs: 'player',
+  });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otpLoading, setOtpLoading] = useState<boolean>(false); // Loader state for OTP
   const { data: session } = useSession();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     if (session && !session.user.name) {
       window.location.href = '/completeprofile';
@@ -147,14 +153,39 @@ export default function Register() {
                 <label htmlFor="otp" className="block text-gray-700 text-sm font-semibold mb-2">
                   OTP
                 </label>
-                <input
-                  type="text"
-                  name="otp"
-                  value={formValues.otp}
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={handleChange}
-                  maxLength={6}
-                />
+                <div className="flex space-x-2">
+                  {[...Array(6)].map((_, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      name={`otp-${index}`}
+                      value={formValues.otp[index] || ''} // Ensure OTP value is a string
+                      maxLength={1}
+                      className="w-12 h-12 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onChange={(e) => {
+                        const newOtp = formValues.otp.split('');
+                        newOtp[index] = e.target.value;
+                        setFormValues({
+                          ...formValues,
+                          otp: newOtp.join(''),
+                        });
+
+                        // Move focus to next input if current input is filled
+                        if (e.target.value && index < 5) {
+                          const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`) as HTMLInputElement;
+                          nextInput?.focus();
+                        }
+                      }}
+                      onKeyUp={(e) => {
+                        // Move focus to previous input if backspace is pressed
+                        if (e.key === 'Backspace' && index > 0) {
+                          const prevInput = document.querySelector(`input[name="otp-${index - 1}"]`) as HTMLInputElement;
+                          prevInput?.focus();
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             )}
 
@@ -168,7 +199,7 @@ export default function Register() {
               />
               <label htmlFor="terms" className="text-gray-700 text-sm">
                 I accept the{' '}
-                <a href="/terms" className="text-blue-500 hover:underline">
+                <a href="#" className="text-blue-500 hover:underline" onClick={() => setIsModalOpen(true)}>
                   terms & conditions
                 </a>
               </label>
@@ -193,11 +224,13 @@ export default function Register() {
           </form>
           <p className="text-center text-gray-600 text-sm mt-4">
             Already have an account?{' '}
-            <a href="/login" className="text-blue-500 hover:underline">
+            <a href="/login"  className="text-blue-500 hover:underline">
               Login
             </a>
           </p>
         </div>
+        <TermsAndConditions  isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
+      
       </div>
 
       {/* Brand Section */}

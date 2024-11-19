@@ -61,11 +61,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
     const totalPages = Math.ceil(total / limit); // Calculate total pages
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        });
+        return date.toLocaleDateString('en-US');
     };
     return (
         <div>
@@ -79,11 +75,12 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
             <table>
                 <thead>
                     <tr>
+                    <th onClick={() => handleSort('created_at')}>Paid At</th>
                         <th onClick={() => handleSort('firstName')}>Coach Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
                         <th onClick={() => handleSort('amount')}>Amount</th>
                         <th onClick={() => handleSort('status')}>Payment Status</th>
-                        <th onClick={() => handleSort('created_at')}>Paid At</th>
+                        
                          
                     </tr>
                 </thead>
@@ -93,6 +90,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
                     ) : (
                         data.map(item => (
                             <tr key={item.id}>
+                                 <td>{formatDate(item.created_at)}</td>
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 
@@ -106,7 +104,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
                                     )}
                                    
                                 </td>
-                                <td>{formatDate(item.created_at)}</td>
+                               
                             </tr>
                         ))
                     )}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Head from 'next/head';
+import { showError, showSuccess } from '../components/Toastr';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const Contact = () => {
     message: ''
   });
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null); // Track submission status
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
@@ -67,6 +69,7 @@ const Contact = () => {
     e.preventDefault();
 
     if (validateForm()) {
+      setIsLoading(true); // Set loading to true
       try {
         const response = await fetch('/api/contact', { // Adjust this endpoint URL as needed
           method: 'POST',
@@ -77,14 +80,16 @@ const Contact = () => {
         });
 
         if (response.ok) {
-          setSubmissionStatus("Your message has been sent successfully!");
+          showSuccess("Your message has been sent successfully!");
           setFormData({ name: '', email: '', mobile: '', message: '' }); // Clear form on success
         } else {
-          setSubmissionStatus("There was an error sending your message. Please try again.");
+          showError("There was an error sending your message. Please try again.");
         }
       } catch (error) {
         console.error("Error submitting form:", error);
         setSubmissionStatus("An unexpected error occurred. Please try again later.");
+      } finally {
+        setIsLoading(false); // Set loading to false
       }
     }
   };
@@ -165,8 +170,9 @@ const Contact = () => {
                 <button
                   type="submit"
                   className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700"
+                  disabled={isLoading} // Disable button while loading
                 >
-                  Send Message
+                  {isLoading ? "Sending..." : "Send Message"} {/* Change text based on loading */}
                 </button>
               </form>
             </div>

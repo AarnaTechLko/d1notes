@@ -21,7 +21,22 @@ interface EvaluationDataTableProps {
     limit: number;
     defaultSort: string;// Update this to string | null
 }
-
+const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
+    console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
+    if (!isOpen) return null;
+  
+    return (
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+          <h3 className="text-lg font-bold mb-4">Full Description</h3>
+          <p>{description}</p>
+          <button onClick={onClose} className="mt-4 text-blue-500 hover:underline">
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  };
 const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaultSort, coachId, status }) => {
     const [data, setData] = useState<Item[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,7 +44,14 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
     const [sort, setSort] = useState<string>(defaultSort);
     const [page, setPage] = useState<number>(1);
     const [total, setTotal] = useState<number>(0);
-
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [currentDescription, setCurrentDescription] = useState<string>("");
+    const handleReadMore = (description: string) => {
+        setCurrentDescription(description);
+       
+        setModalOpen(true); // Open modal with full description
+         
+      };
     // Prevent fetchData from running unnecessarily
     const firstRender = useRef(true); // Helps avoid running the effect immediately after render
 
@@ -50,6 +72,9 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
         }
         setLoading(false);
     };
+    const handleCloseModal = () => {
+        setModalOpen(false); // Close modal
+      };
 
     useEffect(() => {
       
@@ -84,8 +109,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                         <th onClick={() => handleSort('firstName')}>Player Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
                         <th onClick={() => handleSort('primary_video_link')}>Video Link</th>
-                        <th onClick={() => handleSort('video_link_two')}>Video Link 2</th>
-                        <th onClick={() => handleSort('video_link_three')}>Video Link 3</th>
+                        
                         <th onClick={() => handleSort('video_description')}>Video Description</th>
                         <th onClick={() => handleSort('evaluation_status')}>Status</th>
                         <th onClick={() => handleSort('evaluation_status')}>View Evaluation</th>
@@ -93,17 +117,25 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                 </thead>
                 <tbody>
                     {loading ? (
-                        <tr><td colSpan={8}>Loading...</td></tr>
+                        <tr><td colSpan={7}>Loading...</td></tr>
                     ) : (
                         data.map(item => (
                             <tr key={item.id}>
+                                
                                 <td>{formatDate(item.created_at)}</td>
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
-                                <td><a href={item.primary_video_link} target='_blank'><VisibilityIcon className="icon" /></a></td>
-                                <td><a href={item.video_link_two} target='_blank'><VisibilityIcon className="icon" /></a> </td>
-                                <td><a href={item.video_link_three} target='_blank'><VisibilityIcon className="icon" /> </a></td>
-                                <td>{item.video_description}</td>
+                                <td>
+                                    <a href={item.primary_video_link} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Primary</a>
+                                    <a href={item.video_link_two} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Link#2</a>
+                                    <a href={item.video_link_three} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Link#3</a>
+                                    </td>
+                              
+                                <td>{item.video_description.substring(0, 30)}
+                                <button onClick={() => handleReadMore(item.video_description)} className="text-blue-500 hover:underline ml-2">
+                  Read More
+                </button>
+                                </td>
                                 <td> 
                                     {item.status === 0 && (
                                         <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Requested</button>
@@ -153,6 +185,11 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                     Next
                 </button>
             </div>
+            <DetailsModal
+  isOpen={modalOpen}
+  onClose={handleCloseModal}
+  description={currentDescription}
+/>
         </div>
     );
 };

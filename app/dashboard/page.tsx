@@ -20,7 +20,26 @@ const Dashboard: React.FC = () => {
   const [data, setData] = useState<Evaluation[]>([]); // State to hold the data for the table
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  // Fetch evaluations when the selected tab changes
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [currentDescription, setCurrentDescription] = useState<string>("");
+  
+  const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
+    console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
+    if (!isOpen) return null;
+  
+    return (
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+          <h3 className="text-lg font-bold mb-4">Full Description</h3>
+          <p>{description}</p>
+          <button onClick={onClose} className="mt-4 text-blue-500 hover:underline">
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const fetchEvaluations = async (status: string) => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
@@ -56,7 +75,16 @@ const Dashboard: React.FC = () => {
     setData(evaluationsData); // Set the data for the table
     setLoading(false); // Set loading to false after data is fetched
   };
+  const handleReadMore = (description: string) => {
+    setCurrentDescription(description);
+   
+    setModalOpen(true); // Open modal with full description
+     
+  };
 
+  const handleCloseModal = () => {
+    setModalOpen(false); // Close modal
+  };
   useEffect(() => {
     // Fetch data for the initially selected tab
     fetchEvaluations(selectedTab);
@@ -71,7 +99,7 @@ const Dashboard: React.FC = () => {
     Cell: ({ value }: CellProps<Evaluation>) => {
       // Format the date to 'dd-mm-yyyy'
       const date = new Date(value);
-      return date.toLocaleDateString('en-GB'); // This formats the date to 'dd/mm/yyyy'
+      return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
     },
         
       },
@@ -93,18 +121,37 @@ const Dashboard: React.FC = () => {
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
             <a href={row.original.primary_video_link} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">
-              One
+              Primary
             </a>
             <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">
-             Two
+             Link#2
             </a>
             <a href={row.original.video_link_three} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">
-              Three
+              Link#3
             </a>
           </div>
         ),
       },
-      { Header: "Video Description", accessor: "video_description" },
+      {
+        Header: "Video Description",
+        accessor: "video_description",
+        Cell: ({ cell }) => {
+          const description = cell.value ?? ""; // Default to an empty string if undefined
+      
+          const truncatedDescription = description.length > 30 ? description.substring(0, 30) + "..." : description;
+      
+          return (
+            <div>
+              <span>{truncatedDescription}</span>
+              {description.length > 30 && (
+                <button onClick={() => handleReadMore(description)} className="text-blue-500 hover:underline ml-2">
+                  Read More
+                </button>
+              )}
+            </div>
+          );
+        },
+      },
       { Header: "Payment Status", accessor: "payment_status" },
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
@@ -140,6 +187,11 @@ const Dashboard: React.FC = () => {
 
   return ( 
     <div className="flex h-screen">
+      <Modal
+  isOpen={modalOpen}
+  onClose={handleCloseModal}
+  description={currentDescription}
+/>
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6 ">

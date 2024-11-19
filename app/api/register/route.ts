@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   .select()
   .from(otps)
   .where(and(
-    eq(otps.email, email),
+    eq(otps.email, email), 
     eq(otps.otp, otp)
   ))
   .limit(1)
