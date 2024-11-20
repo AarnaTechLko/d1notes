@@ -66,7 +66,13 @@ const Sidebar: React.FC = () => {
               <span>Purchase More Licenses</span>
             </a>
           </li>
-
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/enterprise/teams" className="flex items-center space-x-2 p-2">
+            
+              <FaCompressAlt className='text-xl'/>
+              <span>Teams</span>
+            </a>
+          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/enterprise/coaches" className="flex items-center space-x-2 p-2">
             

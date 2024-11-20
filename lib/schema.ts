@@ -218,3 +218,21 @@ export const forgetPassword=pgTable('forgetPassword', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const teams=pgTable('teams', {
+  id: serial('id').primaryKey(),
+  team_name: text('team_name').notNull(),
+  logo: text('logo').notNull(),
+  description: text('description').notNull(),
+  created_by: text('created_by').notNull(),
+  creator_id: integer('creator_id').notNull(),
+ 
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
+export const teamPlayers = pgTable("teamPlayers", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull(),
+  playerId: integer("player_id").notNull(),
+  enterprise_id: integer("enterprise_id").notNull(),
+});
+
