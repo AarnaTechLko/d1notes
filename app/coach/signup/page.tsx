@@ -43,7 +43,7 @@ export default function Register() {
 
       if (!response.ok) throw new Error('Failed to send OTP.');
 
-      showSuccess('OTP sent to your email.');
+      showSuccess('A verification passcode has been sent to your email.');
       setOtpSent(true);
     } catch (err) {
       showError(err instanceof Error ? err.message : 'Something went wrong!');
@@ -153,14 +153,15 @@ if (!termsAccepted) {
 
   {otpSent && (
               <div className="mb-4">
-                <label htmlFor="otp" className="block text-gray-700 text-sm font-semibold mb-2">
-                  OTP
+                <label htmlFor="otp" className="block text-gray-700 text-sm font-semibold mb-0">
+                Enter Verification code, sent to your email.
                 </label>
+                <span className="text-xs text-gray-500">(Check Spam also if not found in inbox.)</span>
                 <div className="flex space-x-2">
                   {[...Array(6)].map((_, index) => (
                     <input
                       key={index}
-                      type="text"
+                      type="number"
                       name={`otp-${index}`}
                       value={formValues.otp[index] || ''} // Ensure OTP value is a string
                       maxLength={1}
