@@ -9,6 +9,9 @@ img.logo {
     height: 51px;
     width: auto;
 }
+.z-10{
+  z-index:100 !important;
+}
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
