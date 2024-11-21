@@ -41,6 +41,7 @@ export const users = pgTable(
     countrycode:text("countrycode"),
     password: text("password").notNull(),
     enterprise_id: text("enterprise_id"),
+    coach_id: text("coach_id"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (users) => {

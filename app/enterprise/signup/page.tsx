@@ -209,7 +209,7 @@ export default function Signup() {
       {/* Form Section */}
       <div className="flex-1 bg-white p-6 md:p-12 rounded-lg shadow-md">
         <div className="w-full">
-          <h2 className="text-2xl font-bold mb-4 text-left">Enterprise Sign Up</h2>
+          <h2 className="text-2xl font-bold mb-4 text-left">Club Sign Up</h2>
 
           <form onSubmit={handleSubmit}>
             {/* Organization Name */}

@@ -237,7 +237,7 @@ const Header: React.FC = () => {
                           </li>
                           <li className="pt-[8px]">
                             <Link href="/enterprise/signup" className="block px-4 py-2 text-black hover:bg-blue-300" onClick={() => setCreateAccountOpen(false)}>
-                              Enterprise Signup
+                              Club Signup
                             </Link>
                           </li>
                         </ul>

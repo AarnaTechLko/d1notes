@@ -691,7 +691,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             value={formValues.license}
             onChange={handleChange}
           />
-          <p className="text-xs text-gray-500">( You can copy License key from <a href="/enterprise/licenses" target="_blank">Here</a> )</p>
+          <p className="text-xs text-gray-500">( You can copy License key from <a href="/coach/licenses" target="_blank">Here</a> )</p>
           {formErrors.license && <p className="text-red-500 text-sm">{formErrors.license}</p>}
         </div>
         </div>

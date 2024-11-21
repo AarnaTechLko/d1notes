@@ -131,7 +131,7 @@ export default function Login() {
                     disabled={loading}
                     className="form-radio"
                   />
-                  <span className="ml-2">Enterprise</span>
+                  <span className="ml-2">Club</span>
                 </label>
               </div>
               <div className="mb-4">

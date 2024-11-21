@@ -282,7 +282,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("/api/enterprise/player/signup", {
+      const response = await fetch("/api/coach/player/signup", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`, // Send token in Authorization header
@@ -689,7 +689,7 @@ if (!response.ok) {
             value={formValues.license}
             onChange={handleChange}
           />
-          <p className="text-xs text-gray-500">( You can copy License key from <a href="/enterprise/licenses" target="_blank">Here</a> )</p>
+          <p className="text-xs text-gray-500">( You can copy License key from <a href="/coach/licenses" target="_blank">Here</a> )</p>
           {validationErrors.license && <p className="text-red-500 text-sm">{validationErrors.license}</p>}
         </div>
         </div>
