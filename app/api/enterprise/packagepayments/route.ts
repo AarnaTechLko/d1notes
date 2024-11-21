@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { db } from '../../../lib/db';
+import { db } from '../../../../lib/db';
 import { orderHistory, enterprises, licenses, packages } from '@/lib/schema';
 import { eq, and, count } from 'drizzle-orm';
 
@@ -113,11 +113,12 @@ export async function GET(req: NextRequest) {
         for (const randomString of randomStrings) {
           await db.insert(licenses).values({
            enterprise_id: updatedepayment[0].enterprise_id,
-           buyer_type:"Enterprise",
+            
             package_id: updatedepayment[0].package_id,
             payment_info: sessionId,
             licenseKey: randomString,  // Insert individual random string
             status: 'Free',
+            buyer_type: 'Enterprise',
             createdAt: new Date(),
           });
         }

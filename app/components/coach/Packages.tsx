@@ -12,7 +12,7 @@ interface PackageData {
   const Packages: React.FC = () => {
     const handleBuyNow = async (pkgId: string, amount: number) => {
         const stripe = await stripePromise;
-        const response = await fetch('/api/enterprise/packagepayments', {
+        const response = await fetch('/api/coach/packagepayments', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

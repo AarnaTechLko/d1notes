@@ -18,7 +18,7 @@ const PaymentDonePage: NextPage<{ searchParams: { session_id?: string } }> = ({ 
 
   const fetchPaymentDetails = async (session_id: string): Promise<void> => {
     try {
-      const response = await fetch(`/api/enterprise/packagepayments?session_id=${session_id}`, {
+      const response = await fetch(`/api/coach/packagepayments?session_id=${session_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const PaymentDonePage: NextPage<{ searchParams: { session_id?: string } }> = ({ 
           </p>
         </div>
         <button className="w-full py-2 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200">
-          <a href="/enterprise/dashboard">Go to Dashboard</a>
+          <a href="/coach/dashboard">Go to Dashboard</a>
         </button>
       </div>
     </div>

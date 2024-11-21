@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { db } from '../../../lib/db';
+import { db } from '../../../../lib/db';
 import { orderHistory, enterprises, licenses, packages } from '@/lib/schema';
 import { eq, and, count } from 'drizzle-orm';
 
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/enterprise/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/enterprise/PaymentCancel`,
+      success_url: `${req.headers.get('origin')}/coach/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get('origin')}/coach/PaymentCancel`,
     });
 
     await db.insert(orderHistory).values({
@@ -113,11 +113,12 @@ export async function GET(req: NextRequest) {
         for (const randomString of randomStrings) {
           await db.insert(licenses).values({
            enterprise_id: updatedepayment[0].enterprise_id,
-           buyer_type:"Enterprise",
+            
             package_id: updatedepayment[0].package_id,
             payment_info: sessionId,
             licenseKey: randomString,  // Insert individual random string
             status: 'Free',
+            buyer_type: 'Coach',
             createdAt: new Date(),
           });
         }
