@@ -137,14 +137,14 @@ export async function GET(req: NextRequest) {
   
     const whereClause = search
       ? and(
-        eq(users.enterprise_id, enterprise_id),
+        eq(users.coach_id, enterprise_id),
         or(
           ilike(users.first_name, `%${search}%`),
           ilike(users.email, `%${search}%`),
           ilike(users.number, `%${search}%`)
         )
       )
-      : eq(users.enterprise_id, enterprise_id);
+      : eq(users.coach_id, enterprise_id);
   
     const coachesData = await db
       .select()

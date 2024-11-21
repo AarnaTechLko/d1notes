@@ -19,7 +19,7 @@ const players=await db.select({
     id: users.id,
     first_name: users.first_name,
     last_name: users.last_name,
-    image: users.image}).from(users).where(eq(users.enterprise_id,enterprise_id));
+    image: users.image}).from(users).where(eq(users.coach_id,enterprise_id));
 
 return NextResponse.json(players, { status: 200 });
 

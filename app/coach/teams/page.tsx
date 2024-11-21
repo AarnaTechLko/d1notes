@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import TeamModal from "@/app/components/enterprise/TeamModal";
-import Sidebar from "@/app/components/enterprise/Sidebar";
+import TeamModal from "@/app/components/coach/TeamModal";
+import Sidebar from "@/app/components/coach/Sidebar";
 import { useSession } from "next-auth/react";
 // Define types for better TypeScript compliance
 type Team = {
@@ -39,7 +39,7 @@ export default function TeamsPage() {
     }
 
     try {
-      const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
+      const res = await fetch(`/api/coach/teams?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch teams");
       const { data, teamplayersList }: { data: Team[]; teamplayersList: any[] } = await res.json();
       setTeams(data);
@@ -63,7 +63,7 @@ export default function TeamsPage() {
     }
 
     try {
-      const res = await fetch("/api/enterprise/player", {
+      const res = await fetch("/api/coach/player", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }), // Include `id` if editing
       };
-      await fetch("/api/teams", {
+      await fetch("/api/coach/teams", {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -116,7 +116,7 @@ export default function TeamsPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      await fetch("/api/teams", {
+      await fetch("/api/coach/teams", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -162,7 +162,7 @@ export default function TeamsPage() {
         playerIds: selectedPlayers,
       };
   
-      const res = await fetch("/api/enterprise/teams/assignPlayers", {
+      const res = await fetch("/api/coach/teams/assignPlayers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

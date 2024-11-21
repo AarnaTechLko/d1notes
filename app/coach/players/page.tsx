@@ -45,7 +45,7 @@ const Home: React.FC = () => {
       }
 
       const response = await fetch(
-        `/api/enterprise/player/signup?enterprise_id=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
+        `/api/coach/player/signup?enterprise_id=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
       
       );
 
