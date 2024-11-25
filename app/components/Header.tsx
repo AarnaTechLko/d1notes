@@ -128,12 +128,12 @@ const Header: React.FC = () => {
                     <>
                     <li className="pt-[8px]">
                       <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
-                        Browse Coaches
+                         Coaches
                       </Link>
                     </li>
                     <li className="pt-[8px]">
                     <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Clubs
+                       Clubs
                     </Link>
                   </li>
                   </>
@@ -222,22 +222,22 @@ const Header: React.FC = () => {
                  
                   <li>
                     <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Coaches
+                       Coaches
                     </Link>
                   </li>
                   <li >
                     <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Clubs
+                       Clubs
                     </Link>
                   </li>
                   <li >
                     <Link href="/browse/teams" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Teams
+                       Teams
                     </Link>
                   </li>
                   <li >
                     <Link href="/browse/players" className="text-black hover:text-black-300" onClick={closeMenu}>
-                      Browse Players
+                       Players
                     </Link>
                   </li>
                   <li ref={createAccountRef} className="relative">
