@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import ProfileCard from '../../components/enterprise/ProfileCard';
+import ProfileCard from '@/app/components/players/ProfileCard';
 import SearchFilter from '../../components/SearchFilter';
 import Head from 'next/head';
 import Loading from '../../components/Loading';
@@ -8,10 +8,13 @@ import Filters from '../../components/Filters';
 
 // Define a type for the profile
 interface Profile {
-  organizationName: string;
-  country: string;
-  logo: string;
+  coachName: string;
+  enterpriseName: string;
+  firstName: string;
+  lastName: string;
+  image: string;
   slug: string;
+  rating:number;
   
 }
 
@@ -63,7 +66,7 @@ const Home = () => {
     setFilteredProfiles(
       profiles.filter((profile) => {
         
-        const organizationName = (profile.organizationName || '').toLowerCase();
+        const organizationName = (profile.firstName || '').toLowerCase();
        
     
         return (
@@ -102,12 +105,17 @@ const Home = () => {
                 <div className="w-full lg:w-auto" key={profile.slug}>
                   <ProfileCard
                     key={profile.slug}
+                    rating={5}
+                    coachName={profile.coachName}
+                    enterpriseName={profile.enterpriseName}
+                    firstName={profile.firstName}
+                    lastName={profile.lastName}
+                    image={profile.image ?? '/default-image.jpg'}
                    
-                    organization={profile.organizationName}
-                    logo={profile.logo ?? '/default-image.jpg'}
-                    country={profile.country}
                     slug={profile.slug}
                   />
+
+
                 </div>
               ))}
             </div>
