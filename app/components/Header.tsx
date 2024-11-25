@@ -125,11 +125,18 @@ const Header: React.FC = () => {
               {session ? (
                 <>
                   {session?.user?.type === 'player' && isUserImageAvailable && (
+                    <>
                     <li className="pt-[8px]">
                       <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
                         Browse Coaches
                       </Link>
                     </li>
+                    <li className="pt-[8px]">
+                    <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
+                      Browse Clubs
+                    </Link>
+                  </li>
+                  </>
                   )}
                   {session?.user?.type === 'coach' && (
                     <>
@@ -216,6 +223,21 @@ const Header: React.FC = () => {
                   <li>
                     <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
                       Browse Coaches
+                    </Link>
+                  </li>
+                  <li >
+                    <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
+                      Browse Clubs
+                    </Link>
+                  </li>
+                  <li >
+                    <Link href="/browse/teams" className="text-black hover:text-black-300" onClick={closeMenu}>
+                      Browse Teams
+                    </Link>
+                  </li>
+                  <li >
+                    <Link href="/browse/players" className="text-black hover:text-black-300" onClick={closeMenu}>
+                      Browse Players
                     </Link>
                   </li>
                   <li ref={createAccountRef} className="relative">

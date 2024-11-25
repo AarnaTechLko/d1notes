@@ -25,7 +25,7 @@ const formSchema = z.object({
   state: z.string().min(1, 'State is required.'),
   city: z.string().min(1, 'City is required.'),
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
-  otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required
+  //otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required
   loginAs: z.literal('enterprise'),
   logo:z.string(), // File instance for logo
   affiliationDocs: z.string(), // File instance for PDF docs
@@ -47,7 +47,7 @@ export default function Signup() {
     state: '',
     city: '',
     password: '',
-    otp: '',
+    //otp: '',
     loginAs: 'enterprise',
     logo: '',
     affiliationDocs:'',
@@ -282,9 +282,9 @@ export default function Signup() {
       value={formValues.mobileNumber}
       onChange={handlePhoneNumberChange}
       maxLength={14} 
-      onFocus={() => {
-        if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
-      }}
+      // onFocus={() => {
+      //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
+      // }}
     />
   </div>
           
@@ -409,23 +409,23 @@ export default function Signup() {
                       key={index}
                       type="number"
                       name={`otp-${index}`}
-                      value={formValues.otp[index] || ''} // Ensure OTP value is a string
+                     /// value={formValues.otp[index] || ''} // Ensure OTP value is a string
                       maxLength={1}
                       className="w-12 h-12 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      onChange={(e) => {
-                        const newOtp = formValues.otp.split('');
-                        newOtp[index] = e.target.value;
-                        setFormValues({
-                          ...formValues,
-                          otp: newOtp.join(''),
-                        });
+                      // onChange={(e) => {
+                      //   const newOtp = formValues.otp.split('');
+                      //   newOtp[index] = e.target.value;
+                      //   setFormValues({
+                      //     ...formValues,
+                      //     otp: newOtp.join(''),
+                      //   });
 
-                        // Move focus to next input if current input is filled
-                        if (e.target.value && index < 5) {
-                          const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`) as HTMLInputElement;
-                          nextInput?.focus();
-                        }
-                      }}
+                      //   // Move focus to next input if current input is filled
+                      //   if (e.target.value && index < 5) {
+                      //     const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`) as HTMLInputElement;
+                      //     nextInput?.focus();
+                      //   }
+                      // }}
                       onKeyUp={(e) => {
                         // Move focus to previous input if backspace is pressed
                         if (e.key === 'Backspace' && index > 0) {

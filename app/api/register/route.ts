@@ -33,14 +33,15 @@ export async function POST(req: NextRequest) {
   .limit(1)
   .execute();
 
-  if(existingOtp.length < 1)
-  {
-    return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
-  }
+  // if(existingOtp.length < 1)
+  // {
+  //   return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
+  // }
     
   const hashedPassword = await hash(password, 10);
 
   try {
+    
     const insertedUser = await db.insert(users).values({
       first_name: null,
       last_name: null,
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
       state:null,
       city:null,
       jersey:null,
+      slug:null,
       password: hashedPassword, // Store the hashed password
       createdAt: new Date(), // Store the current timestamp as createdAt
     }).returning();
@@ -109,6 +111,9 @@ export async function PUT(req: NextRequest) {
   
   const playerIDAsNumber = parseInt(playerID, 10);
   try{
+    const timestamp = Date.now(); 
+    const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
+
   const updatedUser = await db
     .update(users)
     .set({
@@ -129,7 +134,8 @@ export async function PUT(req: NextRequest) {
       jersey:jersey||null,
       league:league||null,
       countrycode:league||null,
-      image:imageFile
+      image:imageFile,
+      slug:slug
 
     })
     .where(eq(users.id, playerIDAsNumber))

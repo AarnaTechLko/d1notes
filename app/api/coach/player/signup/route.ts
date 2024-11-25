@@ -67,6 +67,8 @@ export async function POST(req: NextRequest) {
   .join('');
   const hashedPassword = await hash(randomPassword, 10);
   try{
+    const timestamp = Date.now(); 
+    const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
   const user = await db
     .insert(users)
   
@@ -92,6 +94,7 @@ export async function POST(req: NextRequest) {
             countrycode: countrycode,
             image: imageFile,
             password: hashedPassword,
+            slug:slug
           })
 
      .returning();

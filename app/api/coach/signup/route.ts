@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
   ))
   .limit(1)
   .execute();
-  if(existingOtp.length < 1)
-    {
-      return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
-    }
+  // if(existingOtp.length < 1)
+  //   {
+  //     return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
+  //   }
     const hashedPassword = await hash(password, 10);
     
     const insertedUser = await db.insert(coaches).values({

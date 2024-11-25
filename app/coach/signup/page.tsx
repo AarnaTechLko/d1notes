@@ -12,14 +12,15 @@ import TermsAndConditions from '@/app/components/TermsAndConditions';
 const formSchema = z.object({
   email: z.string().email('Invalid email format.'),
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
-  otp: z.string().min(6, 'OTP must be 6 characters.'),
+ /// otp: z.string().min(6, 'OTP must be 6 characters.'),
   loginAs: z.literal('coach'), // In case loginAs should always be 'player'
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Register() {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach', otp:'' });
+  ////const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach',otp:'' });
+  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach' });
   const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -143,9 +144,9 @@ if (!termsAccepted) {
                   value={formValues.password}
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onChange={handleChange}
-                  onFocus={() => {
-                    if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
-                  }}
+                  // onFocus={() => {
+                  //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
+                  // }}
                 />
                  {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500" />}
               </div>
@@ -163,23 +164,23 @@ if (!termsAccepted) {
                       key={index}
                       type="number"
                       name={`otp-${index}`}
-                      value={formValues.otp[index] || ''} // Ensure OTP value is a string
+                     /// value={formValues.otp[index] || ''} // Ensure OTP value is a string
                       maxLength={1}
                       className="w-12 h-12 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      onChange={(e) => {
-                        const newOtp = formValues.otp.split('');
-                        newOtp[index] = e.target.value;
-                        setFormValues({
-                          ...formValues,
-                          otp: newOtp.join(''),
-                        });
+                      // onChange={(e) => {
+                      //   const newOtp = formValues.otp.split('');
+                      //   newOtp[index] = e.target.value;
+                      //   setFormValues({
+                      //     ...formValues,
+                      //     otp: newOtp.join(''),
+                      //   });
 
-                        // Move focus to next input if current input is filled
-                        if (e.target.value && index < 5) {
-                          const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`) as HTMLInputElement;
-                          nextInput?.focus();
-                        }
-                      }}
+                      //   // Move focus to next input if current input is filled
+                      //   if (e.target.value && index < 5) {
+                      //     const nextInput = document.querySelector(`input[name="otp-${index + 1}"]`) as HTMLInputElement;
+                      //     nextInput?.focus();
+                      //   }
+                      // }}
                       onKeyUp={(e) => {
                         // Move focus to previous input if backspace is pressed
                         if (e.key === 'Backspace' && index > 0) {

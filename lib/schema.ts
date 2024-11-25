@@ -42,6 +42,7 @@ export const users = pgTable(
     password: text("password").notNull(),
     enterprise_id: text("enterprise_id"),
     coach_id: text("coach_id"),
+    slug: text("slug"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (users) => {
@@ -226,8 +227,8 @@ export const teams=pgTable('teams', {
   logo: text('logo').notNull(),
   description: text('description').notNull(),
   created_by: text('created_by').notNull(),
+  slug: text('slug').notNull(),
   creator_id: integer('creator_id').notNull(),
- 
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

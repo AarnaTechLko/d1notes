@@ -26,7 +26,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const { team_name, description, logo, created_by, creator_id } = await req.json();
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id }).returning();
+  const timestamp = Date.now(); 
+  const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug }).returning();
   return NextResponse.json(result);
 }
 
