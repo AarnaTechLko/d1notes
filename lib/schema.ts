@@ -43,6 +43,7 @@ export const users = pgTable(
     enterprise_id: text("enterprise_id"),
     coach_id: text("coach_id"),
     slug: text("slug"),
+    status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (users) => {
@@ -77,6 +78,7 @@ export const coaches = pgTable(
     password: text("password").notNull(),
     certificate:text("certificate"),
     countrycode:text("countrycode"),
+    status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (coaches) => {

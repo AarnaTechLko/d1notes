@@ -17,8 +17,8 @@ export async function GET(req: NextRequest) {
   // const rating = searchParams.get('rating') || '';  
 
   try {
-    const conditions = [isNotNull(teams.team_name)];
-
+   // const conditions = [eq(users.status, 'Active')];
+    
 
     //   if (country) {
     //     conditions.push(eq(teams.country, country));
@@ -69,7 +69,8 @@ export async function GET(req: NextRequest) {
       .leftJoin(
         sql`coaches AS coa`, // Alias defined here
         sql`${users.coach_id}::integer = coa.id`
-      );
+      )
+      .where(eq(users.status, 'Active'));
 
     const result = await query.execute();
 

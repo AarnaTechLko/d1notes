@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import PlayerForm from '@/app/components/enterprise/PlayerForm';
+import { showError, showSuccess } from '@/app/components/Toastr';
 
 // Define the type for the coach data
 interface Coach {
@@ -16,7 +17,7 @@ interface Coach {
   gender: string;
   sport: string;
   expectedCharge: string;
- 
+  status:string;
   position: string;
   team: string;
 }
@@ -27,7 +28,10 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [selectedCoach, setSelectedCoach] =useState<Coach | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
+  const [licenseKey, setLicenseKey] = useState<string>('');
   const limit = 10; // Items per page
 
   const { data: session } = useSession();
@@ -63,7 +67,46 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
+  const handleLicenseKeySubmit = async () => {
+    try {
+      const session = await getSession();
+      const enterpriseId = session?.user?.id;
 
+      if (!enterpriseId || !selectedCoach) {
+        console.error('Missing required data');
+        return;
+      }
+
+      const response = await fetch('/api/enterprise/player/updatestatus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          coach_id: selectedCoach.id,
+          licenseKey: licenseKey,
+         
+          
+        }),
+      });
+
+      if (response.ok) {
+        showSuccess('License assigned successfully');
+        fetchCoaches(currentPage, search);
+        setShowLicenseNoModal(false);
+      } else {
+        const errorData = await response.json();
+        const errorMessage = errorData.message || 'Failed to Change Status';
+        showError(errorMessage);
+        setShowLicenseNoModal(true);
+      }
+    } catch (error) {
+      console.error('Error assigning license:', error);
+    } finally {
+     
+      setLicenseKey('');
+    }
+  };
   useEffect(() => {
     fetchCoaches(currentPage, search);
   }, [currentPage, search]);
@@ -80,7 +123,10 @@ const Home: React.FC = () => {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to the first page
   };
-
+  const handleEnterLicense = (coach: Coach) => {
+    setSelectedCoach(coach);
+    setShowLicenseNoModal(true);
+  };
   const handleSubmitCoachForm = async (formData: any) => {
     try {
       const response = await fetch('/api/enterprise/player/signup', {
@@ -136,6 +182,7 @@ const Home: React.FC = () => {
                   <th>Sport</th>
                   <th>Team</th>
                   <th>Position</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -155,6 +202,15 @@ const Home: React.FC = () => {
                       <td>{coach.sport}</td>
                       <td>{coach.team}</td>
                       <td>{coach.position}</td>
+                      <td>{coach.status === 'Inactive' ? (
+    <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
+      {coach.status}
+    </button>
+  ) : (
+    <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+      {coach.status}
+    </button>
+  )}</td>
                       <td>
 
                         <a href={`/coach/${coach.id}`} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" target='_blank'>Delete</a>
@@ -200,7 +256,35 @@ const Home: React.FC = () => {
             </button>
           </div>
         </div>
-
+        {showLicenseNoModal && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg w-96">
+              <h2 className="text-2xl font-semibold mb-4">Enter License Key</h2>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-lg mb-4"
+                value={licenseKey}
+                onChange={(e) => setLicenseKey(e.target.value)}
+                placeholder="Enter License Key"
+              />
+                <p className="text-xs text-gray-500">( You can copy License key from <a href="/coach/licenses" target="_blank">Here</a> )</p>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowLicenseNoModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleLicenseKeySubmit}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">

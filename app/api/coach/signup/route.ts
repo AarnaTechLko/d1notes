@@ -138,7 +138,7 @@ export async function GET(req: NextRequest) {
   try {
     const conditions = [isNotNull(coaches.firstName)];
     
-    
+    conditions.push(eq(coaches.status,'Active'));
     if (country) {
       conditions.push(eq(coaches.country, country));
     }
