@@ -146,6 +146,11 @@ const Header: React.FC = () => {
                         </Link>
                       </li>
                       <li className="pt-[8px]">
+                        <Link href="/coach/invitation" className="text-black hover:text-black-300" onClick={closeMenu}>
+                          Send Invitation
+                        </Link>
+                      </li>
+                      <li className="pt-[8px]">
                         <Link href="/coach/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={closeMenu}>
                           Hello, {session?.user?.name || "Coach"}!
                         </Link>

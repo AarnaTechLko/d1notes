@@ -5,6 +5,7 @@ import Sidebar from "../../components/enterprise/Sidebar";
 import { getSession, useSession, signIn } from "next-auth/react";
 import Packages from "@/app/components/enterprise/Packages";
 import DashboardContent from "@/app/components/enterprise/Dashboard";
+import InviteForm from "@/app/components/InviteForm";
 
 
 const Dashboard: React.FC = () => {
@@ -62,6 +63,9 @@ const Dashboard: React.FC = () => {
    <DashboardContent/>
 )}
           
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 ">
+        <InviteForm usertype="Club"/>
         </div>
       </main>
     </div>

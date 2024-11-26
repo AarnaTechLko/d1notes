@@ -1,12 +1,15 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Brand from '../public/images/brand.jpg';
 import Image from 'next/image';
+import crypto from 'crypto';
 import { showError, showSuccess } from '../components/Toastr';
 import { z } from 'zod';
 import { FaCheck, FaSpinner } from 'react-icons/fa';
 import TermsAndConditions from '../components/TermsAndConditions';
+import { useSearchParams } from 'next/navigation';
+import Email from 'next-auth/providers/email';
 
 // Zod schema for validation - Removed .optional() to make 'otp' a required string
 const formSchema = z.object({
@@ -14,6 +17,8 @@ const formSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
   ///otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required to be 6 characters
   loginAs: z.literal('player'),
+  referenceId: z.string().optional(),
+  sendedBy: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -24,13 +29,57 @@ export default function Register() {
     password: '',
     //otp: '', // Ensure otp is always a string
     loginAs: 'player',
+    referenceId: '',
+    sendedBy: ''
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otpLoading, setOtpLoading] = useState<boolean>(false); // Loader state for OTP
+  const [referenceId, setReferenceId] = useState<string | null | undefined>();
+  const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
+  const [email, setEmail] = useState<string | null | undefined>();
+  const [sendedBy, setSendedBy] = useState<string | null | undefined>();
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Set isClient to true once the component has mounted on the client
+    setIsClient(true);
+  }, []);
+  
+
+  useEffect(() => {
+    if (!isClient) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptedUid = urlParams.get('uid');
+    const sendBy = urlParams.get('by'); 
+    if (typeof encryptedUid === 'string') {
+      try {
+        const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
+        const decryptedData = decryptData(encryptedUid, secretKey);
+        console.log('Decrypted data:', decryptedData);
+        setReferenceId(decryptedData.userId);
+        setReferenceEmail(decryptedData.singleEmail);
+        setEmail(decryptedData.singleEmail);
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          email: decryptedData.singleEmail || '',
+        }));
+        
+        
+      } catch (error) {
+        console.error('Decryption failed:', error);
+      }
+    }
+
+    if (sendBy) {
+
+      setSendedBy(sendBy || undefined);
+    }
+  }, [isClient]);
+
   useEffect(() => {
     if (session && !session.user.name) {
       window.location.href = '/completeprofile';
@@ -77,34 +126,59 @@ export default function Register() {
 
     setLoading(true);
     try {
+      const payload = { ...formValues };
+      if (referenceId) {
+        payload.referenceId = referenceId;
+        payload.email = referenceEmail || '';
+        payload.sendedBy = sendedBy || '';
+      } else {
+        delete payload.referenceId;  
+        delete payload.sendedBy; 
+         
+      }
+
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Something went wrong!');
       }
+      else {
+        const res = await signIn('credentials', {
+          redirect: false,
+          email: formValues.email,
+          password: formValues.password,
+          loginAs: formValues.loginAs,
+        });
 
-      const res = await signIn('credentials', {
-        redirect: false,
-        email: formValues.email,
-        password: formValues.password,
-        loginAs: formValues.loginAs,
-      });
+        //window.location.href = '/completeprofile';
+      }
 
-      window.location.href = '/completeprofile';
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : 'Something went wrong!');
     }
   };
 
+  const decryptData = (encryptedString: string, secretKey: string) => {
+    const [ivHex, encrypted] = encryptedString.split(':');
+    const iv = Buffer.from(ivHex, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
+
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return JSON.parse(decrypted);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
+ 
     if (name === "email") {
       setOtpSent(false); // Reset OTP sent status if email changes
     }
@@ -120,14 +194,15 @@ export default function Register() {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                Email
+                Email 
               </label>
               <input
                 type="text"
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 name="email"
-                value={formValues.email}
                 onChange={handleChange}
+                value={email || formValues.email}
+                readOnly={!!referenceEmail}
                 autoComplete="off"
               />
             </div>
@@ -142,9 +217,9 @@ export default function Register() {
                 value={formValues.password}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleChange}
-                // onFocus={() => {
-                //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
-                // }}
+              // onFocus={() => {
+              //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
+              // }}
               />
               {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />}
             </div>
@@ -152,8 +227,8 @@ export default function Register() {
             {otpSent && (
               <div className="mb-4">
                 <label htmlFor="otp" className="block text-gray-700 text-sm font-semibold mb-0">
-                Enter Verification code, sent to your email.
-                 
+                  Enter Verification code, sent to your email.
+
                 </label>
                 <span className="text-xs text-gray-500">(Check Spam also if not found in inbox.)</span>
                 <div className="flex space-x-2">
@@ -227,13 +302,13 @@ export default function Register() {
           </form>
           <p className="text-center text-gray-600 text-sm mt-4">
             Already have an account?{' '}
-            <a href="/login"  className="text-blue-500 hover:underline">
+            <a href="/login" className="text-blue-500 hover:underline">
               Login
             </a>
           </p>
         </div>
-        <TermsAndConditions  isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
-      
+        <TermsAndConditions isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
       </div>
 
       {/* Brand Section */}

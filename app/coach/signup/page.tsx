@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Brand from '../../public/images/brand.jpg';
 import Image from 'next/image';
+import crypto from 'crypto';
 import { showError, showSuccess } from '../../components/Toastr';
 import { z } from 'zod';
 import { FaCheck, FaSpinner } from 'react-icons/fa';
 import TermsAndConditions from '@/app/components/TermsAndConditions';
+import { useSearchParams } from 'next/navigation';
 
 // Zod schema for validation
 const formSchema = z.object({
@@ -14,20 +16,63 @@ const formSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
  /// otp: z.string().min(6, 'OTP must be 6 characters.'),
   loginAs: z.literal('coach'), // In case loginAs should always be 'player'
+  referenceId: z.string().optional(),
+  sendedBy: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Register() {
   ////const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach',otp:'' });
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach' });
+  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach', referenceId: '',
+    sendedBy: '' });
   const [error, setError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otpLoading, setOtpLoading] = useState<boolean>(false); 
+  const [referenceId, setReferenceId] = useState<string | null | undefined>();
+  const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
+  const [email, setEmail] = useState<string | null | undefined>();
+  const [sendedBy, setSendedBy] = useState<string | null | undefined>();
   const { data: session } = useSession();
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    // Set isClient to true once the component has mounted on the client
+    setIsClient(true);
+  }, []);
+  
+  
+  useEffect(() => {
+    if (!isClient) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptedUid = urlParams.get('uid');
+    const sendBy = urlParams.get('by'); 
+    if (typeof encryptedUid === 'string') {
+      try {
+        const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
+        const decryptedData = decryptData(encryptedUid, secretKey);
+        console.log('Decrypted data:', decryptedData);
+        setReferenceId(decryptedData.userId);
+        setReferenceEmail(decryptedData.singleEmail);
+        setEmail(decryptedData.singleEmail);
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          email: decryptedData.singleEmail || '',
+        }));
+        
+        
+      } catch (error) {
+        console.error('Decryption failed:', error);
+      }
+    }
+
+    if (sendBy) {
+
+      setSendedBy(sendBy || undefined);
+    }
+  }, [isClient]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sendOtp = async () => {
     if (!formSchema.shape.email.safeParse(formValues.email).success) {
@@ -70,10 +115,23 @@ if (!termsAccepted) {
 
     setLoading(true);
     try {
+      
+      const payload = { ...formValues };
+      if (referenceId) {
+        payload.referenceId = referenceId;
+        payload.email = referenceEmail || '';
+        payload.sendedBy = sendedBy || '';
+      } else {
+        delete payload.referenceId;  
+        delete payload.sendedBy; 
+         
+      }
+      console.log(payload);
+      
       const response = await fetch('/api/coach/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -104,7 +162,16 @@ if (!termsAccepted) {
       setOtpSent(false); // Reset OTP sent status if email changes
     }
   };
+  const decryptData = (encryptedString: string, secretKey: string) => {
+    const [ivHex, encrypted] = encryptedString.split(':');
+    const iv = Buffer.from(ivHex, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
 
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return JSON.parse(decrypted);
+  };
   useEffect(() => {
     if (session && !session.user.name) {
       window.location.href = '/coach/completeprofile';
@@ -124,7 +191,7 @@ if (!termsAccepted) {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Email
+                  Email 
                 </label>
                 <input
                   type="text"

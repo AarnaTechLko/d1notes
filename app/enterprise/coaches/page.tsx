@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import CoachForm from '@/app/components/enterprise/CoachForm';
+import { showError, showSuccess } from '@/app/components/Toastr';
 
 // Define the type for the coach data
 interface Coach {
@@ -27,6 +28,9 @@ const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLicenseModal, setShowLicenseModal] = useState<boolean>(false);
+  const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
+  const [licenseCount, setLicenseCount] = useState<number>(0);
   const limit = 10; // Items per page
 
   const { data: session } = useSession();
@@ -45,7 +49,6 @@ const Home: React.FC = () => {
 
       const response = await fetch(
         `/api/enterprise/coach/signup?enterprise_id=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
-      
       );
 
       if (!response.ok) {
@@ -89,7 +92,6 @@ const Home: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
-      fetchCoaches(currentPage, search);
       if (response.ok) {
         console.log('Coach added successfully');
         fetchCoaches(); // Refresh data table
@@ -100,6 +102,50 @@ const Home: React.FC = () => {
       console.error('Error adding coach:', error);
     } finally {
       setShowModal(false);
+    }
+  };
+
+  const handleAssignLicense = (coach: Coach) => {
+    setSelectedCoach(coach);
+    setShowLicenseModal(true);
+  };
+
+  const handleLicenseSubmit = async () => {
+    try {
+      const session = await getSession();
+      const enterpriseId = session?.user?.id;
+
+      if (!enterpriseId || !selectedCoach) {
+        console.error('Missing required data');
+        return;
+      }
+
+      const response = await fetch('/api/enterprise/coach/assignLicense', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          coach_id: selectedCoach.id,
+          enterprise_id: enterpriseId,
+          licenseCount: licenseCount,
+        }),
+      });
+
+      if (response.ok) {
+        showSuccess('License assigned successfully');
+        setShowLicenseModal(false);
+      } else {
+        const errorData = await response.json();
+        const errorMessage = errorData.message || 'Failed to assign license';
+        showError(errorMessage);
+        setShowLicenseModal(true);
+      }
+    } catch (error) {
+      console.error('Error assigning license:', error);
+    } finally {
+     
+      setLicenseCount(0);
     }
   };
 
@@ -124,60 +170,63 @@ const Home: React.FC = () => {
             </button>
           </div>
 
-        
-            <table className="w-full text-sm text-left text-gray-700 mt-4">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Gender</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Sport</th>
-                  <th>Qualification</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              {loading ? (
-            <div>Loading...</div>
-          ) : (
-              <tbody>
-                {coaches.length > 0 ? (
-                  coaches.map((coach) => (
-                    <tr key={coach.id}>
-                      <td className='text-center'> 
-                        <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto"/>
-                        {coach.firstName} {coach.lastName}</td>
-                      <td>{coach.gender}</td>
-                      <td>{coach.email}</td>
-                      <td>{coach.countrycode}{coach.phoneNumber}</td>
-                      <td>{coach.sport}</td>
-                      <td>{coach.qualifications}</td>
-                      <td>
-
-                        <a href={`/coach/${coach.slug}`} className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" target='_blank'>View</a>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7}>No coaches found</td>
+          <table className="w-full text-sm text-left text-gray-700 mt-4">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Sport</th>
+                <th>Qualification</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coaches.length > 0 ? (
+                coaches.map((coach) => (
+                  <tr key={coach.id}>
+                    <td className="text-center">
+                      <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto" />
+                      {coach.firstName} {coach.lastName}
+                    </td>
+                    <td>{coach.gender}</td>
+                    <td>{coach.email}</td>
+                    <td>{coach.countrycode}{coach.phoneNumber}</td>
+                    <td>{coach.sport}</td>
+                    <td>{coach.qualifications}</td>
+                    <td>
+                      <a
+                        href={`/coach/${coach.slug}`}
+                        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                        target="_blank"
+                      >
+                        View
+                      </a>
+                      <button
+                        onClick={() => handleAssignLicense(coach)}
+                        className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+                      >
+                        Assign License
+                      </button>
+                    </td>
                   </tr>
-                )}
-              </tbody>
-               )}
-            </table>
-         
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7}>No coaches found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
           {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-4 py-2 text-sm ${
-                currentPage === 1
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
-              }`}
+              className={`px-4 py-2 text-sm ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:underline'
+                }`}
             >
               Previous
             </button>
@@ -187,32 +236,39 @@ const Home: React.FC = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 text-sm ${
-                currentPage === totalPages
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
-              }`}
+              className={`px-4 py-2 text-sm ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:underline'
+                }`}
             >
               Next
             </button>
           </div>
         </div>
 
-        {/* Modal */}
-        {showModal && (
+        {/* License Modal */}
+        {showLicenseModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-4 rounded-lg w-11/12 max-h-[100vh] overflow-hidden relative">
-              <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
-                <h2 className="text-2xl font-semibold text-gray-800">Add Coach</h2>
+            <div className="bg-white p-4 rounded-lg w-96">
+              <h2 className="text-2xl font-semibold mb-4">Assign Licenses</h2>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg mb-4"
+                value={licenseCount}
+                onChange={(e) => setLicenseCount(Number(e.target.value))}
+                placeholder="Number of licenses"
+              />
+              <div className="flex justify-end">
                 <button
-                  onClick={() => setShowModal(false)}
-                  className="text-xl text-gray-600 hover:text-gray-900"
+                  onClick={() => setShowLicenseModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2"
                 >
-                  &times;
+                  Cancel
                 </button>
-              </div>
-              <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
-                <CoachForm onSubmit={handleSubmitCoachForm} />
+                <button
+                  onClick={handleLicenseSubmit}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>

@@ -427,6 +427,55 @@ export default function Register() {
         </div>
 
        </div>
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+        <div>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <select
+            name="country"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.country}
+            onChange={handleChange}
+          >
+            <option value="">Select</option>
+            <option value="United States of America">United States of America</option>
+           
+          </select>
+          
+          {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
+        </div>
+        <div>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          
+        
+          <select
+        name="state"
+        id="state"
+        value={formValues.state}
+        onChange={handleChange}
+        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+      >
+        <option value="">Select a state</option>
+        {states.map((state) => (
+          <option key={state.abbreviation} value={state.abbreviation}>
+            {state.name}
+          </option>
+        ))}
+      </select>
+          {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
+        </div>
+        <div>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <input
+            type="text"
+            name="city"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.city}
+            onChange={handleChange}
+          />
+          {validationErrors.city && <p className="text-red-500 text-sm">{validationErrors.city}</p>}
+        </div>
+
+        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
           <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
@@ -591,55 +640,7 @@ export default function Register() {
           {validationErrors.bio && <p className="text-red-500 text-sm">{validationErrors.bio}</p>}
         </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
-        <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
-          <select
-            name="country"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.country}
-            onChange={handleChange}
-          >
-            <option value="">Select</option>
-            <option value="United States of America">United States of America</option>
-           
-          </select>
-          
-          {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
-        </div>
-        <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
-          
         
-          <select
-        name="state"
-        id="state"
-        value={formValues.state}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-      >
-        <option value="">Select a state</option>
-        {states.map((state) => (
-          <option key={state.abbreviation} value={state.abbreviation}>
-            {state.name}
-          </option>
-        ))}
-      </select>
-          {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
-        </div>
-        <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
-          <input
-            type="text"
-            name="city"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.city}
-            onChange={handleChange}
-          />
-          {validationErrors.city && <p className="text-red-500 text-sm">{validationErrors.city}</p>}
-        </div>
-
-        </div>
         
 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
   <button

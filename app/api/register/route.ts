@@ -18,31 +18,31 @@ export async function POST(req: NextRequest) {
 
   const logError = debug('app:error');
   const body = await req.json();
-  const { email, password, otp } = body;
+  const { email, password, otp, sendedBy, referenceId } = body;
+
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
   }
 
   const existingOtp = await db
-  .select()
-  .from(otps)
-  .where(and(
-    eq(otps.email, email), 
-    eq(otps.otp, otp)
-  ))
-  .limit(1)
-  .execute();
+    .select()
+    .from(otps)
+    .where(and(
+      eq(otps.email, email), 
+      eq(otps.otp, otp)
+    ))
+    .limit(1)
+    .execute();
 
   // if(existingOtp.length < 1)
   // {
   //   return NextResponse.json({ message: 'OTP Do not match. Enter valid OTP.' }, { status: 400 });
   // }
-    
+
   const hashedPassword = await hash(password, 10);
 
   try {
-    
-    const insertedUser = await db.insert(users).values({
+    let userValues: any = {
       first_name: null,
       last_name: null,
       grade_level: null,
@@ -55,34 +55,45 @@ export async function POST(req: NextRequest) {
       number: null,
       email: email,
       image: null,
-      bio:null,
-      country:null,
-      state:null,
-      city:null,
-      jersey:null,
-      slug:null,
-      password: hashedPassword, // Store the hashed password
-      createdAt: new Date(), // Store the current timestamp as createdAt
-    }).returning();
+      bio: null,
+      country: null,
+      state: null,
+      city: null,
+      jersey: null,
+      slug: null,
+      password: hashedPassword,
+      createdAt: new Date(),
+    };
+
+    // Conditionally add coach_id or enterprise_id based on sendedBy and referenceId
+    if (sendedBy && referenceId) {
+      if (sendedBy === 'coach') {
+        userValues.coach_id = referenceId; // Insert referenceId into coach_id
+      } else if (sendedBy === 'enterprise') {
+        userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
+      }
+    }
+
+    const insertedUser = await db.insert(users).values(userValues).returning();
 
     const emailResult = await sendEmail({
       to: email,
       subject: "D1 NOTES Player Registration",
       text: "D1 NOTES Player Registration",
-      html: `<p>Dear Player! Your account creation as a Player on D1 NOTES has been started. </p><p>Please complete your profile in next step to enjoy the evaluation from best coaches.</p>`,
-  });
-
+      html: `<p>Dear Player! Your account creation as a Player on D1 NOTES has been started. </p><p>Please complete your profile in the next step to enjoy the evaluation from the best coaches.</p>`,
+    });
 
     return NextResponse.json({ id: insertedUser }, { status: 200 });
+
   } catch (error) {
     logError('Error registering user: %O', error);
     const err = error as any;
     if (err.constraint == 'users_email_unique') {
       return NextResponse.json({ message: "This Email ID is already in use." }, { status: 500 });
     }
-
   }
 }
+
 
 export async function PUT(req: NextRequest) {
   const logError = debug('app:error');

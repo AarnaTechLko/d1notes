@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     
     // Parse the form data
     const body = await req.json();
-    const { email, password, otp } = body;
+    const { email, password, otp,sendedBy, referenceId } = body;
 
     if (!email || !password) {
       logError('Missing required fields');
@@ -40,13 +40,18 @@ export async function POST(req: NextRequest) {
   //   }
     const hashedPassword = await hash(password, 10);
     
-    const insertedUser = await db.insert(coaches).values({
-       
+    let userValues: any = {
       email: email,
-      
       password: hashedPassword,
-      
-    }).returning();
+      createdAt: new Date(),
+    };
+
+    if (sendedBy && referenceId) {
+       if (sendedBy === 'Club') {
+        userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
+      }
+    }
+    const insertedUser = await db.insert(coaches).values(userValues).returning();
     
     const emailResult = await sendEmail({
       to: email,
@@ -113,7 +118,7 @@ export async function PUT(req: NextRequest) {
     state: state || null,
     city: city || null,
     slug: slug || null, 
-    countrycode: countrycode || null, 
+    countrycode: countrycode || null,  
     image:imageFile
   })
   .where(eq(coaches.id, coachIdAsNumber))

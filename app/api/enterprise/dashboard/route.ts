@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import { licenses, coaches} from '../../../../lib/schema';
+ 
 
 import { eq, and, gt,desc, count } from 'drizzle-orm';
 

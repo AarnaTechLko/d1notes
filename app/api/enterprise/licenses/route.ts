@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import {packages, orderHistory, enterprises, licenses} from '../../../../lib/schema';
 
-import { eq, and, gt,desc } from 'drizzle-orm';
+import { eq, and, gt,desc,or } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
 
@@ -12,7 +12,13 @@ const licenseslist = await db
   .select()
   .from(licenses)
  
-  .where(eq(licenses.enterprise_id, enterprise_id)) 
+  .where(
+    or(
+      eq(licenses.enterprise_id, enterprise_id),
+      eq(licenses.assigned_to, enterprise_id)
+    ) 
+  )
+   
   .orderBy(desc(licenses.createdAt));
 
 return NextResponse.json({ licenseslist}, { status: 200 });

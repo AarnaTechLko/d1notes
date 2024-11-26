@@ -208,6 +208,7 @@ export const licenses=pgTable('licenses', {
   licenseKey: text('licenseKey').notNull(),
   used_for:text('used_for'),
   used_by:text('used_by'),
+  assigned_to:integer('assigned_to'),
   status:text('status').notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
@@ -237,5 +238,15 @@ export const teamPlayers = pgTable("teamPlayers", {
   teamId: integer("team_id").notNull(),
   playerId: integer("player_id").notNull(),
   enterprise_id: integer("enterprise_id").notNull(),
+});
+
+export const invitations = pgTable("invitations", {
+  id: serial("id").primaryKey(),
+  sender_type: text("sender_type").notNull(),
+  sender_id: integer("sender_id").notNull(),
+  email: text("email"),
+  invitation_for: text("invitation_for"),
+  mobile: text("mobile"),
+  invitation_link:text("invitation_link")
 });
 
