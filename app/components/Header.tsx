@@ -33,8 +33,7 @@ const Header: React.FC = () => {
         callbackUrl: '/login',
       });
   
-      localStorage.removeItem('userImage');
-  
+   
       window.location.href = '/login';
     } catch (error) {
       
@@ -188,7 +187,7 @@ const Header: React.FC = () => {
                   <li className="relative" ref={dropdownRef}>
                     <button onClick={toggleDropdown} className="flex items-center">
                       <Image
-                        src={session?.user?.image || ''}
+                        src={session?.user?.image || defaultImage}
                         alt="Profile"
                         width={40}
                         height={40}
