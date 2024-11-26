@@ -27,6 +27,11 @@ export async function POST(req: NextRequest) {
     const affiliationDocs = formData.get('affiliationDocs') as string;
     const password = formData.get('password') as string;
 
+    const emailCkeck=await db.select().from(enterprises).where(eq(enterprises.email,email));
+    if(emailCkeck.length>0){
+        return NextResponse.json({ message: "Email already exists" }, { status: 500 });
+    }
+
     try {
         // Hash the password before storing it in the database
         const hashedPassword = await hash(password, 10);
