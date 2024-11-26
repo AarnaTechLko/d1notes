@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     if (sendedBy && referenceId) {
       if (sendedBy === 'coach') {
         userValues.coach_id = referenceId; // Insert referenceId into coach_id
-      } else if (sendedBy === 'enterprise') {
+      } else if (sendedBy === 'Club') {
         userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
       }
     }
