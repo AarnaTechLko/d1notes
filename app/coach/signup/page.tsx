@@ -199,6 +199,7 @@ if (!termsAccepted) {
                   name="email"
                   value={formValues.email}
                   onChange={handleChange}
+                  readOnly={!!referenceEmail}
                 />
               </div>
               <div className="mb-4">
