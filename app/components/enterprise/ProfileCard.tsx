@@ -11,7 +11,7 @@ interface ProfileCardProps {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country }) => {
   const handleRedirect = (slug: string) => {
-    window.location.href = `/clubs/${slug}`;
+    window.location.href = `/enterprise/${slug}`;
   };
 
   return (
