@@ -267,6 +267,8 @@ export default function Signup() {
       value={formValues.countryCodes} 
       onChange={handleChange}
     >
+      <option value="">Select</option>
+
      {countryCodesList.map((item) => (
         <option key={item.id} value={item.code}>
           {item.code} ({item.country})
