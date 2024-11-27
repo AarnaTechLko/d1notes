@@ -4,6 +4,7 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import CoachForm from '@/app/components/enterprise/CoachForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
+import { FaSpinner } from 'react-icons/fa';
 
 // Define the type for the coach data
 interface Coach {
@@ -29,12 +30,14 @@ const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [loadingKey, setLoadingKey] = useState<boolean>(false);
   const [showLicenseModal, setShowLicenseModal] = useState<boolean>(false);
   const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [licenseCount, setLicenseCount] = useState<number>(0);
   const [licenseKey, setLicenseKey] = useState<string>('');
   const limit = 10; // Items per page
+  
 
   const { data: session } = useSession();
 
@@ -69,6 +72,34 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleLoadLicense = async () => {
+        
+    try {
+        setLoadingKey(true);
+        const userId= session?.user.id; 
+        const response = await fetch("/api/fetchlicense", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId:userId,
+                type:"Enterprise",
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch license");
+        }
+        setLoadingKey(false);
+        const data = await response.json();
+        setLicenseKey(data.licenseKey);
+       
+    } catch (error) {
+        console.error("Error fetching license:", error);
+        alert("Failed to assign license");
+    }
+};
   useEffect(() => {
     fetchCoaches(currentPage, search);
   }, [currentPage, search]);
@@ -97,7 +128,7 @@ const Home: React.FC = () => {
       });
       if (response.ok) {
         console.log('Coach added successfully');
-        fetchCoaches(); // Refresh data table
+        fetchCoaches(currentPage, search);  /// Refresh data table
       } else {
         console.error('Failed to add coach');
       }
@@ -258,19 +289,21 @@ const Home: React.FC = () => {
 
                     </td>
                     <td>
-                      <a
-                        href={`/coach/${coach.slug}`}
-                        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                        target="_blank"
-                      >
-                        View
-                      </a>
-                      <button
-                        onClick={() => handleAssignLicense(coach)}
-                        className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-                      >
-                        Assign License
-                      </button>
+                     <div className="flex items-center space-x-2">
+  <a
+    href={`/coach/${coach.slug}`}
+    className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+    target="_blank"
+  >
+    View
+  </a>
+  <button
+    onClick={() => handleAssignLicense(coach)}
+    className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+  >
+    Assign License
+  </button>
+</div>
                     </td>
                   </tr>
                 ))
@@ -346,7 +379,22 @@ const Home: React.FC = () => {
                 onChange={(e) => setLicenseKey(e.target.value)}
                 placeholder="Enter License Key"
               />
-                <p className="text-xs text-gray-500">( You can copy License key from <a href="/coach/licenses" target="_blank">Here</a> )</p>
+              {loadingKey ? (
+                                            <>
+                                                <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                               
+                                            </>
+                                        )}
+          <button
+          type='button'
+  className="text-xs text-gray-500 underline"
+  onClick={() => handleLoadLicense()}
+>
+  Assign License
+</button>
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowLicenseNoModal(false)}

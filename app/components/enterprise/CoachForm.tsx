@@ -105,6 +105,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingKey, setLoadingKey] = useState<boolean>(false);
     const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
     const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -402,6 +403,35 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         setFormValues({ ...formValues, phoneNumber: formattedNumber });
     };
 
+    const handleAssignLicense = async () => {
+        
+        try {
+            setLoadingKey(true);
+            const userId= session?.user.id; 
+            const response = await fetch("/api/fetchlicense", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId:userId,
+                    type:"Enterprise",
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch license");
+            }
+            setLoadingKey(false);
+            const data = await response.json();
+
+            // Update the license value in formValues
+            setFormValues((prev) => ({ ...prev, license: data.licenseKey }));
+        } catch (error) {
+            console.error("Error fetching license:", error);
+            alert("Failed to assign license");
+        }
+    };
     const handleImageClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -690,8 +720,24 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.license}
             onChange={handleChange}
+            readOnly
           />
-          <p className="text-xs text-gray-500">( You can copy License key from <a href="/enterprise/licenses" target="_blank">Here</a> )</p>
+          {loadingKey ? (
+                                            <>
+                                                <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                               
+                                            </>
+                                        )}
+          <button
+          type='button'
+  className="text-xs text-gray-500 underline"
+  onClick={() => handleAssignLicense()}
+>
+  Assign License
+</button>
           {formErrors.license && <p className="text-red-500 text-sm">{formErrors.license}</p>}
         </div>
         </div>

@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
       state: state || null,
       city: city || null,
       slug: slug || null,
+      status:'Active',
       countrycode: countrycode || null,
       image: imageFile,
       password: hashedPassword

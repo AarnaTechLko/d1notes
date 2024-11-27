@@ -94,7 +94,8 @@ export async function POST(req: NextRequest) {
             countrycode: countrycode,
             image: imageFile,
             password: hashedPassword,
-            slug:slug
+            slug:slug,
+            status:'Active',
           })
 
      .returning();
