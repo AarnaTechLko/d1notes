@@ -56,7 +56,7 @@ interface PackageData {
     fetchPackages();
   }, [sessions]);
   return (
-    <div className="flex flex-col items-center min-h-screen py-10  text-black">
+    <div className="flex flex-col items-center py-10  text-black">
       <h2 className="text-4xl font-bold mb-6">Pricing Packages</h2>
       <div className="flex flex-wrap justify-center gap-6">
         {packages.map((pkg) => (
