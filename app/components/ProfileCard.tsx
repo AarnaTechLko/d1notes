@@ -45,7 +45,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
     <div className="mt-2 flex justify-center">
       <button 
         onClick={() => handleRedirect(slug)} // Function to redirect to the bio
-        className="flex items-center space-x-2 text-gray-500"
+        className="flex items-center space-x-2 text-gray-500 mb-5"
       >
        <FaUser/>
         <span>View Bio</span>

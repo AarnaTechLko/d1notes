@@ -4,7 +4,7 @@ import ProfileCard from '../../components/enterprise/ProfileCard';
 import SearchFilter from '../../components/SearchFilter';
 import Head from 'next/head';
 import Loading from '../../components/Loading';
-import Filters from '../../components/Filters';
+import Filters from '../../components/enterprise/Filters';
 
 // Define a type for the profile
 interface Profile {

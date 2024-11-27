@@ -30,13 +30,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, enterpriseName, fi
   className="flex-none w-64 h-150 bg-white rounded-lg shadow-md mt-5 overflow-hidden snap-center cursor-pointer"
   key={slug}
 >
+<div className="w-[200px] h-[200px] rounded-full m-auto flex items-center justify-center bg-red-700">
   <Image
     src={image}
     alt={firstName}
-    width={200}
-    height={200}
-    className="rounded-lg object-cover w-full h-[200px]"
+    width={160}
+    height={160}
+    className="object-cover w-[170px] h-[170px] rounded-full"
   />
+  </div>
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold">{firstName} {lastName}</h3>
     <h3 className="text-sm "><b>Coach:</b> {coachName}</h3>

@@ -28,13 +28,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
   className="flex-none w-64 h-150 bg-white rounded-lg shadow-md mt-5 overflow-hidden snap-center cursor-pointer"
   key={slug}
 >
-  <Image
-    src={logo}
-    alt={teamName}
-    width={200}
-    height={200}
-    className="rounded-lg object-cover w-full h-[200px]"
-  />
+<div className="w-[200px] h-[200px] rounded-full m-auto flex items-center justify-center bg-blue-700">
+        <Image
+          src={logo}
+          alt={teamName}
+          width={190}
+          height={190}
+          className="object-cover w-[170px] h-[170px] rounded-full"
+        />
+      </div>
+  
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold">{teamName}</h3>
     

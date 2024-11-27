@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import '../globals.css';
 import Logo from '../public/images/logo.png';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ const Header: React.FC = () => {
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [isUserImageAvailable, setIsUserImageAvailable] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
+  const pathname = usePathname();
   const [createAccountOpen, setCreateAccountOpen] = useState<boolean>(false);
 
   // Refs to detect outside click
@@ -81,7 +83,8 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  
+  const isActiveLink = (href: string) =>
+    pathname === href ? "text-blue-500 font-bold" : "text-black";
 
   return (
     <header className="bg-white shadow-md">
@@ -126,12 +129,16 @@ const Header: React.FC = () => {
                   {session?.user?.type === 'player' && isUserImageAvailable && (
                     <>
                     <li className="pt-[8px]">
-                      <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
+                      <Link href="/browse"  className={`${isActiveLink(
+                            "/browse"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                          Coaches
                       </Link>
                     </li>
                     <li className="pt-[8px]">
-                    <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
+                    <Link href="/browse/clubs" className={`${isActiveLink(
+                            "/browse/clubs"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                        Clubs
                     </Link>
                   </li>
@@ -140,12 +147,16 @@ const Header: React.FC = () => {
                   {session?.user?.type === 'coach' && (
                     <>
                       <li className="pt-[8px]">
-                        <Link href="/coach/dashboard" className="text-black hover:text-black-300" onClick={closeMenu}>
+                        <Link href="/coach/dashboard" className={`${isActiveLink(
+                            "/coach/dashboard"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                           Dashboard
                         </Link>
                       </li>
                       <li className="pt-[8px]">
-                        <Link href="/coach/invitation" className="text-black hover:text-black-300" onClick={closeMenu}>
+                        <Link href="/coach/invitation" className={`${isActiveLink(
+                            "/coach/invitation"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                           Send Invitation
                         </Link>
                       </li>
@@ -159,7 +170,9 @@ const Header: React.FC = () => {
                   {session?.user?.type === 'player' && (
                     <>
                       <li className="pt-[8px]">
-                        <Link href="/dashboard" className="text-black hover:text-black-300" onClick={closeMenu}>
+                        <Link href="/dashboard" className={`${isActiveLink(
+                            "/dashboard"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                           Dashboard
                         </Link>
                       </li>
@@ -173,7 +186,9 @@ const Header: React.FC = () => {
                    {session?.user?.type === 'enterprise' && (
                     <>
                       <li className="pt-[8px]">
-                        <Link href="/enterprise/dashboard" className="text-black hover:text-black-300" onClick={closeMenu}>
+                        <Link href="/enterprise/dashboard" className={`${isActiveLink(
+                            "/enterprise/dashboard"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                           Dashboard
                         </Link>
                       </li>
@@ -199,14 +214,18 @@ const Header: React.FC = () => {
                         <ul>
                           {session?.user?.type === 'coach' && (
                             <li className="pt-[8px]">
-                              <Link href="/coach/profile" className="block w-full text-left px-4 py-2 text-black hover:bg-blue-300" onClick={closeMenu}>
+                              <Link href="/coach/profile" className={`${isActiveLink(
+                            "/coach/profile"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                                 Profile
                               </Link>
                             </li>
                           )}
                           {session?.user?.type === 'player' && (
                             <li className="pt-[8px]">
-                              <Link href="/profile" className="block w-full text-left px-4 py-2 text-black hover:bg-blue-300" onClick={closeMenu}>
+                              <Link href="/profile" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                                 Profile
                               </Link>
                             </li>
@@ -225,22 +244,30 @@ const Header: React.FC = () => {
                 <>
                  
                   <li>
-                    <Link href="/browse" className="text-black hover:text-black-300" onClick={closeMenu}>
+                    <Link href="/browse"  className={`${isActiveLink(
+                            "/browse"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                        Coaches
                     </Link>
                   </li>
                   <li >
-                    <Link href="/browse/clubs" className="text-black hover:text-black-300" onClick={closeMenu}>
+                    <Link href="/browse/clubs" className={`${isActiveLink(
+                            "/browse/clubs"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                        Clubs
                     </Link>
                   </li>
                   <li >
-                    <Link href="/browse/teams" className="text-black hover:text-black-300" onClick={closeMenu}>
+                    <Link href="/browse/teams" className={`${isActiveLink(
+                            "/browse/teams"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                        Teams
                     </Link>
                   </li>
                   <li >
-                    <Link href="/browse/players" className="text-black hover:text-black-300" onClick={closeMenu}>
+                    <Link href="/browse/players" className={`${isActiveLink(
+                            "/browse/players"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                        Players
                     </Link>
                   </li>
@@ -272,7 +299,9 @@ const Header: React.FC = () => {
                   </li>
                   
                   <li>
-                    <Link href="/login" className="text-black hover:text-blue-300" onClick={closeMenu}>
+                    <Link href="/login" className={`${isActiveLink(
+                            "/login"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
                       Login
                     </Link>
                   </li>
