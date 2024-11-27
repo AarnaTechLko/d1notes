@@ -70,6 +70,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false); 
+  const [loadingKey, setLoadingKey] = useState<boolean>(false); 
   const [maxDate, setMaxDate] = useState('');
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
   const positionOptions = [
@@ -210,6 +211,37 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     { name: "Wisconsin", abbreviation: "WI" },
     { name: "Wyoming", abbreviation: "WY" }
   ];
+
+  const handleAssignLicense = async () => {
+        
+    try {
+        setLoadingKey(true);
+        const userId= session?.user.id; 
+        const response = await fetch("/api/fetchlicense", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId:userId,
+                type:"Coach",
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch license");
+        }
+        setLoadingKey(false);
+        const data = await response.json();
+
+        // Update the license value in formValues
+        setFormValues((prev) => ({ ...prev, license: data.licenseKey }));
+    } catch (error) {
+        console.error("Error fetching license:", error);
+        alert("Failed to assign license");
+    }
+};
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
@@ -688,8 +720,24 @@ if (!response.ok) {
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.license}
             onChange={handleChange}
+            readOnly
           />
-          <p className="text-xs text-gray-500">( You can copy License key from <a href="/coach/licenses" target="_blank">Here</a> )</p>
+          {loadingKey ? (
+                                            <>
+                                                <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                               
+                                            </>
+                                        )}
+          <button
+          type='button'
+  className="text-xs text-gray-500 underline"
+  onClick={() => handleAssignLicense()}
+>
+  Assign License
+</button>
           {validationErrors.license && <p className="text-red-500 text-sm">{validationErrors.license}</p>}
         </div>
         </div>

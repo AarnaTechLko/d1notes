@@ -376,6 +376,7 @@ const Home: React.FC = () => {
                 type="text"
                 className="w-full p-2 border rounded-lg mb-4"
                 value={licenseKey}
+                readOnly
                 onChange={(e) => setLicenseKey(e.target.value)}
                 placeholder="Enter License Key"
               />

@@ -18,7 +18,10 @@ try{
     .where(
         and(
       eq(licenses.licenseKey,licenseKey),
-      eq(licenses.status, 'Free')
+       or(
+        eq(licenses.status, 'Free'),
+        eq(licenses.status, 'Assigned')
+       )
        )
     )
     .execute();

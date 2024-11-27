@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from '../../../lib/db';
 import { users, otps, licenses } from '../../../lib/schema'
-import { eq, and } from "drizzle-orm";
+import { eq, and, or } from "drizzle-orm";
 export async function POST(request: Request) {
     const { userId, type } = await request.json();
 
@@ -27,8 +27,11 @@ export async function POST(request: Request) {
         .where(
             and(
                 eq(licenses.enterprise_id,userId),
-                eq(licenses.status,'Free'),
-                eq(licenses.buyer_type,'Coach')
+                eq(licenses.buyer_type,'Coach'),
+                or(
+                    eq(licenses.status,'Free'),
+                    eq(licenses.status,'Assigned'),
+                )
             )
         ).execute();
         const licenseKey =licensseQuery[0].licenseKey;

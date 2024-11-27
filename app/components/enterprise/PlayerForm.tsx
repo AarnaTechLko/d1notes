@@ -720,6 +720,7 @@ if (!response.ok) {
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.license}
             onChange={handleChange}
+            readOnly
           />
          {loadingKey ? (
                                             <>
