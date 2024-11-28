@@ -57,31 +57,7 @@ export default function TeamsPage() {
     }
   };
 
-  const fetchPlayers = async () => {
-    if (!session || !session.user?.id) {
-      console.error("No user logged in");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/coach/player", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          enterprise_id: session.user.id, // Send logged-in user's ID
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch players");
-
-      const data: Player[] = await res.json();
-      setPlayers(data);
-    } catch (error) {
-      console.error("Error fetching players:", error);
-    }
-  };
+  
 
   const handleSubmit = async (formValues: Partial<Team>) => {
     try {
@@ -187,7 +163,7 @@ export default function TeamsPage() {
 
   useEffect(() => {
     fetchTeams(); 
-    fetchPlayers();
+    
   }, [session]);
 
   return (
