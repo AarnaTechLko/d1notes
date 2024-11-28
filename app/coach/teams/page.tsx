@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/coach/TeamModal";
 import Sidebar from "@/app/components/coach/Sidebar";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 // Define types for better TypeScript compliance
 type Team = {
   id: number;
@@ -221,12 +222,14 @@ export default function TeamsPage() {
                       <td className="px-4 py-2"><img src={team.logo} className="w-8 h-8 rounded-full"/></td>
                       <td className="px-4 py-2">{team.team_name}</td>
                       <td className="px-4 py-2">{team.description}</td>
-                      <td className="px-4 py-2"><button
-                          className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                          onClick={() => handleAddPlayers(team.id)}
-                        >
-                          Add Players
-                        </button></td>
+                      <td className="px-4 py-2">
+                      <Link
+  href={`/coach/addplayers/${team.id}`}
+  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+>
+  Add/View Players
+</Link>
+                      </td>
                       <td className="px-4 py-2 space-x-2">
                         <button
                           className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"

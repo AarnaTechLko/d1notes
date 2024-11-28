@@ -146,6 +146,7 @@ const Home: React.FC = () => {
   };
 
   const handleEnterLicense = (coach: Coach) => {
+    handleLoadLicense();
     setSelectedCoach(coach);
     setShowLicenseNoModal(true);
   };
@@ -173,16 +174,16 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess('License assigned successfully');
+        showSuccess('License shared successfully');
         setShowLicenseModal(false);
       } else {
         const errorData = await response.json();
-        const errorMessage = errorData.message || 'Failed to assign license';
+        const errorMessage = errorData.message || 'Failed to share license';
         showError(errorMessage);
         setShowLicenseModal(true);
       }
     } catch (error) {
-      console.error('Error assigning license:', error);
+      console.error('Error sharing license:', error);
     } finally {
      
       setLicenseCount(0);
@@ -213,7 +214,7 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess('License assigned successfully');
+        showSuccess('License shared successfully');
         fetchCoaches(currentPage, search);
         setShowLicenseNoModal(false);
       } else {
@@ -223,7 +224,7 @@ const Home: React.FC = () => {
         setShowLicenseNoModal(true);
       }
     } catch (error) {
-      console.error('Error assigning license:', error);
+      console.error('Error shared license:', error);
     } finally {
      
       setLicenseCount(0);
@@ -302,7 +303,7 @@ const Home: React.FC = () => {
     onClick={() => handleAssignLicense(coach)}
     className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
   >
-    Assign License
+    Share License
   </button>
 </div>
                     </td>
@@ -390,13 +391,13 @@ const Home: React.FC = () => {
                                                
                                             </>
                                         )}
-          <button
+          {/* <button
           type='button'
   className="text-xs text-gray-500 underline"
   onClick={() => handleLoadLicense()}
 >
   Assign License
-</button>
+</button> */}
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowLicenseNoModal(false)}

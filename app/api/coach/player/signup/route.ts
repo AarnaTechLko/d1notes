@@ -26,8 +26,15 @@ export async function POST(req: NextRequest) {
   .where(
     and(
         eq(licenses.licenseKey,license),
-        eq(licenses.status,'Free'),
+       or(
         eq(licenses.enterprise_id,parseInt(enterprise_id)),
+        eq(licenses.assigned_to,parseInt(enterprise_id))
+       ),
+       
+        or(
+          eq(licenses.status,'Free'),
+          eq(licenses.status,'Assigned'),
+        )
        
   ));
   if(checkLicense.length < 1)

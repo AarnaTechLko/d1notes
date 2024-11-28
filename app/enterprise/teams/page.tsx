@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
+import PlayerTransfer from "@/app/components/PlayerTransfer";
+import Link from "next/link";
 // Define types for better TypeScript compliance
 type Team = {
   id: number;
@@ -144,43 +146,7 @@ export default function TeamsPage() {
     );
   };
 
-  const handleSavePlayers = async (teamId: number) => {
-    if (!session || !session.user?.id) {
-      console.error("No user logged in");
-      return;
-    }
-  
-    if (selectedPlayers.length === 0) {
-      console.warn("No players selected");
-      return;
-    }
-  
-    try {
-      const payload = {
-        teamId,
-        enterprise_id: session.user.id,
-        playerIds: selectedPlayers,
-      };
-  
-      const res = await fetch("/api/enterprise/teams/assignPlayers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!res.ok) {
-        throw new Error("Failed to assign players to the team");
-      }
-  
-      console.log("Players assigned successfully");
-      setPlayerModalOpen(false);
-      setSelectedPlayers([]); // Clear the selection
-    } catch (error) {
-      console.error("Error saving players:", error);
-    }
-  };
+ 
 
   
 
@@ -221,12 +187,12 @@ export default function TeamsPage() {
                       <td className="px-4 py-2"><img src={team.logo} className="w-8 h-8 rounded-full"/></td>
                       <td className="px-4 py-2">{team.team_name}</td>
                       <td className="px-4 py-2">{team.description}</td>
-                      <td className="px-4 py-2"><button
-                          className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                          onClick={() => handleAddPlayers(team.id)}
-                        >
-                          Add Players
-                        </button></td>
+                      <td className="px-4 py-2"><Link
+  href={`/enterprise/addplayers/${team.id}`}
+  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+>
+  Add/View Players
+</Link></td>
                       <td className="px-4 py-2 space-x-2">
                         <button
                           className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
@@ -259,48 +225,7 @@ export default function TeamsPage() {
               />
             )}
 
-            {/* Player Selection Modal */}
-            {playerModalOpen && (
-             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-             <div className="bg-white p-6 rounded-lg w-96">
-               <h2 className="text-xl font-bold mb-4">Select Players</h2>
-               <div className="space-y-4">
-               {players.map((player) => (
-  <div key={player.id} className="flex items-center space-x-4">
-   <input
-        type="checkbox"
-        name={`player_${player.id}`}
-        checked={selectedPlayers.includes(player.id)} // Bind checked state
-        onChange={() => handlePlayerSelection(player.id)} // Handle toggle
-      />
-    <img
-      src={player.image}
-      alt={player.first_name}
-      className="w-10 h-10 rounded-full object-cover"
-    />
-    <span>{player.first_name} {player.last_name}</span>
-  </div>
-))}
-
-               </div>
-               <div className="mt-4 space-x-2">
-               <button
-  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-  onClick={() => currentTeamId && handleSavePlayers(currentTeamId)} // Pass the current teamId
->
-  Save
-</button>
-                 <button
-                   className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                   onClick={() => setPlayerModalOpen(false)}
-                 >
-                   Cancel
-                 </button>
-               </div>
-             </div>
-           </div>
-           
-            )}
+          
           </div>
         </div>
       </main>

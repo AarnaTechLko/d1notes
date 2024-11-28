@@ -71,6 +71,7 @@ const Home: React.FC = () => {
   };
   const handleEnterLicense = (coach: Coach) => {
     setSelectedCoach(coach);
+    handleLoadLicense();
     setShowLicenseNoModal(true);
   };
   useEffect(() => {
@@ -327,13 +328,13 @@ const Home: React.FC = () => {
                                                
                                             </>
                                         )}
-          <button
+          {/* <button
           type='button'
   className="text-xs text-gray-500 underline"
   onClick={() => handleLoadLicense()}
 >
   Assign License
-</button>
+</button> */}
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowLicenseNoModal(false)}

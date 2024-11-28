@@ -26,11 +26,14 @@ export async function POST(request: Request) {
         const licensseQuery=await db.select({licenseKey:licenses.licenseKey}).from(licenses)
         .where(
             and(
-                eq(licenses.enterprise_id,userId),
-                eq(licenses.buyer_type,'Coach'),
                 or(
-                    eq(licenses.status,'Free'),
-                    eq(licenses.status,'Assigned'),
+                    eq(licenses.enterprise_id, userId),
+                    eq(licenses.assigned_to, userId)
+                ),
+              
+                or(
+                    eq(licenses.status, 'Free'),
+                    eq(licenses.status, 'Assigned')
                 )
             )
         ).execute();
