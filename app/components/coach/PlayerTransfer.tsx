@@ -273,7 +273,7 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
         >
           {isLoading ? "Assigning..." : "Assign"}
         </button>
-        <Link href="/enterprise/teams">
+        <Link href="/coach/teams">
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
           >
