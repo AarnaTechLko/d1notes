@@ -126,9 +126,10 @@ const Home: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
+      fetchCoaches(currentPage, search);
       if (response.ok) {
         console.log('Coach added successfully');
-        fetchCoaches(currentPage, search);  /// Refresh data table
+        fetchCoaches();  /// Refresh data table
       } else {
         console.error('Failed to add coach');
       }

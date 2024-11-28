@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { licenses, coaches} from '../../../../lib/schema';
+import { licenses, coaches, users} from '../../../../lib/schema';
  
 
 import { eq, and, gt,desc, count } from 'drizzle-orm';
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
 
   const totalPlayersResult = await db
     .select({ count: count() })
-    .from(coaches)
-    .where(eq(coaches.enterprise_id, enterprise_id)); // Ensure the `coaches` table is correct here
+    .from(users)
+    .where(eq(users.enterprise_id, enterprise_id)); // Ensure the `coaches` table is correct here
   const totalPlayers = totalPlayersResult[0]?.count || 0;
 
   return NextResponse.json(

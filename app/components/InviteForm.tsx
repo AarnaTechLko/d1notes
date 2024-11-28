@@ -42,8 +42,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   };
 
   const validateMobile = (mobile: { code: string; number: string }): boolean => {
-    const mobileRegex = /^\d{1,14}$/; // Allows up to 14 digits
-    return Boolean(mobile.code) && Boolean(mobile.number.trim()) && mobileRegex.test(mobile.number);
+    // Remove all non-numeric characters
+    const numericOnly = mobile.number.replace(/[^\d]/g, "");
+    
+    // Check if the numeric part is exactly 10 digits
+    const isTenDigits = numericOnly.length === 10;
+  
+    return Boolean(mobile.code) && isTenDigits;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -173,25 +178,45 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
 
       {/* Email Input */}
       <div className="mb-6">
-        <label className="block text-xl font-medium text-gray-700 mb-4">
-          Email <span className="text-sm text-gray-500">(Use comma to add multiple emails)</span>
-        </label>
-        {emails.map((email, index) => (
-          <div key={index} className="flex space-x-3 mb-4">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => {
-                const newEmails = [...emails];
-                newEmails[index] = e.target.value;
-                setEmails(newEmails);
-              }}
-              className="w-full px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              placeholder="Enter email address"
-            />
-          </div>
-        ))}
-      </div>
+  <label className="block text-xl font-medium text-gray-700 mb-4">
+    Email <span className="text-sm text-gray-500">(Use comma to add multiple emails)</span>
+  </label>
+  {emails.map((email, index) => (
+    <div key={index} className="flex space-x-3 mb-4">
+      <input
+        type="text"
+        value={email}
+        onChange={(e) => {
+          const newEmails = [...emails];
+          newEmails[index] = e.target.value;
+          setEmails(newEmails);
+        }}
+        className="w-full px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        placeholder="Enter email address"
+      />
+      {/* Remove email button */}
+      {emails.length > 1 && (
+        <button
+          type="button"
+          onClick={() => {
+            const newEmails = emails.filter((_, idx) => idx !== index);
+            setEmails(newEmails);
+          }}
+          className="text-red-600 hover:text-red-800 font-medium"
+        >
+          Remove
+        </button>
+      )}
+    </div>
+  ))}
+  <button
+    type="button"
+    onClick={() => setEmails([...emails, ""])}
+    className="text-blue-600 hover:text-blue-800 font-medium"
+  >
+    + Add another email
+  </button>
+</div>
 
       {/* Mobile Input */}
       <div className="mb-6">
