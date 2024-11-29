@@ -291,9 +291,18 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     if (!formValues.league.trim()) newErrors.league = "city is required.";
     if (!formValues.license.trim()) newErrors.license = "License key is required.";
 
-    // Set validation errors if any
     if (Object.keys(newErrors).length > 0) {
-      setValidationErrors(newErrors);
+      const orderedErrors = Object.keys(newErrors)
+        .reverse() // Reverse the keys array
+        .map((key) => newErrors[key as keyof Partial<FormValues>]);  // Cast key to keyof Partial<FormValues>
+    
+      orderedErrors.forEach((error) => {
+        if (error) {
+          showError(error!.toString()); // Safely call toString
+        }
+      });
+    
+      setValidationErrors(newErrors); // Optionally set the errors in the state
       return;
     }
 
@@ -443,7 +452,7 @@ if (!response.ok) {
                                                 
                                             </>
                                         )}
-            {validationErrors.image && <p className="text-red-500 text-sm text-center mt-2">{validationErrors.image}</p>}
+           
           </div>
         </div>
 
@@ -459,7 +468,7 @@ if (!response.ok) {
             value={formValues.first_name}
             onChange={handleChange}
           />
-          {validationErrors.first_name && <p className="text-red-500 text-sm">{validationErrors.first_name}</p>}
+         
         </div>
 
         {/* Last Name */}
@@ -472,7 +481,7 @@ if (!response.ok) {
             value={formValues.last_name}
             onChange={handleChange}
           />
-          {validationErrors.last_name && <p className="text-red-500 text-sm">{validationErrors.last_name}</p>}
+         
         </div>
 
         {/* Location */}
@@ -485,7 +494,7 @@ if (!response.ok) {
             value={formValues.location}
             onChange={handleChange}
           />
-          {validationErrors.location && <p className="text-red-500 text-sm">{validationErrors.location}</p>}
+          
         </div>
         <div>
           <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className="mandatory">*</span></label>
@@ -496,7 +505,7 @@ if (!response.ok) {
             value={formValues.email}
             onChange={handleChange}
           />
-          {validationErrors.email && <p className="text-red-500 text-sm">{validationErrors.email}</p>}
+         
         </div>
        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -513,7 +522,7 @@ if (!response.ok) {
            
           </select>
           
-          {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
+         
         </div>
         <div>
           <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className="mandatory">*</span></label>
@@ -533,7 +542,7 @@ if (!response.ok) {
           </option>
         ))}
       </select>
-          {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
+         
         </div>
         <div>
           <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className="mandatory">*</span></label>
@@ -544,7 +553,7 @@ if (!response.ok) {
             value={formValues.city}
             onChange={handleChange}
           />
-          {validationErrors.city && <p className="text-red-500 text-sm">{validationErrors.city}</p>}
+         
         </div>
        
 
@@ -560,7 +569,7 @@ if (!response.ok) {
             value={formValues.birthday}
             onChange={handleChange}
           />
-          {validationErrors.birthday && <p className="text-red-500 text-sm">{validationErrors.birthday}</p>}
+         
         </div>
 
         {/* Grade Level */}
@@ -575,7 +584,7 @@ if (!response.ok) {
             onChange={handleChange}
           />
           
-          {validationErrors.grade_level && <p className="text-red-500 text-sm">{validationErrors.grade_level}</p>}
+        
         </div>
 
         {/* Gender */}
@@ -592,7 +601,7 @@ if (!response.ok) {
             <option value="Female">Female</option>
             
           </select>
-          {validationErrors.gender && <p className="text-red-500 text-sm">{validationErrors.gender}</p>}
+          
         </div>
         <div>
           <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="text-xs text-gray-500">(Optional)</span></label>
@@ -620,7 +629,7 @@ if (!response.ok) {
             
           </select>
           <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
-          {validationErrors.sport && <p className="text-red-500 text-sm">{validationErrors.sport}</p>}
+         
         </div>
 
         {/* Team */}
@@ -634,7 +643,7 @@ if (!response.ok) {
             value={formValues.team}
             onChange={handleChange}
           />
-          {validationErrors.team && <p className="text-red-500 text-sm">{validationErrors.team}</p>}
+          
         </div>
 
         {/* Position */}
@@ -648,7 +657,7 @@ if (!response.ok) {
             onChange={handlePositionChange}
             placeholder="Select Position(s)"
           />
-          {validationErrors.position && <p className="text-red-500 text-sm">{validationErrors.position}</p>}
+         
         </div>
 
         {/* Number */}
@@ -680,7 +689,7 @@ if (!response.ok) {
     />
   </div>
 
-  {validationErrors.number && <p className="text-red-500 text-sm">{validationErrors.number}</p>}
+ 
 </div>
 
         </div>
@@ -695,7 +704,7 @@ if (!response.ok) {
             value={formValues.league}
             onChange={handleChange}
           /> 
-          {validationErrors.bio && <p className="text-red-500 text-sm">{validationErrors.league}</p>}
+          
         </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
@@ -709,7 +718,7 @@ if (!response.ok) {
             value={formValues.bio}
             onChange={handleChange}
           ></textarea>
-          {validationErrors.bio && <p className="text-red-500 text-sm">{validationErrors.bio}</p>}
+         
         </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6 pb-5">
@@ -739,7 +748,7 @@ if (!response.ok) {
 >
   Assign License
 </button>
-          {validationErrors.license && <p className="text-red-500 text-sm">{validationErrors.license}</p>}
+         
         </div>
         </div>
         
