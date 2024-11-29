@@ -180,25 +180,29 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         if (!formValues.license) errors.license = 'License is required';
 
         setFormErrors(errors); // Set errors once validation is done
-        return Object.keys(errors).every(key => errors[key as keyof FormErrors] === undefined || errors[key as keyof FormErrors] === null);
+
+        // Display errors in Toastr
+        Object.keys(errors).forEach((key) => {
+            const errorMessage = errors[key as keyof FormErrors];
+            if (errorMessage) {
+                showError(errorMessage);
+                
+            }
+        });
+    
+        return Object.keys(errors).every(
+            (key) => errors[key as keyof FormErrors] === undefined || errors[key as keyof FormErrors] === null
+        );
     };
 
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        
+        console.log(formErrors);
         setError(null);
         setSuccessMessage(null);
 
-        if (!validateForm())
-            {
-                Object.entries(formErrors).forEach(([field, error]) => {
-                    if (error) { // Skip null or undefined values
-                      console.log(`${field}: ${error}`);
-                      showError(error);
-                    }
-            })
-        } 
+        if (!validateForm()) return;
 
         setLoading(true);
         const formData = new FormData();
@@ -406,7 +410,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             </>
                                         )}
                                        
-                                        {formErrors.image && <p className="text-red-600 text-sm text-center">{formErrors.image}</p>}
+                                        
                                     </div>
                                 </div>
 
@@ -420,7 +424,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.firstName}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.firstName && <p className="text-red-600 text-sm">{formErrors.firstName}</p>}
+                                        
                                     </div>
 
                                     <div>
@@ -432,7 +436,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.lastName}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
+                                        
                                     </div>
                                     <div >
                                         <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
@@ -443,7 +447,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.expectedCharge}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.expectedCharge && <p className="text-red-600 text-sm">{formErrors.expectedCharge}</p>}
+                                        
                                     </div>
                                     <div>
                                         <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
@@ -474,8 +478,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             />
                                         </div>
 
-                                        {formErrors.countrycode && <p className="text-red-600 text-sm">{formErrors.countrycode}</p>}
-                                        {formErrors.phoneNumber && <p className="text-red-600 text-sm">{formErrors.phoneNumber}</p>}
+                                      
                                     </div>
                                     <div>
                                         <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
@@ -486,7 +489,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.email}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.email && <p className="text-red-600 text-sm">{formErrors.email}</p>}
+                                       
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -503,7 +506,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                         </select>
 
-                                        {formErrors.country && <p className="text-red-500 text-sm">{formErrors.country}</p>}
+                                        
                                     </div>
                                     <div>
                                         <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
@@ -523,7 +526,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                                 </option>
                                             ))}
                                         </select>
-                                        {formErrors.state && <p className="text-red-500 text-sm">{formErrors.state}</p>}
+                                       
                                     </div>
                                     <div>
                                         <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
@@ -534,7 +537,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.city ?? ""}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.city && <p className="text-red-500 text-sm">{formErrors.city}</p>}
+                                       
                                     </div>
 
                                 </div>
@@ -554,7 +557,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             <option value="Female">Female</option>
                                             <option value="Other">Other</option>
                                         </select>
-                                        {formErrors.gender && <p className="text-red-600 text-sm">{formErrors.gender}</p>}
+                                      
                                     </div>
 
                                     {/* Location */}
@@ -571,7 +574,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             <option value="Soccer">Soccer</option>
 
                                         </select>
-                                        {formErrors.sport && <p className="text-red-600 text-sm">{formErrors.sport}</p>}
+                                        
                                     </div>
                                     <div>
                                         <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
@@ -582,7 +585,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.clubName}
                                             onChange={handleChange}
                                         />
-                                        {formErrors.clubName && <p className="text-red-600 text-sm">{formErrors.clubName}</p>}
+                                       
                                     </div>
                                 </div>
                                 
@@ -597,7 +600,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         onChange={handleChange}
                                         rows={4}
                                     />
-                                    {formErrors.qualifications && <p className="text-red-600 text-sm">{formErrors.qualifications}</p>}
+                                   
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -627,7 +630,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 >
   Assign License
 </button>
-          {formErrors.license && <p className="text-red-500 text-sm">{formErrors.license}</p>}
+           
         </div>
         </div>
 

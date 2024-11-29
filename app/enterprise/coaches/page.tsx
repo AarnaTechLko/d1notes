@@ -252,70 +252,75 @@ const Home: React.FC = () => {
             </button>
           </div>
 
-          <table className="w-full text-sm text-left text-gray-700 mt-4">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Sport</th>
-                <th>Qualification</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {coaches.length > 0 ? (
-                coaches.map((coach) => (
-                  <tr key={coach.id}>
-                    <td className="text-center">
-                      <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto" />
-                      {coach.firstName} {coach.lastName}
-                    </td>
-                    <td>{coach.gender}</td>
-                    <td>{coach.email}</td>
-                    <td>{coach.countrycode}{coach.phoneNumber}</td>
-                    <td>{coach.sport}</td>
-                    <td>{coach.qualifications}</td>
-                    <td>
-                    {coach.status === 'Inactive' ? (
-    <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
-      {coach.status}
-    </button>
-  ) : (
-    <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
-      {coach.status}
-    </button>
-  )}
-
-                    </td>
-                    <td>
-                     <div className="flex items-center space-x-2">
-  <a
-    href={`/coach/${coach.slug}`}
-    className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-    target="_blank"
-  >
-    View
-  </a>
-  <button
-    onClick={() => handleAssignLicense(coach)}
-    className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-  >
-    Share License
-  </button>
-</div>
-                    </td>
-                  </tr>
-                ))
+          <div className="overflow-x-auto">
+  <table className="w-full text-sm text-left text-gray-700 mt-4">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Sport</th>
+        <th>Qualification</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {coaches.length > 0 ? (
+        coaches.map((coach) => (
+          <tr key={coach.id}>
+            <td className="text-center">
+              <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto" />
+              {coach.firstName} {coach.lastName}
+            </td>
+            <td>{coach.gender}</td>
+            <td>{coach.email}</td>
+            <td>{coach.countrycode}{coach.phoneNumber}</td>
+            <td>{coach.sport}</td>
+            <td>{coach.qualifications}</td>
+            <td>
+              {coach.status === 'Inactive' ? (
+                <button
+                  className="bg-red px-4 py-2 rounded bg-red-500 text-white"
+                  onClick={() => handleEnterLicense(coach)}
+                >
+                  {coach.status}
+                </button>
               ) : (
-                <tr>
-                  <td colSpan={7}>No coaches found</td>
-                </tr>
+                <button className="bg-red px-4 py-2 rounded bg-green-500 text-white">
+                  {coach.status}
+                </button>
               )}
-            </tbody>
-          </table>
+            </td>
+            <td>
+              <div className="flex items-center space-x-2">
+                <a
+                  href={`/coach/${coach.slug}`}
+                  className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                  target="_blank"
+                >
+                  View
+                </a>
+                <button
+                  onClick={() => handleAssignLicense(coach)}
+                  className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+                >
+                  Share License
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={8}>No coaches found</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
 
           {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-4">
