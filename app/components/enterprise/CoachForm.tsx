@@ -481,7 +481,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                       
                                     </div>
                                     <div>
-                                        <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                                        <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="email"
