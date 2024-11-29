@@ -216,7 +216,7 @@ const Header: React.FC = () => {
                             <li className="pt-[8px]">
                               <Link href="/coach/profile" className={`${isActiveLink(
                             "/coach/profile"
-                          )} hover:text-blue-300`} onClick={closeMenu}>
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
                                 Profile
                               </Link>
                             </li>

@@ -170,6 +170,19 @@ setCoachData(responseData.clubdata);
   </div>
 </section>
 
+
+<h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+    Teams
+  </h2>
+        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+
+   
+  <div className="flex flex-col md:flex-row md:space-x-8">
+   
+   
+  </div>
+</section>
+
  
 
 

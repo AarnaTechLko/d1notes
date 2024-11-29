@@ -11,6 +11,8 @@ import Image from 'next/image';
 import { showError, showSuccess } from '../../components/Toastr';
 import { FaCheck, FaSpinner } from 'react-icons/fa';
 import FileUploader from '../FileUploader';
+import { states, countryCodesList } from '@/lib/constants';
+
 interface CoachFormProps {
     onSubmit: (formData: any) => void;
 }
@@ -113,58 +115,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     const certificateInputRef = useRef<HTMLInputElement | null>(null);
     const { data: session } = useSession();
     const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
-    const states = [
-        { name: "Alabama", abbreviation: "AL" },
-        { name: "Alaska", abbreviation: "AK" },
-        { name: "Arizona", abbreviation: "AZ" },
-        { name: "Arkansas", abbreviation: "AR" },
-        { name: "California", abbreviation: "CA" },
-        { name: "Colorado", abbreviation: "CO" },
-        { name: "Connecticut", abbreviation: "CT" },
-        { name: "Delaware", abbreviation: "DE" },
-        { name: "Florida", abbreviation: "FL" },
-        { name: "Georgia", abbreviation: "GA" },
-        { name: "Hawaii", abbreviation: "HI" },
-        { name: "Idaho", abbreviation: "ID" },
-        { name: "Illinois", abbreviation: "IL" },
-        { name: "Indiana", abbreviation: "IN" },
-        { name: "Iowa", abbreviation: "IA" },
-        { name: "Kansas", abbreviation: "KS" },
-        { name: "Kentucky", abbreviation: "KY" },
-        { name: "Louisiana", abbreviation: "LA" },
-        { name: "Maine", abbreviation: "ME" },
-        { name: "Maryland", abbreviation: "MD" },
-        { name: "Massachusetts", abbreviation: "MA" },
-        { name: "Michigan", abbreviation: "MI" },
-        { name: "Minnesota", abbreviation: "MN" },
-        { name: "Mississippi", abbreviation: "MS" },
-        { name: "Missouri", abbreviation: "MO" },
-        { name: "Montana", abbreviation: "MT" },
-        { name: "Nebraska", abbreviation: "NE" },
-        { name: "Nevada", abbreviation: "NV" },
-        { name: "New Hampshire", abbreviation: "NH" },
-        { name: "New Jersey", abbreviation: "NJ" },
-        { name: "New Mexico", abbreviation: "NM" },
-        { name: "New York", abbreviation: "NY" },
-        { name: "North Carolina", abbreviation: "NC" },
-        { name: "North Dakota", abbreviation: "ND" },
-        { name: "Ohio", abbreviation: "OH" },
-        { name: "Oklahoma", abbreviation: "OK" },
-        { name: "Oregon", abbreviation: "OR" },
-        { name: "Pennsylvania", abbreviation: "PA" },
-        { name: "Rhode Island", abbreviation: "RI" },
-        { name: "South Carolina", abbreviation: "SC" },
-        { name: "South Dakota", abbreviation: "SD" },
-        { name: "Tennessee", abbreviation: "TN" },
-        { name: "Texas", abbreviation: "TX" },
-        { name: "Utah", abbreviation: "UT" },
-        { name: "Vermont", abbreviation: "VT" },
-        { name: "Virginia", abbreviation: "VA" },
-        { name: "Washington", abbreviation: "WA" },
-        { name: "West Virginia", abbreviation: "WV" },
-        { name: "Wisconsin", abbreviation: "WI" },
-        { name: "Wyoming", abbreviation: "WY" }
-    ];
+    
     // Validation function
     const validateForm = (): boolean => {
         const errors: FormErrors = {
@@ -197,6 +148,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         if (!formValues.firstName) errors.firstName = 'First Name is required';
         if (!formValues.lastName) errors.lastName = 'Last Name is required';
 
+        if (!formValues.countrycode) errors.countrycode = 'Country Code required';
         if (!formValues.phoneNumber) errors.phoneNumber = 'Phone Number is required';
         if (!formValues.email) {
             errors.email = 'Email is required';
@@ -234,11 +186,19 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log(formErrors);
+        
         setError(null);
         setSuccessMessage(null);
 
-        if (!validateForm()) return;
+        if (!validateForm())
+            {
+                Object.entries(formErrors).forEach(([field, error]) => {
+                    if (error) { // Skip null or undefined values
+                      console.log(`${field}: ${error}`);
+                      showError(error);
+                    }
+            })
+        } 
 
         setLoading(true);
         const formData = new FormData();
@@ -278,78 +238,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         }
     };
 
-    const countryCodes = [
-        { id: 1, code: "+1", country: "USA" },
-        { id: 2, code: "+44", country: "UK" },
-        { id: 3, code: "+91", country: "India" },
-        { id: 4, code: "+61", country: "Australia" },
-        { id: 5, code: "+33", country: "France" },
-        { id: 6, code: "+49", country: "Germany" },
-        { id: 7, code: "+81", country: "Japan" },
-        { id: 8, code: "+55", country: "Brazil" },
-        { id: 9, code: "+34", country: "Spain" },
-        { id: 10, code: "+39", country: "Italy" },
-        { id: 11, code: "+52", country: "Mexico" },
-        { id: 12, code: "+7", country: "Russia" },
-        { id: 13, code: "+86", country: "China" },
-        { id: 14, code: "+27", country: "South Africa" },
-        { id: 15, code: "+20", country: "Egypt" },
-        { id: 16, code: "+62", country: "Indonesia" },
-        { id: 17, code: "+60", country: "Malaysia" },
-        { id: 18, code: "+34", country: "Spain" },
-        { id: 19, code: "+91", country: "India" },
-        { id: 20, code: "+63", country: "Philippines" },
-        { id: 21, code: "+90", country: "Turkey" },
-        { id: 22, code: "+94", country: "Sri Lanka" },
-        { id: 23, code: "+971", country: "UAE" },
-        { id: 24, code: "+34", country: "Spain" },
-        { id: 25, code: "+27", country: "South Africa" },
-        { id: 26, code: "+44", country: "United Kingdom" },
-        { id: 27, code: "+55", country: "Brazil" },
-        { id: 28, code: "+49", country: "Germany" },
-        { id: 29, code: "+62", country: "Indonesia" },
-        { id: 30, code: "+52", country: "Mexico" },
-        { id: 31, code: "+61", country: "Australia" },
-        { id: 32, code: "+33", country: "France" },
-        { id: 33, code: "+44", country: "United Kingdom" },
-        { id: 34, code: "+1", country: "USA" },
-        { id: 35, code: "+968", country: "Oman" },
-        { id: 36, code: "+972", country: "Israel" },
-        { id: 37, code: "+886", country: "Taiwan" },
-        { id: 38, code: "+90", country: "Turkey" },
-        { id: 39, code: "+351", country: "Portugal" },
-        { id: 40, code: "+977", country: "Nepal" },
-        { id: 41, code: "+265", country: "Malawi" },
-        { id: 42, code: "+234", country: "Nigeria" },
-        { id: 43, code: "+254", country: "Kenya" },
-        { id: 44, code: "+1", country: "Canada" },
-        { id: 45, code: "+54", country: "Argentina" },
-        { id: 46, code: "+48", country: "Poland" },
-        { id: 47, code: "+351", country: "Portugal" },
-        { id: 48, code: "+20", country: "Egypt" },
-        { id: 49, code: "+971", country: "UAE" },
-        { id: 50, code: "+962", country: "Jordan" },
-        { id: 51, code: "+975", country: "Bhutan" },
-        { id: 52, code: "+977", country: "Nepal" },
-        { id: 53, code: "+1", country: "USA" },
-        { id: 54, code: "+49", country: "Germany" },
-        { id: 55, code: "+7", country: "Russia" },
-        { id: 56, code: "+60", country: "Malaysia" },
-        { id: 57, code: "+92", country: "Pakistan" },
-        { id: 58, code: "+370", country: "Lithuania" },
-        { id: 59, code: "+502", country: "Guatemala" },
-        { id: 60, code: "+504", country: "Honduras" },
-        { id: 61, code: "+852", country: "Hong Kong" },
-        { id: 62, code: "+63", country: "Philippines" },
-        { id: 63, code: "+33", country: "France" },
-        { id: 64, code: "+55", country: "Brazil" },
-        { id: 65, code: "+56", country: "Chile" },
-        { id: 66, code: "+57", country: "Colombia" },
-        { id: 67, code: "+60", country: "Malaysia" },
-        { id: 68, code: "+503", country: "El Salvador" },
-        { id: 69, code: "+91", country: "India" },
-        { id: 70, code: "+1", country: "USA" }
-    ];
+    
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -489,7 +378,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                 {/* Profile Image */}
 
                                 <div className="mb-4">
-                                    <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                                    <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
                                     <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                                         <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                                             <Image
@@ -523,7 +412,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                                     <div>
-                                        <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
+                                        <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="firstName"
@@ -535,7 +424,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+                                        <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="lastName"
@@ -546,7 +435,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                                     </div>
                                     <div >
-                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )</label>
+                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="expectedCharge"
@@ -557,7 +446,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         {formErrors.expectedCharge && <p className="text-red-600 text-sm">{formErrors.expectedCharge}</p>}
                                     </div>
                                     <div>
-                                        <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+                                        <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
 
                                         <div className="flex">
                                             <select
@@ -567,7 +456,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                                 onChange={handleChange}
                                             >
                                                 <option value="">Select</option>
-                                                {countryCodes.map((item) => (
+                                                {countryCodesList.map((item) => (
                                                     <option key={item.id} value={item.code}>
                                                         {item.code} ({item.country})
                                                     </option>
@@ -585,7 +474,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             />
                                         </div>
 
-
+                                        {formErrors.countrycode && <p className="text-red-600 text-sm">{formErrors.countrycode}</p>}
                                         {formErrors.phoneNumber && <p className="text-red-600 text-sm">{formErrors.phoneNumber}</p>}
                                     </div>
                                     <div>
@@ -602,7 +491,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                                     <div>
-                                        <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+                                        <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                                         <select
                                             name="country"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -617,7 +506,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         {formErrors.country && <p className="text-red-500 text-sm">{formErrors.country}</p>}
                                     </div>
                                     <div>
-                                        <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+                                        <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
 
 
                                         <select
@@ -637,7 +526,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         {formErrors.state && <p className="text-red-500 text-sm">{formErrors.state}</p>}
                                     </div>
                                     <div>
-                                        <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+                                        <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="city"
@@ -653,7 +542,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                     {/* Gender */}
                                     <div>
-                                        <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+                                        <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
                                         <select
                                             name="gender"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -671,7 +560,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     {/* Location */}
 
                                     <div>
-                                        <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">You coach</label>
+                                        <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">You coach<span className='mandatory'>*</span></label>
                                         <select
                                             name="sport"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -685,7 +574,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         {formErrors.sport && <p className="text-red-600 text-sm">{formErrors.sport}</p>}
                                     </div>
                                     <div>
-                                        <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)</label>
+                                        <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="clubName"
@@ -699,7 +588,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                 
                                 {/* Qualifications */}
                                 <div className="mb-4">
-                                    <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound</label>
+                                    <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound<span className='mandatory'>*</span></label>
                                     <textarea
                                         placeholder='Specify your qualification(s)'
                                         name="qualifications"
@@ -713,7 +602,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                                       <div>
-          <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key</label>
+          <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="license"

@@ -9,6 +9,9 @@ img.logo {
     height: 51px;
     width: auto;
 }
+.mandatory{
+  color:red;
+}
 .z-10{
   z-index:100 !important;
 }

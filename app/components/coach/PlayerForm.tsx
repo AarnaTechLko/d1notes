@@ -417,7 +417,8 @@ if (!response.ok) {
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <form onSubmit={handleSubmit} >
         
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4 text-center">
+          <label>Profile Photo<span className="mandatory">*</span></label>
           <div className="items-center cursor-pointer" onClick={handleImageClick}>
             <Image
               src={formValues.image ? formValues.image : DefaultPic}
@@ -449,7 +450,7 @@ if (!response.ok) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
           <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
-            First Name
+            First Name<span className="mandatory">*</span>
           </label>
           <input
             type="text"
@@ -463,7 +464,7 @@ if (!response.ok) {
 
         {/* Last Name */}
         <div>
-          <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+          <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className="mandatory">*</span></label>
           <input
             type="text"
             name="last_name"
@@ -476,7 +477,7 @@ if (!response.ok) {
 
         {/* Location */}
         <div>
-          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Location</label>
+          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Location<span className="mandatory">*</span></label>
           <input
             type="text"
             name="location"
@@ -487,7 +488,7 @@ if (!response.ok) {
           {validationErrors.location && <p className="text-red-500 text-sm">{validationErrors.location}</p>}
         </div>
         <div>
-          <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+          <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className="mandatory">*</span></label>
           <input
             type="text"
             name="email"
@@ -500,7 +501,7 @@ if (!response.ok) {
        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className="mandatory">*</span></label>
           <select
             name="country"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -515,7 +516,7 @@ if (!response.ok) {
           {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
         </div>
         <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className="mandatory">*</span></label>
           
         
           <select
@@ -535,7 +536,7 @@ if (!response.ok) {
           {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
         </div>
         <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className="mandatory">*</span></label>
           <input
             type="text"
             name="city"
@@ -550,7 +551,7 @@ if (!response.ok) {
         </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
+          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className="mandatory">*</span></label>
           <input
             type="date"
             name="birthday"
@@ -564,7 +565,7 @@ if (!response.ok) {
 
         {/* Grade Level */}
         <div>
-          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level</label>
+          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level<span className="mandatory">*</span></label>
           <input
           placeholder="Specify level"
             type="text"
@@ -579,7 +580,7 @@ if (!response.ok) {
 
         {/* Gender */}
         <div>
-          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className="mandatory">*</span></label>
           <select
             name="gender"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -607,7 +608,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport</label>
+          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className="mandatory">*</span></label>
           <select
             name="sport"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -624,7 +625,7 @@ if (!response.ok) {
 
         {/* Team */}
         <div>
-          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
+          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year<span className="mandatory">*</span></label>
           <input
           placeholder="Team Name/ 2024"
             type="text"
@@ -638,7 +639,7 @@ if (!response.ok) {
 
         {/* Position */}
         <div>
-          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)</label>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className="mandatory">*</span></label>
           <Select
             isMulti
             options={positionOptions}
@@ -652,7 +653,7 @@ if (!response.ok) {
 
         {/* Number */}
         <div>
-  <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+  <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className="mandatory">*</span></label>
   
   <div className="flex">
     <select  
@@ -685,7 +686,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League</label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className="mandatory">*</span></label>
           <input
           type="text"
             placeholder="Specify experience league (AYSO, club, school, etc.)"
@@ -699,7 +700,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className="mandatory">*</span></label>
           <textarea
             placeholder="Tell us about your player’s experience/ competition level, any 
           accolades and goals."
@@ -713,7 +714,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key</label>
+          <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key<span className="mandatory">*</span></label>
           <input
             type="text"
             name="license"

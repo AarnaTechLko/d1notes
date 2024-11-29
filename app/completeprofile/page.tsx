@@ -356,7 +356,8 @@ export default function Register() {
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <form onSubmit={handleSubmit} >
         
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4 text-center">
+          <label>Upload Your Photo<span className='mandatory'>*</span></label>
           <div className="items-center cursor-pointer" onClick={handleImageClick}>
             <Image
               src={formValues.image ? formValues.image : DefaultPic}
@@ -388,7 +389,7 @@ export default function Register() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
           <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
-            First Name
+            First Name<span className='mandatory'>*</span>
           </label>
           <input
             type="text"
@@ -402,7 +403,7 @@ export default function Register() {
 
         {/* Last Name */}
         <div>
-          <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+          <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="last_name"
@@ -415,7 +416,7 @@ export default function Register() {
 
         {/* Location */}
         <div>
-          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Location</label>
+          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Location<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="location"
@@ -429,7 +430,7 @@ export default function Register() {
        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
           <select
             name="country"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -444,7 +445,7 @@ export default function Register() {
           {validationErrors.country && <p className="text-red-500 text-sm">{validationErrors.country}</p>}
         </div>
         <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
           
         
           <select
@@ -464,7 +465,7 @@ export default function Register() {
           {validationErrors.state && <p className="text-red-500 text-sm">{validationErrors.state}</p>}
         </div>
         <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="city"
@@ -478,7 +479,7 @@ export default function Register() {
         </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
+          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
           <input
             type="date"
             name="birthday"
@@ -492,7 +493,7 @@ export default function Register() {
 
         {/* Grade Level */}
         <div>
-          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level</label>
+          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level<span className='mandatory'>*</span></label>
 
           <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
             <option value="">Select</option>
@@ -509,7 +510,7 @@ export default function Register() {
 
         {/* Gender */}
         <div>
-          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
           <select
             name="gender"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -537,7 +538,7 @@ export default function Register() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport</label>
+          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
           <select
             name="sport"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -554,7 +555,7 @@ export default function Register() {
 
         {/* Team */}
         <div>
-          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
+          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year<span className='mandatory'>*</span></label>
           <input
           placeholder="Team Name/ 2024"
             type="text"
@@ -568,7 +569,7 @@ export default function Register() {
 
         {/* Position */}
         <div>
-          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)</label>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className='mandatory'>*</span></label>
           <Select
             isMulti
             options={positionOptions}
@@ -582,7 +583,7 @@ export default function Register() {
 
         {/* Number */}
         <div>
-  <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+  <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
   
   <div className="flex">
     <select  
@@ -615,7 +616,7 @@ export default function Register() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League</label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
           <input
           type="text"
             placeholder="Rec, AYSO, Club, Pre EcnL, Ercl, Acedemy, NPL, BPC, MSL, High School and College"
@@ -629,7 +630,7 @@ export default function Register() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
           <textarea
             placeholder="Tell us about your player’s experience/competition level, any accolades and aspirations."
             name="bio"

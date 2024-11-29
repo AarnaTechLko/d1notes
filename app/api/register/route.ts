@@ -24,6 +24,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
   }
 
+  const checkEmail=await db.select().from(users).where(eq(users.email,email)).execute(); 
+    
+  if (checkEmail.length>0) 
+    {
+       
+      return NextResponse.json({ message: 'This email already exists.' }, { status: 400 });
+    }
+
   const existingOtp = await db
     .select()
     .from(otps)

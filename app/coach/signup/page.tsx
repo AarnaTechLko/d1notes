@@ -191,7 +191,7 @@ if (!termsAccepted) {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Email 
+                  Email<span className='mandatory'>*</span> 
                 </label>
                 <input
                   type="text"
@@ -204,7 +204,7 @@ if (!termsAccepted) {
               </div>
               <div className="mb-4">
                 <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Password
+                  Password<span className='mandatory'>*</span>
                 </label>
                 <input
                   type="password"

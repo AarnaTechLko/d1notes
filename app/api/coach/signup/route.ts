@@ -19,12 +19,20 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, password, otp,sendedBy, referenceId } = body;
 
-    if (!email || !password) {
+    if (!email || !password) 
+    {
       logError('Missing required fields');
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+  const checkEmail=await db.select().from(coaches).where(eq(coaches.email,email)).execute(); 
     
+  if (checkEmail.length>0) 
+    {
+       
+      return NextResponse.json({ message: 'This email already exists.' }, { status: 400 });
+    }
+
   const existingOtp = await db
   .select()
   .from(otps)

@@ -438,7 +438,7 @@ export default function Register() {
               {/* Profile Image */}
               
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image  
@@ -471,7 +471,7 @@ export default function Register() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
+                  <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     name="firstName"
@@ -483,7 +483,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+                  <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     name="lastName"
@@ -494,7 +494,7 @@ export default function Register() {
                   {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                 </div>
                 <div >
-                <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )</label>
+                <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
                 <input
                   type="text"
                   name="expectedCharge"
@@ -505,7 +505,7 @@ export default function Register() {
                 {formErrors.expectedCharge && <p className="text-red-600 text-sm">{formErrors.expectedCharge}</p>}
               </div>
               <div>
-                <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+                <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
 
                 <div className="flex">
     <select 
@@ -542,7 +542,7 @@ export default function Register() {
 
               {/* Gender */}
               <div>
-                <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+                <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
                 <select
                   name="gender"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -560,7 +560,7 @@ export default function Register() {
               {/* Location */}
              
               <div>
-                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">You coach</label>
+                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">You coach<span className='mandatory'>*</span></label>
                 <select
                   name="sport"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -574,7 +574,7 @@ export default function Register() {
                 {formErrors.sport && <p className="text-red-600 text-sm">{formErrors.sport}</p>}
               </div>
               <div>
-                <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)</label>
+                <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
                 <input
                   type="text"
                   name="clubName"
@@ -587,7 +587,7 @@ export default function Register() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
           <select
             name="country"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -602,7 +602,7 @@ export default function Register() {
           {formErrors.country && <p className="text-red-500 text-sm">{formErrors.country}</p>}
         </div>
         <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
           
         
           <select
@@ -622,7 +622,7 @@ export default function Register() {
           {formErrors.state && <p className="text-red-500 text-sm">{formErrors.state}</p>}
         </div>
         <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="city"
@@ -636,7 +636,7 @@ export default function Register() {
         </div>
               {/* Qualifications */}
               <div className="mb-4">
-                <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound</label>
+                <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound<span className='mandatory'>*</span></label>
                 <textarea
                 placeholder='Specify your qualification(s)'
                   name="qualifications"

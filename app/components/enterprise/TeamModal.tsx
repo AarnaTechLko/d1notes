@@ -8,6 +8,7 @@ import { type PutBlobResult } from '@vercel/blob';
 import { upload } from "@vercel/blob/client";
 import { getSession } from "next-auth/react";
 import FileUploader from "../FileUploader";
+import { showError } from "../Toastr";
 
 const formSchema = z.object({
   team_name: z.string().min(1, "Team Name is required."),
@@ -97,7 +98,7 @@ const [creatorName, setCreatorName] = useState<string | null>(null);
 
     const validation = formSchema.safeParse(formValues);
     if (!validation.success) {
-      alert(validation.error.issues.map((issue) => issue.message).join("\n"));
+      showError(validation.error.issues.map((issue) => issue.message).join("\n"));
       return;
     }
 
@@ -110,7 +111,7 @@ const [creatorName, setCreatorName] = useState<string | null>(null);
         <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">Name<span className="mandatory">*</span></label>
             <input
               type="text"
               value={formValues.team_name}
@@ -120,7 +121,7 @@ const [creatorName, setCreatorName] = useState<string | null>(null);
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-gray-700">Description<span className="mandatory">*</span></label>
             <textarea
               value={formValues.description}
               onChange={handleChange}
