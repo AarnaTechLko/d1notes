@@ -215,7 +215,7 @@ export default function Signup() {
             {/* Organization Name */}
             <div className="mb-4">
               <label htmlFor="organizationName" className="block text-gray-700 text-sm font-semibold mb-2">
-                Organization Name
+                Organization Name<span className="mandatory">*</span>
               </label>
               <input
                 type="text"
@@ -229,7 +229,7 @@ export default function Signup() {
             {/* Contact Person */}
             <div className="mb-4">
               <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
-                Contact Person
+                Contact Person<span className="mandatory">*</span>
               </label>
               <input
                 type="text"
@@ -244,7 +244,7 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
               <div className="flex-1">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Email
+                  Email<span className="mandatory">*</span>
                 </label>
                 <input
                   type="text"
@@ -258,7 +258,7 @@ export default function Signup() {
               
               <div className="flex-1">
                 <label htmlFor="mobileNumber" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Mobile Number
+                  Mobile Number<span className="mandatory">*</span>
                 </label>
                 <div className="flex">
     <select  
@@ -296,7 +296,7 @@ export default function Signup() {
             {/* Address */}
             <div className="mb-4">
               <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-                Address
+                Address<span className="mandatory">*</span>
               </label>
               <input
                 type="text"
@@ -311,7 +311,7 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
               <div className="flex-1">
                 <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Country
+                  Country<span className="mandatory">*</span>
                 </label>
                 <input
                   type="text"
@@ -323,7 +323,7 @@ export default function Signup() {
               </div>
               <div className="flex-1">
                 <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">
-                  State
+                  State<span className="mandatory">*</span>
                 </label>
                 <input
                   type="text"
@@ -335,7 +335,7 @@ export default function Signup() {
               </div>
               <div className="flex-1">
                 <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">
-                  City
+                  City<span className="mandatory">*</span>
                 </label>
                 <input
                   type="text"
@@ -350,7 +350,7 @@ export default function Signup() {
             {/* Logo Upload */}
             <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
               <div onClick={handleImageClick}>
-                <label className="block text-gray-700 text-sm font-semibold mb-2 text-center">Organization Logo</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2 text-center">Organization Logo<span className="mandatory">*</span></label>
                 <Image
                   src={formValues.logo || DefaultPic}
                   alt="Profile Image"
