@@ -21,6 +21,8 @@ interface Coach {
   slug: string;
   qualifications: string;
   status: string;
+  assignedLicenseCount: string;
+  consumeLicenseCount: string;
 }
 
 const Home: React.FC = () => {
@@ -36,6 +38,7 @@ const Home: React.FC = () => {
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [licenseCount, setLicenseCount] = useState<number>(0);
   const [licenseKey, setLicenseKey] = useState<string>('');
+  const [totalLicenses, setTotalLicenses] = useState<number>(0);
   const limit = 10; // Items per page
   
 
@@ -64,6 +67,7 @@ const Home: React.FC = () => {
 
       const data = await response.json();
       setCoaches(data.coaches);
+      setTotalLicenses(data.totalLicensesCount[0].count)
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching coaches:', error);
@@ -130,6 +134,7 @@ const Home: React.FC = () => {
       if (response.ok) {
         console.log('Coach added successfully');
         fetchCoaches();  /// Refresh data table
+       
       } else {
         console.error('Failed to add coach');
       }
@@ -160,7 +165,14 @@ const Home: React.FC = () => {
         console.error('Missing required data');
         return;
       }
-
+      if(licenseCount>totalLicenses){
+        showError('License Qualtity can not be greater than available license.');
+        return;
+      }
+      if(licenseCount===0){
+        showError('Enter number of licenses.');
+        return;
+      }
       const response = await fetch('/api/enterprise/coach/assignLicense', {
         method: 'POST',
         headers: {
@@ -175,6 +187,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess('License shared successfully');
+        fetchCoaches(); 
         setShowLicenseModal(false);
       } else {
         const errorData = await response.json();
@@ -216,6 +229,7 @@ const Home: React.FC = () => {
       if (response.ok) {
         showSuccess('License shared successfully');
         fetchCoaches(currentPage, search);
+        
         setShowLicenseNoModal(false);
       } else {
         const errorData = await response.json();
@@ -261,9 +275,9 @@ const Home: React.FC = () => {
         <th>Email</th>
         <th>Phone</th>
         <th>Sport</th>
-        <th>Qualification</th>
+        <th>License</th>
         <th>Status</th>
-        <th>Action</th>
+        <th style={{width:225}}>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -271,14 +285,19 @@ const Home: React.FC = () => {
         coaches.map((coach) => (
           <tr key={coach.id}>
             <td className="text-center">
-              <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto" />
+              <img src={coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
               {coach.firstName} {coach.lastName}
             </td>
             <td>{coach.gender}</td>
             <td>{coach.email}</td>
             <td>{coach.countrycode}{coach.phoneNumber}</td>
             <td>{coach.sport}</td>
-            <td>{coach.qualifications}</td>
+            <td>
+            <div className="mt-4">
+  <button className="w-24 px-1 py-1 bg-blue-500 text-white rounded-lg">Shared {coach.assignedLicenseCount}</button>
+  <button className="w-24 px-1 py-1 bg-red-500 text-white rounded-lg mt-2"> Consumed {coach.consumeLicenseCount}</button>
+</div>
+            </td>
             <td>
               {coach.status === 'Inactive' ? (
                 <button
@@ -292,6 +311,7 @@ const Home: React.FC = () => {
                   {coach.status}
                 </button>
               )}
+              
             </td>
             <td>
               <div className="flex items-center space-x-2">
@@ -351,6 +371,11 @@ const Home: React.FC = () => {
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg w-96">
               <h2 className="text-2xl font-semibold mb-4">Assign Licenses</h2>
+              <div className="mb-2">
+              <label>Available License Keys: </label> 
+               <span className='bg-blue-500 w-16 h-16 rounded-full p-2 text-white'>{totalLicenses}</span>
+                </div>
+                <div className="mb-2">
               <input
                 type="number"
                 className="w-full p-2 border rounded-lg mb-4"
@@ -358,6 +383,7 @@ const Home: React.FC = () => {
                 onChange={(e) => setLicenseCount(Number(e.target.value))}
                 placeholder="Number of licenses"
               />
+              </div>
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowLicenseModal(false)}

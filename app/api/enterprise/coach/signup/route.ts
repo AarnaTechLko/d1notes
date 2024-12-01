@@ -5,7 +5,7 @@ import { coaches, otps, licenses } from '../../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and, between, lt, ilike, or, count, desc } from 'drizzle-orm';
+import { eq, isNotNull, and, between, lt, ilike, or, count, desc,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
  
 
@@ -129,13 +129,45 @@ export async function GET(req: NextRequest) {
     )
     : eq(coaches.enterprise_id, enterprise_id);
 
-  const coachesData = await db
-    .select()
+    const coachesData = await db
+    .select(
+      {
+        firstName: coaches.firstName,
+        lastName: coaches.lastName,
+        gender: coaches.gender,
+        image: coaches.image,
+        id: coaches.id,
+        email: coaches.email,
+        phoneNumber: coaches.phoneNumber,
+        slug: coaches.slug,
+        sport: coaches.sport,
+        qualifications: coaches.qualifications,
+        status: coaches.status,
+        consumeLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Consumed' THEN 1 END)`,
+        assignedLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Assigned' THEN 1 END)`,
+       
+      }
+    )
     .from(coaches)
+    .leftJoin(licenses, sql`${licenses.assigned_to} = ${coaches.id}`)
     .where(whereClause)
+    .groupBy(
+      coaches.id,
+      coaches.firstName,
+      coaches.lastName,
+      coaches.gender,
+      coaches.image,
+      coaches.email,
+      coaches.phoneNumber,
+      coaches.slug,
+      coaches.sport,
+      coaches.qualifications,
+      coaches.status
+    )
     .offset(offset)
     .orderBy(desc(coaches.createdAt))
     .limit(limit);
+
 
   // Query to get the total count
   const totalCount = await db
@@ -144,13 +176,28 @@ export async function GET(req: NextRequest) {
   .where(whereClause)
   .then((result) => result[0]?.count || 0);
 
+  const totalLicensesCount = await db
+    .select({
+      count: sql<number>`COUNT(*)`
+    })
+    .from(licenses)
+    .where(
+      and(
+        eq(licenses.status, 'Free'),
+        eq(licenses.enterprise_id, Number(enterprise_id)) // Replace `enterprise_id` with the desired variable or value
+      )
+    );
+
   const totalPages = Math.ceil(totalCount / limit);
-  return NextResponse.json({coaches: coachesData, totalPages});
+  return NextResponse.json({coaches: coachesData, totalLicensesCount:totalLicensesCount, totalPages});
 
 } catch (error) {
   
   return NextResponse.json(
-    { message: 'Failed to fetch coaches' },
+    { 
+      message: 'Failed to fetch coaches', 
+      error: error instanceof Error ? error.message : String(error) // Include the error message in the response
+    },
     { status: 500 }
   );
 }
