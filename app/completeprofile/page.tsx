@@ -348,7 +348,7 @@ if (!formValues.weight.trim()) {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Kgs)<span className='mandatory'>*</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     name="weight"
