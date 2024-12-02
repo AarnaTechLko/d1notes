@@ -124,6 +124,9 @@ export async function PUT(req: NextRequest) {
   const jersey = formData.get('jersey') as string;
   const league = formData.get('league') as string;
   const countrycode = formData.get('countrycode') as string;
+  const playingcountries = formData.get('playingcountries') as string;
+  const height = formData.get('height') as string;
+  const weight = formData.get('weight') as string;
  
 
   const imageFile = formData.get('image') as string | null;
@@ -154,7 +157,10 @@ export async function PUT(req: NextRequest) {
       league:league||null,
       countrycode:league||null,
       image:imageFile,
-      slug:slug
+      slug:slug,
+      playingcountries:playingcountries||null,
+      height:height||null,
+      weight:weight||null,
 
     })
     .where(eq(users.id, playerIDAsNumber))

@@ -14,8 +14,14 @@ interface Profile {
   lastName: string;
   image: string;
   slug: string;
-  rating:number;
-  
+  rating: number;
+  position: string;
+  grade_level: string;
+  location: string;
+  height: string;
+  weight: string;
+
+
 }
 
 const Home = () => {
@@ -65,13 +71,13 @@ const Home = () => {
   useEffect(() => {
     setFilteredProfiles(
       profiles.filter((profile) => {
-        
+
         const organizationName = (profile.firstName || '').toLowerCase();
-       
-    
+
+
         return (
           organizationName.includes(searchQuery.toLowerCase())
-          
+
         );
       })
     );
@@ -110,9 +116,14 @@ const Home = () => {
                     enterpriseName={profile.enterpriseName}
                     firstName={profile.firstName}
                     lastName={profile.lastName}
-                    image={profile.image ?? '/default-image.jpg'}
-                   
+                    image={profile.image ?? '/default.jpg'}
+
                     slug={profile.slug}
+                    position={profile.position}
+                    grade_level={profile.grade_level}
+                    location={profile.location}
+                    height={profile.height}
+                    weight={profile.weight}
                   />
 
 

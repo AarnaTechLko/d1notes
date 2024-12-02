@@ -9,21 +9,31 @@ import Loading from '@/app/components/Loading';
 
 
 import { EvaluationData } from '../../types/types';
+import ProfileCard from '@/app/components/players/ProfileCard';
 
 
-
+interface Profile {
+  slug: string;
+  enterpriseName: string;
+  firstName: string;
+  lastName: string;
+  image?: string;
+  position: string;
+  grade_level: string;
+  location: string;
+  height: number;
+  weight: number;
+}
 
 interface CoachData {
- 
-    team_name: string;
-    created_by: string;
-    description:  string;
-    
-  createdAt:  string;
-  slug: string;
 
- 
-  logo:string;
+  team_name: string;
+  created_by: string;
+  description: string;
+  cover_image: string;
+  createdAt: string;
+  slug: string;
+  logo: string;
 }
 
 interface CoachProfileProps {
@@ -35,6 +45,7 @@ interface CoachProfileProps {
 const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
   const [coachData, setCoachData] = useState<CoachData | null>(null);
+  const [teamData, setTeamData] = useState<Profile[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isevaludationModalopen, setIsevaluationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -47,7 +58,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
-  
+  function toSentenceCase(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
   // Fetch coach data
   useEffect(() => {
     const payload = { slug: slug };
@@ -64,8 +78,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         }
 
         const responseData = await response.json();
-setCoachData(responseData.clubdata);
- 
+        setCoachData(responseData.clubdata);
+        setTeamData(responseData.teamplayersList);
+
       } catch (err) {
         setError("Some error occurred.");
       } finally {
@@ -95,90 +110,87 @@ setCoachData(responseData.clubdata);
   return (
     <>
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
-        {/* Header Section */}
-       
-        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg">
-  {/* Profile Image and Coach Info */}
-  <div className="flex flex-col md:flex-row md:w-2/3 mb-4 md:mb-0 md:mr-4">
-    {/* Profile Image */}
-    <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-      <Image
-        src={coachData.logo}
-        alt={`${coachData.team_name}`}
-        width={200}
-        height={200}
-        className="rounded-full object-cover"
-      />
-    </div>
-
-    {/* Coach Info */}
-    <div className="text-center md:text-left">
-      <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
-        {coachData.team_name}
-      </h1>
-      <p className="text-gray-600 text-lg">
-      Created By: {coachData.created_by}
-      </p>
-
-      {/* Rating */}
-      <div className="flex items-center justify-center md:justify-start mt-2">
-      <div className="mt-1">{stars}</div>
-      
-      </div>
-      <span className="text-yellow-500 text-2xl">5</span>
-      <span className="ml-2 text-gray-500">/ 5.0</span>
-    </div>
-  </div>
-
-
-</div>
-
-
-
-
-        {/* Contact Info Section */}
-        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-   Description
-  </h2>
-        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
-
-   
-  <div className="flex flex-col md:flex-row md:space-x-8">
-    {/* Column 1 */}
-    <div className="flex-1 mb-4 md:mb-0">
-        {coachData.description}
-      {/* <ul className="space-y-4">
-        <li><strong>Address:</strong> {coachData.address} USD</li>
-        <li><strong>Country :</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
-        <li><strong>City:</strong> {coachData.city}</li>
         
-      </ul> */}
-    </div>
-    
-    {/* Column 2 */}
-    {/* <div className="flex-1">
-      <ul className="space-y-4">
-      <li><strong>Location:</strong> {coachData.location}</li>
-        <li><strong>Country:</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
-        <li><strong>City:</strong> {coachData.city}</li>
-      </ul>
-    </div> */}
-  </div>
-</section>
 
- 
+        <div className="text-center flex flex-col items-center space-y-4">
+          
+          <div className="flex-shrink-0">
+            <Image
+              src={coachData.logo}
+              alt={`${coachData.team_name}`}
+              width={200}
+              height={200}
+              className="rounded-full object-cover"
+            />
+          </div>
+
+          {/* Coach Info */}
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
+              {coachData.team_name}
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Created By: {coachData.created_by}
+            </p>
+          </div>
+
+          {/* Rating */}
+          <div className="flex items-center justify-center space-x-2 mt-2">
+            <div className="mt-1">{stars}</div>
+
+          </div>
+        </div>
 
 
- 
+
+        {/* Header Section */}
+
+        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg">
+
+          {/* Profile Image and Coach Info */}
+          <div className="flex flex-col md:flex-row  mb-4 md:mb-0 md:mr-4">
+
+            <img src={coachData.cover_image} width="100%" />
+            {/* Profile Image */}
+
+          </div>
 
 
- 
+        </div>
+
+
+        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+ {teamData?.map((profile:any) => (
+                <div className="w-full lg:w-auto" key={profile.slug}>
+                  <ProfileCard
+                    key={profile.slug}
+                    rating={5}
+                    coachName=''
+                    enterpriseName={profile.enterpriseName}
+                    firstName={toSentenceCase(profile.firstName)}
+                    lastName={toSentenceCase(profile.lastName)}
+                    image={profile.image ?? '/default.jpg'}
+
+                    slug={profile.slug}
+                    position={toSentenceCase(profile.position)}
+                    grade_level={toSentenceCase(profile.grade_level)}
+                    location={toSentenceCase(profile.location)}
+                    height={profile.height}
+                    weight={profile.weight}
+                  />
+
+
+                </div>
+              ))}
+
+          </div>
+        </section>
       </div>
 
       {/* Modals */}
-     
+
     </>
   );
 };

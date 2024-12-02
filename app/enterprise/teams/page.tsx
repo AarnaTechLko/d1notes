@@ -4,16 +4,21 @@ import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
-import PlayerTransfer from "@/app/components/PlayerTransfer";
+ 
 import Link from "next/link";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 // Define types for better TypeScript compliance
 type Team = {
-  id: number;
-  team_name: string;
-  description: string;
-  logo: string;
-  created_by: string;
-  creator_id: string;
+  id?: number;
+  team_name?: string;
+  description?: string;
+  logo?: string;
+  created_by?: string;
+  creator_id?: number;
+  team_type?: string;
+  team_year?: string;
+  slug?: string;
+  cover_image?: string;
   playerIds?: number[]; 
 };
 
@@ -63,22 +68,12 @@ export default function TeamsPage() {
       console.error("No user logged in");
       return;
     }
-
+  
     try {
-      const res = await fetch("/api/enterprise/player", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          enterprise_id: session.user.id, // Send logged-in user's ID
-        }),
-      });
-
+      const res = await fetch(`/api/players?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch players");
-
-      const data: Player[] = await res.json();
-      setPlayers(data);
+      const playerData: Player[] = await res.json();
+      setPlayers(playerData);
     } catch (error) {
       console.error("Error fetching players:", error);
     }
@@ -110,13 +105,13 @@ export default function TeamsPage() {
     const sanitizedTeam = {
       ...team,
       created_by: team.created_by || "",
-      creator_id: team.creator_id || "",
+      creator_id: team.creator_id ,
     };
     setEditTeam(sanitizedTeam);
     setModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id?: number) => {
     try {
       await fetch("/api/teams", {
         method: "DELETE",
@@ -193,21 +188,26 @@ export default function TeamsPage() {
 >
   Add/View Players
 </Link></td>
-                      <td className="px-4 py-2 space-x-2">
-                        <button
-                          className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                          onClick={() => handleEdit(team)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                          onClick={() => handleDelete(team.id)}
-                        >
-                          Delete
-                        </button>
-                        
-                      </td>
+<td className="px-4 py-2">
+  <div className="flex items-center space-x-2">
+    <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
+      <FaEye />
+    </a>
+    <button
+      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+      onClick={() => handleEdit(team)}
+    >
+      <FaEdit />
+    </button>
+    <button
+      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+      onClick={() => handleDelete(team.id)}
+    >
+      <FaTrash />
+    </button>
+  </div>
+</td>
+
                     </tr>
                   ))}
                 </tbody>

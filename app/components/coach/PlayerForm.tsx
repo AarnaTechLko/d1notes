@@ -12,6 +12,7 @@ import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { showError, showSuccess } from "../Toastr";
 import FileUploader from "../FileUploader";
+import { countryCodesList, states, positionOptionsList,genders ,playingLevels, countries} from "@/lib/constants";
 interface PlayerFormProps {
     onSubmit: (formData: any) => void;
 }
@@ -32,10 +33,14 @@ interface FormValues {
   state:string;
   city:string;
   jersey:string;
-  enterprise_id:string;
+  enterprise_id:number;
   league:string;
   countrycode:string;
   license:string;
+  height:string;
+  weight:string;
+  playingcountries:string;
+  ownerType:string;
   image: string | null; // Updated to store Base64 string
 }
 const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
@@ -59,159 +64,26 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     jersey:"",
     league:"",
     countrycode:"",
-    enterprise_id:"",
+    enterprise_id:0,
     license:"",
+    playingcountries:"",
+    height:"",
+    weight:"",
+    ownerType:"",
     image: null,
   });
 
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [usertype, setUsertype] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false); 
   const [loadingKey, setLoadingKey] = useState<boolean>(false); 
   const [maxDate, setMaxDate] = useState('');
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
-  const positionOptions = [
-    { value: "Goalkeeper", label: "Goalkeeper" },
-    { value: "Defender", label: "Defender" },
-    { value: "Midfielder", label: "Midfielder" },
-    { value: "Forward", label: "Forward" },
-    { value: "Striker", label: "Striker" },
-    { value: "Wingback", label: "Wingback" },
-    { value: "Center Back", label: "Center Back" },
-    // Add more positions as needed
-  ];
-
-  const countryCodes = [
-    { id: 1, code: "+1", country: "USA" },
-    { id: 2, code: "+44", country: "UK" },
-    { id: 3, code: "+91", country: "India" },
-    { id: 4, code: "+61", country: "Australia" },
-    { id: 5, code: "+33", country: "France" },
-    { id: 6, code: "+49", country: "Germany" },
-    { id: 7, code: "+81", country: "Japan" },
-    { id: 8, code: "+55", country: "Brazil" },
-    { id: 9, code: "+34", country: "Spain" },
-    { id: 10, code: "+39", country: "Italy" },
-    { id: 11, code: "+52", country: "Mexico" },
-    { id: 12, code: "+7", country: "Russia" },
-    { id: 13, code: "+86", country: "China" },
-    { id: 14, code: "+27", country: "South Africa" },
-    { id: 15, code: "+20", country: "Egypt" },
-    { id: 16, code: "+62", country: "Indonesia" },
-    { id: 17, code: "+60", country: "Malaysia" },
-    { id: 18, code: "+34", country: "Spain" },
-    { id: 19, code: "+91", country: "India" },
-    { id: 20, code: "+63", country: "Philippines" },
-    { id: 21, code: "+90", country: "Turkey" },
-    { id: 22, code: "+94", country: "Sri Lanka" },
-    { id: 23, code: "+971", country: "UAE" },
-    { id: 24, code: "+34", country: "Spain" },
-    { id: 25, code: "+27", country: "South Africa" },
-    { id: 26, code: "+44", country: "United Kingdom" },
-    { id: 27, code: "+55", country: "Brazil" },
-    { id: 28, code: "+49", country: "Germany" },
-    { id: 29, code: "+62", country: "Indonesia" },
-    { id: 30, code: "+52", country: "Mexico" },
-    { id: 31, code: "+61", country: "Australia" },
-    { id: 32, code: "+33", country: "France" },
-    { id: 33, code: "+44", country: "United Kingdom" },
-    { id: 34, code: "+1", country: "USA" },
-    { id: 35, code: "+968", country: "Oman" },
-    { id: 36, code: "+972", country: "Israel" },
-    { id: 37, code: "+886", country: "Taiwan" },
-    { id: 38, code: "+90", country: "Turkey" },
-    { id: 39, code: "+351", country: "Portugal" },
-    { id: 40, code: "+977", country: "Nepal" },
-    { id: 41, code: "+265", country: "Malawi" },
-    { id: 42, code: "+234", country: "Nigeria" },
-    { id: 43, code: "+254", country: "Kenya" },
-    { id: 44, code: "+1", country: "Canada" },
-    { id: 45, code: "+54", country: "Argentina" },
-    { id: 46, code: "+48", country: "Poland" },
-    { id: 47, code: "+351", country: "Portugal" },
-    { id: 48, code: "+20", country: "Egypt" },
-    { id: 49, code: "+971", country: "UAE" },
-    { id: 50, code: "+962", country: "Jordan" },
-    { id: 51, code: "+975", country: "Bhutan" },
-    { id: 52, code: "+977", country: "Nepal" },
-    { id: 53, code: "+1", country: "USA" },
-    { id: 54, code: "+49", country: "Germany" },
-    { id: 55, code: "+7", country: "Russia" },
-    { id: 56, code: "+60", country: "Malaysia" },
-    { id: 57, code: "+92", country: "Pakistan" },
-    { id: 58, code: "+370", country: "Lithuania" },
-    { id: 59, code: "+502", country: "Guatemala" },
-    { id: 60, code: "+504", country: "Honduras" },
-    { id: 61, code: "+852", country: "Hong Kong" },
-    { id: 62, code: "+63", country: "Philippines" },
-    { id: 63, code: "+33", country: "France" },
-    { id: 64, code: "+55", country: "Brazil" },
-    { id: 65, code: "+56", country: "Chile" },
-    { id: 66, code: "+57", country: "Colombia" },
-    { id: 67, code: "+60", country: "Malaysia" },
-    { id: 68, code: "+503", country: "El Salvador" },
-    { id: 69, code: "+91", country: "India" },
-    { id: 70, code: "+1", country: "USA" }
-  ];
-  
-
-  
-  const states = [
-    { name: "Alabama", abbreviation: "AL" },
-    { name: "Alaska", abbreviation: "AK" },
-    { name: "Arizona", abbreviation: "AZ" },
-    { name: "Arkansas", abbreviation: "AR" },
-    { name: "California", abbreviation: "CA" },
-    { name: "Colorado", abbreviation: "CO" },
-    { name: "Connecticut", abbreviation: "CT" },
-    { name: "Delaware", abbreviation: "DE" },
-    { name: "Florida", abbreviation: "FL" },
-    { name: "Georgia", abbreviation: "GA" },
-    { name: "Hawaii", abbreviation: "HI" },
-    { name: "Idaho", abbreviation: "ID" },
-    { name: "Illinois", abbreviation: "IL" },
-    { name: "Indiana", abbreviation: "IN" },
-    { name: "Iowa", abbreviation: "IA" },
-    { name: "Kansas", abbreviation: "KS" },
-    { name: "Kentucky", abbreviation: "KY" },
-    { name: "Louisiana", abbreviation: "LA" },
-    { name: "Maine", abbreviation: "ME" },
-    { name: "Maryland", abbreviation: "MD" },
-    { name: "Massachusetts", abbreviation: "MA" },
-    { name: "Michigan", abbreviation: "MI" },
-    { name: "Minnesota", abbreviation: "MN" },
-    { name: "Mississippi", abbreviation: "MS" },
-    { name: "Missouri", abbreviation: "MO" },
-    { name: "Montana", abbreviation: "MT" },
-    { name: "Nebraska", abbreviation: "NE" },
-    { name: "Nevada", abbreviation: "NV" },
-    { name: "New Hampshire", abbreviation: "NH" },
-    { name: "New Jersey", abbreviation: "NJ" },
-    { name: "New Mexico", abbreviation: "NM" },
-    { name: "New York", abbreviation: "NY" },
-    { name: "North Carolina", abbreviation: "NC" },
-    { name: "North Dakota", abbreviation: "ND" },
-    { name: "Ohio", abbreviation: "OH" },
-    { name: "Oklahoma", abbreviation: "OK" },
-    { name: "Oregon", abbreviation: "OR" },
-    { name: "Pennsylvania", abbreviation: "PA" },
-    { name: "Rhode Island", abbreviation: "RI" },
-    { name: "South Carolina", abbreviation: "SC" },
-    { name: "South Dakota", abbreviation: "SD" },
-    { name: "Tennessee", abbreviation: "TN" },
-    { name: "Texas", abbreviation: "TX" },
-    { name: "Utah", abbreviation: "UT" },
-    { name: "Vermont", abbreviation: "VT" },
-    { name: "Virginia", abbreviation: "VA" },
-    { name: "Washington", abbreviation: "WA" },
-    { name: "West Virginia", abbreviation: "WV" },
-    { name: "Wisconsin", abbreviation: "WI" },
-    { name: "Wyoming", abbreviation: "WY" }
-  ];
-
+ 
   const handleAssignLicense = async () => {
         
     try {
@@ -250,18 +122,31 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     
     // Validation
     const newErrors: Partial<FormValues> = {};
-    if (!formValues.image) {
-        newErrors.image = "Profile image is required";
-    } else {
-        // Calculate the approximate size of the base64 string
-        const imageSizeInBytes = (formValues.image.length * 3) / 4;
-        if (imageSizeInBytes > 5 * 1024 * 1024) {
-            newErrors.image = "Image size must be less than 5MB";
-        }
-    }
+    // if (!formValues.image) {
+    //     newErrors.image = "Profile image is required";
+    // } else {
+    //     // Calculate the approximate size of the base64 string
+    //     const imageSizeInBytes = (formValues.image.length * 3) / 4;
+    //     if (imageSizeInBytes > 5 * 1024 * 1024) {
+    //         newErrors.image = "Image size must be less than 5MB";
+    //     }
+    // }
     if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
-    if (!formValues.location.trim()) newErrors.location = "Location is required.";
+    if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+    const heightRegex = /^\d{1,2}'\d{1,2}"$/;
+    if (!formValues.height.trim()) {
+      newErrors.height = "Height is required.";
+    } else if (!heightRegex.test(formValues.height.trim())) {
+      newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
+    }
+
+    const weightRegex = /^\d+(\.\d{1,2})?$/;
+if (!formValues.weight.trim()) {
+    newErrors.weight = "Weight is required.";
+} else if (!weightRegex.test(formValues.weight.trim())) {
+    newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
+}
     if (!formValues.email) {
         newErrors.email = 'Email is required';
     } else if (
@@ -288,7 +173,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     if (!formValues.country.trim()) newErrors.country = "Country is required.";
     if (!formValues.state.trim()) newErrors.state = "State is required.";
     if (!formValues.city.trim()) newErrors.city = "city is required.";
-    if (!formValues.league.trim()) newErrors.league = "city is required.";
+    if (!formValues.league.trim()) newErrors.league = "League is required.";
     if (!formValues.license.trim()) newErrors.license = "License key is required.";
 
     if (Object.keys(newErrors).length > 0) {
@@ -306,16 +191,10 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
       return;
     }
 
-    const formData = new FormData();
-
-    // Append all form values to FormData
-    for (const key in formValues) {
-      const value = formValues[key as keyof FormValues];
-      formData.append(key, value as string | Blob);
-    }
-
+    
     if (session && session.user.id) {
-      formData.append("playerID", session.user.id); // Assuming user.id is the ID
+      formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
+  formValues.ownerType = session.user.type;
     } else {
       setError("User is not authenticated");
       return;
@@ -328,7 +207,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
         headers: {
           Authorization: `Bearer ${token}`, // Send token in Authorization header
         },
-        body: formData,
+        body: JSON.stringify(formValues),
       });
  
 if (!response.ok) {
@@ -343,7 +222,7 @@ if (!response.ok) {
       const data = await response.json();
      
       showSuccess('Player added successfully.');
-      onSubmit(formData);
+      onSubmit(formValues);
     } catch (err) {
       setLoading(false);
       alert("asdasd");
@@ -404,17 +283,16 @@ if (!response.ok) {
     }
     
   };
-   
+  const handleCountryChange = (selectedOptions: any) => {
+    const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
+    setFormValues({ ...formValues, playingcountries: playingcountries });
+  };
   const handlePositionChange = (selectedOptions: any) => {
     // Convert selected options into a comma-separated string
     const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
     setFormValues({ ...formValues, position: positions });
   };
-  useEffect(() => {
-    if (session) {
-        setFormValues({ ...formValues, enterprise_id: session.user.id });
-    }
-}, [session]);
+ 
   return (
     <>
      <div className="container mx-auto p-1">
@@ -427,7 +305,7 @@ if (!response.ok) {
       <form onSubmit={handleSubmit} >
         
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4 text-center">
-          <label>Profile Photo<span className="mandatory">*</span></label>
+          <label>Profile Photo</label>
           <div className="items-center cursor-pointer" onClick={handleImageClick}>
             <Image
               src={formValues.image ? formValues.image : DefaultPic}
@@ -486,7 +364,7 @@ if (!response.ok) {
 
         {/* Location */}
         <div>
-          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Location<span className="mandatory">*</span></label>
+          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location<span className="mandatory">*</span></label>
           <input
             type="text"
             name="location"
@@ -508,6 +386,49 @@ if (!response.ok) {
          
         </div>
        </div>
+
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+       <div>
+          <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height (in cms)<span className='mandatory'>*</span></label>
+          <input
+            type="text"
+            name="height"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.height}
+            onChange={handleChange}
+            placeholder="5'6&quot;"
+          />
+          
+        </div>
+
+        <div>
+          <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Kgs)<span className='mandatory'>*</span></label>
+          <input
+            type="text"
+            name="weight"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={formValues.weight}
+            onChange={handleChange}
+          />
+          
+        </div>
+
+        
+
+        <div>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Playing for Country</label>
+          <Select
+            isMulti
+            options={countries}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={handleCountryChange}
+            placeholder="Select Position(s)"
+          />
+          
+        </div>
+
+       </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
           <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className="mandatory">*</span></label>
@@ -518,7 +439,12 @@ if (!response.ok) {
             onChange={handleChange}
           >
             <option value="">Select</option>
-            <option value="United States of America">United States of America</option>
+            {countries.map((country) => (
+                      <option key={country.label} value={country.label}>
+                        {country.label}
+                      </option>
+                    ))}
+
            
           </select>
           
@@ -575,14 +501,15 @@ if (!response.ok) {
         {/* Grade Level */}
         <div>
           <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level<span className="mandatory">*</span></label>
-          <input
-          placeholder="Specify level"
-            type="text"
-            name="grade_level"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.grade_level}
-            onChange={handleChange}
-          />
+          <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
+                    {playingLevels.map((level) => (
+
+
+                      <option value={level.value} key={level.value}>{level.label}</option>
+                    ))}
+
+
+                  </select>
           
         
         </div>
@@ -596,10 +523,11 @@ if (!response.ok) {
             value={formValues.gender}
             onChange={handleChange}
           >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            
+            {genders.map((gender) => (
+
+
+<option value={gender.value} key={gender.value}>{gender.label}</option>
+))}
           </select>
           
         </div>
@@ -651,7 +579,7 @@ if (!response.ok) {
           <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className="mandatory">*</span></label>
           <Select
             isMulti
-            options={positionOptions}
+            options={positionOptionsList}
             className="basic-multi-select"
             classNamePrefix="select"
             onChange={handlePositionChange}
@@ -671,7 +599,7 @@ if (!response.ok) {
       value={formValues.countrycode} 
       onChange={handleChange}
     >
-     {countryCodes.map((item) => (
+     {countryCodesList.map((item) => (
         <option key={item.id} value={item.code}>
           {item.code} ({item.country})
         </option>
@@ -705,7 +633,7 @@ if (!response.ok) {
             onChange={handleChange}
           /> 
           
-        </div>
+        </div> 
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>

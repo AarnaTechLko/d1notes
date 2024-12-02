@@ -113,9 +113,19 @@ const Home: React.FC = () => {
         {/* Other Columns */}
        
         <td>{order.licenseKey}</td>
-        <td>{order.status}</td>
+        <td><button
+    className={`px-4 py-2 rounded-lg text-white ${
+      order.status === "Free"
+        ? "bg-green-500"
+        : order.status === "Assigned"
+        ? "bg-yellow-500"
+        : "bg-red-500"
+    }`}
+  >
+    {order.status}
+  </button></td>
         
-        {/* Copy-to-Clipboard Column */}
+         
         <td>
           { order.status === "Consumed" ? "N/A" : (
             
@@ -143,32 +153,37 @@ const Home: React.FC = () => {
             </table>
             {/* Pagination Controls */}
             <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 text-sm ${
-                  currentPage === 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500 hover:underline'
-                }`}
-              >
-                Previous
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 text-sm ${
-                  currentPage === totalPages
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500 hover:underline'
-                }`}
-              >
-                Next
-              </button>
-            </div>
+  {/* Previous Button */}
+  <button
+    onClick={handlePrevPage}
+    disabled={currentPage === 1}
+    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+      currentPage === 1
+        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+        : "bg-blue-500 text-white hover:bg-blue-600"
+    }`}
+  >
+    Previous
+  </button>
+
+  {/* Page Indicator */}
+  <span className="text-sm text-gray-600">
+    Page {currentPage} of {totalPages}
+  </span>
+
+  {/* Next Button */}
+  <button
+    onClick={handleNextPage}
+    disabled={currentPage === totalPages}
+    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+      currentPage === totalPages
+        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+        : "bg-blue-500 text-white hover:bg-blue-600"
+    }`}
+  >
+    Next 
+  </button>
+</div>
           </div>
         </div>
       </main>

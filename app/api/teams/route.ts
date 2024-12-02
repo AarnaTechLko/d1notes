@@ -25,16 +25,16 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { team_name, description, logo, created_by, creator_id } = await req.json();
+  const { team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id } = await req.json();
   const timestamp = Date.now(); 
   const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug }).returning();
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id }).returning();
   return NextResponse.json(result);
 }
 
 export async function PUT(req: NextRequest) {
     try {
-      const { id, team_name, description, logo, created_by, creator_id } = await req.json();
+      const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id } = await req.json();
   
       // Log input for debugging
       console.log("Request Body:", { id, team_name, description, created_by, creator_id });
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest) {
   
       const result = await db
         .update(teams)
-        .set({ team_name, description, logo, created_by, creator_id })
+        .set({ team_name, description, logo, created_by, creator_id,team_type,team_year,cover_image,coach_id })
         .where(eq(teams.id, id))
         .returning();
   

@@ -5,7 +5,7 @@ import { teams, enterprises, coaches, otps, users } from '../../../../lib/schema
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and, between, lt, ilike, sql } from 'drizzle-orm';
+import { eq, isNotNull, and,not, between, lt, ilike, sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
@@ -57,6 +57,11 @@ export async function GET(req: NextRequest) {
         lastName: users.last_name,
         slug: users.slug,
         image: users.image,
+        position: users.position,
+        grade_level: users.grade_level,
+        location: users.location,
+        height: users.height,
+        weight: users.weight,
         coachName: sql`coa."firstName"`.as("coachName"),
         coachLastName: sql`coa."lastName"`.as("coachLastName"),
         enterpriseName: sql`ent."organizationName"`.as("enterpriseName"),
@@ -70,7 +75,11 @@ export async function GET(req: NextRequest) {
         sql`coaches AS coa`, // Alias defined here
         sql`${users.coach_id}::integer = coa.id`
       )
-      .where(eq(users.status, 'Active'));
+      .where(
+        and(
+          eq(users.status, 'Active'), 
+          isNotNull(users.first_name)
+      ));
 
     const result = await query.execute();
 
@@ -82,6 +91,11 @@ export async function GET(req: NextRequest) {
       lastName: coach.lastName,
       slug: coach.slug,
       image: coach.image,
+      position: coach.position,
+      grade_level: coach.grade_level,
+      location: coach.location,
+      height: coach.height,
+      weight: coach.weight,
 
     }));
     // Return the coach list as a JSON response

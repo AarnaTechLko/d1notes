@@ -43,6 +43,9 @@ export const users = pgTable(
     enterprise_id: text("enterprise_id"),
     coach_id: text("coach_id"),
     slug: text("slug"),
+    playingcountries: text("playingcountries"),
+    height: text("height"),
+    weight: text("weight"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -232,6 +235,10 @@ export const teams=pgTable('teams', {
   created_by: text('created_by').notNull(),
   slug: text('slug').notNull(),
   creator_id: integer('creator_id').notNull(),
+  coach_id: integer('coach_id').notNull(),
+  team_type: text('team_type'),
+  team_year: text('team_year'),
+  cover_image: text('cover_image'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

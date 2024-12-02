@@ -3,12 +3,21 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { showError, showSuccess } from "./Toastr";
+ 
 
 interface Player {
   id: number;
   first_name: string;
   last_name: string;
   image: string;
+  position?: string; // New fields for additional info
+  location?: string; // New fields for additional info
+  height?: string; // New fields for additional info
+  weight?: string; // New fields for additional info
+  grade_level?: string; // New fields for additional info
+  team?: string; // New fields for additional info
+  
+ 
 }
 
 interface PlayerTransferProps {
@@ -158,7 +167,6 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
     }
   };
 
-  // Filter available and selected players based on search term
   const filteredAvailablePlayers = availablePlayers.filter((player) =>
     `${player.first_name} ${player.last_name}`
       .toLowerCase()
@@ -172,115 +180,122 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
   );
 
   return (
-    <>
+    <div className="container mx-auto p-4">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex justify-center items-center h-1/2-screen">
-          <div className="flex w-3/4 gap-4">
-            <Droppable droppableId="available">
-              {(provided) => (
-                <div
-                  className="w-1/2 border p-4"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  <h2 className="text-lg font-bold mb-2">Available Players</h2>
-                  <input
-                    type="text"
-                    placeholder="Search available players"
-                    value={availableSearchTerm}
-                    onChange={(e) => setAvailableSearchTerm(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
-                  />
-                  <ul>
-                    {filteredAvailablePlayers.map((player, index) => (
-                      <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
-                        {(provided) => (
-                          <li
-                            className="p-2 bg-gray-100 border mb-2 flex items-center gap-2 cursor-pointer"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <img
-                              src={player.image}
-                              alt={`${player.first_name} ${player.last_name}`}
-                              className="w-8 h-8 rounded-full"
-                            />
-                            <span>
+        <div className="flex justify-between items-start">
+          <Droppable droppableId="available">
+            {(provided) => (
+              <div
+                className="w-1/2 border p-4 rounded-lg bg-white shadow-md"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <h2 className="text-xl font-bold mb-2">Available Players</h2>
+                <input
+                  type="text"
+                  placeholder="Search available players"
+                  value={availableSearchTerm}
+                  onChange={(e) => setAvailableSearchTerm(e.target.value)}
+                  className="w-full mb-4 p-2 border rounded"
+                />
+                <ul>
+                  {filteredAvailablePlayers.map((player, index) => (
+                    <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
+                      {(provided) => (
+                        <li
+                          className="p-4 bg-gray-100 border mb-2 rounded-lg flex items-center gap-4"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <img
+                            src={player.image  ?? '/default.jpg'}
+                            alt={`${player.first_name} ${player.last_name}`}
+                            className="w-20 h-20 rounded-full"
+                          />
+                          <div>
+                            <h3 className="font-semibold">
                               {player.first_name} {player.last_name}
-                            </span>
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                </div>
-              )}
-            </Droppable>
+                            </h3>
+                            {player.position && <p className="text-xs"><b>Position:</b> {player.position}</p>}
+                            {player.location && <p className="text-xs"><b>Playing Location:</b> {player.location}</p>}
+                            {player.height && <p className="text-xs"><b>Height:</b> {player.height}</p>}
+                            {player.weight && <p className="text-xs"><b>Weight:</b> {player.weight}</p>}
+                            {player.grade_level && <p className="text-xs"><b>Level:</b> {player.grade_level}</p>}
+                            {player.team && <p className="text-xs"><b>Team:</b> {player.team}</p>}
+                          </div>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              </div>
+            )}
+          </Droppable>
 
-            <Droppable droppableId="selected">
-              {(provided) => (
-                <div
-                  className="w-1/2 border p-4"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  <h2 className="text-lg font-bold mb-2">Selected Players</h2>
-                  <input
-                    type="text"
-                    placeholder="Search selected players"
-                    value={selectedSearchTerm}
-                    onChange={(e) => setSelectedSearchTerm(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
-                  />
-                  <ul>
-                    {filteredSelectedPlayers.map((player, index) => (
-                      <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
-                        {(provided) => (
-                          <li
-                            className="p-2 bg-gray-100 border mb-2 flex items-center gap-2 cursor-pointer"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <img
-                              src={player.image}
-                              alt={`${player.first_name} ${player.last_name}`}
-                              className="w-8 h-8 rounded-full"
-                            />
-                            <span>
+          <Droppable droppableId="selected">
+            {(provided) => (
+              <div
+                className="w-1/2 border p-4 rounded-lg bg-white shadow-md"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <h2 className="text-xl font-bold mb-2">Selected Players</h2>
+                <input
+                  type="text"
+                  placeholder="Search selected players"
+                  value={selectedSearchTerm}
+                  onChange={(e) => setSelectedSearchTerm(e.target.value)}
+                  className="w-full mb-4 p-2 border rounded"
+                />
+                <ul>
+                  {filteredSelectedPlayers.map((player, index) => (
+                    <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
+                      {(provided) => (
+                        <li
+                          className="p-4 bg-gray-100 border mb-2 rounded-lg flex items-center gap-4"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <img
+                            src={player.image  ?? '/default.jpg'}
+                            alt={`${player.first_name} ${player.last_name}`}
+                            className="w-20 h-20 rounded-full"
+                          />
+                          <div>
+                          <h3 className="font-semibold">
                               {player.first_name} {player.last_name}
-                            </span>
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                </div>
-              )}
-            </Droppable>
-          </div>
+                            </h3>
+                            {player.position && <p className="text-xs"><b>Position:</b> {player.position}</p>}
+                            {player.location && <p className="text-xs"><b>Playing Location:</b> {player.location}</p>}
+                            {player.height && <p className="text-xs"><b>Height:</b> {player.height}</p>}
+                            {player.weight && <p className="text-xs"><b>Weight:</b> {player.weight}</p>}
+                            {player.grade_level && <p className="text-xs"><b>Level:</b> {player.grade_level}</p>}
+                            {player.team && <p className="text-xs"><b>Team:</b> {player.team}</p>}
+                          </div>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              </div>
+            )}
+          </Droppable>
         </div>
       </DragDropContext>
-      <div className="text-center mt-4 flex justify-center gap-4">
+      <div className="text-center mt-4">
         <button
           onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
+          className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
           disabled={isLoading}
         >
-          {isLoading ? "Assigning..." : "Assign"}
+          {isLoading ? "Assigning..." : "Assign Players"}
         </button>
-        <Link href="/enterprise/teams">
-          <button
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-          >
-            Back to Teams
-          </button>
-        </Link>
       </div>
-    </>
+    </div>
   );
 };
 

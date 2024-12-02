@@ -12,6 +12,20 @@ img.logo {
 .mandatory{
   color:red;
 }
+.jersyBlock {
+  position: absolute;
+  top: 70%;
+  right: 12px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  background-color: #3c82f6;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.2em;
+}
 .z-10{
   z-index:100 !important;
 }

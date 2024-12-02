@@ -34,6 +34,7 @@ const Home: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
   const [showLicenseModal, setShowLicenseModal] = useState<boolean>(false);
+  const [assignLicenseLoader, setAssignLicenseLoader] = useState<boolean>(false);
   const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [licenseCount, setLicenseCount] = useState<number>(0);
@@ -157,6 +158,7 @@ const Home: React.FC = () => {
   };
 
   const handleLicenseSubmit = async () => {
+    setAssignLicenseLoader(true);
     try {
       const session = await getSession();
       const enterpriseId = session?.user?.id;
@@ -167,10 +169,12 @@ const Home: React.FC = () => {
       }
       if(licenseCount>totalLicenses){
         showError('License Qualtity can not be greater than available license.');
+        setAssignLicenseLoader(false);
         return;
       }
       if(licenseCount===0){
         showError('Enter number of licenses.');
+        setAssignLicenseLoader(false);
         return;
       }
       const response = await fetch('/api/enterprise/coach/assignLicense', {
@@ -187,18 +191,21 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess('License shared successfully');
+        setAssignLicenseLoader(false);
         fetchCoaches(); 
         setShowLicenseModal(false);
       } else {
         const errorData = await response.json();
         const errorMessage = errorData.message || 'Failed to share license';
+        setAssignLicenseLoader(false);
         showError(errorMessage);
         setShowLicenseModal(true);
       }
     } catch (error) {
       console.error('Error sharing license:', error);
+      setAssignLicenseLoader(false);
     } finally {
-     
+      setAssignLicenseLoader(false);
       setLicenseCount(0);
     }
   };
@@ -384,7 +391,7 @@ const Home: React.FC = () => {
                 placeholder="Number of licenses"
               />
               </div>
-              <div className="flex justify-end">
+              <div className="flex">
                 <button
                   onClick={() => setShowLicenseModal(false)}
                   className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2"
@@ -395,7 +402,17 @@ const Home: React.FC = () => {
                   onClick={handleLicenseSubmit}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg"
                 >
-                  Submit
+                  {assignLicenseLoader ? (
+                                            <>
+                                             <span className="flex items-center">
+                                               <FaSpinner className="animate-spin mr-2" /> Sharing...
+                                               </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                               Share License
+                                            </>
+                                        )}
                 </button>
               </div>
             </div>

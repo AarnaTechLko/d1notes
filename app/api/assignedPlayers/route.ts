@@ -23,6 +23,12 @@ export async function POST(req: Request) {
         id: users.id,
         first_name: users.first_name,
         last_name: users.last_name,
+        position: users.position,
+        location: users.location,
+        height: users.height,
+        weight: users.weight,
+        team: users.team,
+        grade_level: users.grade_level,
         image: users.image})
       .from(teamPlayers)
       .innerJoin(users, eq(teamPlayers.playerId, users.id)) // Join the users table

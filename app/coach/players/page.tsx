@@ -4,6 +4,7 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/coach/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
+import defaultImage from '../../public/default.jpg';
 import { FaSpinner } from 'react-icons/fa';
 
 // Define the type for the coach data
@@ -224,7 +225,18 @@ const Home: React.FC = () => {
                   coaches.map((coach) => (
                     <tr key={coach.id}>
                       <td className='text-center'> 
-                        <img src={coach.image} className="rounded-full w-32 h-32 object-cover m-auto"/>
+                        {coach.image === null || coach.image === '' ? (
+                          <img
+                            src={defaultImage.src}
+                            className="rounded-full w-32 h-32 object-cover m-auto"
+                            alt={`${coach.first_name} ${coach.last_name}`}
+                          />
+                        ) : (
+                      <img
+    src={coach.image} // Use defaultImage if coach.image is null or empty
+    className="rounded-full w-32 h-32 object-cover m-auto"
+    alt={`${coach.first_name} ${coach.last_name}`}
+  />)}
                         {coach.first_name} {coach.last_name}</td>
                       <td>{coach.gender}</td>
                       <td>{coach.email}</td>

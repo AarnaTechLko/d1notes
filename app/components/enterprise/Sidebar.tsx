@@ -43,29 +43,6 @@ const Sidebar: React.FC = () => {
               <span>Dashboard</span>
             </a>
           </li>
-        
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/orderhistory" className="flex items-center space-x-2 p-2">
-            
-              <FaDollarSign className='text-xl'/>
-              <span>Order History</span>
-            </a>
-          </li>
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/licenses" className="flex items-center space-x-2 p-2">
-            <CertificateIcon className='text-xl'/>
-             
-              <span>Licences</span>
-            </a>
-          </li>
-
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/upgrade" className="flex items-center space-x-2 p-2">
-            
-              <FaDollarSign className='text-xl'/>
-              <span>Purchase More Licenses</span>
-            </a>
-          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/enterprise/teams" className="flex items-center space-x-2 p-2">
             
@@ -87,6 +64,31 @@ const Sidebar: React.FC = () => {
               <span>Players</span>
             </a>
           </li>
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/enterprise/orderhistory" className="flex items-center space-x-2 p-2">
+            
+              <FaDollarSign className='text-xl'/>
+              <span>Order History</span>
+            </a>
+          </li>
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/enterprise/licenses" className="flex items-center space-x-2 p-2">
+            <CertificateIcon className='text-xl'/>
+             
+              <span>Licences</span>
+            </a>
+          </li>
+
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/enterprise/upgrade" className="flex items-center space-x-2 p-2">
+            
+              <FaDollarSign className='text-xl'/>
+              <span>Purchase Licenses</span>
+            </a>
+          </li>
+        
+         
+         
           
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a  onClick={handleLogout} className="flex items-center space-x-2 p-2">
