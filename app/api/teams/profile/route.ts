@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
             height: users.height,
             weight: users.weight,
             player_id: teamPlayers.playerId,
+            jersey: users.jersey,
         })
         .from(teamPlayers)
         .innerJoin(users, eq(users.id, teamPlayers.playerId))

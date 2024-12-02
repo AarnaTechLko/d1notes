@@ -161,6 +161,7 @@ if (!formValues.weight.trim()) {
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
     
+    if (!formValues.countrycode.trim()) newErrors.countrycode = "Country Code is required.";
     if (!formValues.number.trim()) newErrors.number = "Mobile Number is required.";
     if (formValues.number.length < 14) newErrors.number = 'Mobile Number Must be of 14 Digits Minimum';
     if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(formValues.number)) {
@@ -402,7 +403,7 @@ if (!response.ok) {
         </div>
 
         <div>
-          <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Kgs)<span className='mandatory'>*</span></label>
+          <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)<span className='mandatory'>*</span></label>
           <input
             type="text"
             name="weight"
@@ -505,7 +506,7 @@ if (!response.ok) {
                     {playingLevels.map((level) => (
 
 
-                      <option value={level.value} key={level.value}>{level.label}</option>
+                      <option value={level.label} key={level.label}>{level.label}</option>
                     ))}
 
 
@@ -599,6 +600,7 @@ if (!response.ok) {
       value={formValues.countrycode} 
       onChange={handleChange}
     >
+      <option value="">Select</option>
      {countryCodesList.map((item) => (
         <option key={item.id} value={item.code}>
           {item.code} ({item.country})

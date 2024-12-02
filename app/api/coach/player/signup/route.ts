@@ -17,7 +17,7 @@ import next from 'next';
 
 export async function POST(req: NextRequest) {
 
-  const { license, enterprise_id, ownerType, first_name, email, last_name, gradeLevel, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile} = await req.json();
+  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image} = await req.json();
    
   const coachId = ownerType === 'coach' ? enterprise_id : null;
   const enterpriseId = ownerType === 'enterprise' ? enterprise_id : null;
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         email: email,
         coach_id: coachId,
         enterprise_id: enterpriseId,
-        grade_level: gradeLevel,
+        grade_level: grade_level,
         location: location,
         birthday: birthday,
         gender: gender,
@@ -81,8 +81,11 @@ export async function POST(req: NextRequest) {
         jersey: jersey,
         league: league,
         countrycode: countrycode,
-        image: imageFile,
+        image: image,
         password: hashedPassword,
+        playingcountries: playingcountries,
+        height: height,
+        weight: weight,
         slug: slug,
         status: 'Active'
       })

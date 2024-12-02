@@ -9,7 +9,7 @@ import { getInitialsAfterComma } from '@/lib/clientHelpers';
 
 interface ProfileCardProps {
   coachName: string;
-  enterpriseName: string;
+  jersey: number;
   firstName: string;
   lastName: string;
   image: string;
@@ -22,7 +22,7 @@ interface ProfileCardProps {
   weight: string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, enterpriseName, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight }) => {
   const positions = getInitialsAfterComma(position);
   const handleRedirect = (slug: string) => {
     //console.log(slug);
@@ -58,25 +58,25 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, enterpriseName, fi
 
     {/* Jersey Badge */}
     <div className="absolute top-4 right-4 bg-maroon-500 text-white text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center jersyBlock">
-      {rating}
+      {jersey}
     </div>
   </div>
 
   {/* Profile Info Section */}
   <div className="mt-4 text-left">
-    <p className="text-gray-500 text-lg snap-center cursor-pointer" onClick={() => handleRedirect(slug)}>
+    <p className="text-gray-500 text-lg snap-center cursor-pointer teampagefont" onClick={() => handleRedirect(slug)}>
       {firstName}
     </p>
-    <h2 className="text-2xl font-bold text-gray-800 snap-center cursor-pointer" onClick={() => handleRedirect(slug)}>
+    <h2 className="text-2xl font-bold text-gray-800 snap-center cursor-pointer teampagefont" onClick={() => handleRedirect(slug)}>
       {lastName}
     </h2>
     <hr className="my-2 w-8 border-blue-500" />
-    <p className="text-gray-500 mt-2">{positions}</p>
+    <p className="text-gray-500 mt-2 teampagefont">{positions}</p>
 
-    <p className="text-gray-500">
+    <p className="text-gray-500 teampagefont">
       {height}/ {weight} Lbs.
     </p>
-    <p className="text-gray-600">{grade_level}</p>
+    <p className="text-gray-600 teampagefont">{grade_level}</p>
   </div>
 </div>
 

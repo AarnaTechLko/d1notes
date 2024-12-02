@@ -23,6 +23,7 @@ interface Profile {
   location: string;
   height: number;
   weight: number;
+  jersey: number;
 }
 
 interface CoachData {
@@ -126,7 +127,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
           {/* Coach Info */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
+            <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
               {coachData.team_name}
             </h1>
             <p className="text-gray-600 text-lg">
@@ -168,11 +169,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     key={profile.slug}
                     rating={5}
                     coachName=''
-                    enterpriseName={profile.enterpriseName}
+                   
                     firstName={toSentenceCase(profile.firstName)}
                     lastName={toSentenceCase(profile.lastName)}
                     image={profile.image ?? '/default.jpg'}
-
+                    jersey={profile.jersey}
                     slug={profile.slug}
                     position={toSentenceCase(profile.position)}
                     grade_level={toSentenceCase(profile.grade_level)}
