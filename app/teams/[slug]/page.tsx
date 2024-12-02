@@ -35,6 +35,12 @@ interface CoachData {
   createdAt: string;
   slug: string;
   logo: string;
+  qualifications: string;
+  firstName: string;
+  lastName: string;
+  coachimage: string;
+   
+  coachSlug: string;
 }
 
 interface CoachProfileProps {
@@ -113,34 +119,75 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
         
 
-        <div className="text-center flex flex-col items-center space-y-4">
-          
-          <div className="flex-shrink-0">
-            <Image
-              src={coachData.logo}
-              alt={`${coachData.team_name}`}
-              width={200}
-              height={200}
-              className="rounded-full object-cover"
-            />
-          </div>
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+  {/* First Column: Team Details */}
+  <div className="flex-1 text-center flex flex-col items-center space-y-4">
+    <div className="flex-shrink-0">
+      <Image
+        src={coachData.logo}
+        alt={coachData.team_name}
+        width={200}
+        height={200}
+        className="rounded-full object-cover"
+      />
+    </div>
 
-          {/* Coach Info */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
-              {coachData.team_name}
-            </h1>
-            <p className="text-gray-600 text-lg">
-              Created By: {coachData.created_by}
-            </p>
-          </div>
+    {/* Team Info */}
+    <div>
+      <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
+        {coachData.team_name}
+      </h1>
+      <p className="text-gray-600 text-lg">
+        Created By: {coachData.created_by}
+      </p>
+    </div>
 
-          {/* Rating */}
-          <div className="flex items-center justify-center space-x-2 mt-2">
-            <div className="mt-1">{stars}</div>
+    {/* Rating */}
+    <div className="flex items-center justify-center space-x-2 mt-2">
+      <div className="mt-1">{stars}</div>
+    </div>
+  </div>
 
-          </div>
-        </div>
+  {/* Second Column: Coach Data */}
+  <div className="flex-1 flex justify-center">
+  <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Coach Details</h2>
+    <div className="space-y-2 text-center flex flex-col items-center">
+  <div className="relative">
+    <Image
+      src={coachData.coachimage ?? '/default.jpg'}
+      alt={coachData.team_name}
+      width={200}
+      height={200}
+      className="rounded-full object-cover"
+    />
+    {/* Overlay */}
+    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity">
+      <a
+        href={`/coach/${coachData.coachSlug}`}
+       className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold"
+      >
+        View Bio
+      </a>
+    </div>
+  </div>
+  <p className="text-gray-900 text-xl">
+    {coachData.firstName} {coachData.lastName}
+  </p>
+  <p className="text-gray-600 text-lg">
+    {coachData.qualifications}
+  </p>
+  <p className="text-gray-600 text-lg">
+    <span className="font-medium">Team:</span> {coachData.team_name}
+  </p>
+  {/* Add more fields as necessary */}
+</div>
+
+  </div>
+</div>
+
+</div>
+
 
 
 
