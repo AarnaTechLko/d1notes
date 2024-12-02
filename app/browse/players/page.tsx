@@ -9,7 +9,7 @@ import Filters from '../../components/players/Filters';
 // Define a type for the profile
 interface Profile {
   coachName: string;
-  enterpriseName: string;
+  jersey:number;
   firstName: string;
   lastName: string;
   image: string;
@@ -113,7 +113,7 @@ const Home = () => {
                     key={profile.slug}
                     rating={5}
                     coachName={profile.coachName}
-                    enterpriseName={profile.enterpriseName}
+                    jersey={profile.jersey}
                     firstName={profile.firstName}
                     lastName={profile.lastName}
                     image={profile.image ?? '/default.jpg'}
