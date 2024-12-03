@@ -70,8 +70,27 @@ export default function Register() {
   const [loading, setLoading] = useState<boolean>(false);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState('');
+  const [height, setHeight] = useState("");
 
+  const formatHeight = (value: string) => {
+    // Remove non-numeric characters
+    const numericValue = value.replace(/\D/g, "");
 
+    if (numericValue.length === 0) return ""; // Return empty if no input
+    if (numericValue.length === 1) return `${numericValue}'`; // Format single digit as feet only
+
+    // Format as feet and inches
+    const feet = numericValue.slice(0, -1);
+    const inches = numericValue.slice(-1);
+
+    return `${feet}'${inches}"`;
+  };
+
+  const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    const formattedValue = formatHeight(value);
+    setFormValues((prevValues) => ({ ...prevValues, height: formattedValue }));
+  }; 
 
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -335,14 +354,14 @@ if (!formValues.weight.trim()) {
                 </div>
 
                 <div>
-                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height (in cms)<span className='mandatory'>*</span></label>
+                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     name="height"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.height}
-                    onChange={handleChange}
-                    placeholder="5'6&quot;"
+                    onChange={handleHeightChange}
+                    placeholder="Feet' Inches&quot;"
                   />
 
                 </div>
