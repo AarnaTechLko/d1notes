@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from '../components/coach/Sidebar';
+import Sidebar from '../components/Sidebar';
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import { Select } from '@mui/material';

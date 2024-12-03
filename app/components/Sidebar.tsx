@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaImage } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -90,7 +90,13 @@ const Sidebar: React.FC = () => {
               <span>Payment History</span>
             </a>
           </li>
-
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/banners" className="flex items-center space-x-2 p-2">
+            
+              <FaImage className='text-xl'/>
+              <span>Upload Banners</span>
+            </a>
+          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/messages" className="flex items-center space-x-2 p-2">
             

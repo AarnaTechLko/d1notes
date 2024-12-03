@@ -259,3 +259,12 @@ export const invitations = pgTable("invitations", {
   invitation_link:text("invitation_link")
 });
 
+export const playerbanner = pgTable("playerbanner", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id"),
+  usertype: text("usertype"),
+ 
+  filepath: text("filepath").notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
