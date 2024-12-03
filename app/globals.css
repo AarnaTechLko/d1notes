@@ -9,6 +9,12 @@ img.logo {
     height: 51px;
     width: auto;
 }
+input[readonly] {
+  background-color: #f5f5f5; /* Light gray background to indicate read-only */
+  border-color: #ddd; /* Lighter border color */
+  color: #777; /* Gray text color */
+  cursor: not-allowed; /* Change cursor to show it's not editable */
+}
 .mandatory{
   color:red;
 }

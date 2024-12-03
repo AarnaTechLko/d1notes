@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
- 
+
 import Link from "next/link";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
-// Define types for better TypeScript compliance
+
 type Team = {
   id?: number;
   team_name?: string;
@@ -19,7 +19,7 @@ type Team = {
   team_year?: string;
   slug?: string;
   cover_image?: string;
-  playerIds?: number[]; 
+  playerIds?: number[];
 };
 
 type Player = {
@@ -33,12 +33,17 @@ export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editTeam, setEditTeam] = useState<Team | null>(null);
-  const [players, setPlayers] = useState<Player[]>([]); // Player list state
-  const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]); // Selected players state
-  const [playerModalOpen, setPlayerModalOpen] = useState(false); // Player selection modal visibility
-  const [enterpriseId, setEnterpriseID] =useState<string | null>(null);; // Player selection modal visibility
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
+  const [playerModalOpen, setPlayerModalOpen] = useState(false);
+  const [enterpriseId, setEnterpriseID] = useState<string | null>(null);
   const { data: session } = useSession();
   const [currentTeamId, setCurrentTeamId] = useState<number | null>(null);
+  const [loadingData, setLoadingData] = useState<boolean>(false);
+
+  const [fullDescription, setFullDescription] = useState<string | null>(null); // State for full description
+  const [descriptionModalOpen, setDescriptionModalOpen] = useState(false); // State for showing full description modal
+
   const fetchTeams = async () => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
@@ -46,6 +51,7 @@ export default function TeamsPage() {
     }
 
     try {
+      setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch teams");
       const { data, teamplayersList }: { data: Team[]; teamplayersList: any[] } = await res.json();
@@ -54,9 +60,9 @@ export default function TeamsPage() {
         ...team,
         playerIds: teamplayersList
           .filter((player) => player.teamId === team.id)
-          .map((player) => player.playerId), // Extract only player IDs
+          .map((player) => player.playerId),
       }));
-  
+      setLoadingData(false);
       setTeams(updatedTeams);
     } catch (error) {
       console.error("Error fetching teams:", error);
@@ -68,7 +74,7 @@ export default function TeamsPage() {
       console.error("No user logged in");
       return;
     }
-  
+
     try {
       const res = await fetch(`/api/players?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch players");
@@ -84,7 +90,7 @@ export default function TeamsPage() {
       const method = editTeam ? "PUT" : "POST";
       const payload = {
         ...formValues,
-        ...(editTeam && { id: editTeam.id }), // Include `id` if editing
+        ...(editTeam && { id: editTeam.id }),
       };
       await fetch("/api/teams", {
         method,
@@ -93,8 +99,7 @@ export default function TeamsPage() {
       });
       setModalOpen(false);
       setEditTeam(null);
-      fetchTeams(); 
-     ///// fetchPlayers();
+      fetchTeams();
     } catch (error) {
       console.error("Error submitting team:", error);
     }
@@ -105,7 +110,7 @@ export default function TeamsPage() {
     const sanitizedTeam = {
       ...team,
       created_by: team.created_by || "",
-      creator_id: team.creator_id ,
+      creator_id: team.creator_id,
     };
     setEditTeam(sanitizedTeam);
     setModalOpen(true);
@@ -127,7 +132,7 @@ export default function TeamsPage() {
   const handleAddPlayers = (teamId: number) => {
     const team = teams.find((t) => t.id === teamId);
     if (team) {
-      setSelectedPlayers(team.playerIds || []); // Pre-select players assigned to the team
+      setSelectedPlayers(team.playerIds || []);
     }
     setCurrentTeamId(teamId);
     setPlayerModalOpen(true);
@@ -141,12 +146,13 @@ export default function TeamsPage() {
     );
   };
 
- 
-
-  
+  const handleShowFullDescription = (description: string) => {
+    setFullDescription(description);
+    setDescriptionModalOpen(true);
+  };
 
   useEffect(() => {
-    fetchTeams(); 
+    fetchTeams();
     fetchPlayers();
   }, [session]);
 
@@ -164,53 +170,96 @@ export default function TeamsPage() {
               Add Team
             </button>
 
-            {/* Responsive Table */}
             <div className="mt-4 overflow-x-auto">
               <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100 border-b">
-                    <th className="text-left px-4 py-2">Logo</th>
+                    <th className="text-left px-4 py-2">Year</th>
                     <th className="text-left px-4 py-2">Name</th>
+                    <th className="text-left px-4 py-2">Logo</th>
                     <th className="text-left px-4 py-2">Description</th>
                     <th className="text-left px-4 py-2">Players</th>
+                    <th className="text-left px-4 py-2">Roster</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
                 </thead>
+              {loadingData ? (
+                 <tbody>
+                  <tr>
+                    <td colSpan={5}> <div className="flex justify-center items-center">
+    <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+  </div></td>
+                  </tr>
+                 </tbody>
+  
+) : (
+ 
                 <tbody>
                   {teams.map((team) => (
                     <tr key={team.id} className="border-b">
-                      <td className="px-4 py-2"><img src={team.logo} className="w-8 h-8 rounded-full"/></td>
+                      <td className="px-4 py-2">{team.team_year}
+                       
+                      </td>
                       <td className="px-4 py-2">{team.team_name}</td>
-                      <td className="px-4 py-2">{team.description}</td>
-                      <td className="px-4 py-2"><Link
+                      <td className="px-4 py-2">
+                      <img src={team.logo} className="w-12 h-12 rounded-full" />
+                      </td>
+                      <td className="px-4 py-2">
+                        <p>
+                          {team.description
+                            ? team.description.length > 100
+                              ? `${team.description.slice(0, 100)}...`
+                              : team.description
+                            : "No description available"}
+                        </p>
+                        {team.description && team.description.length > 100 && (
+                          <button
+                            onClick={() => handleShowFullDescription(team.description || '')}
+                            className="text-blue-500 underline mt-2"
+                          >
+                            Read More
+                          </button>
+                        )}
+                      </td>
+                      
+                      <td className="px-4 py-2">
+                      <Link
   href={`/enterprise/addplayers/${team.id}`}
   className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+  style={{ minWidth: '120px', whiteSpace: 'nowrap' }}
 >
-  Add/View Players
-</Link></td>
-<td className="px-4 py-2">
-  <div className="flex items-center space-x-2">
-    <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
-      <FaEye />
-    </a>
-    <button
-      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-      onClick={() => handleEdit(team)}
-    >
-      <FaEdit />
-    </button>
-    <button
-      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-      onClick={() => handleDelete(team.id)}
-    >
-      <FaTrash />
-    </button>
-  </div>
-</td>
-
+  Add Players
+</Link>
+                      </td>
+                      <td className="px-4 py-2">
+                        <a
+                            href={`/teams/${team.slug}`}
+                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                            target="_blank" style={{ minWidth: '50px', whiteSpace: 'nowrap' }}
+                          >
+                            View
+                          </a></td>
+                      <td className="px-4 py-2">
+                        <div className="flex items-center space-x-2">
+                          
+                          <button
+                            className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                            onClick={() => handleEdit(team)}
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                            onClick={() => handleDelete(team.id)}
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
+              )}
               </table>
             </div>
 
@@ -225,7 +274,20 @@ export default function TeamsPage() {
               />
             )}
 
-          
+            {descriptionModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="bg-white p-4 rounded-lg max-w-xl w-full">
+                  <h2 className="text-xl font-bold mb-4">Full Description</h2>
+                  <p>{fullDescription}</p>
+                  <button
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                    onClick={() => setDescriptionModalOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>

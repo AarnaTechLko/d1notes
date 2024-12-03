@@ -115,7 +115,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     const certificateInputRef = useRef<HTMLInputElement | null>(null);
     const { data: session } = useSession();
     const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
-    
+
     // Validation function
     const validateForm = (): boolean => {
         const errors: FormErrors = {
@@ -186,10 +186,10 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             const errorMessage = errors[key as keyof FormErrors];
             if (errorMessage) {
                 showError(errorMessage);
-                
+
             }
         });
-    
+
         return Object.keys(errors).every(
             (key) => errors[key as keyof FormErrors] === undefined || errors[key as keyof FormErrors] === null
         );
@@ -228,9 +228,9 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                 if (response.status === 500) {
                     showError('Invalid Key or Used Key.');
                     setLoading(false);
-                } 
+                }
                 return; // Stop further processing if there's an error
-              }
+            }
 
             const data = await response.json();
             showSuccess('Coach added successfully.');
@@ -242,7 +242,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         }
     };
 
-    
+
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -258,23 +258,23 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     const handleImageChange = async () => {
         if (!fileInputRef.current?.files) {
             throw new Error('No file selected');
-          }
-          setPhotoUploading(true);
-          const file = fileInputRef.current.files[0];
-      
-          try {
+        }
+        setPhotoUploading(true);
+        const file = fileInputRef.current.files[0];
+
+        try {
             const newBlob = await upload(file.name, file, {
-              access: 'public',
-              handleUploadUrl: '/api/uploads',
+                access: 'public',
+                handleUploadUrl: '/api/uploads',
             });
             setPhotoUploading(false);
             const imageUrl = newBlob.url;
             setFormValues({ ...formValues, image: imageUrl });
             setBlob(newBlob);
-          } catch (error) {
+        } catch (error) {
             setPhotoUploading(false);
             console.error('Error uploading file:', error);
-          }
+        }
     };
     const formatPhoneNumber = (value: string) => {
         if (!value) return value;
@@ -297,18 +297,18 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     };
 
     const handleAssignLicense = async () => {
-        
+
         try {
             setLoadingKey(true);
-            const userId= session?.user.id; 
+            const userId = session?.user.id;
             const response = await fetch("/api/fetchlicense", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    userId:userId,
-                    type:"Enterprise",
+                    userId: userId,
+                    type: "Enterprise",
                 }),
             });
 
@@ -338,26 +338,26 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     };
 
 
-    const handleCertificateChange = async() => {
+    const handleCertificateChange = async () => {
         if (!certificateInputRef.current?.files) {
             throw new Error('No file selected');
-          }
-          setCertificateUploading(true);
-          const file = certificateInputRef.current.files[0];
-      
-          try {
+        }
+        setCertificateUploading(true);
+        const file = certificateInputRef.current.files[0];
+
+        try {
             const newBlob = await upload(file.name, file, {
-              access: 'public',
-              handleUploadUrl: '/api/uploads',
+                access: 'public',
+                handleUploadUrl: '/api/uploads',
             });
             setCertificateUploading(false);
             const certificate = newBlob.url;
             setFormValues({ ...formValues, certificate: certificate });
             setBlob(newBlob);
-          } catch (error) {
+        } catch (error) {
             setCertificateUploading(false);
             console.error('Error uploading file:', error);
-          }
+        }
     };
 
     useEffect(() => {
@@ -365,7 +365,15 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             setFormValues({ ...formValues, enterprise_id: session.user.id });
         }
     }, [session]);
-
+    
+    useEffect(() => {
+        if (session?.user?.type === 'enterprise') {
+          setFormValues((prevFormValues) => ({
+            ...prevFormValues,
+            clubName: session?.user?.name || '', // Set the clubName to the logged-in user's name
+          }));
+        }
+      }, [session]);
     return (
         <>
             <div className="container mx-auto">
@@ -400,17 +408,17 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             className="hidden"
                                             ref={fileInputRef}
                                         />
-                                      {photoUpoading ? (
+                                        {photoUpoading ? (
                                             <>
-                                                <FileUploader/>
+                                                <FileUploader />
                                             </>
                                         ) : (
                                             <>
-                                                
+
                                             </>
                                         )}
-                                       
-                                        
+
+
                                     </div>
                                 </div>
 
@@ -424,7 +432,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.firstName}
                                             onChange={handleChange}
                                         />
-                                        
+
                                     </div>
 
                                     <div>
@@ -436,7 +444,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.lastName}
                                             onChange={handleChange}
                                         />
-                                        
+
                                     </div>
                                     <div >
                                         <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
@@ -447,7 +455,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.expectedCharge}
                                             onChange={handleChange}
                                         />
-                                        
+
                                     </div>
                                     <div>
                                         <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
@@ -478,7 +486,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             />
                                         </div>
 
-                                      
+
                                     </div>
                                     <div>
                                         <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className='mandatory'>*</span></label>
@@ -489,7 +497,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.email}
                                             onChange={handleChange}
                                         />
-                                       
+
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -506,7 +514,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                         </select>
 
-                                        
+
                                     </div>
                                     <div>
                                         <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
@@ -526,7 +534,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                                 </option>
                                             ))}
                                         </select>
-                                       
+
                                     </div>
                                     <div>
                                         <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
@@ -537,7 +545,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             value={formValues.city ?? ""}
                                             onChange={handleChange}
                                         />
-                                       
+
                                     </div>
 
                                 </div>
@@ -557,7 +565,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             <option value="Female">Female</option>
                                             <option value="Other">Other</option>
                                         </select>
-                                      
+
                                     </div>
 
                                     {/* Location */}
@@ -574,7 +582,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             <option value="Soccer">Soccer</option>
 
                                         </select>
-                                        
+
                                     </div>
                                     <div>
                                         <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
@@ -582,13 +590,20 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             type="text"
                                             name="clubName"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                                            value={formValues.clubName}
-                                            onChange={handleChange}
+                                            value={session?.user?.type === 'enterprise' ? session?.user?.name || '' : formValues.clubName}
+                                            readOnly={session?.user?.type === 'enterprise'}
+                                            onChange={(e) => {
+                                                if (session?.user?.type !== 'enterprise') {
+                                                    handleChange(e);  
+                                                }
+                                            }}
+                                            placeholder={session?.user?.type === 'enterprise' ? '' : 'Enter club name'} // Optional placeholder
                                         />
-                                       
+
+
                                     </div>
                                 </div>
-                                
+
                                 {/* Qualifications */}
                                 <div className="mb-4">
                                     <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound<span className='mandatory'>*</span></label>
@@ -600,39 +615,39 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                         onChange={handleChange}
                                         rows={4}
                                     />
-                                   
+
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
-                                      <div>
-          <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key<span className='mandatory'>*</span></label>
-          <input
-            type="text"
-            name="license"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.license}
-            onChange={handleChange}
-            readOnly
-          />
-          {loadingKey ? (
+                                    <div>
+                                        <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key<span className='mandatory'>*</span></label>
+                                        <input
+                                            type="text"
+                                            name="license"
+                                            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                                            value={formValues.license}
+                                            onChange={handleChange}
+                                            readOnly
+                                        />
+                                        {loadingKey ? (
                                             <>
                                                 <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
                                             </>
                                         ) : (
                                             <>
-                                               
+
                                             </>
                                         )}
-          <button
-          type='button'
-  className="text-xs text-gray-500 underline"
-  onClick={() => handleAssignLicense()}
->
-  Assign License
-</button>
-           
-        </div>
-        </div>
+                                        <button
+                                            type='button'
+                                            className="text-xs text-gray-500 underline"
+                                            onClick={() => handleAssignLicense()}
+                                        >
+                                            Assign License
+                                        </button>
+
+                                    </div>
+                                </div>
 
 
 
@@ -659,13 +674,13 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             className="hidden"
                                             ref={certificateInputRef}
                                         />
-{certificateUploading ? (
+                                        {certificateUploading ? (
                                             <>
-                                                <FileUploader/>
+                                                <FileUploader />
                                             </>
                                         ) : (
                                             <>
-                                                
+
                                             </>
                                         )}
                                     </div>

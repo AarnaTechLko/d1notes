@@ -51,7 +51,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
         className="flex items-center space-x-2 text-gray-500"
       >
        <FaUser/>
-        <span>View Bio</span>
+        <span>View Details</span>
       </button>
     </div>
   </div>

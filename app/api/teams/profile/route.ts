@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import { teams, playerEvaluation, users, teamPlayers, coaches } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq } from 'drizzle-orm';
+import { desc, eq, asc } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -31,12 +31,8 @@ export async function POST(req: NextRequest) {
                 lastName: coaches.lastName,
                 team_type: teams.team_type,
                 team_year: teams.team_year,
-                
-
-
                 clubName: coaches.clubName,
                 qualifications: coaches.qualifications,
-
                 coachimage: coaches.image,
                 coachSlug: coaches.slug,
 
@@ -86,6 +82,7 @@ export async function POST(req: NextRequest) {
             })
             .from(teamPlayers)
             .innerJoin(users, eq(users.id, teamPlayers.playerId))
+            .orderBy(asc(users.jersey))
             .where(eq(teamPlayers.teamId, payload[0].id));
 
 

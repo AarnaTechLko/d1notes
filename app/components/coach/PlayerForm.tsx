@@ -8,7 +8,7 @@ import DefaultPic from "../../public/default.jpg";
 import { useSession } from "next-auth/react";
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
-import Select from "react-select";
+import Select, { NonceProvider } from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { showError, showSuccess } from "../Toastr";
 import FileUploader from "../FileUploader";
@@ -84,6 +84,27 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
   const [maxDate, setMaxDate] = useState('');
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
  
+  const formatHeight = (value: string) => {
+    // Remove non-numeric characters
+    const numericValue = value.replace(/\D/g, "");
+
+    if (numericValue.length === 0) return ""; // Return empty if no input
+    if (numericValue.length === 1) return `${numericValue}'`; // Format single digit as feet only
+
+    // Format as feet and inches
+    const feet = numericValue.slice(0, -1);
+    const inches = numericValue.slice(-1);
+
+    return `${feet}'${inches}"`;
+  };
+
+  const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    const formattedValue = formatHeight(value);
+    setFormValues((prevValues) => ({ ...prevValues, height: formattedValue }));
+  }; 
+
+
   const handleAssignLicense = async () => {
         
     try {
@@ -158,7 +179,7 @@ if (!formValues.weight.trim()) {
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
     if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sport is required.";
-    if (!formValues.team.trim()) newErrors.team = "Team is required.";
+    
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
     
     if (!formValues.countrycode.trim()) newErrors.countrycode = "Country Code is required.";
@@ -390,15 +411,15 @@ if (!response.ok) {
 
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
        <div>
-          <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height (in cms)<span className='mandatory'>*</span></label>
-          <input
-            type="text"
-            name="height"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.height}
-            onChange={handleChange}
-            placeholder="5'6&quot;"
-          />
+          <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height<span className='mandatory'>*</span></label>
+         <input
+                    type="text"
+                    name="height"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.height}
+                    onChange={handleHeightChange}
+                    placeholder="Feet' Inches&quot;"
+                  />
           
         </div>
 
@@ -544,7 +565,7 @@ if (!response.ok) {
            
         </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
           <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className="mandatory">*</span></label>
           <select
@@ -562,7 +583,7 @@ if (!response.ok) {
         </div>
 
         {/* Team */}
-        <div>
+        <div style={{display:'none'}}>
           <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year<span className="mandatory">*</span></label>
           <input
           placeholder="Team Name/ 2024"
