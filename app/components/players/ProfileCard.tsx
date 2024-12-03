@@ -49,7 +49,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
       {/* Link in the middle of the overlay */}
       <a 
-        href="#" 
+        href={`/players/${slug}`}
         className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold"
       >
         View Full Bio
