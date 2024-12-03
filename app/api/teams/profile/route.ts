@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
                 coach_id: teams.coach_id,
                 firstName: coaches.firstName,
                 lastName: coaches.lastName,
+                team_type: teams.team_type,
+                team_year: teams.team_year,
+                
 
 
                 clubName: coaches.clubName,
@@ -59,6 +62,8 @@ export async function POST(req: NextRequest) {
             firstName: club.firstName,
             lastName: club.lastName,
             clubName: club.clubName,
+            team_type: club.team_type,
+            team_year: club.team_year,
             qualifications: club.qualifications,
             coachimage: club.coachimage,
             coachSlug: club.coachSlug,

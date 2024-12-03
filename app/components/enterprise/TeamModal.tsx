@@ -13,13 +13,13 @@ import CoverImage from '../../../public/coverImage.jpg'
 const formSchema = z.object({
   team_name: z.string().min(1, "Team Name is required.").optional(),
   description: z.string().min(1, "Description is required.").optional(),
-  logo: z.string().optional(), // URL for logo
+  logo: z.string().min(1, "Logo is required.").optional(), // URL for logo
   created_by: z.string().optional(),
   creator_id: z.number().optional(),
-  cover_image: z.string().optional(),
-  team_type: z.string().optional(),
-  team_year: z.string().optional(),
-  coach_id: z.number().optional(),
+  cover_image: z.string().min(1, "Cover Image is required.").optional(),
+  team_type: z.string().min(1, "Team For is required.").optional(),
+  team_year: z.string().min(1, "Team year is required.").optional(),
+  coach_id: z.number().min(1, "Coach is required.").optional(),
 });
 type Coach = {
   id: number;
@@ -65,7 +65,7 @@ export default function TeamModal({
     created_by: "Enterprise",
     creator_id: 0,
     cover_image: "",
-    team_type: "",
+    team_type: "Men",
     team_year: "",
     coach_id:0
   });
@@ -212,12 +212,7 @@ export default function TeamModal({
     img.onload = async () => {
       const { width, height } = img;
 
-      // Validate aspect ratio (16:9)
-      if (width / height !== 16 / 9) {
-        setPhotoUploading(false);
-        showError("Cover image must have a 16:9 aspect ratio.");
-        return;
-      }
+     
 
       try {
         const newBlob = await upload(file.name, file, {
@@ -256,7 +251,27 @@ export default function TeamModal({
     const validation = formSchema.safeParse(formValues);
     console.log(formValues);
     if (!validation.success) {
-      showError(validation.error.issues.map((issue) => issue.message).join("\n"));
+      const fieldOrder = [
+        "team_name",
+        "coach_id",
+        "team_year",
+        "team_type",
+        "description",
+       
+        "created_by",
+        "creator_id",
+        "logo",
+        "cover_image",
+       
+      ];
+    
+      fieldOrder.forEach((field) => {
+        const issue = validation.error.issues.find((error) => error.path[0] === field);
+        if (issue) {
+          showError(issue.message);
+        }
+      });
+    
       return;
     }
 
@@ -265,11 +280,14 @@ export default function TeamModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6">
+       <div
+      className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 overflow-y-auto"
+      style={{ maxHeight: '90vh' }} // Ensures the modal doesn't exceed 90% of the viewport height
+    >
         <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* First Column */}
-          <div className="space-y-4 shadow p-8">
+          <div className="space-y-4 shadow p-8 ">
             <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -383,7 +401,7 @@ export default function TeamModal({
             </div>
             <div onClick={handleCoverImageClick} className="cursor-pointer">
               <label className="block text-sm font-medium text-gray-700">
-                Upload Cover Image <span className="mandatory">(Aspect ratio 16:9 mandatory)</span>
+                Upload Cover Image<span className="mandatory">*</span>
               </label>
               <Image
                 src={formValues.cover_image || CoverImage}
