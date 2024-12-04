@@ -10,6 +10,8 @@ declare module 'next-auth' {
       email?: string | null;
       image?: string | null;
       package_id?: string | null;
-    };
+      club_id?: string | null;
+      coach_id?: string | null;
+    }
   }
 }

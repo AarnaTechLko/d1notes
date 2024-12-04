@@ -84,7 +84,7 @@ export default function Login() {
       }
       else if (session.user.type === 'team') {
         
-        window.location.href = '/teams/dashboard';
+        window.location.href = '/team/dashboard';
       }
        else if (!session.user.name) {
         window.location.href = '/completeprofile';

@@ -10,6 +10,7 @@ import Loading from '@/app/components/Loading';
 
 import { EvaluationData } from '../../types/types';
 import ProfileCard from '@/app/components/players/ProfileCard';
+import CoachProfileCard from '@/app/components/ProfileCard';
 
 
 interface Profile {
@@ -55,6 +56,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [teamData, setTeamData] = useState<Profile[]>([]);
+  const [coachList, setCoachList] = useState<[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isevaludationModalopen, setIsevaluationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -89,6 +91,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         const responseData = await response.json();
         setCoachData(responseData.clubdata);
         setTeamData(responseData.teamplayersList);
+        setCoachList(responseData.coach);
 
       } catch (err) {
         setError("Some error occurred.");
@@ -181,7 +184,32 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         </div>
 
+        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Coach
+        </h2>
 
+        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+
+<div className="flex flex-col md:flex-row md:space-x-8">
+{coachList?.map((item: any) => {
+  
+  return (
+    <CoachProfileCard
+      key={item?.teamSlug}
+      name={item.firstName}
+      organization={item.clubName} // Ensure `team_name` is correct
+      image={item.image ?? '/default.jpg'}
+      rating={5}
+      slug={item.slug}
+    />
+  );
+})}
+
+</div>
+</section>
+        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Players
+        </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 

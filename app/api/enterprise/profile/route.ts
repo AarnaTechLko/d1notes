@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { enterprises, playerEvaluation, teams, users } from '../../../../lib/schema'
+import { coaches, enterprises, playerEvaluation, teams, users } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq ,and} from 'drizzle-orm';
+import { eq ,and, isNotNull} from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -47,7 +47,18 @@ export async function POST(req: NextRequest) {
             )
         ).execute();
 
-        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams });
+         
+            const clubCoaches=await db.select().from(coaches)
+            .where(
+                and(
+                eq(coaches.enterprise_id, String(payload[0].id)),
+                isNotNull(coaches.firstName)
+                )
+            ).execute();
+         
+       
+
+        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching enterprises:', error);

@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
             slug: club.slug,
             firstName: club.firstName,
             lastName: club.lastName,
+            coach_id: club.coach_id,
             clubName: club.clubName,
             team_type: club.team_type,
             team_year: club.team_year,
@@ -85,8 +86,8 @@ export async function POST(req: NextRequest) {
             .orderBy(asc(users.jersey))
             .where(eq(teamPlayers.teamId, payload[0].id));
 
-
-        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList });
+        const coach=await db.select().from(coaches).where(eq(coaches.id, payload[0].coach_id)).execute();
+        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coach });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching teams:', error);

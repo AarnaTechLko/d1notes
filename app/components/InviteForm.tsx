@@ -15,9 +15,11 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   const [mobiles, setMobiles] = useState<{ code: string; number: string }[]>([
     { code: "+1", number: "" },
   ]);
+  const [loadingData, setLoadingData] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [registrationType, setRegistrationType] = useState<"coach" | "player">("player");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [teams, setTeams] = useState<[] | null >([]);
   const { data: session } = useSession();
 
   const validateEmail = (email: string): boolean => {
@@ -51,6 +53,27 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
     return Boolean(mobile.code) && isTenDigits;
   };
 
+  const fetchTeams = async () => {
+    if (!session || !session.user?.club_id) {
+      console.error("No user logged in");
+      return;
+    }
+
+    try {
+      setLoadingData(true);
+      const res = await fetch(`/api/teams?enterprise_id=${session.user.club_id}`);
+      if (!res.ok) 
+        {
+          throw new Error("Failed to fetch teams");
+        }
+      const data=await res.json();
+      console.log(data);
+   
+      setTeams(data.data);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -136,7 +159,8 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
     if (usertype === "coach") {
       setRegistrationType("player");
     }
-  }, [usertype]);
+    fetchTeams();
+  }, [usertype, session]);
 
   return (
     <form
@@ -144,12 +168,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
       className="max-w-3xl mx-auto p-8 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 shadow-xl rounded-xl space-y-6"
     >
       <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">
-        {usertype === "coach"
+        {usertype === "coach" || usertype=='Team'
           ? "Send Invitation to Players"
           : "Send Invitation"}
+          
       </h2>
 
-      {usertype !== "coach" && (
+      {usertype !== "coach" && usertype !== "Team" && (
         <div className="mb-6 flex justify-center space-x-10">
           <label className="flex items-center space-x-2">
             <input
@@ -176,7 +201,24 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
         </div>
       )}
 
-      {/* Email Input */}
+<div className="mb-6">
+  <label className="block text-xl font-medium text-gray-700 mb-4">
+    Select Team: <span className="text-sm text-gray-500">*</span>
+  </label>
+  <select
+              value={session?.user.id}
+              onChange={(e) =>teams}
+              className="px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full"
+            >
+              <option value="">Select</option>
+              {teams?.map((items:any) => (
+                <option key={items.id} value={items?.id}>
+                  {items.team_name}
+                </option>
+              ))}
+            </select>
+
+  </div>
       <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">
     Email <span className="text-sm text-gray-500">(Use comma to add multiple emails)</span>
@@ -231,8 +273,8 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
               className="px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="">Select</option>
-              {countryCodesList.map((country) => (
-                <option key={country.code} value={country.code}>
+              {countryCodesList.map((country, index) => (
+                <option key={index} value={country.code}>
                   {country.country} ({country.code})
                 </option>
               ))}

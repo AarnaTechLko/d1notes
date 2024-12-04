@@ -16,7 +16,9 @@ interface ExtendedUser {
   name: string | null;
   email: string | null;
   image: string | null;
+  coach_id?: string | null;
   package_id?: string | null;
+  club_id?: string | null;
 }
   
 const handler = NextAuth({
@@ -48,6 +50,8 @@ const handler = NextAuth({
               email: coach[0].email,
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image,
+              coach_id:coach[0].id,
+              club_id:coach[0].enterprise_id
             };
           }
         } else if (loginAs === 'player') {
@@ -61,6 +65,8 @@ const handler = NextAuth({
               email: user[0].email,
               type: 'player', // Custom field indicating player
               image: user[0].image,
+              coach_id:user[0].coach_id,
+              club_id:user[0].enterprise_id
             };
           }
         }
@@ -75,6 +81,8 @@ const handler = NextAuth({
               email: team[0].manager_email,
               type: 'team', // Custom field indicating player
               image: team[0].logo,
+              coach_id:team[0].coach_id,
+              club_id:team[0].creator_id
             };
           }
         }
@@ -90,6 +98,8 @@ const handler = NextAuth({
               package_id: enterprise[0].package_id,
               type: 'enterprise', // Custom field indicating player
               image:enterprise[0].logo,
+              coach_id:null,
+              club_id:null
             };
           }
         }
@@ -101,8 +111,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-//secret:SECRET_KEY,
-secret: process.env.NEXTAUTH_SECRET, 
+secret:SECRET_KEY,
+  ///secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -111,6 +121,9 @@ secret: process.env.NEXTAUTH_SECRET,
         const extendedUser = user as ExtendedUser; // Cast the user to the extended type
         token.id = extendedUser.id;
         token.type = extendedUser.type; // Add user type (coach or player) to the token
+        token.image = extendedUser.image;
+        token.coach_id = extendedUser.coach_id; 
+        token.club_id = extendedUser.club_id; 
         token.image = extendedUser.image;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
@@ -123,6 +136,9 @@ secret: process.env.NEXTAUTH_SECRET,
         session.user.id = token.id as string;
         session.user.type = token.type as string; // Add the type to the session
         session.user.name = token.name as string; // Add the type to the session
+        session.user.image = token.image as string | null;
+        session.user.coach_id = token.coach_id as string | null; // Add the type to the session
+        session.user.club_id = token.club_id as string | null;
         session.user.image = token.image as string | null;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session

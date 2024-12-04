@@ -126,24 +126,34 @@ const Header: React.FC = () => {
             <ul className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-4 md:mt-0">
               {session ? (
                 <>
-                  {session?.user?.type === 'player' && isUserImageAvailable && (
-                    <>
-                    <li className="pt-[8px]">
-                      <Link href="/browse"  className={`${isActiveLink(
+                  <li  className="pt-[8px]">
+                    <Link href="/browse"  className={`${isActiveLink(
                             "/browse"
                           )} hover:text-blue-300`} onClick={closeMenu}>
-                         Coaches
-                      </Link>
-                    </li>
-                    <li className="pt-[8px]">
+                       Coaches
+                    </Link>
+                  </li>
+                  <li  className="pt-[8px]">
                     <Link href="/browse/clubs" className={`${isActiveLink(
                             "/browse/clubs"
                           )} hover:text-blue-300`} onClick={closeMenu}>
                        Clubs
                     </Link>
                   </li>
-                  </>
-                  )}
+                  <li  className="pt-[8px]">
+                    <Link href="/browse/teams" className={`${isActiveLink(
+                            "/browse/teams"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
+                       Teams
+                    </Link>
+                  </li>
+                  <li  className="pt-[8px]">
+                    <Link href="/browse/players" className={`${isActiveLink(
+                            "/browse/players"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
+                       Players
+                    </Link>
+                  </li>
                   {session?.user?.type === 'coach' && (
                     <>
                       <li className="pt-[8px]">
@@ -199,6 +209,22 @@ const Header: React.FC = () => {
                       </li>
                     </>
                   )}
+                   {session?.user?.type === 'team' && (
+                    <>
+                      <li className="pt-[8px]">
+                        <Link href="/team/dashboard" className={`${isActiveLink(
+                            "/team/dashboard"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
+                          Dashboard
+                        </Link>
+                      </li>
+                      <li className="pt-[8px]">
+                        <Link href="/team/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={closeMenu}>
+                          Hello, {session?.user?.name || "Player"}!
+                        </Link>
+                      </li>
+                    </>
+                  )}
                   <li className="relative" ref={dropdownRef}>
                     <button onClick={toggleDropdown} className="flex items-center">
                       <Image
@@ -230,6 +256,8 @@ const Header: React.FC = () => {
                               </Link>
                             </li>
                           )}
+
+                          
                           <li>
                             <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-black hover:bg-blue-300">
                               Logout
