@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db'; // Adjust path based on your directory
-import { users, coaches, enterprises } from '@/lib/schema';
+import { users, coaches, enterprises, teams } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
  
@@ -64,6 +64,20 @@ const handler = NextAuth({
             };
           }
         }
+        else if (loginAs === 'team') {
+          const team = await db.select().from(teams).where(eq(teams.manager_email, email)).execute();
+          if (team.length === 0 || !team[0].password || !(await bcrypt.compare(password, team[0].password))) {
+            return null; // Invalid credentials
+          } else {
+            return {
+              id: team[0].id.toString(),
+              name: team[0].manager_name,
+              email: team[0].manager_email,
+              type: 'team', // Custom field indicating player
+              image: team[0].logo,
+            };
+          }
+        }
         else if (loginAs === 'enterprise') {
           const enterprise = await db.select().from(enterprises).where(eq(enterprises.email, email)).execute();
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
@@ -87,8 +101,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-  ///secret: process.env.NEXTAUTH_SECRET, 
+//secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {

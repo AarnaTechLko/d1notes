@@ -10,24 +10,15 @@ import FileUploader from "../FileUploader";
 import { showError } from "../Toastr";
 import CoverImage from '../../../public/coverImage.jpg'
 
-const formSchema = z.object({
-  team_name: z.string().min(1, "Team Name is required.").optional(),
-  description: z.string().min(1, "Description is required.").optional(),
-  logo: z.string().min(1, "Logo is required.").optional(), // URL for logo
-  created_by: z.string().optional(),
-  creator_id: z.number().optional(),
-  cover_image: z.string().min(1, "Cover Image is required.").optional(),
-  team_type: z.string().min(1, "Team For is required.").optional(),
-  team_year: z.string().min(1, "Team year is required.").optional(),
-  coach_id: z.number().min(1, "Coach is required.").optional(),
-});
+ 
 type Coach = {
   id: number;
   firstName: string;
   clubName: string;
   image: string;
 };
-type FormValues = z.infer<typeof formSchema> & {
+
+type FormValues = {
   id?: number;
   team_name?: string;
   description?: string;
@@ -39,7 +30,10 @@ type FormValues = z.infer<typeof formSchema> & {
   slug?: string;
   cover_image?: string;
   coach_id?: number;
-  playerIds?: number[]; 
+  playerIds?: number[];
+  manager_name?: string;
+  manager_email?: string;
+  manager_phone?: string;
 };
 
 export default function TeamModal({
@@ -67,7 +61,10 @@ export default function TeamModal({
     cover_image: "",
     team_type: "Men",
     team_year: "",
-    coach_id:0
+    coach_id:0,
+    manager_name: "",
+    manager_email: "",
+    manager_phone: ""
   });
   const [photoUploading, setPhotoUploading] = useState(false);
 
@@ -245,206 +242,284 @@ export default function TeamModal({
 
     }));
   };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("hitting");
-    const validation = formSchema.safeParse(formValues);
-    console.log(formValues);
-    if (!validation.success) {
-      const fieldOrder = [
-        "team_name",
-        "coach_id",
-        "team_year",
-        "team_type",
-        "description",
-       
-        "created_by",
-        "creator_id",
-        "logo",
-        "cover_image",
-       
-      ];
+  
     
-      fieldOrder.forEach((field) => {
-        const issue = validation.error.issues.find((error) => error.path[0] === field);
-        if (issue) {
-          showError(issue.message);
-        }
-      });
-    
-      return;
-    }
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+  
+      // Custom Validation
+      if (!formValues.team_name) {
+        showError("Team Name is required.");
+        return;
+      }
+  
+      if (!formValues.coach_id) {
+        showError("Coach is required.");
+        return;
+      }
+  
+      if (!formValues.team_year) {
+        showError("Team Year is required.");
+        return;
+      }
+  
+      if (!formValues.team_type) {
+        showError("Team Type is required.");
+        return;
+      }
+  
+      if (!formValues.description) {
+        showError("Description is required.");
+        return;
+      }
 
-    onSubmit(validation.data);
-  };
+      if (!formValues.manager_name) {
+        showError("Manager Name is required.");
+        return;
+      }
+  
+      if (!formValues.manager_email) {
+        showError("Manager Email is required.");
+        return;
+      }
+
+      if (!formValues.manager_phone) {
+        showError("Manager Phone is required.");
+        return;
+      }
+
+      if (!formValues.logo) {
+        showError("Logo is required.");
+        return;
+      }
+  
+      if (!formValues.cover_image) {
+        showError("Cover Image is required.");
+        return;
+      }
+   
+     onSubmit(formValues);
+    };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-       <div
-      className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 overflow-y-auto"
-      style={{ maxHeight: '90vh' }} // Ensures the modal doesn't exceed 90% of the viewport height
-    >
-        <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* First Column */}
-          <div className="space-y-4 shadow p-8 ">
-            <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Name<span className="mandatory">*</span>
-              </label>
+  <div
+    className="bg-white rounded-lg shadow-lg w-full max-w-6xl p-6 overflow-y-auto"
+    style={{ maxHeight: '90vh' }}
+  >
+    <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* First Column: Team Details */}
+      <div className="space-y-4 shadow p-8">
+        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Name<span className="mandatory">*</span>
+          </label>
+          <input
+            type="text"
+            value={formValues.team_name}
+            onChange={handleChange}
+            name="team_name"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Coach<span className="mandatory">*</span>
+          </label>
+          <Select
+            options={coaches ?? []}
+            value={selectedCoach}
+            onChange={handleCoachChange}
+            isClearable
+            placeholder="Select a Coach"
+            formatOptionLabel={getOptionLabel}
+            components={{ Option: CustomOption }}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Year<span className="mandatory">*</span>
+          </label>
+          <select
+            value={formValues.team_year}
+            onChange={handleChange}
+            name="team_year"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select Year</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Team for<span className="mandatory">*</span>
+          </label>
+          <div className="flex space-x-6">
+            <div className="flex items-center">
               <input
-                type="text"
-                value={formValues.team_name}
+                type="radio"
+                id="men"
+                name="team_type"
+                value="Men"
+                checked={formValues.team_type === 'Men' || !formValues.team_type}
                 onChange={handleChange}
-                name="team_name"
-                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="focus:ring-2 focus:ring-blue-500"
               />
+              <label htmlFor="men" className="ml-2 text-sm text-gray-700">Men</label>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Coach<span className="mandatory">*</span>
-              </label>
-              <Select
-                options={coaches ?? []}
-                value={selectedCoach}
-                onChange={handleCoachChange}
-                isClearable
-                placeholder="Select a Coach"
-                formatOptionLabel={getOptionLabel}  // Use formatOptionLabel instead of getOptionLabel
-                components={{ Option: CustomOption }} // Use custom Option component
+            <div className="flex items-center">
+              <input
+                type="radio"
+                id="women"
+                name="team_type"
+                value="Women"
+                checked={formValues.team_type === 'Women'}
+                onChange={handleChange}
+                className="focus:ring-2 focus:ring-blue-500"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Year<span className="mandatory">*</span>
-              </label>
-              <select
-                value={formValues.team_year}
-                onChange={handleChange}
-                name="team_year"
-                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Year</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Team for<span className="mandatory">*</span>
-              </label>
-              <div className="flex space-x-6">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="men"
-                    name="team_type"
-                    value="Men"
-                    checked={formValues.team_type === 'Men' || !formValues.team_type}
-                    onChange={handleChange}
-                    className="focus:ring-2 focus:ring-blue-500"
-                  />
-                  <label htmlFor="men" className="ml-2 text-sm text-gray-700">Men</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="women"
-                    name="team_type"
-                    value="Women"
-                    checked={formValues.team_type === 'Women'}
-                    onChange={handleChange}
-                    className="focus:ring-2 focus:ring-blue-500"
-                  />
-                  <label htmlFor="women" className="ml-2 text-sm text-gray-700">Women</label>
-                </div>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Description<span className="mandatory">*</span>
-              </label>
-              <textarea
-                value={formValues.description}
-                onChange={handleChange}
-                name="description"
-                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
+              <label htmlFor="women" className="ml-2 text-sm text-gray-700">Women</label>
             </div>
           </div>
-
-          {/* Second Column */}
-          <div className="space-y-4 shadow p-8 ml-1">
-
-            <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Images</h3>
-            <div onClick={handleImageClick} className="cursor-pointer">
-              <label className="block text-sm font-medium text-gray-700">
-                Upload Logo<span className="mandatory">*</span>
-              </label>
-              <Image
-                src={formValues.logo || DefaultPic}
-                alt="Team Logo"
-                width={100}
-                height={100}
-                className="rounded-full mx-auto"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              {photoUploading && <FileUploader />}
-            </div>
-            <div onClick={handleCoverImageClick} className="cursor-pointer">
-              <label className="block text-sm font-medium text-gray-700">
-                Upload Cover Image<span className="mandatory">*</span>
-              </label>
-              <Image
-                src={formValues.cover_image || CoverImage}
-                alt="Cover Image"
-                width={300}
-                height={150}
-                className="rounded-lg mx-auto"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={coverImageInputRef}
-                onChange={handleCoverImageChange}
-                className="hidden"
-              />
-              {photoUploading && <FileUploader />}
-            </div>
-
-
-          </div>
-
-          <div className="flex">
-            <div className="flex justify-center space-x-4 mt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                {team ? "Update" : "Add"}
-              </button>
-            </div>
-          </div>
-
-
-        </form>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Description<span className="mandatory">*</span>
+          </label>
+          <textarea
+            value={formValues.description}
+            onChange={handleChange}
+            name="description"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
       </div>
-    </div>
+
+      {/* Second Column: Management Details */}
+      <div className="space-y-4 shadow p-8">
+        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Manager Details</h3>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Manager Name<span className="mandatory">*</span>
+          </label>
+          <input
+            type="text"
+            value={formValues.manager_name}
+            onChange={handleChange}
+            name="manager_name"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Manager Email<span className="mandatory">*</span>
+          </label>
+          <input
+            type="email"
+            value={formValues.manager_email}
+            onChange={handleChange}
+            name="manager_email"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Manager Phone<span className="mandatory">*</span>
+          </label>
+          <input
+            type="tel"
+            value={formValues.manager_phone}
+            onChange={handleChange}
+            name="manager_phone"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      {/* Third Column: Image Upload */}
+      <div className="space-y-4 shadow p-8">
+        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Images</h3>
+
+        {/* Logo Image */}
+        <div onClick={handleImageClick} className="cursor-pointer relative">
+          <label className="block text-sm font-medium text-gray-700">
+            Upload Logo<span className="mandatory">*</span>
+          </label>
+          <div className="relative">
+            <Image
+              src={formValues.logo || DefaultPic}
+              alt="Team Logo"
+              width={100}
+              height={100}
+              className="rounded-full mx-auto"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold h-10 w-[95px] mx-auto text-xs rounded top-8">
+            Click to Upload
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          {photoUploading && <FileUploader />}
+        </div>
+
+        {/* Cover Image */}
+        <div onClick={handleCoverImageClick} className="cursor-pointer relative">
+          <label className="block text-sm font-medium text-gray-700">
+            Upload Cover Image<span className="mandatory">*</span>
+          </label>
+          <div className="relative">
+            <Image
+              src={formValues.cover_image || CoverImage}
+              alt="Cover Image"
+              width={300}
+              height={150}
+              className="rounded-lg mx-auto"
+            />
+            <div className="text-xs absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold">
+             Click to Upload
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={coverImageInputRef}
+            onChange={handleCoverImageChange}
+            className="hidden"
+          />
+          {photoUploading && <FileUploader />}
+        </div>
+      </div>
+
+      {/* Submit Buttons */}
+      <div className="flex justify-center space-x-4 mt-4">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          {team ? "Update" : "Add"}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  
+
 
 
 

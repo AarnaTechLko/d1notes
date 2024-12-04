@@ -438,35 +438,41 @@ export default function Register() {
               {/* Profile Image */}
               
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
-                    <Image  
-                      src={formValues.image ? formValues.image : DefaultPic} 
-                      alt="Profile Image"
-                      width={100}
-                      height={100}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    ref={fileInputRef}
-                  />
-                   {photoUpoading ? (
-                                            <>
-                                                <FileUploader/>
-                                            </>
-                                        ) : (
-                                            <>
-                                                
-                                            </>
-                                        )}
-                  {formErrors.image && <p className="text-red-600 text-sm text-center">{formErrors.image}</p>}
-                </div>
+  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
+    <Image
+      src={formValues.image ? formValues.image : DefaultPic}
+      alt="Profile Image"
+      width={100}
+      height={100}
+      className="object-cover w-full h-full"
+    />
+    {!formValues.image && (
+    <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+      <p className="text-white text-xs font-medium">Click to Upload</p>
+    </div>
+     )}
+  </div>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageChange}
+    className="hidden"
+    ref={fileInputRef}
+  />
+  {photoUpoading ? (
+    <>
+      <FileUploader />
+    </>
+  ) : (
+    <>
+      {/* Optional: Placeholder for additional content */}
+    </>
+  )}
+  {formErrors.image && <p className="text-red-600 text-sm text-center">{formErrors.image}</p>}
+</div>
+
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">

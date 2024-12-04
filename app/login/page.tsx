@@ -9,7 +9,7 @@ import ForgotPassword from '../components/ForgotPassword';
 interface FormValues {
   email: string;
   password: string;
-  loginAs: 'coach' | 'player' | 'enterprise';
+  loginAs: 'coach' | 'player' | 'enterprise' | 'team';
 }
 
 export default function Login() {
@@ -82,6 +82,10 @@ export default function Login() {
         
         window.location.href = '/enterprise/dashboard';
       }
+      else if (session.user.type === 'team') {
+        
+        window.location.href = '/teams/dashboard';
+      }
        else if (!session.user.name) {
         window.location.href = '/completeprofile';
       }
@@ -97,7 +101,7 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <span className="block text-gray-700 text-sm font-semibold mb-2">Login as:</span>
-                <label className="inline-flex items-center mr-4">
+                <label className="inline-flex items-center mr-2">
                   <input
                     type="radio"
                     name="loginAs"
@@ -109,7 +113,7 @@ export default function Login() {
                   />
                   <span className="ml-2">Coach</span>
                 </label>
-                <label className="inline-flex items-center mr-4">
+                <label className="inline-flex items-center mr-2">
                   <input
                     type="radio"
                     name="loginAs"
@@ -121,7 +125,7 @@ export default function Login() {
                   />
                   <span className="ml-2">Player</span>
                 </label>
-                <label className="inline-flex items-center">
+                <label className="inline-flex items-center mr-2">
                   <input
                     type="radio"
                     name="loginAs"
@@ -131,7 +135,20 @@ export default function Login() {
                     disabled={loading}
                     className="form-radio"
                   />
-                  <span className="ml-2">Club</span>
+                  <span className="ml-2">Club </span>
+                </label>
+                
+                <label className="inline-flex items-center ">
+                  <input
+                    type="radio"
+                    name="loginAs"
+                    value="team"
+                    checked={formValues.loginAs === 'team'}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="form-radio"
+                  />
+                  <span className="ml-2">Team Manager</span>
                 </label>
               </div>
               <div className="mb-4">
