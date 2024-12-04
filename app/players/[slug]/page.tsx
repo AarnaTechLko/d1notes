@@ -145,21 +145,31 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
           <div>
           <div className="relative overflow-hidden w-full h-[500px]">
-        {banners.map((banner, index) => (
-          <div
-            key={index}
-            className={`absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out ${
-              index === currentBanner ? 'transform translate-x-0' : 'transform -translate-x-full'
-            }`}
-          >
-            <img
-              src={banner}
-              alt={`Banner ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
+  {banners.length > 0 ? (
+    banners.map((banner, index) => (
+      <div
+        key={index}
+        className={`absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out ${
+          index === currentBanner ? 'transform translate-x-0' : 'transform -translate-x-full'
+        }`}
+      >
+        <img
+          src={banner}
+          alt={`Banner ${index + 1}`}
+          className="w-full h-full object-cover"
+        />
       </div>
+    ))
+  ) : (
+    <div className="absolute top-0 left-0 w-full h-full">
+      <img
+        src="/default-cover.jpg"
+        alt="Default Banner"
+        className="w-full h-full object-cover"
+      />
+    </div>
+  )}
+</div>
 
           </div>
         </div>
@@ -169,7 +179,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           {/* Image Section */}
           <div className="flex justify-end items-right">
             <img
-              src={coachData.image}
+              src={coachData.image ?? '/default.jpg'}
               alt="Player Thumbnail"
               className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
             />

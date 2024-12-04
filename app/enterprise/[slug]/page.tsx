@@ -9,24 +9,25 @@ import Loading from '@/app/components/Loading';
 
 
 import { EvaluationData } from '../../types/types';
+import ProfileCard from '@/app/components/teams/ProfileCard';
 
 
 
 
 interface CoachData {
- 
-    organizationName: string;
-    contactPerson: string;
-    address:  string;
-    
-  createdAt:  string;
+
+  organizationName: string;
+  contactPerson: string;
+  address: string;
+
+  createdAt: string;
   slug: string;
- 
+
   country: string;
   state: string;
   city: string;
- 
-  logo:string;
+
+  logo: string;
 }
 
 interface CoachProfileProps {
@@ -38,6 +39,7 @@ interface CoachProfileProps {
 const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
   const [coachData, setCoachData] = useState<CoachData | null>(null);
+  const [teamData, setTeamData] = useState<[] | null>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isevaludationModalopen, setIsevaluationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
-  
+
   // Fetch coach data
   useEffect(() => {
     const payload = { slug: slug };
@@ -67,8 +69,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         }
 
         const responseData = await response.json();
-setCoachData(responseData.clubdata);
- 
+        setCoachData(responseData.clubdata);
+        setTeamData(responseData.clubTeams);
+
       } catch (err) {
         setError("Some error occurred.");
       } finally {
@@ -98,102 +101,88 @@ setCoachData(responseData.clubdata);
   return (
     <>
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
-        {/* Header Section */}
-       
-        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg">
-  {/* Profile Image and Coach Info */}
-  <div className="flex flex-col md:flex-row md:w-2/3 mb-4 md:mb-0 md:mr-4">
-    {/* Profile Image */}
-    <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-      <Image
-        src={coachData.logo}
-        alt={`${coachData.organizationName}`}
-        width={200}
-        height={200}
-        className="rounded-full object-cover"
-      />
-    </div>
-
-    {/* Coach Info */}
-    <div className="text-center md:text-left">
-      <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
-        {coachData.organizationName}
-      </h1>
-      <p className="text-gray-600 text-lg">
-       Club
-      </p>
-
-      {/* Rating */}
-      <div className="flex items-center justify-center md:justify-start mt-2">
-      <div className="mt-1">{stars}</div>
-      
-      </div>
-      <span className="text-yellow-500 text-2xl">5</span>
-      <span className="ml-2 text-gray-500">/ 5.0</span>
-    </div>
-  </div>
 
 
-</div>
+        <div className="mx-auto px-4 py-8 transition-all duration-300 hover:shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Left Section */}
+            <div className="flex flex-col items-center justify-center md:items-end">
+              <Image
+                src={coachData.logo}
+                alt={`${coachData.organizationName}`}
+                width={150}
+                height={150}
+                className="rounded-full object-cover"
+              />
 
+            </div>
+            <div className="flex flex-col items-center md:items-start">
+              <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
+                {coachData.organizationName}
+              </h1>
+              <p className="text-gray-600 text-lg">Club</p>
+              <div className="flex items-center justify-center md:justify-start mt-2">
+                <div className="mt-1">{stars}</div>
+              </div>
+              <div className="flex items-center justify-center md:justify-start mt-2">
+                <span className="text-yellow-500 text-2xl">5</span>
+                <span className="ml-2 text-gray-500">/ 5.0</span>
+              </div>
+            </div>
+            {/* Right Section */}
+            <div className="flex flex-col items-center md:items-end">
+              <ul className="space-y-4">
+                <li>
+                  <strong>Address:</strong> {coachData.address} USD
+                </li>
+                <li>
+                  <strong>Country:</strong> {coachData.country}
+                </li>
+                <li>
+                  <strong>State:</strong> {coachData.state}
+                </li>
+                <li>
+                  <strong>City:</strong> {coachData.city}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-
-
-        {/* Contact Info Section */}
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-    General Information
-  </h2>
+          Teams
+        </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-   
-  <div className="flex flex-col md:flex-row md:space-x-8">
-    {/* Column 1 */}
-    <div className="flex-1 mb-4 md:mb-0">
-      <ul className="space-y-4">
-        <li><strong>Address:</strong> {coachData.address} USD</li>
-        <li><strong>Country :</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
-        <li><strong>City:</strong> {coachData.city}</li>
-        
-      </ul>
-    </div>
-    
-    {/* Column 2 */}
-    {/* <div className="flex-1">
-      <ul className="space-y-4">
-      <li><strong>Location:</strong> {coachData.location}</li>
-        <li><strong>Country:</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
-        <li><strong>City:</strong> {coachData.city}</li>
-      </ul>
-    </div> */}
-  </div>
-</section>
+          <div className="flex flex-col md:flex-row md:space-x-8">
+          {teamData?.map((item: any) => {
+            console.log(item); // Check the structure of item
+            return (
+              <ProfileCard
+                key={item?.teamSlug}
+                creatorname={item.creatorName}
+                teamName={item.teamName} // Ensure `team_name` is correct
+                logo={item.logo ?? '/default.jpg'}
+                rating={5}
+                slug={item.slug}
+              />
+            );
+          })}
+
+          </div>
+        </section>
 
 
-<h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-    Teams
-  </h2>
-        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
-
-   
-  <div className="flex flex-col md:flex-row md:space-x-8">
-   
-   
-  </div>
-</section>
-
- 
 
 
- 
 
 
- 
+
+
       </div>
 
-      {/* Modals */}
      
+
     </>
   );
 };
