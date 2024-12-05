@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
@@ -6,7 +6,7 @@ import { useSession, signOut } from 'next-auth/react';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
-  
+  const { data: session } = useSession(); 
  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -19,6 +19,9 @@ const Sidebar: React.FC = () => {
     localStorage.setItem('userImage', '')
     window.location.href = '/login';
   };
+  useEffect(() => {
+    
+  }, [session])
   return (
     <div>
       {/* Mobile Menu Toggle Button */}
@@ -87,13 +90,15 @@ const Sidebar: React.FC = () => {
               </ul>
             )}
           </li>
-          <li className="hover:bg-gray-700 rounded transition duration-200">
+          {session?.user.club_id !== '' && session?.user.club_id ? (
+            <>
+            {/* <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/coach/upgrade" className="flex items-center space-x-2 p-2">
             
               <FaCompressAlt className='text-xl'/>
               <span>Purchase License</span>
             </a>
-          </li>
+          </li> */}
           <li>
           <a href="/coach/licenses" className="flex items-center space-x-2 p-2">
             
@@ -126,6 +131,12 @@ const Sidebar: React.FC = () => {
               <span>Messages</span>
             </a>
           </li>
+          </>
+          )
+          : (
+            <></>
+          )}
+          
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="evaluations" className="flex items-center space-x-2 p-2">
                 <FaSignOutAlt className="text-xl" />

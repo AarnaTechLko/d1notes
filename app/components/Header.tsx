@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   const [profilepic, setProfilepic] = useState<string>(defaultImage.src);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { data: session } = useSession();
+  const { data: session } = useSession(); 
   const router = useRouter();
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [isUserImageAvailable, setIsUserImageAvailable] = useState(false);
