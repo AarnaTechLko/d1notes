@@ -139,8 +139,10 @@ export default function Register() {
         delete payload.sendedBy; 
          
       }
-   
-      const response = await fetch('/api/register', {
+   console.log(payload);
+
+return
+   const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

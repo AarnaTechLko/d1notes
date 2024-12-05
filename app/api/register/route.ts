@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   const logError = debug('app:error');
   const body = await req.json();
-  const { email, password, otp, sendedBy, referenceId } = body;
+  const { email, password, otp, sendedBy, referenceId,teamId } = body;
 
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
@@ -88,10 +88,10 @@ export async function POST(req: NextRequest) {
     }
 
     const insertedUser = await db.insert(users).values(userValues).returning();
-    if (sendedBy && referenceId) {
+    if (sendedBy && teamId) {
       await db.insert(teamPlayers).values(
         {
-          teamId: referenceId,
+          teamId: teamId,
           playerId: insertedUser[0].id,
           enterprise_id: userValues.enterprise_id,
         }
