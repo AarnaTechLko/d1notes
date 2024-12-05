@@ -80,9 +80,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
           status: 3,
           remark: remark, // Include the remark in the payload
         };
-        alert(remark);
-console.log(payload);
-return;
+        
         try {
           const response = await fetch('/api/coach/evaluations', {
             method: 'PUT',

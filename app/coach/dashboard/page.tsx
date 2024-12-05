@@ -184,7 +184,16 @@ const Dashboard: React.FC = () => {
               </button>
             );
           } else {
-            return <a onClick={() => handleEvaluationDetails(evaluation)}><FaEye /></a>;
+            if (selectedTab != '3')
+              {
+                
+                return <a onClick={() => handleEvaluationDetails(evaluation)}><FaEye /></a>;
+              }
+              else
+              {
+                return 'Rejected';
+              }
+            
           }
         },
       },
@@ -258,8 +267,13 @@ const Dashboard: React.FC = () => {
         <Sidebar />
         <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
           <div className="bg-white shadow-md rounded-lg p-6 ">
+          <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
+  <span className="text-xl font-semibold text-gray-700">Your Evaluation Price:</span>
+  <span className="text-2xl font-bold text-blue-600">{session?.user?.expectedCharge} USD</span>
+</div>
+
             {/* Dropdown for tabs on small screens */}
-            <div className="block md:hidden mb-4">
+            <div className="block md:hidden mb-4 ">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
@@ -292,7 +306,8 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Regular tabs for larger screens */}
-            <div className="hidden md:flex space-x-4 mb-4">
+            <br></br>
+            <div className="hidden md:flex space-x-4 mb-4 mt-100">
               {[
                 { name: 'Requested', value: '0' },
                 { name: 'Accepted', value: '1' },
