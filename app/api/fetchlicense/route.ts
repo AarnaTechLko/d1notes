@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     if (!userId || !type) {
         return NextResponse.json({ error: "User ID and type are required" }, { status: 400 });
     }
-    if(type==='Enterprise')
+    if(type==='Enterprise' || type==='enterprise')
     {
     const licensseQuery=await db.select({licenseKey:licenses.licenseKey}).from(licenses)
     .where(
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const licenseKey =licensseQuery[0].licenseKey;
     return NextResponse.json({ licenseKey });
     }
-    if(type==='Coach')
+    if(type==='coach')
         {
         const licensseQuery=await db.select({licenseKey:licenses.licenseKey}).from(licenses)
         .where(
