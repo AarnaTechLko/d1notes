@@ -112,6 +112,7 @@ export const playerEvaluation = pgTable(
     created_at: timestamp("created_at").defaultNow().notNull(),
     rating: integer("rating"), // New field for rating, nullable by default
     remarks: text("remarks"),
+    rejectremarks: text("rejectremarks"),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   }
 );

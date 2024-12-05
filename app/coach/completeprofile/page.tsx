@@ -10,6 +10,7 @@ import { FaCheck, FaSpinner } from 'react-icons/fa';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import FileUploader from '@/app/components/FileUploader';
+import { countryCodesList,states } from '@/lib/constants';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -99,58 +100,7 @@ export default function Register() {
   const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
-  const states = [
-    { name: "Alabama", abbreviation: "AL" },
-    { name: "Alaska", abbreviation: "AK" },
-    { name: "Arizona", abbreviation: "AZ" },
-    { name: "Arkansas", abbreviation: "AR" },
-    { name: "California", abbreviation: "CA" },
-    { name: "Colorado", abbreviation: "CO" },
-    { name: "Connecticut", abbreviation: "CT" },
-    { name: "Delaware", abbreviation: "DE" },
-    { name: "Florida", abbreviation: "FL" },
-    { name: "Georgia", abbreviation: "GA" },
-    { name: "Hawaii", abbreviation: "HI" },
-    { name: "Idaho", abbreviation: "ID" },
-    { name: "Illinois", abbreviation: "IL" },
-    { name: "Indiana", abbreviation: "IN" },
-    { name: "Iowa", abbreviation: "IA" },
-    { name: "Kansas", abbreviation: "KS" },
-    { name: "Kentucky", abbreviation: "KY" },
-    { name: "Louisiana", abbreviation: "LA" },
-    { name: "Maine", abbreviation: "ME" },
-    { name: "Maryland", abbreviation: "MD" },
-    { name: "Massachusetts", abbreviation: "MA" },
-    { name: "Michigan", abbreviation: "MI" },
-    { name: "Minnesota", abbreviation: "MN" },
-    { name: "Mississippi", abbreviation: "MS" },
-    { name: "Missouri", abbreviation: "MO" },
-    { name: "Montana", abbreviation: "MT" },
-    { name: "Nebraska", abbreviation: "NE" },
-    { name: "Nevada", abbreviation: "NV" },
-    { name: "New Hampshire", abbreviation: "NH" },
-    { name: "New Jersey", abbreviation: "NJ" },
-    { name: "New Mexico", abbreviation: "NM" },
-    { name: "New York", abbreviation: "NY" },
-    { name: "North Carolina", abbreviation: "NC" },
-    { name: "North Dakota", abbreviation: "ND" },
-    { name: "Ohio", abbreviation: "OH" },
-    { name: "Oklahoma", abbreviation: "OK" },
-    { name: "Oregon", abbreviation: "OR" },
-    { name: "Pennsylvania", abbreviation: "PA" },
-    { name: "Rhode Island", abbreviation: "RI" },
-    { name: "South Carolina", abbreviation: "SC" },
-    { name: "South Dakota", abbreviation: "SD" },
-    { name: "Tennessee", abbreviation: "TN" },
-    { name: "Texas", abbreviation: "TX" },
-    { name: "Utah", abbreviation: "UT" },
-    { name: "Vermont", abbreviation: "VT" },
-    { name: "Virginia", abbreviation: "VA" },
-    { name: "Washington", abbreviation: "WA" },
-    { name: "West Virginia", abbreviation: "WV" },
-    { name: "Wisconsin", abbreviation: "WI" },
-    { name: "Wyoming", abbreviation: "WY" }
-  ];
+  
   // Validation function
   const validateForm = (): boolean => {
     const errors: FormErrors = {
@@ -169,15 +119,15 @@ export default function Register() {
       image: null, // Ensure this property is included
     };
   
-    if (!formValues.image) {
-      errors.image = "Profile image is required";
-  } else {
-      // Calculate the approximate size of the base64 string
-      const imageSizeInBytes = (formValues.image.length * 3) / 4;
-      if (imageSizeInBytes > 5 * 1024 * 1024) {
-        errors.image = "Image size must be less than 5MB";
-      }
-  }
+  //   if (!formValues.image) {
+  //     errors.image = "Profile image is required";
+  // } else {
+  //     // Calculate the approximate size of the base64 string
+  //     const imageSizeInBytes = (formValues.image.length * 3) / 4;
+  //     if (imageSizeInBytes > 5 * 1024 * 1024) {
+  //       errors.image = "Image size must be less than 5MB";
+  //     }
+  // }
     if (!formValues.firstName) errors.firstName = 'First Name is required';
     if (!formValues.lastName) errors.lastName = 'Last Name is required';
      
@@ -251,78 +201,6 @@ export default function Register() {
     }
   };
 
-  const countryCodes = [
-    { id: 1, code: "+1", country: "USA" },
-    { id: 2, code: "+44", country: "UK" },
-    { id: 3, code: "+91", country: "India" },
-    { id: 4, code: "+61", country: "Australia" },
-    { id: 5, code: "+33", country: "France" },
-    { id: 6, code: "+49", country: "Germany" },
-    { id: 7, code: "+81", country: "Japan" },
-    { id: 8, code: "+55", country: "Brazil" },
-    { id: 9, code: "+34", country: "Spain" },
-    { id: 10, code: "+39", country: "Italy" },
-    { id: 11, code: "+52", country: "Mexico" },
-    { id: 12, code: "+7", country: "Russia" },
-    { id: 13, code: "+86", country: "China" },
-    { id: 14, code: "+27", country: "South Africa" },
-    { id: 15, code: "+20", country: "Egypt" },
-    { id: 16, code: "+62", country: "Indonesia" },
-    { id: 17, code: "+60", country: "Malaysia" },
-    { id: 18, code: "+34", country: "Spain" },
-    { id: 19, code: "+91", country: "India" },
-    { id: 20, code: "+63", country: "Philippines" },
-    { id: 21, code: "+90", country: "Turkey" },
-    { id: 22, code: "+94", country: "Sri Lanka" },
-    { id: 23, code: "+971", country: "UAE" },
-    { id: 24, code: "+34", country: "Spain" },
-    { id: 25, code: "+27", country: "South Africa" },
-    { id: 26, code: "+44", country: "United Kingdom" },
-    { id: 27, code: "+55", country: "Brazil" },
-    { id: 28, code: "+49", country: "Germany" },
-    { id: 29, code: "+62", country: "Indonesia" },
-    { id: 30, code: "+52", country: "Mexico" },
-    { id: 31, code: "+61", country: "Australia" },
-    { id: 32, code: "+33", country: "France" },
-    { id: 33, code: "+44", country: "United Kingdom" },
-    { id: 34, code: "+1", country: "USA" },
-    { id: 35, code: "+968", country: "Oman" },
-    { id: 36, code: "+972", country: "Israel" },
-    { id: 37, code: "+886", country: "Taiwan" },
-    { id: 38, code: "+90", country: "Turkey" },
-    { id: 39, code: "+351", country: "Portugal" },
-    { id: 40, code: "+977", country: "Nepal" },
-    { id: 41, code: "+265", country: "Malawi" },
-    { id: 42, code: "+234", country: "Nigeria" },
-    { id: 43, code: "+254", country: "Kenya" },
-    { id: 44, code: "+1", country: "Canada" },
-    { id: 45, code: "+54", country: "Argentina" },
-    { id: 46, code: "+48", country: "Poland" },
-    { id: 47, code: "+351", country: "Portugal" },
-    { id: 48, code: "+20", country: "Egypt" },
-    { id: 49, code: "+971", country: "UAE" },
-    { id: 50, code: "+962", country: "Jordan" },
-    { id: 51, code: "+975", country: "Bhutan" },
-    { id: 52, code: "+977", country: "Nepal" },
-    { id: 53, code: "+1", country: "USA" },
-    { id: 54, code: "+49", country: "Germany" },
-    { id: 55, code: "+7", country: "Russia" },
-    { id: 56, code: "+60", country: "Malaysia" },
-    { id: 57, code: "+92", country: "Pakistan" },
-    { id: 58, code: "+370", country: "Lithuania" },
-    { id: 59, code: "+502", country: "Guatemala" },
-    { id: 60, code: "+504", country: "Honduras" },
-    { id: 61, code: "+852", country: "Hong Kong" },
-    { id: 62, code: "+63", country: "Philippines" },
-    { id: 63, code: "+33", country: "France" },
-    { id: 64, code: "+55", country: "Brazil" },
-    { id: 65, code: "+56", country: "Chile" },
-    { id: 66, code: "+57", country: "Colombia" },
-    { id: 67, code: "+60", country: "Malaysia" },
-    { id: 68, code: "+503", country: "El Salvador" },
-    { id: 69, code: "+91", country: "India" },
-    { id: 70, code: "+1", country: "USA" }
-  ];
   
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -429,7 +307,7 @@ export default function Register() {
         <div className="flex-1 bg-white p-1 md:p-8">
           <div className="bg-white rounded-lg p-4  mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-          <p className="text-red-500">( All fields are mandatory including coach&lsquo;s photo upload.)</p>
+          <p className="text-red-500">( Fields marked with * are mandatory.)</p>
             {error && <p className="text-red-600">{error}</p>}
             {successMessage && <p className="text-green-600">{successMessage}</p>}
             {loading && <p className="text-blue-600">Submitting your information... Please wait.</p>}
@@ -521,7 +399,7 @@ export default function Register() {
       onChange={handleChange}
     >
       <option value="">Select</option>
-     {countryCodes.map((item) => (
+     {countryCodesList.map((item) => (
         <option key={item.id} value={item.code}>
           {item.code} ({item.country})
         </option>

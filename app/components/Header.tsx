@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   const [profilepic, setProfilepic] = useState<string>(defaultImage.src);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { data: session } = useSession();
+  const { data: session } = useSession(); 
   const router = useRouter();
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [isUserImageAvailable, setIsUserImageAvailable] = useState(false);
@@ -27,18 +27,19 @@ const Header: React.FC = () => {
   // Refs to detect outside click
   const dropdownRef = useRef<HTMLLIElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
-
   const handleLogout = async () => {
+     
+    
     try {
       await signOut({
         redirect: false,
         callbackUrl: '/login',
       });
-  
-   
-      window.location.href = '/login';
-    } catch (error) {
       
+      // Redirect to the login page
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
 
@@ -245,6 +246,11 @@ const Header: React.FC = () => {
                           )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
                                 Profile
                               </Link>
+                              <Link href="/coach/changepassword" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                                Change Password
+                              </Link>
                             </li>
                           )}
                           {session?.user?.type === 'player' && (
@@ -256,6 +262,36 @@ const Header: React.FC = () => {
                               </Link>
 
                               <Link href="/changepassword" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                                Change Password
+                              </Link>
+                            </li>
+                          )}
+                          {session?.user?.type === 'enterprise' && (
+                            <li className="pt-[8px]">
+                              {/* <Link href="/enterprise/profile" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                                Profile
+                              </Link> */}
+
+                              <Link href="/enterprise/changepassword" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                                Change Password
+                              </Link>
+                            </li>
+                          )}
+                          {session?.user?.type === 'team' && (
+                            <li className="pt-[8px]">
+                              {/* <Link href="/enterprise/profile" className={`${isActiveLink(
+                            "/profile"
+                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                                Profile
+                              </Link> */}
+
+                              <Link href="/team/changepassword" className={`${isActiveLink(
                             "/profile"
                           )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
                                 Change Password

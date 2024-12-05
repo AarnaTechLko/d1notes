@@ -11,7 +11,8 @@ const ChangePassword: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = useSession();
-  const handlePasswordChange = async () => {
+  const handlePasswordChange = async (e:any) => {
+    e.preventDefault();
     setError('');
     setSuccess(false);
 
@@ -43,6 +44,9 @@ const ChangePassword: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Password has been changed successfully.");
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
         
       } else {
         showError(data.message || 'Failed to change password.');
@@ -60,7 +64,7 @@ const ChangePassword: React.FC = () => {
       <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-6">
         Change Password
       </h2>
-
+<form  onSubmit={handlePasswordChange}>
       <div className="space-y-4">
         <div className="form-group">
           <label
@@ -122,7 +126,7 @@ const ChangePassword: React.FC = () => {
       </div>
 
       <button
-        onClick={handlePasswordChange}
+       type="submit"
         disabled={loading}
         className={`mt-6 w-full py-2 px-4 text-white font-semibold rounded-lg focus:outline-none ${
           loading
@@ -132,6 +136,7 @@ const ChangePassword: React.FC = () => {
       >
         {loading ? 'Changing...' : 'Change Password'}
       </button>
+      </form>
     </div>
   );
 };
