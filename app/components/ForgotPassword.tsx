@@ -98,7 +98,7 @@ const ForgotPassword = () => {
               >
                 <FormControlLabel value="coach" control={<Radio />} label="Coach" />
                 <FormControlLabel value="player" control={<Radio />} label="Player" />
-                <FormControlLabel value="enterprise" control={<Radio />} label="Enterprise" />
+                <FormControlLabel value="enterprise" control={<Radio />} label="Club" />
               </RadioGroup>
             </FormControl>
 

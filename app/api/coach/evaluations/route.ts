@@ -54,12 +54,12 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { evaluationId, status } = await req.json();
+    const { evaluationId, status, remark } = await req.json();
     const parsedEvaluationId = parseInt(evaluationId, 10);
 
     const result = await db
       .update(playerEvaluation)
-      .set({ status: status || undefined }) // Set the new status value
+      .set({ status: status || undefined ,rejectremarks: remark || undefined }) // Set the new status value
       .where(eq(playerEvaluation.id, parsedEvaluationId)) // Condition for evaluation ID
       .returning();
 
@@ -113,6 +113,7 @@ export async function GET(req: NextRequest) {
         video_link_two: playerEvaluation.video_link_two,
         video_link_three: playerEvaluation.video_link_three,
         status: playerEvaluation.status,
+        rejectremarks: playerEvaluation.rejectremarks,
         video_description: playerEvaluation.video_description,
       })
       .from(playerEvaluation)

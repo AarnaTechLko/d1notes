@@ -164,6 +164,7 @@ const Header: React.FC = () => {
                           Dashboard
                         </Link>
                       </li>
+                      {session?.user?.club_id !== '' && session?.user.club_id ? (
                       <li className="pt-[8px]">
                         <Link href="/coach/invitation" className={`${isActiveLink(
                             "/coach/invitation"
@@ -171,12 +172,16 @@ const Header: React.FC = () => {
                           Send Invitation
                         </Link>
                       </li>
+                       ):(
+                        <></>
+                       )}
                       <li className="pt-[8px]">
                         <Link href="/coach/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={closeMenu}>
                           Hello, {session?.user?.name || "Coach"}!
                         </Link>
                       </li>
                     </>
+                 
                   )}
                   {session?.user?.type === 'player' && (
                     <>
