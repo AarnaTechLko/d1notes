@@ -390,7 +390,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                 {/* Profile Image */}
 
                                 <div className="mb-4">
-                                    <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
+                                    <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
                                     <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                                         <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                                             <Image
