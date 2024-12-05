@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { teams,teamPlayers } from "@/lib/schema";
+import { teams,teamPlayers,coaches } from "@/lib/schema";
 import { eq,and,desc } from "drizzle-orm";
 import { sendEmail } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/helpers";
@@ -16,7 +16,28 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-  const data = await db.select().from(teams)
+  const data = await db.select(
+    {
+      id: teams.id,
+      team_name: teams.team_name,
+      description: teams.description,
+      logo: teams.logo,
+      created_by: teams.created_by,
+      creator_id: teams.creator_id,
+      slug: teams.slug,
+      team_type: teams.team_type,
+      team_year: teams.team_year,
+      cover_image: teams.cover_image,
+      coach_id: teams.coach_id,
+      manager_name: teams.manager_name,
+      manager_email: teams.manager_email,
+      manager_phone: teams.manager_phone,
+      firstName: coaches.firstName,
+      lastName: coaches.lastName,
+      coachSlug: coaches.slug,
+    }
+  ).from(teams)
+  .leftJoin(coaches, eq(teams.coach_id, coaches.id))
   .where(
     and(
         eq(teams.creator_id,parseInt(enterpriseId)),
