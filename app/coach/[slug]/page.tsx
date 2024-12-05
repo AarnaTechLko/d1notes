@@ -7,7 +7,7 @@ import LoginModal from '../../components/LoginModal'; // Import the modal
 import EvaluationModal from '@/app/components/EvaluationModal';
 import Loading from '@/app/components/Loading';
 import CertificateModal from '@/app/components/CertificateModal';
-
+import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
 
 
@@ -73,7 +73,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         const responseData = await response.json();
 setCoachData(responseData.coachdata);
-setEvaluationList(responseData.evaluationlist || []);
+ 
+setEvaluationList(responseData.evaluationlist);
       } catch (err) {
         setError("Some error occurred.");
       } finally {
@@ -111,7 +112,7 @@ setEvaluationList(responseData.evaluationlist || []);
     {/* Profile Image */}
     <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
       <Image
-        src={coachData.image}
+        src={coachData.image ?? '/default-image.jpg'}
         alt={`${coachData.firstName} ${coachData.lastName}`}
         width={200}
         height={200}
@@ -263,13 +264,25 @@ Previous Evaluations
 
         <li key={index} className="bg-white p-4 rounded-lg shadow flex items-center">
           {/* Circular Image */}
-          <Image
-            src={evaluation.image} // Adjust this based on your actual data structure
-            alt={`Evaluation by ${evaluation.review_title}`} // Provide a meaningful alt text
-            width={50} // Set width for the image
-            height={50} // Set height for the image
-            className="rounded-full object-cover mr-4" // Add margin-right for spacing
-          />
+          {evaluation.image && evaluation.image !== 'null' && (
+  <Image
+    src={evaluation.image}
+    alt={`Evaluation by ${evaluation.review_title}`}
+    width={50}
+    height={50}
+    className="rounded-full object-cover mr-4"
+  />
+)}
+{(!evaluation.image || evaluation.image === 'null') && (
+  <Image
+    src={defaultImage}
+    alt={`Evaluation by ${evaluation.review_title}`}
+    width={50}
+    height={50}
+    className="rounded-full object-cover mr-4"
+  />
+)}
+         
           
           {/* Review Title and Other Details */}
           <div className="flex-1">

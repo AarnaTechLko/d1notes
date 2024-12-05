@@ -55,14 +55,17 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   };
 
   const fetchTeams = async () => {
-    if (!session || !session.user?.club_id) {
+    if (!session || !session.user?.id) {
       console.error("No user logged in");
       return;
     }
 
+    const enterpriseID = session.user.type === 'enterprise' ? session.user.id : session.user.club_id;
+
+
     try {
       setLoadingData(true);
-      const res = await fetch(`/api/teams?enterprise_id=${session.user.club_id}`);
+      const res = await fetch(`/api/teams?enterprise_id=${enterpriseID}`);
       if (!res.ok) 
         {
           throw new Error("Failed to fetch teams");
@@ -163,10 +166,12 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   };
 
   useEffect(() => {
+    fetchTeams();
+   
     if (usertype === "coach") {
       setRegistrationType("player");
     }
-    fetchTeams();
+   
     if(session?.user.type==='team')
     {
       setSelectedTeam(session?.user.id);
