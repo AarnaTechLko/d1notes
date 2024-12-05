@@ -39,6 +39,7 @@ export default function Register() {
   const [referenceId, setReferenceId] = useState<string | null | undefined>();
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
   const [email, setEmail] = useState<string | null | undefined>();
+  const [team, setTeam] = useState<string | null | undefined>();
   const [sendedBy, setSendedBy] = useState<string | null | undefined>();
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,10 +63,12 @@ export default function Register() {
         console.log('Decrypted data:', decryptedData);
         setReferenceId(decryptedData.userId);
         setReferenceEmail(decryptedData.singleEmail);
-        setEmail(decryptedData.singleEmail);
+        setTeam(decryptedData.selectedTeam);
+       
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
+          team: decryptedData.selectedTeam || '',
         }));
         
         
@@ -136,7 +139,7 @@ export default function Register() {
         delete payload.sendedBy; 
          
       }
-
+   
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

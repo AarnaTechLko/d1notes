@@ -20,6 +20,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   const [registrationType, setRegistrationType] = useState<"coach" | "player">("player");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [teams, setTeams] = useState<[] | null >([]);
+  const [selectedTeam, setSelectedTeam] = useState<string>("");
   const { data: session } = useSession();
 
   const validateEmail = (email: string): boolean => {
@@ -81,7 +82,11 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
 
     const isAnyEmailValid = emails.some((email) => email.trim() && validateEmail(email));
     const isAnyMobileValid = mobiles.some((mobile) => validateMobile(mobile));
-
+    if (!selectedTeam) {
+      setError("Please Select a Team.");
+      setIsSubmitting(false);
+      return;
+    }
     if (!isAnyEmailValid && !isAnyMobileValid) {
       setError("Please provide a valid email or mobile number.");
       setIsSubmitting(false);
@@ -122,6 +127,8 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
       userId,
       userName,
       registrationType,
+      selectedTeam,
+     
     };
 
     try {
@@ -160,6 +167,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
       setRegistrationType("player");
     }
     fetchTeams();
+    if(session?.user.type==='team')
+    {
+      setSelectedTeam(session?.user.id);
+    }
+    else{
+      setSelectedTeam('');
+    }
   }, [usertype, session]);
 
   return (
@@ -206,8 +220,9 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
     Select Team: <span className="text-sm text-gray-500">*</span>
   </label>
   <select
-              value={session?.user.id}
-              onChange={(e) =>teams}
+              value={selectedTeam}
+              onChange={(e) => setSelectedTeam(e.target.value)}
+              disabled={selectedTeam !== ''}
               className="px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full"
             >
               <option value="">Select</option>

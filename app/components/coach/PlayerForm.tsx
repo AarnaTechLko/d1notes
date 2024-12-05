@@ -40,6 +40,7 @@ interface FormValues {
   height:string;
   weight:string;
   playingcountries:string;
+  teamId?:string;
   ownerType:string;
   image: string | null; // Updated to store Base64 string
 }
@@ -70,6 +71,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     height:"",
     weight:"",
     ownerType:"",
+    teamId:"",
     image: null,
   });
 
@@ -109,7 +111,10 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
         
     try {
         setLoadingKey(true);
-        const userId= session?.user.id; 
+        const userId = session?.user.type !== 'team' ? session?.user.id : session?.user.club_id;
+        const type = session?.user.type !== 'team' ? session?.user.type : 'Enterprise';
+
+        
         const response = await fetch("/api/fetchlicense", {
             method: "POST",
             headers: {
@@ -117,7 +122,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
             },
             body: JSON.stringify({
                 userId:userId,
-                type:"Coach",
+                type:type,
             }),
         });
 
@@ -215,14 +220,25 @@ if (!formValues.weight.trim()) {
 
     
     if (session && session.user.id) {
-      formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
-  formValues.ownerType = session.user.type;
+      if(session.user.type!='team')
+      {
+        formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
+        formValues.ownerType = session.user.type;
+      }
+      else{
+        formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
+        formValues.ownerType = 'enterprise';
+        formValues.teamId=session.user.id;
+      }
+         
     } else {
       setError("User is not authenticated");
       return;
     }
     setLoading(true);
+  
     try {
+    
       const token = localStorage.getItem("token");
       const response = await fetch("/api/coach/player/signup", {
         method: "POST",

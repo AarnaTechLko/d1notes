@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
-import { users, otps, licenses } from '../../../../../lib/schema'
+import { users, otps, licenses,teamPlayers } from '../../../../../lib/schema'
 import debug from 'debug';
 import { eq, and, gt, or , ilike, count, desc } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -124,55 +124,138 @@ catch (error: unknown) {
 }
 
 export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const search = url.searchParams.get('search') || ''; // Default to empty string if not provided
+  const page = parseInt(url.searchParams.get('page') || '1', 10); // Default to 1 if not provided
+  const limit = parseInt(url.searchParams.get('limit') || '10', 10); // Default to 10 if not provided
+  const enterprise_id = url.searchParams.get('enterprise_id');
+  const teamId = url.searchParams.get('teamId');
 
-    const url = new URL(req.url);
-    const search = url.searchParams.get('search') || '';  // Default to empty string if not provided
-    const page = parseInt(url.searchParams.get('page') || '1', 10);  // Default to 1 if not provided
-    const limit = parseInt(url.searchParams.get('limit') || '10', 10);  // Default to 10 if not provided
-    const enterprise_id = url.searchParams.get('enterprise_id');  
-    try{
+  try {
     if (!enterprise_id) {
       return NextResponse.json(
         { message: 'Enterprise ID not found!' },
         { status: 500 }
       );
     }
+
     const offset = (page - 1) * limit;
-  
+
     const whereClause = search
       ? and(
-        eq(users.enterprise_id, enterprise_id),
-        or(
-          ilike(users.first_name, `%${search}%`),
-          ilike(users.email, `%${search}%`),
-          ilike(users.number, `%${search}%`)
+          eq(users.enterprise_id, enterprise_id),
+          or(
+            ilike(users.first_name, `%${search}%`),
+            ilike(users.email, `%${search}%`),
+            ilike(users.number, `%${search}%`)
+          )
         )
-      )
       : eq(users.enterprise_id, enterprise_id);
-  
-    const coachesData = await db
-      .select()
-      .from(users)
-      .where(whereClause)
-      .offset(offset)
-      .orderBy(desc(users.createdAt))
-      .limit(limit);
 
-    const totalCount = await db
-    .select({ count: count() })/// Use raw SQL for COUNT(*) function
-    .from(users)
-    .where(whereClause)
-    .then((result) => result[0]?.count || 0);
-  
+    let query;
+    let totalCountQuery;
+
+    if (teamId) {
+      query = db
+        .select({
+          id: users.id,
+          first_name: users.first_name,
+          last_name: users.last_name,
+          grade_level: users.grade_level,
+          location: users.location,
+          birthday: users.birthday,
+          gender: users.gender,
+          sport: users.sport,
+          team: users.team,
+          jersey: users.jersey,
+          position: users.position,
+          number: users.number,
+          email: users.email,
+          image: users.image,
+          bio: users.bio,
+          country: users.country,
+          state: users.state,
+          city: users.city,
+          league: users.league,
+          countrycode: users.countrycode,
+          password: users.password,
+          enterprise_id: users.enterprise_id,
+          coach_id: users.coach_id,
+          slug: users.slug,
+          playingcountries: users.playingcountries,
+          height: users.height,
+          weight: users.weight,
+          status: users.status,
+          createdAt: users.createdAt,
+        })
+        .from(users)
+        .innerJoin(teamPlayers, eq(teamPlayers.playerId, users.id))
+        .where(eq(teamPlayers.teamId,Number(teamId)))
+        .offset(offset)
+        .orderBy(desc(users.createdAt))
+        .limit(limit);
+
+      totalCountQuery = db
+        .select({ count: count() })
+        .from(users)
+        .innerJoin(teamPlayers, eq(teamPlayers.playerId, users.id))
+        .where(eq(teamPlayers.teamId,Number(teamId)))
+    } else {
+      query = db
+        .select({
+          id: users.id,
+          first_name: users.first_name,
+          last_name: users.last_name,
+          grade_level: users.grade_level,
+          location: users.location,
+          birthday: users.birthday,
+          gender: users.gender,
+          sport: users.sport,
+          team: users.team,
+          jersey: users.jersey,
+          position: users.position,
+          number: users.number,
+          email: users.email,
+          image: users.image,
+          bio: users.bio,
+          country: users.country,
+          state: users.state,
+          city: users.city,
+          league: users.league,
+          countrycode: users.countrycode,
+          password: users.password,
+          enterprise_id: users.enterprise_id,
+          coach_id: users.coach_id,
+          slug: users.slug,
+          playingcountries: users.playingcountries,
+          height: users.height,
+          weight: users.weight,
+          status: users.status,
+          createdAt: users.createdAt,
+        })
+        .from(users)
+        .where(whereClause)
+        .offset(offset)
+        .orderBy(desc(users.createdAt))
+        .limit(limit);
+
+      totalCountQuery = db
+        .select({ count: count() })
+        .from(users)
+        .where(whereClause);
+    }
+
+    const coachesData = await query;
+    const totalCount = await totalCountQuery.then((result) => result[0]?.count || 0);
     const totalPages = Math.ceil(totalCount / limit);
-    return NextResponse.json({players: coachesData, totalPages});
-  
+
+    return NextResponse.json({ players: coachesData, totalPages });
   } catch (error) {
-    
     return NextResponse.json(
-      { message: 'Failed to fetch coaches' },
+      { message: 'Failed to fetch coaches', error: error instanceof Error ? error.message : error },
       { status: 500 }
     );
   }
-  }
+}
+
 

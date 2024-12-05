@@ -38,21 +38,15 @@ const Sidebar: React.FC = () => {
         <nav className="flex-grow mt-10">
         <ul className="space-y-2 p-4">
           <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/dashboard" className="flex items-center space-x-2 p-2">
+            <a href="/team/dashboard" className="flex items-center space-x-2 p-2">
               <MdDashboard className="text-xl" />
               <span>Dashboard</span>
             </a>
           </li>
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/teams" className="flex items-center space-x-2 p-2">
-            
-              <FaCompressAlt className='text-xl'/>
-              <span>Teams</span>
-            </a>
-          </li>
+        
            
           <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/enterprise/players" className="flex items-center space-x-2 p-2">
+            <a href="/team/players" className="flex items-center space-x-2 p-2">
             
               <FaCompressAlt className='text-xl'/>
               <span>Players</span>

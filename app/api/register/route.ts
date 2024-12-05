@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { users, otps } from '../../../lib/schema'
+import { users, otps, teams, teamPlayers } from '../../../lib/schema'
 import debug from 'debug';
 import { eq, and, gt } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -77,13 +77,28 @@ export async function POST(req: NextRequest) {
     if (sendedBy && referenceId) {
       if (sendedBy === 'coach') {
         userValues.coach_id = referenceId; // Insert referenceId into coach_id
-      } else if (sendedBy === 'Club') {
+      }
+      else if (sendedBy === 'Club') {
         userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
+      }
+      else if (sendedBy === 'Team') {
+        const TeamQuery=await db.select().from(teams).where(eq(teams.id, referenceId)).execute();
+        userValues.enterprise_id = TeamQuery[0].creator_id; // Insert referenceId into enterprise_id
       }
     }
 
     const insertedUser = await db.insert(users).values(userValues).returning();
+    if (sendedBy && referenceId) {
+      await db.insert(teamPlayers).values(
+        {
+          teamId: referenceId,
+          playerId: insertedUser[0].id,
+          enterprise_id: userValues.enterprise_id,
+        }
+        
+      ).returning();
 
+    }
     const emailResult = await sendEmail({
       to: email,
       subject: "D1 NOTES Player Registration",

@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
-import { users, otps, licenses } from '../../../../../lib/schema'
+import { users, otps, licenses, teamPlayers } from '../../../../../lib/schema'
 import debug from 'debug';
 import { eq, and, gt, or, ilike, count, desc } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -17,7 +17,7 @@ import next from 'next';
 
 export async function POST(req: NextRequest) {
 
-  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image} = await req.json();
+  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId} = await req.json();
    
   const coachId = ownerType === 'coach' ? enterprise_id : null;
   const enterpriseId = ownerType === 'enterprise' ? enterprise_id : null;
@@ -91,6 +91,18 @@ export async function POST(req: NextRequest) {
       })
 
       .returning();
+
+      if (teamId) {
+        await db.insert(teamPlayers).values(
+          {
+            teamId: teamId,
+            playerId: user[0].id,
+            enterprise_id: enterpriseId,
+          }
+          
+        ).returning();
+  
+      }
 
     const updateLicnes = await db.update(licenses).set({
       status: 'Consumed',
