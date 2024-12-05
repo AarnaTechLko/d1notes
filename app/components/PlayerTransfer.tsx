@@ -28,6 +28,8 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
   const [availablePlayers, setAvailablePlayers] = useState<Player[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
   const [availableSearchTerm, setAvailableSearchTerm] = useState<string>("");
+  const [teamName, setTeamName] = useState<string>("");
+  const [teamType, setTeamType] = useState<string>("");
   const [selectedSearchTerm, setSelectedSearchTerm] = useState<string>("");
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -70,11 +72,17 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
       if (!res.ok) throw new Error("Failed to fetch players");
 
       const data = await res.json();
-      setAvailablePlayers(data);
+      setAvailablePlayers(data.players);
+      setTeamName(data.team.team_name);
+      setTeamType(data.team.team_type);
+      
+       
     } catch (error) {
       console.error("Error fetching players:", error);
     }
   };
+
+  
 
   useEffect(() => {
     fetchAssignedPlayers();
@@ -181,6 +189,15 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
 
   return (
     <div className="container mx-auto p-4">
+      <div className="justify-between items-start">
+      <p className="text-center"><span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
+  {teamName} ({teamType})
+</span></p>
+ 
+        <h2 className="text-xl font-bold w-full  text-blue-600">Add / Remove Players</h2>
+      <p className="w-full mt-4"><b>Add:</b>To assign players to this team, you can simply Drag & Drop players from Available Players to Selected Players.</p>
+      <p className="w-full mt-4 mb-5"><b>Remove:</b>To remove players from this team, you can simply Drag & Drop players from Selected Players to Available Players.</p>
+      </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex justify-between items-start">
           <Droppable droppableId="available">
@@ -198,7 +215,7 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
                   onChange={(e) => setAvailableSearchTerm(e.target.value)}
                   className="w-full mb-4 p-2 border rounded"
                 />
-                <ul>
+                <ul className=" overflow-y-auto h-96">
                   {filteredAvailablePlayers.map((player, index) => (
                     <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
                       {(provided) => (
@@ -249,7 +266,7 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
                   onChange={(e) => setSelectedSearchTerm(e.target.value)}
                   className="w-full mb-4 p-2 border rounded"
                 />
-                <ul>
+                <ul  className=" overflow-y-auto h-96">
                   {filteredSelectedPlayers.map((player, index) => (
                     <Draggable key={player.id} draggableId={player.id.toString()} index={index}>
                       {(provided) => (

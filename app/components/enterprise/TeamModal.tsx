@@ -273,20 +273,20 @@ export default function TeamModal({
         return;
       }
 
-      if (!formValues.manager_name) {
-        showError("Manager Name is required.");
-        return;
-      }
+      // if (!formValues.manager_name) {
+      //   showError("Manager Name is required.");
+      //   return;
+      // }
   
-      if (!formValues.manager_email) {
-        showError("Manager Email is required.");
-        return;
-      }
+      // if (!formValues.manager_email) {
+      //   showError("Manager Email is required.");
+      //   return;
+      // }
 
-      if (!formValues.manager_phone) {
-        showError("Manager Phone is required.");
-        return;
-      }
+      // if (!formValues.manager_phone) {
+      //   showError("Manager Phone is required.");
+      //   return;
+      // }
 
       if (!formValues.logo) {
         showError("Logo is required.");
@@ -308,7 +308,7 @@ export default function TeamModal({
     style={{ maxHeight: '90vh' }}
   >
     <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* First Column: Team Details */}
       <div className="space-y-4 shadow p-8">
         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
@@ -399,7 +399,7 @@ export default function TeamModal({
       </div>
 
       {/* Second Column: Management Details */}
-      <div className="space-y-4 shadow p-8">
+      {/* <div className="space-y-4 shadow p-8">
         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Manager Details</h3>
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -437,7 +437,7 @@ export default function TeamModal({
             className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Third Column: Image Upload */}
       <div className="space-y-4 shadow p-8">

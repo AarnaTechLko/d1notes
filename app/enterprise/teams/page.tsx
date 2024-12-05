@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 import Link from "next/link";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
@@ -19,6 +20,9 @@ type Team = {
   team_year?: string;
   slug?: string;
   cover_image?: string;
+  firstName?: string;
+  lastName?: string;
+  coachSlug?: string;
   playerIds?: number[];
 };
 
@@ -117,6 +121,14 @@ export default function TeamsPage() {
   };
 
   const handleDelete = async (id?: number) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
     try {
       await fetch("/api/teams", {
         method: "DELETE",
@@ -200,7 +212,12 @@ export default function TeamsPage() {
                       <td className="px-4 py-2">{team.team_year}
                        
                       </td>
-                      <td className="px-4 py-2">{team.team_name}</td>
+                      <td className="px-4 py-2">{team.team_name}
+                        <a href={`/coach/${team.coachSlug}`} target="_blank">
+<span className="inline-block bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+Coach: {team.firstName} {team.lastName}
+</span></a>
+                      </td>
                       <td className="px-4 py-2">
                       <img src={team.logo} className="w-12 h-12 rounded-full" />
                       </td>
