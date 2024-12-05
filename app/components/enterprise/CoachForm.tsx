@@ -136,15 +136,15 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             image: null, // Ensure this property is included
         };
 
-        if (!formValues.image) {
-            errors.image = "Profile image is required";
-        } else {
-            // Calculate the approximate size of the base64 string
-            const imageSizeInBytes = (formValues.image.length * 3) / 4;
-            if (imageSizeInBytes > 5 * 1024 * 1024) {
-                errors.image = "Image size must be less than 5MB";
-            }
-        }
+        // if (!formValues.image) {
+        //     errors.image = "Profile image is required";
+        // } else {
+        //     // Calculate the approximate size of the base64 string
+        //     const imageSizeInBytes = (formValues.image.length * 3) / 4;
+        //     if (imageSizeInBytes > 5 * 1024 * 1024) {
+        //         errors.image = "Image size must be less than 5MB";
+        //     }
+        // }
         if (!formValues.firstName) errors.firstName = 'First Name is required';
         if (!formValues.lastName) errors.lastName = 'Last Name is required';
 
@@ -381,7 +381,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                     <div className="flex-1 bg-white p-1 md:p-8">
                         <div className="bg-white rounded-lg p-4  mx-auto">
 
-                            <p className="text-red-500">( All fields are mandatory including coach&lsquo;s photo upload.)</p>
+                            <p className="text-red-500">( Fields marked with * are mandatory.)</p>
                             {error && <p className="text-red-600">{error}</p>}
                             {successMessage && <p className="text-green-600">{successMessage}</p>}
                             {loading && <p className="text-blue-600">Submitting your information... Please wait.</p>}
