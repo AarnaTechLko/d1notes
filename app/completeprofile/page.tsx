@@ -277,7 +277,7 @@ if (!formValues.weight.trim()) {
         <div className="flex flex-col justify-center bg-white p-4 w-full">
           <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
             <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-            <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p>
+            {/* <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p> */}
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit} >
@@ -412,10 +412,14 @@ if (!formValues.weight.trim()) {
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
-                    {countries.map((country) => (
-                      <option key={country.label} value={country.label}>
-                        {country.label}
-                      </option>
+        {countries
+          .filter((country) =>
+            country.label.toLowerCase().includes('united states')
+          )
+          .map((country) => (
+            <option key={country.label} value={country.label}>
+              {country.label}
+            </option>
                     ))}
 
                   </select>

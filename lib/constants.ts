@@ -143,7 +143,7 @@ export const genders=[
   { value:"", label:"Select"},
   { value:"Male", label:"Male"},
   { value:"Female", label:"Female"},
-  { value:"Binary", label:"Binary"}
+  { value:"Non Binary", label:"Non Binary"}
 ];
 
 export const playingLevels=[

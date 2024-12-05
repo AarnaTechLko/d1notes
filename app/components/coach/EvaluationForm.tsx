@@ -3,7 +3,7 @@ import Image from 'next/image';
 import EvaluationProfile from '../EvaluationProfile';
 import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import { format } from 'date-fns';
-
+import defaultImage from '../../public/default.jpg'
 import { getSession } from 'next-auth/react';
 
 
@@ -250,7 +250,25 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         <h3 className="text-lg font-semibold mb-4">Review Title: <span className="font-normal">{evaluationData?.review_title}</span></h3>
         <div className="flex items-center mb-4">
             <strong className="mr-2">Player:</strong>
-            {evaluationData?.image ? (
+            {evaluationData?.image && evaluationData?.image !== 'null' && (
+  <Image
+    src={evaluationData?.image}
+    alt="Player Avatar"
+                    className='w-12 h-12 mr-3 rounded-full object-cover'
+                    width={30}
+                    height={30}
+  />
+)}
+{(!evaluationData?.image || evaluationData?.image === 'null') && (
+  <Image
+    src={defaultImage}
+    alt="Player Avatar"
+    className='w-12 h-12 mr-3 rounded-full object-cover'
+    width={30}
+    height={30}
+  />
+)}
+            {/* {evaluationData?.image ? (
                 <Image
                     src={evaluationData.image}
                     alt="Player Avatar"
@@ -260,7 +278,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                 />
             ) : (
                 <div>No Image Available</div>
-            )}
+            )} */}
             <span className="text-gray-700">{evaluationData?.first_name} {evaluationData?.last_name}</span>
             <span className="ml-2 text-gray-500">{evaluationData?.position}, {evaluationData?.team} #{evaluationData?.number}</span>
         </div>

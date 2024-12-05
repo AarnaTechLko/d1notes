@@ -192,7 +192,7 @@ export default function Register() {
       {/* Form Section */}
       <div className="flex-1 bg-white p-4 md:p-8">
         <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-left">Sign Up</h2>
+          <h2 className="text-2xl font-bold mb-6 text-left">Player Sign Up</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

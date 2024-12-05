@@ -138,7 +138,7 @@ export default function Login() {
                   <span className="ml-2">Club </span>
                 </label>
                 
-                <label className="inline-flex items-center ">
+                {/* <label className="inline-flex items-center ">
                   <input
                     type="radio"
                     name="loginAs"
@@ -149,7 +149,7 @@ export default function Login() {
                     className="form-radio"
                   />
                   <span className="ml-2">Team Manager</span>
-                </label>
+                </label> */}
               </div>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">

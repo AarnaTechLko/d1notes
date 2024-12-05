@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Loading from '../components/Loading';
 import { getSession } from 'next-auth/react';
 import StarRating from '../components/StarRating';
+import defaultImage from '../../public/default.jpg'
 
 type EvaluationPageProps = {
     searchParams: {
@@ -116,16 +117,24 @@ setLoading(false);
                         <h3 className="text-lg font-semibold mb-4">{evaluationData?.review_title}</h3>
                         <div className="flex items-center mb-4">
                             <strong className="mr-2">Player:</strong>
-                            {evaluationData?.image ? (
-                                <Image
-                                    src={evaluationData.image} // image is guaranteed to be a string here
-                                    alt="Player Avatar"
-                                    width={30}
-                                    height={30}
-                                />
-                            ) : (
-                                <div>No Image Available</div> // Placeholder or alternative content
-                            )}
+                            {evaluationData?.image && evaluationData?.image !== 'null' && (
+  <Image
+    src={evaluationData?.image}
+    alt="Player Avatar"
+                    className='w-12 h-12 mr-3 rounded-full object-cover'
+                    width={30}
+                    height={30}
+  />
+)}
+{(!evaluationData?.image || evaluationData?.image === 'null') && (
+  <Image
+    src={defaultImage}
+    alt="Player Avatar"
+    className='w-12 h-12 mr-3 rounded-full object-cover'
+    width={30}
+    height={30}
+  />
+)}
                             <span className="text-gray-700">{evaluationData?.first_name} {evaluationData?.last_name}</span>
                             <span className="ml-2 text-gray-500">{evaluationData?.position}, {evaluationData?.team} #{evaluationData?.number}</span>
                         </div>
