@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         const enterprise = await db
             .select()
             .from(enterprises)
-            .where(eq(coaches.email, email))
+            .where(eq(enterprises.email, email))
             .limit(1);
         userExists = enterprise.length > 0;
     }
