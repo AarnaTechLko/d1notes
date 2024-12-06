@@ -146,8 +146,15 @@ if (!termsAccepted) {
         password: formValues.password,
         loginAs: formValues.loginAs,
       });
-
-      window.location.href = '/coach/completeprofile';
+      if(res?.ok)
+      {
+        window.location.href = '/coach/completeprofile';
+      }
+      else{
+        showError(res?.error || 'Something went wrong!');
+      }
+      
+     
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : 'Something went wrong!'); 

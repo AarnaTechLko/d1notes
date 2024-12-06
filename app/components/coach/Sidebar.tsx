@@ -33,7 +33,7 @@ const Sidebar: React.FC = () => {
       </button>
 
       {/* Sidebar */}
-      <aside
+      <aside 
         className={`mt-0.5 fixed top-0 left-0 h-full bg-gray-800 text-white w-64 transform ${
           isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col md:z-auto`}

@@ -142,9 +142,7 @@ export async function PUT(req: NextRequest) {
   const playingcountries = formData.get('playingcountries') as string;
   const height = formData.get('height') as string;
   const weight = formData.get('weight') as string;
- 
-
-  const imageFile = formData.get('image') as string | null;
+ const imageFile = formData.get('image') as string | null;
   
   const playerIDAsNumber = parseInt(playerID, 10);
   try{

@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import Brand from "../public/images/brand.jpg";
 import Image from "next/image";
 import DefaultPic from "../public/default.jpg";
-import { useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import Select from "react-select";
@@ -90,7 +90,7 @@ export default function Register() {
     const { value } = event.target;
     const formattedValue = formatHeight(value);
     setFormValues((prevValues) => ({ ...prevValues, height: formattedValue }));
-  }; 
+  };
 
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -113,7 +113,7 @@ export default function Register() {
     if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
     if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
-    
+
     const heightRegex = /^\d{1,2}'\d{1,2}"$/;
     if (!formValues.height.trim()) {
       newErrors.height = "Height is required.";
@@ -122,12 +122,12 @@ export default function Register() {
     }
 
     const weightRegex = /^\d+(\.\d{1,2})?$/;
-if (!formValues.weight.trim()) {
-    newErrors.weight = "Weight is required.";
-} else if (!weightRegex.test(formValues.weight.trim())) {
-    newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
-}
- 
+    if (!formValues.weight.trim()) {
+      newErrors.weight = "Weight is required.";
+    } else if (!weightRegex.test(formValues.weight.trim())) {
+      newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
+    }
+
     if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
@@ -196,14 +196,15 @@ if (!formValues.weight.trim()) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Something went wrong!");
       }
+      if (session && session.user.id) {
+        const email = session?.user?.email;
+      }
+      
 
-      const data = await response.json();
-
-      localStorage.setItem("userImage", data.image);
       window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
-      setError(err instanceof Error ? err.message : "Something went wrong!");
+      showError(err instanceof Error ? err.message : "Something went wrong!");
     }
   };
 
@@ -282,41 +283,41 @@ if (!formValues.weight.trim()) {
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit} >
 
-            <div className="mb-4">
+              <div className="mb-4">
                 <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
-  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
-    <Image
-      src={formValues.image ? formValues.image : DefaultPic}
-      alt="Profile Image"
-      width={100}
-      height={100}
-      className="object-cover w-full h-full"
-    />
-    {!formValues.image && (
-    <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
-      <p className="text-white text-xs font-medium">Click to Upload</p>
-    </div>
-     )}
-  </div>
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleImageChange}
-    className="hidden"
-    ref={fileInputRef}
-  />
-  {photoUpoading ? (
-    <>
-      <FileUploader />
-    </>
-  ) : (
-    <>
-      {/* Optional: Placeholder for additional content */}
-    </>
-  )}
-   
-</div>
+                  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
+                    <Image
+                      src={formValues.image ? formValues.image : DefaultPic}
+                      alt="Profile Image"
+                      width={100}
+                      height={100}
+                      className="object-cover w-full h-full"
+                    />
+                    {!formValues.image && (
+                      <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+                        <p className="text-white text-xs font-medium">Click to Upload</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    ref={fileInputRef}
+                  />
+                  {photoUpoading ? (
+                    <>
+                      <FileUploader />
+                    </>
+                  ) : (
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
+                  )}
+
+                </div>
 
               </div>
 
@@ -412,15 +413,15 @@ if (!formValues.weight.trim()) {
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
-        {countries
-          .filter((country) =>
-            country.label.toLowerCase().includes('united states')
-          )
-          .map((country) => (
-            <option key={country.label} value={country.label}>
-              {country.label}
-            </option>
-                    ))}
+                    {countries
+                      .filter((country) =>
+                        country.label.toLowerCase().includes('united states')
+                      )
+                      .map((country) => (
+                        <option key={country.label} value={country.label}>
+                          {country.label}
+                        </option>
+                      ))}
 
                   </select>
 

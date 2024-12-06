@@ -47,10 +47,7 @@ const handler = NextAuth({
           } 
         
             else {
-              if(coach[0].enterprise_id)
-                {
-                   club=await db.select().from(enterprises).where(eq(enterprises.id,Number(coach[0].enterprise_id))).execute();
-                }
+               
             return {
               id: coach[0].id.toString(),
               name: coach[0].firstName,
@@ -59,8 +56,8 @@ const handler = NextAuth({
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image,
               coach_id:coach[0].id,
-              club_id:coach[0].enterprise_id,
-              club_name:club[0].organizationName
+              club_id:coach[0].enterprise_id ?? '',
+              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
             };
           }
         } else if (loginAs === 'player') {
@@ -83,7 +80,7 @@ const handler = NextAuth({
               expectedCharge:0,
               coach_id:user[0].coach_id,
               club_id:user[0].enterprise_id,
-              club_name:club[0].organizationName
+              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
             };
           }
         }
@@ -106,7 +103,7 @@ const handler = NextAuth({
               image: team[0].logo,
               expectedCharge:0,
               coach_id:team[0].coach_id,
-              club_name:team[0].creator_id
+               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
             };
           }
         }
@@ -140,6 +137,7 @@ const handler = NextAuth({
 secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
+    
     async jwt({ token, user }) {
       // Check if the user exists and is of the correct type
       if (user) {
@@ -159,6 +157,7 @@ secret: process.env.NEXTAUTH_SECRET,
       return token;
     },
     async session({ session, token }) {
+    
       if (session.user) {
         session.user.id = token.id as string;
         session.user.type = token.type as string; // Add the type to the session

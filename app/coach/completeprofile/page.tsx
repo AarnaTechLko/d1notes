@@ -159,7 +159,7 @@ export default function Register() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(formErrors);
+     
     setError(null);
     setSuccessMessage(null);
     
@@ -190,7 +190,7 @@ export default function Register() {
       }
       
       const data = await response.json();
-      localStorage.setItem("userImage", data.image);
+      
     
 
      window.location.href = '/coach/dashboard'; 
@@ -310,7 +310,7 @@ export default function Register() {
           <p className="text-red-500">( Fields marked with * are mandatory.)</p>
             {error && <p className="text-red-600">{error}</p>}
             {successMessage && <p className="text-green-600">{successMessage}</p>}
-            {loading && <p className="text-blue-600">Submitting your information... Please wait.</p>}
+             
             
             <form onSubmit={handleSubmit}>
               {/* Profile Image */}
