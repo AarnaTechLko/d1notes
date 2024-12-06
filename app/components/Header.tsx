@@ -31,13 +31,16 @@ const Header: React.FC = () => {
      
     
     try {
-      await signOut({
-        redirect: false,
-        callbackUrl: '/login',
+      const result = await signOut({
+        redirect: false, // Prevent automatic redirect by NextAuth
+        callbackUrl: '/login', // Specify the callback URL, but we will handle redirection manually
       });
-      
-      // Redirect to the login page
-      router.push('/login');
+    
+    if(result.url)
+    {
+      window.location.replace('/login');  
+    }
+     
     } catch (error) {
       console.error('Logout error:', error);
     }

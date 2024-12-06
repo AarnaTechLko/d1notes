@@ -15,7 +15,7 @@ interface FormValues {
 export default function Login() {
   const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach' });
   const [loading, setLoading] = useState<boolean>(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,7 +69,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (session) {
+    if (status === "authenticated") {
       
       // Redirect based on session type
       if (session.user.type === 'coach') {
@@ -96,6 +96,7 @@ export default function Login() {
     <>
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 bg-white p-4 md:p-8">
+       
           <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-6 text-left">Sign In</h2>
             <form onSubmit={handleSubmit}>

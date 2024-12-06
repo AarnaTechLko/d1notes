@@ -267,7 +267,8 @@ if (!formValues.weight.trim()) {
 if (!response.ok) {
     // Check for server-side errors (e.g., 500)
     if (response.status === 500) {
-        showError('Invalid Key or Used Key.');
+      const data = await response.json();
+        showError(data.message);
         setLoading(false);
     } 
     return; // Stop further processing if there's an error
@@ -279,7 +280,7 @@ if (!response.ok) {
       onSubmit(formValues);
     } catch (err) {
       setLoading(false);
-      alert("asdasd");
+      
       ///showSuccess("Invalid or Used key.");
     }
   };

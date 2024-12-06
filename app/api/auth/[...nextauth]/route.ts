@@ -54,7 +54,7 @@ const handler = NextAuth({
               email: coach[0].email,
               expectedCharge:coach[0].expectedCharge,
               type: 'coach', // Custom field indicating coach or player
-              image: coach[0].image,
+              image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id:coach[0].id,
               club_id:coach[0].enterprise_id ?? '',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
@@ -76,7 +76,7 @@ const handler = NextAuth({
               name: user[0].first_name,
               email: user[0].email,
               type: 'player', // Custom field indicating player
-              image: user[0].image,
+              image: user[0].image === 'null' ? '/default.jpg' : user[0].image,
               expectedCharge:0,
               coach_id:user[0].coach_id,
               club_id:user[0].enterprise_id,
@@ -100,7 +100,7 @@ const handler = NextAuth({
               name: team[0].manager_name,
               email: team[0].manager_email,
               type: 'team', // Custom field indicating player
-              image: team[0].logo,
+              image: team[0].logo === 'null' ? '/default.jpg' : team[0].logo,
               expectedCharge:0,
               coach_id:team[0].coach_id,
                club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
@@ -133,8 +133,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-///secret:SECRET_KEY,
-secret: process.env.NEXTAUTH_SECRET, 
+secret:SECRET_KEY,
+//secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     

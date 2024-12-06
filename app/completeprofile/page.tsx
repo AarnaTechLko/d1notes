@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Header from "../components/Header";
 import Brand from "../public/images/brand.jpg";
 import Image from "next/image";
@@ -38,6 +39,7 @@ interface FormValues {
 }
 
 export default function Register() {
+  const router = useRouter(); 
   const [formValues, setFormValues] = useState<FormValues>({
     first_name: "",
     last_name: "",
@@ -200,8 +202,8 @@ export default function Register() {
         const email = session?.user?.email;
       }
       
-
-      window.location.href = "/dashboard"; // Redirect after successful registration
+      router.push("/dashboard");
+      ///window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
