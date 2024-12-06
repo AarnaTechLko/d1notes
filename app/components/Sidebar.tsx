@@ -42,7 +42,7 @@ const Sidebar: React.FC = () => {
               alt="Coach Avatar"
               className="w-16 h-16 rounded-full mb-2"
             />
-            <h2 className="text-lg font-semibold">{session.user.name || 'Player Name'}</h2>
+            <h2 className="text-lg font-semibold">{session.user.name || ''}</h2>
             <h3>(Player)</h3>
             <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
           </div>

@@ -42,13 +42,13 @@ const Sidebar: React.FC = () => {
         {session?.user && (
           <div className="flex flex-col items-center p-4 border-b border-gray-700">
             <img
-              src={session.user.image || '/default-avatar.png'} // Fallback to default avatar
+              src={session.user.image || '/default.jpg'} // Fallback to default avatar
               alt="Coach Avatar"
               className="w-16 h-16 rounded-full mb-2"
             />
-            <h2 className="text-lg font-semibold">{session.user.name || 'Coach Name'}</h2>
+            <h2 className="text-lg font-semibold">{session.user.name || ''}</h2>
             <h3>(Coach)</h3>
-            <p className="text-sm text-gray-400">{session.user.club_name || 'Club Name'}</p>
+            <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
           </div>
         )}
 
