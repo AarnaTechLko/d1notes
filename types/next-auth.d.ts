@@ -13,6 +13,7 @@ declare module 'next-auth' {
       club_id?: string | null;
       coach_id?: string | null;
       expectedCharge?: string | null;
+      club_name?: string | null;
     }
   }
 }

@@ -6,8 +6,8 @@ import { useSession, signOut } from 'next-auth/react';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
-  const { data: session } = useSession(); 
- 
+  const { data: session } = useSession();
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -16,12 +16,12 @@ const Sidebar: React.FC = () => {
   };
   const handleLogout = async () => {
     await signOut(); // Sign out using NextAuth.js
-    localStorage.setItem('userImage', '')
+    localStorage.setItem('userImage', '');
     window.location.href = '/login';
   };
-  useEffect(() => {
-    
-  }, [session])
+
+  useEffect(() => {}, [session]);
+
   return (
     <div>
       {/* Mobile Menu Toggle Button */}
@@ -38,7 +38,21 @@ const Sidebar: React.FC = () => {
           isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col md:z-auto`}
       >
-        <nav className="flex-grow mt-10">
+        {/* Coach Info Section */}
+        {session?.user && (
+          <div className="flex flex-col items-center p-4 border-b border-gray-700">
+            <img
+              src={session.user.image || '/default-avatar.png'} // Fallback to default avatar
+              alt="Coach Avatar"
+              className="w-16 h-16 rounded-full mb-2"
+            />
+            <h2 className="text-lg font-semibold">{session.user.name || 'Coach Name'}</h2>
+            <h3>(Coach)</h3>
+            <p className="text-sm text-gray-400">{session.user.club_name || 'Club Name'}</p>
+          </div>
+        )}
+
+        <nav className="flex-grow mt-4">
           <ul className="space-y-2 p-4">
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/dashboard" className="flex items-center space-x-2 p-2">
@@ -47,103 +61,83 @@ const Sidebar: React.FC = () => {
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a 
-              href="#tab1" 
-              className="flex items-center space-x-2 p-2" 
-              onClick={toggleEvaluationList}
-            >
-              <FaClipboardList className="text-xl" />
-              <span>Evaluation List</span>
-            </a>
-            {isEvaluationListOpen && (
-              <ul className="ml-4 mt-1 space-y-1">
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations" className="flex items-center space-x-2 p-2">
-                    <span>All</span>
+              <a
+                href="#tab1"
+                className="flex items-center space-x-2 p-2"
+                onClick={toggleEvaluationList}
+              >
+                <FaClipboardList className="text-xl" />
+                <span>Evaluation List</span>
+              </a>
+              {isEvaluationListOpen && (
+                <ul className="ml-4 mt-1 space-y-1">
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations" className="flex items-center space-x-2 p-2">
+                      <span>All</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations?status=0" className="flex items-center space-x-2 p-2">
+                      <span>Requested</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations?status=1" className="flex items-center space-x-2 p-2">
+                      <span>Accepted</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations?status=4" className="flex items-center space-x-2 p-2">
+                      <span>Drafted</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations?status=2" className="flex items-center space-x-2 p-2">
+                      <span>Completed</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/evaluations?status=3" className="flex items-center space-x-2 p-2">
+                      <span>Rejected</span>
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </li>
+            {session?.user.club_id && (
+              <>
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/licenses" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Licenses</span>
                   </a>
                 </li>
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations?status=0" className="flex items-center space-x-2 p-2">
-                    <span>Requested</span>
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/players" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Players</span>
                   </a>
                 </li>
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations?status=1" className="flex items-center space-x-2 p-2">
-                    <span>Accepted</span>
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/teams" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Teams</span>
                   </a>
                 </li>
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations?status=4" className="flex items-center space-x-2 p-2">
-                    <span>Drafted</span>
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/messages" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Messages</span>
                   </a>
                 </li>
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations?status=2" className="flex items-center space-x-2 p-2">
-                    <span>Completed</span>
-                  </a>
-                </li>
-                <li className="hover:bg-gray-600 rounded transition duration-200">
-                  <a href="/coach/evaluations?status=3" className="flex items-center space-x-2 p-2">
-                    <span>Rejected</span>
-                  </a>
-                </li>
-              </ul>
+              </>
             )}
-          </li>
-          {session?.user.club_id !== '' && session?.user.club_id ? (
-            <>
-            {/* <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/coach/upgrade" className="flex items-center space-x-2 p-2">
-            
-              <FaCompressAlt className='text-xl'/>
-              <span>Purchase License</span>
-            </a>
-          </li> */}
-          <li>
-          <a href="/coach/licenses" className="flex items-center space-x-2 p-2">
-            
-            <FaCompressAlt className='text-xl'/>
-            <span>Licenses</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="/coach/players" className="flex items-center space-x-2 p-2">
-            
-            <FaCompressAlt className='text-xl'/>
-            <span>Players</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="/coach/teams" className="flex items-center space-x-2 p-2">
-            
-            <FaCompressAlt className='text-xl'/>
-            <span>Teams</span>
-          </a>
-        </li>
-
-
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/coach/messages" className="flex items-center space-x-2 p-2">
-            
-              <FaCompressAlt className='text-xl'/>
-              <span>Messages</span>
-            </a>
-          </li>
-          </>
-          )
-          : (
-            <></>
-          )}
-          
             <li className="hover:bg-gray-700 rounded transition duration-200">
-              <a href="evaluations" className="flex items-center space-x-2 p-2">
+              <a href="#" onClick={handleLogout} className="flex items-center space-x-2 p-2">
                 <FaSignOutAlt className="text-xl" />
                 <span>Sign Out</span>
               </a>
             </li>
-            {/* Add more sidebar items here */}
           </ul>
         </nav>
       </aside>

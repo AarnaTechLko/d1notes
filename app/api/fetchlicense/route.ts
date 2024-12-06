@@ -18,8 +18,14 @@ export async function POST(request: Request) {
             eq(licenses.buyer_type,'Enterprise')
         )
     ).execute();
-    const licenseKey =licensseQuery[0].licenseKey;
-    return NextResponse.json({ licenseKey });
+    if(licensseQuery.length>0)
+        {
+            const licenseKey =licensseQuery[0].licenseKey;
+            return NextResponse.json({ licenseKey });
+        }
+        else{
+            return NextResponse.json({ message:"You do not have much licenses. Please Purchase Licenses." }, { status: 500 });
+        }
     }
     if(type==='coach')
         {
@@ -37,8 +43,15 @@ export async function POST(request: Request) {
                 )
             )
         ).execute();
-        const licenseKey =licensseQuery[0].licenseKey;
-        return NextResponse.json({ licenseKey });
+        if(licensseQuery.length>0)
+        {
+            const licenseKey =licensseQuery[0].licenseKey;
+            return NextResponse.json({ licenseKey });
+        }
+        else{
+            return NextResponse.json({ message:"You do not have much licenses. Please contact your club." }, { status: 500 });
+        }
+       
         }
 
 }

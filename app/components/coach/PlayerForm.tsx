@@ -34,6 +34,7 @@ interface FormValues {
   city:string;
   jersey:string;
   enterprise_id:number;
+  coach_id:number;
   league:string;
   countrycode:string;
   license:string;
@@ -72,6 +73,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     weight:"",
     ownerType:"",
     teamId:"",
+    coach_id:0,
     image: null,
   });
 
@@ -125,9 +127,11 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                 type:type,
             }),
         });
-
+ 
         if (!response.ok) {
-            throw new Error("Failed to fetch license");
+          const data = await response.json();
+           
+            showError(data.message);
         }
         setLoadingKey(false);
         const data = await response.json();
@@ -135,8 +139,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
         // Update the license value in formValues
         setFormValues((prev) => ({ ...prev, license: data.licenseKey }));
     } catch (error) {
-        console.error("Error fetching license:", error);
-        alert("Failed to assign license");
+       //showError("Failed to fetch licenses");
     }
 };
 
@@ -144,7 +147,14 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     event.preventDefault();
     setError(null);
     setSuccessMessage(null);
-    
+    setFormValues({
+      ...formValues,
+      enterprise_id: session?.user?.club_id ? Number(session.user.club_id) : 0,
+  });
+  setFormValues({
+    ...formValues,
+    coach_id: session?.user?.id ? Number(session.user.id) : 0,
+});
     
     // Validation
     const newErrors: Partial<FormValues> = {};
@@ -220,15 +230,21 @@ if (!formValues.weight.trim()) {
 
     
     if (session && session.user.id) {
-      if(session.user.type!='team')
+      if(session.user.type=='team')
       {
+        formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
+        formValues.ownerType = 'enterprise';
+        formValues.teamId=session.user.id;
+      }
+      if(session.user.type=='enterprise')
+        {
         formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
         formValues.ownerType = session.user.type;
       }
       else{
+        formValues.coach_id = Number(session.user.id); // Add user ID to the form values
         formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
-        formValues.ownerType = 'enterprise';
-        formValues.teamId=session.user.id;
+        formValues.ownerType = session.user.type;
       }
          
     } else {
@@ -236,7 +252,7 @@ if (!formValues.weight.trim()) {
       return;
     }
     setLoading(true);
-  
+   
     try {
     
       const token = localStorage.getItem("token");
@@ -272,6 +288,7 @@ if (!response.ok) {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
     setValidationErrors({ ...validationErrors, [name]: "" }); // Clear error when input is changed
+    
   };
 
   const handleImageChange = async() => {
@@ -337,39 +354,46 @@ if (!response.ok) {
   <div className="flex flex-col justify-center bg-white p-2 w-full">
     <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
      
-      <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p>
+      <p className="text-red-500">( Fields marked with * are mandatory.)</p>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <form onSubmit={handleSubmit} >
         
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 mb-4 text-center">
           <label>Profile Photo</label>
-          <div className="items-center cursor-pointer" onClick={handleImageClick}>
-            <Image
-              src={formValues.image ? formValues.image : DefaultPic}
-              alt="Profile Image"
-              width={100}
-              height={100}
-              className="rounded-full mx-auto"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              ref={fileInputRef}
-            />
-             {photoUpoading ? (
-                                            <>
-                                                <FileUploader/>
-                                            </>
-                                        ) : (
-                                            <>
-                                                
-                                            </>
-                                        )}
-           
-          </div>
+          <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
+  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
+    <Image
+      src={formValues.image ? formValues.image : DefaultPic}
+      alt="Profile Image"
+      width={100}
+      height={100}
+      className="object-cover w-full h-full"
+    />
+    {!formValues.image && (
+    <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+      <p className="text-white text-xs font-medium">Click to Upload</p>
+    </div>
+     )}
+  </div>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageChange}
+    className="hidden"
+    ref={fileInputRef}
+  />
+  {photoUpoading ? (
+    <>
+      <FileUploader />
+    </>
+  ) : (
+    <>
+      {/* Optional: Placeholder for additional content */}
+    </>
+  )}
+   
+</div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">

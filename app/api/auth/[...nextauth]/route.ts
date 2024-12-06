@@ -20,6 +20,7 @@ interface ExtendedUser {
   package_id?: string | null;
   club_id?: string | null;
   expectedCharge?: string | null;
+  club_name?: string | null;
 }
   
 const handler = NextAuth({
@@ -38,13 +39,18 @@ const handler = NextAuth({
         }
 
         const { email, password, loginAs } = credentials;
-        
+        let club:any;
         if (loginAs === 'coach') {
           const coach = await db.select().from(coaches).where(eq(coaches.email, email)).execute();
           if (coach.length === 0 || !(await bcrypt.compare(password, coach[0].password))) {
             return null; // Invalid credentials
-          } else {
-            
+          } 
+        
+            else {
+              if(coach[0].enterprise_id)
+                {
+                   club=await db.select().from(enterprises).where(eq(enterprises.id,Number(coach[0].enterprise_id))).execute();
+                }
             return {
               id: coach[0].id.toString(),
               name: coach[0].firstName,
@@ -53,14 +59,21 @@ const handler = NextAuth({
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image,
               coach_id:coach[0].id,
-              club_id:coach[0].enterprise_id
+              club_id:coach[0].enterprise_id,
+              club_name:club[0].organizationName
             };
           }
         } else if (loginAs === 'player') {
           const user = await db.select().from(users).where(eq(users.email, email)).execute();
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
-          } else {
+          } 
+         
+            else {
+              if(user[0].enterprise_id)
+                {
+                   club=await db.select().from(enterprises).where(eq(enterprises.id,Number(user[0].enterprise_id))).execute();
+                }
             return {
               id: user[0].id.toString(),
               name: user[0].first_name,
@@ -69,7 +82,8 @@ const handler = NextAuth({
               image: user[0].image,
               expectedCharge:0,
               coach_id:user[0].coach_id,
-              club_id:user[0].enterprise_id
+              club_id:user[0].enterprise_id,
+              club_name:club[0].organizationName
             };
           }
         }
@@ -77,7 +91,13 @@ const handler = NextAuth({
           const team = await db.select().from(teams).where(eq(teams.manager_email, email)).execute();
           if (team.length === 0 || !team[0].password || !(await bcrypt.compare(password, team[0].password))) {
             return null; // Invalid credentials
-          } else {
+          } 
+          
+            else {
+              if(team[0].creator_id)
+                {
+                   club=await db.select().from(enterprises).where(eq(enterprises.id,Number(team[0].creator_id))).execute();
+                }
             return {
               id: team[0].id.toString(),
               name: team[0].manager_name,
@@ -86,7 +106,7 @@ const handler = NextAuth({
               image: team[0].logo,
               expectedCharge:0,
               coach_id:team[0].coach_id,
-              club_id:team[0].creator_id
+              club_name:team[0].creator_id
             };
           }
         }
@@ -116,8 +136,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-  ///secret: process.env.NEXTAUTH_SECRET, 
+///secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -131,6 +151,7 @@ secret:SECRET_KEY,
         token.club_id = extendedUser.club_id; 
         token.image = extendedUser.image;
         token.expectedCharge = extendedUser.expectedCharge;
+        token.club_name = extendedUser.club_name;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -147,6 +168,7 @@ secret:SECRET_KEY,
         session.user.club_id = token.club_id as string | null;
         session.user.image = token.image as string | null;
         session.user.expectedCharge = token.expectedCharge as string | null;
+        session.user.club_name = token.club_name as string | null;
         //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session

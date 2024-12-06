@@ -17,10 +17,9 @@ import next from 'next';
 
 export async function POST(req: NextRequest) {
 
-  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId} = await req.json();
+  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId, coach_id} = await req.json();
    
-  const coachId = ownerType === 'coach' ? enterprise_id : null;
-  const enterpriseId = ownerType === 'enterprise' ? enterprise_id : null;
+
   
   const emailCheck=(await db.select().from(users).where(eq(users.email, email))).length;
   if(emailCheck>0){
@@ -64,8 +63,8 @@ export async function POST(req: NextRequest) {
         first_name: first_name,
         last_name: last_name,
         email: email,
-        coach_id: coachId,
-        enterprise_id: enterpriseId,
+        coach_id: coach_id,
+        enterprise_id: enterprise_id,
         grade_level: grade_level,
         location: location,
         birthday: birthday,
@@ -97,7 +96,7 @@ export async function POST(req: NextRequest) {
           {
             teamId: teamId,
             playerId: user[0].id,
-            enterprise_id: enterpriseId,
+            enterprise_id: enterprise_id,
           }
           
         ).returning();

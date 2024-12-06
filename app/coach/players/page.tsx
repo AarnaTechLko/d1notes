@@ -218,7 +218,12 @@ const Home: React.FC = () => {
                 </tr>
               </thead>
               {loading ? (
-            <div>Loading...</div>
+            <>
+            <tbody>
+              <tr>
+                <td colSpan={9}><FaSpinner/></td>
+              </tr>
+            </tbody></>
           ) : (
               <tbody>
                 {coaches.length > 0 ? (
