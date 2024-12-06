@@ -41,9 +41,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold">{teamName}</h3>
     
-    <div className="mt-2 flex justify-center">
+    {/* <div className="mt-2 flex justify-center">
       <div className="mt-1">{stars}</div>
-    </div>
+    </div> */}
     {/* Bio Icon Section */}
     <div className="mt-2 flex justify-center">
       <button 

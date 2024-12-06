@@ -85,7 +85,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
 
     const isAnyEmailValid = emails.some((email) => email.trim() && validateEmail(email));
     const isAnyMobileValid = mobiles.some((mobile) => validateMobile(mobile));
-    if (!selectedTeam) {
+    if (registrationType !== "coach" && !selectedTeam) {
       setError("Please Select a Team.");
       setIsSubmitting(false);
       return;
@@ -219,7 +219,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
           </label>
         </div>
       )}
-
+ {registrationType !== "coach" && (
 <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">
     Select Team: <span className="text-sm text-gray-500">*</span>
@@ -239,6 +239,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
             </select>
 
   </div>
+  )}
       <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">
     Email <span className="text-sm text-gray-500">(Use comma to add multiple emails)</span>

@@ -292,7 +292,8 @@ const Home: React.FC = () => {
         coaches.map((coach) => (
           <tr key={coach.id}>
             <td className="text-center">
-              <img src={coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
+          
+              <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
               {coach.firstName} {coach.lastName}
             </td>
             <td>{coach.gender}</td>

@@ -29,7 +29,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
   key={slug}
 >
   <Image
-    src={image}
+    src={image === 'null' || !image ? '/default.jpg' : image}
     alt={name}
     width={200}
     height={200}

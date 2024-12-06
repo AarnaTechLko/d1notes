@@ -141,21 +141,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
           />
         </div>
 
-        {/* Expected Charge */}
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Expected Charge</label>
-          <input
-            type="range"
-            min="0"
-            max="1000"
-            value={amount}
-            onChange={handleAmountChange}
-            onMouseUp={handleAmountCommit}
-            className="w-full"
-          />
-          <p className="text-gray-600">Up to ${amount}</p>
-        </div>
-
+       
         {/* Rating */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Star Rating</label>
