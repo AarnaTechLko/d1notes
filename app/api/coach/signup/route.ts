@@ -127,7 +127,8 @@ export async function PUT(req: NextRequest) {
     city: city || null,
     slug: slug || null, 
     countrycode: countrycode || null,  
-    image:imageFile
+    image:imageFile,
+    status:"Active",
   })
   .where(eq(coaches.id, coachIdAsNumber))
   .execute();
