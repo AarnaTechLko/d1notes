@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq,sql } from 'drizzle-orm';
+import { eq, sql,inArray } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -60,10 +60,10 @@ export async function POST(req: NextRequest) {
         }
 
         // Step 4: Fetch all players in those teams using SQL `IN` clause
-        const placeholders = teamIds.map(() => '?').join(', ');
+        const placeholders = teamIds.map(() => '?').join(',');
         const allTeamPlayers = await db
             .select({
-                playerId: teamPlayers.playerId ,
+                playerId: teamPlayers.playerId,
                 firstName: users.first_name,
                 lastName: users.last_name,
                 jersey: users.jersey,
@@ -78,7 +78,8 @@ export async function POST(req: NextRequest) {
             })
             .from(teamPlayers)
             .leftJoin(users, eq(teamPlayers.playerId, users.id))
-        .limit(5)
+            .where(inArray(teamPlayers.teamId, teamIds)) 
+            .limit(5)
             .execute();
 
         return NextResponse.json({
