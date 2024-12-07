@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq, sql,inArray } from 'drizzle-orm';
+import { eq, sql,inArray,and,ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -78,8 +78,13 @@ export async function POST(req: NextRequest) {
             })
             .from(teamPlayers)
             .leftJoin(users, eq(teamPlayers.playerId, users.id))
-            .where(inArray(teamPlayers.teamId, teamIds)) 
-            .limit(5)
+            .where(
+                and(
+                    inArray(teamPlayers.teamId, teamIds),
+                    ne(teamPlayers.playerId,  user[0].id),
+                )
+            ) 
+            
             .execute();
 
         return NextResponse.json({

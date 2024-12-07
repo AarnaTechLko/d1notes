@@ -94,19 +94,29 @@ export default function TeamModal({
     const { data, innerRef, innerProps } = props;
     return (
       <div ref={innerRef} {...innerProps} className="p-4">
-        {data.photo && (
+        {data.photo !='null' && (
           <img
-            src={data.photo}
+            src={data.photo ?? '/default.jpg'}
             alt={data.label}
             width={40}
             height={40}
             className="rounded-full mr-4"
           />
         )}
-        <div>
-          <span className="font-bold">{data.label}</span>
+         {data.photo =='null' && (
+          <img
+            src={'/default.jpg'}
+            alt={data.label}
+            width={40}
+            height={40}
+            className="rounded-full mr-4"
+          />
+        )}
+         <span className="font-bold">{data.label}</span>
           <div>{data.firstName}</div>
           <div>{data.clubName}</div>
+        <div>
+         
           {/* Add any other information you want */}
         </div>
       </div>
@@ -114,16 +124,25 @@ export default function TeamModal({
   };
 
   const getOptionLabel = (data: any) => (
-    <div className="flex flex-col space-y-1">
-      {data.photo && (
-        <img
-          src={data.photo}
-          alt={data.label}
-          width={40}
-          height={40}
-          className="rounded-full mx-auto"
-        />
-      )}
+    <div className="flex flex-col space-y-1 text-center">
+      {data.photo !='null' && (
+          <img
+            src={data.photo ?? '/default.jpg'}
+            alt={data.label}
+            width={40}
+            height={40}
+            className="rounded-full m-auto"
+          />
+        )}
+         {data.photo =='null' && (
+          <img
+            src={'/default.jpg'}
+            alt={data.label}
+            width={40}
+            height={40}
+            className="rounded-full m-auto"
+          />
+        )}
       <div className="text-center font-bold">{data.label}</div>
 
       {/* Add any other information you want */}
