@@ -38,12 +38,25 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
      <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group">
   {/* Profile Image Container */}
   <div className="relative w-full h-64">
+
+  {image && image !== 'null' && (
     <Image
       src={image}
       alt={firstName}
       layout="fill"
       className="object-cover rounded-lg"
     />
+  )}
+   {image && image == 'null' && (
+    <Image
+      src={'/default.jpg'}
+      alt={firstName}
+      layout="fill"
+      className="object-cover rounded-lg"
+    />
+  )}
+
+
 
     {/* Overlay on hover */}
     <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">

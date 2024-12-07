@@ -111,13 +111,26 @@ setEvaluationList(responseData.evaluationlist);
   <div className="flex flex-col md:flex-row md:w-2/3 mb-4 md:mb-0 md:mr-4">
     {/* Profile Image */}
     <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
+    {coachData.image && coachData.image !== 'null' && (
       <Image
-        src={coachData.image ?? '/default-image.jpg'}
+        src={coachData.image ??  '/default.jpg'}
         alt={`${coachData.firstName} ${coachData.lastName}`}
         width={200}
         height={200}
         className="rounded-full object-cover"
       />
+    )}
+    {coachData.image && coachData.image == 'null' && (
+      <Image
+        src={'/default.jpg'}
+        alt={`${coachData.firstName} ${coachData.lastName}`}
+        width={200}
+        height={200}
+        className="rounded-full object-cover"
+      />
+    )}
+
+
     </div>
 
     {/* Coach Info */}

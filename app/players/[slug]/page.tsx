@@ -158,11 +158,23 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <div className="absolute left-1/2 transform -translate-x-1/2 top-[500px]  w-full shadow-lg rounded-lg p-4 grid grid-cols-[1fr_2fr] gap-4">
           {/* Image Section */}
           <div className="flex justify-end items-right">
+
+          {coachData.image && coachData.image !== 'null' && (
             <img
               src={coachData.image ?? '/default.jpg'}
               alt="Player Thumbnail"
               className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
             />
+          )}
+
+{coachData.image && coachData.image == 'null' && (
+            <img
+              src={'/default.jpg'}
+              alt="Player Thumbnail"
+              className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
+            />
+          )}
+
           </div>
 
           {/* Text Section */}

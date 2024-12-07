@@ -104,7 +104,7 @@ const Home = () => {
                     key={profile.slug}
                    
                     organization={profile.organizationName}
-                    logo={profile.logo ?? '/default-image.jpg'}
+                    logo={profile.logo ?? '/default.jpg'}
                     country={profile.country}
                     slug={profile.slug}
                   />
