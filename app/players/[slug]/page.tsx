@@ -143,7 +143,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   ) : (
     <div className="absolute top-0 left-0 w-full h-full">
       <img
-        src="/default-cover.jpg"
+        src="/footbal.jpg"
         alt="Default Banner"
         className="w-full h-full object-cover"
       />
