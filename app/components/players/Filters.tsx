@@ -144,26 +144,212 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
        
         {/* Rating */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Star Rating</label>
-          <div className="flex flex-col gap-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <label key={star} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  value={star}
-                  checked={rating === star}
-                  onChange={() => handleFilterChange('rating', star)}
-                  className="hidden"
-                />
-                <div className="flex gap-1">
-                  {[...Array(star)].map((_, i) => (
-                    <span key={i} className="text-yellow-500 text-xl">★</span>
-                  ))}
-                </div>
-              </label>
-            ))}
-          </div>
+          <label className="block text-gray-700 mb-2">Rating</label>
+          <div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="30"
+      fill="url(#bronzeGradient)"
+      stroke="#8C4B1A"
+      strokeWidth="2"
+    />
+    <path
+      d="M50 35 L54 46 H66 L56 54 L60 66 L50 58 L40 66 L44 54 L34 46 H46 Z"
+      fill="#8C4B1A"
+      stroke="#662F0D"
+      strokeWidth="1"
+    />
+    <path
+      d="M40 70 L35 90 H45 L50 75 L55 90 H65 L60 70 Z"
+      fill="#8C4B1A"
+      stroke="#5A2911"
+      strokeWidth="1"
+    />
+    <defs>
+      <linearGradient id="bronzeGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#CD7F32" />
+        <stop offset="100%" stopColor="#8C4B1A" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#8C4B1A]">Bronze</span>
+</div>
+<div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="30"
+      fill="url(#silverGradient)"
+      stroke="#A6A6A6"
+      strokeWidth="2"
+    />
+    <path
+      d="M50 35 L54 46 H66 L56 54 L60 66 L50 58 L40 66 L44 54 L34 46 H46 Z"
+      fill="#A6A6A6"
+      stroke="#8C8C8C"
+      strokeWidth="1"
+    />
+    <path
+      d="M40 70 L35 90 H45 L50 75 L55 90 H65 L60 70 Z"
+      fill="#A6A6A6"
+      stroke="#737373"
+      strokeWidth="1"
+    />
+    <defs>
+      <linearGradient id="silverGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#C0C0C0" />
+        <stop offset="100%" stopColor="#A6A6A6" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#A6A6A6]">Silver</span>
+</div>
+<div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="30"
+      fill="url(#goldGradient)"
+      stroke="#D4AF37"
+      strokeWidth="2"
+    />
+    <path
+      d="M50 35 L54 46 H66 L56 54 L60 66 L50 58 L40 66 L44 54 L34 46 H46 Z"
+      fill="#D4AF37"
+      stroke="#B8860B"
+      strokeWidth="1"
+    />
+    <path
+      d="M40 70 L35 90 H45 L50 75 L55 90 H65 L60 70 Z"
+      fill="#D4AF37"
+      stroke="#8B6914"
+      strokeWidth="1"
+    />
+    <defs>
+      <linearGradient id="goldGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#FFD700" />
+        <stop offset="100%" stopColor="#D4AF37" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#D4AF37]">Gold</span>
+</div>
+<div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="30"
+      fill="url(#platinumGradient)"
+      stroke="#B3B3B3"
+      strokeWidth="2"
+    />
+    <path
+      d="M50 35 L54 46 H66 L56 54 L60 66 L50 58 L40 66 L44 54 L34 46 H46 Z"
+      fill="#E5E4E2"
+      stroke="#A8A8A8"
+      strokeWidth="1"
+    />
+    <path
+      d="M40 70 L35 90 H45 L50 75 L55 90 H65 L60 70 Z"
+      fill="#E5E4E2"
+      stroke="#9B9B9B"
+      strokeWidth="1"
+    />
+    <defs>
+      <linearGradient id="platinumGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#F0F0F0" />
+        <stop offset="100%" stopColor="#B3B3B3" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#B3B3B3]">Platinum</span>
+</div>
+<div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    <polygon
+      points="50,10 65,35 50,60 35,35"
+      fill="url(#diamondGradient)"
+      stroke="#A9A9A9"
+      strokeWidth="2"
+    />
+
+    <defs>
+      <linearGradient id="diamondGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#FFFFFF" />
+        <stop offset="100%" stopColor="#D1D1D1" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#D1D1D1]">Diamond</span>
+</div>
+<div className="flex flex-row items-center gap-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 120 100"
+    width="60"
+    height="60"
+    fill="none"
+  >
+    {/* First Diamond */}
+    <polygon
+      points="30,10 45,35 30,60 15,35"
+      fill="url(#diamondGradient)"
+      stroke="#A9A9A9"
+      strokeWidth="2"
+    />
+    {/* Second Diamond */}
+    <polygon
+      points="90,10 105,35 90,60 75,35"
+      fill="url(#diamondGradient)"
+      stroke="#A9A9A9"
+      strokeWidth="2"
+    />
+
+    <defs>
+      <linearGradient id="diamondGradient" x1="0" x2="0" y1="0" y2="100%">
+        <stop offset="0%" stopColor="#FFFFFF" />
+        <stop offset="100%" stopColor="#D1D1D1" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <span className="text-lg font-semibold text-[#D1D1D1]">Double Diamond</span>
+</div>
+
         </div>
       </div>
     </div>
