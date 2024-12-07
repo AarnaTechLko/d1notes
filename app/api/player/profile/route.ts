@@ -64,7 +64,12 @@ export async function POST(req: NextRequest) {
         const allTeamPlayers = await db
             .select({
                 playerId: teamPlayers.playerId ,
-                playerName: users.first_name,
+                firstName: users.first_name,
+                lastName: users.last_name,
+                jersey: users.jersey,
+                grade_level: users.grade_level,
+                height: users.height,
+                weight: users.weight,
                 playerSlug: users.slug,
                 position: users.position,
                 slug: users.slug,

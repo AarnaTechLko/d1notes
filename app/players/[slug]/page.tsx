@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/app/components/Loading';
 import ProfileCard from '@/app/components/teams/ProfileCard';
+import PlayerProfileCard from '../../components/players/ProfileCard'
 import Profile from '@/app/coach/profile/page';
 
 interface Profile {
@@ -61,7 +62,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
-
+  function toSentenceCase(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
   useEffect(() => {
     const payload = { slug: slug };
     const fetchCoachData = async () => {
@@ -116,32 +120,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   return (
     <>
       <div className="container-fluid mx-auto px-4 py-8 animate-fadeIn mb-44">
-        <div className="grid grid-cols-[1fr_5fr] gap-5">
-        <div>
-  <h3 className="text-lg font-semibold mb-4">Player List</h3>
-  <ul className="space-y-4">
-    {restTeams.map((item) => (
-      <li
-        key={item.playerId}
-        className="flex items-center space-x-4 bg-gray-100 p-4 rounded-md shadow-md"
-      >
-       <a href={`/players/${item.slug}`}>
-        <img
-          src={item.image || '/default.jpg'} // Use a default image if player.image is null
-          alt={item.playerName}
-          className="w-16 h-16 object-cover rounded-full border border-gray-300"
-        /></a>
-        
-        <a href={`/players/${item.slug}`}>
-        <div>
-          <h4 className="text-md font-medium">{item.playerName} {item.last_name}</h4>
-          <p className="text-sm text-gray-600">Position: {item.position}</p>
-        </div>
-        </a>
-      </li>
-    ))}
-  </ul>
-</div>
+        <div className="grid  gap-5">
+  
 
           <div>
           <div className="relative overflow-hidden w-full h-[500px]">
@@ -174,7 +154,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           </div>
         </div>
 
-
+      
         <div className="absolute left-1/2 transform -translate-x-1/2 top-[500px]  w-full shadow-lg rounded-lg p-4 grid grid-cols-[1fr_2fr] gap-4">
           {/* Image Section */}
           <div className="flex justify-end items-right">
@@ -206,7 +186,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </div>
       </div>
       <div className="container mx-auto mt-4 mb-20">
-        <h2 className="text-2xl font-semibold mb-4">Team</h2>
+      <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Teams
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {teams.map((item: any) => {
             console.log(item); // Check the structure of item
@@ -222,6 +204,35 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             );
           })}
 
+        </div>
+
+        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Teammates
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {restTeams.map((item: any) => {
+            console.log(item); // Check the structure of item
+            return (
+              <PlayerProfileCard
+              key={item.playerSlug}
+              rating={5}
+              coachName=''
+             
+              firstName={toSentenceCase(item.firstName)}
+              lastName={toSentenceCase(item.lastName)}
+              image={item.image ?? '/default.jpg'}
+              jersey={item.jersey}
+              slug={item.playerSlug}
+              position={toSentenceCase(item.position)}
+              grade_level={toSentenceCase(item.grade_level)}
+              location={toSentenceCase(item.location)}
+              height={item.height}
+              weight={item.weight}
+              />
+            );
+          })}
+
+ 
         </div>
       </div>
     </>
