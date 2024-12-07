@@ -174,6 +174,7 @@ export async function PUT(req: NextRequest) {
       playingcountries:playingcountries||null,
       height:height||null,
       weight:weight||null,
+      status:"Active",
 
     })
     .where(eq(users.id, playerIDAsNumber))
