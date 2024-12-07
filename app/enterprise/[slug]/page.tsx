@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 // Import the modal
-
+import defaultImage from '../../public/default.jpg'
 import Loading from '@/app/components/Loading';
 
 
@@ -110,6 +110,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Left Section */}
             <div className="flex flex-col items-center justify-center md:items-end">
+
+             
+
+{coachData.logo && coachData.logo !== 'null' && (
               <Image
                 src={coachData.logo}
                 alt={`${coachData.organizationName}`}
@@ -117,7 +121,17 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 height={150}
                 className="rounded-full object-cover"
               />
+            )}
+            {(!coachData.logo || coachData.logo === 'null') && (
+              <Image
+                src={defaultImage}
+                alt={`${coachData.organizationName}`}
+                width={150}
+                height={150}
+                className="rounded-full object-cover"
+              />
 
+            )}
             </div>
             <div className="flex flex-col items-center md:items-start">
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
