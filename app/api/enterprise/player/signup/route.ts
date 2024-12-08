@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "D1 NOTES Player Registration",
       text: "D1 NOTES Player Registration",
-      html: `<p>Dear ${firstName}! Your account for  Coach on D1 NOTES has been created. </p><p>Find your Login credentials below.</p><p><b>Email: </b> ${email}</p><p><b>Password: </b>${randomPassword}</p><p>Click <a href="https://d1notes.com/login" target="_blank">Here to Login</a></p>`,
+      html: `<p>Dear ${firstName}! Your account for  Player on D1 NOTES has been created. </p><p>Find your Login credentials below.</p><p><b>Email: </b> ${email}</p><p><b>Password: </b>${randomPassword}</p><p>Click <a href="https://d1notes.com/login" target="_blank">Here to Login</a></p>`,
   });
   return NextResponse.json({ message:"Profile Completed"}, { status: 200 });
 }
