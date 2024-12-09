@@ -92,6 +92,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white shadow-md">
+      
       <div className="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap justify-between items-center p-4">
         
         {/* Logo section - Adjust for mobile to center logo */}

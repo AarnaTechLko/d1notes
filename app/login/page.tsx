@@ -94,6 +94,10 @@ export default function Login() {
 
   return (
     <>
+     <head>
+    <title>Login - D1 NOTES</title>
+    <meta name="description" content="This is the home page of my Next.js application." />
+  </head>
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 bg-white p-4 md:p-8">
        

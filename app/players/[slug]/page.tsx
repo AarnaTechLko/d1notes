@@ -119,6 +119,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
   return (
     <>
+     <head>
+    <title>Player Roster - D1 NOTES</title>
+    <meta name="description" content="This is the home page of my Next.js application." />
+  </head>
       <div className="container-fluid mx-auto px-4 py-8 animate-fadeIn mb-44">
         <div className="grid  gap-5">
   

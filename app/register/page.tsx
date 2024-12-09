@@ -188,6 +188,11 @@ export default function Register() {
   };
 
   return (
+    <> <head>
+    <title>Player Signup - D1 NOTES</title>
+    <meta name="description" content="This is the home page of my Next.js application." />
+  </head>
+
     <div className="flex flex-col md:flex-row">
       {/* Form Section */}
       <div className="flex-1 bg-white p-4 md:p-8">
@@ -326,5 +331,6 @@ export default function Register() {
         />
       </div>
     </div>
+    </>
   );
 }

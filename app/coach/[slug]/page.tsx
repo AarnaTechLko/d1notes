@@ -103,6 +103,10 @@ setEvaluationList(responseData.evaluationlist);
   ));
   return (
     <>
+     <head>
+    <title>Coach Roster - D1 NOTES</title>
+    <meta name="description" content="This is the home page of my Next.js application." />
+  </head>
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
         {/* Header Section */}
        

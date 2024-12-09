@@ -18,10 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        <title>{'My Next App'}</title>
-        <meta name="description" content="This is my Next.js application." />
-      </Head>
+      
       <body className={inter.className}>
         <SessionProvider>
           <Header />

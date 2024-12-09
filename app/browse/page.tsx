@@ -107,9 +107,10 @@ const Home = () => {
 
   return (
     <>
-      <Head>
-        <title>Profile Directory</title>
-      </Head>
+    <head>
+        <title>Profile Directory Coaches- D1 NOTES</title>
+        <meta name="description" content="This is the home page of my Next.js application." />
+      </head>
 
       <div className="container-fluid">
         <div className="flex flex-col md:flex-row">

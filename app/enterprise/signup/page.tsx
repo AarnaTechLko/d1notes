@@ -205,6 +205,11 @@ export default function Signup() {
   };
 
   return (
+    <>
+    <head>
+    <title>Club Signup - D1 NOTES</title>
+    <meta name="description" content="This is the home page of my Next.js application." />
+  </head>
     <div className="flex flex-col md:flex-row w-full space-y-6 md:space-y-0 md:space-x-6">
       {/* Form Section */}
       <div className="flex-1 bg-white p-6 md:p-12 rounded-lg shadow-md">
@@ -479,5 +484,6 @@ export default function Signup() {
         <Image src={Brand} alt="brand" layout="responsive" width={550} height={500} className="object-cover" />
       </div>
     </div>
+    </>
   );
 }

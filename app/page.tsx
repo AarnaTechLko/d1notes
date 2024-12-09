@@ -60,10 +60,10 @@ export default function Home(): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>Home - My Next App</title>
+      <head>
+        <title>Home - D1 NOTES</title>
         <meta name="description" content="This is the home page of my Next.js application." />
-      </Head>
+      </head>
       <div className="max-w-7xl mx-auto px-4 mt-24 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center py-10">
