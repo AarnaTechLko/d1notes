@@ -9,6 +9,7 @@ import Loading from '@/app/components/Loading';
 import CertificateModal from '@/app/components/CertificateModal';
 import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
+import JoinRequestModal from '@/app/components/JoinRequestModal';
 
 
 
@@ -51,6 +52,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [playerId, setPlayerId] = useState<string | null>(null);
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
 
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
@@ -107,10 +109,10 @@ setEvaluationList(responseData.evaluationlist);
     <title>Coach Roster - D1 NOTES</title>
     <meta name="description" content="This is the home page of my Next.js application." />
   </head>
-      <div className="container mx-auto px-4 py-8 animate-fadeIn" >
+      <div className="container mx-auto px-4 py-8 animate-fadeIn z-0" >
         {/* Header Section */}
        
-        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg">
+        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg  transition-all duration-300 hover:shadow-lg  z-1">
   {/* Profile Image and Coach Info */}
   <div className="flex flex-col md:flex-row md:w-2/3 mb-4 md:mb-0 md:mr-4">
     {/* Profile Image */}
@@ -158,7 +160,7 @@ setEvaluationList(responseData.evaluationlist);
 
   {/* Additional Text and Button */}
   <div className="md:w-1/3 text-center md:text-left">
-    
+  <div>
     {session ? (
               <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
                 <span>Rate</span>
@@ -185,7 +187,29 @@ setEvaluationList(responseData.evaluationlist);
                 Proceed to Evaluation
               </button>
             )}
+</div>
+<div>
+
+{!session ? (
+  <>
+    <button
+      onClick={() => setIsModalOpen(true)} // Open modal on click
+      className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+    >
+     Request to Join
+    </button>
+  </>
+) : (
+  <button
+    onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+    className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+  >
+    Request to Join
+  </button>
+)}
   </div>
+  </div>
+  
 </div>
 
 
@@ -336,6 +360,15 @@ Previous Evaluations
           coachId={coachData.id}
           playerId={playerId}
           onClose={() => setIsevaluationModalOpen(false)}
+        />
+      )}
+
+{isJoinRequestModalOpen  && playerId && (
+        <JoinRequestModal 
+        isOpen={isJoinRequestModalOpen} 
+        requestToID={coachData?.id.toString()}
+        type="coach"
+        onClose={() => setIsJoinRequestModalOpen(false)}
         />
       )}
     </>

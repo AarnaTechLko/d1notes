@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
@@ -41,6 +41,13 @@ const Sidebar: React.FC = () => {
             <a href="/enterprise/dashboard" className="flex items-center space-x-2 p-2">
               <MdDashboard className="text-xl" />
               <span>Dashboard</span>
+            </a>
+          </li>
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/enterprise/joinrequests" className="flex items-center space-x-2 p-2">
+            
+              <FaUserPlus className='text-xl'/>
+              <span>Join Requests</span>
             </a>
           </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">

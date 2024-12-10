@@ -53,7 +53,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose,coachslug }) => {
     
       
       setIsAuthenticated(true);
-       window.location.href = '/coach/'+coachslug;
+      // window.location.href = '/coach/'+coachslug;
       onClose(); // Close the modal after successful login
     } catch (err: any) {
         setIsAuthenticated(false);

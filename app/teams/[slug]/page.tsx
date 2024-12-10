@@ -11,6 +11,8 @@ import Loading from '@/app/components/Loading';
 import { EvaluationData } from '../../types/types';
 import ProfileCard from '@/app/components/players/ProfileCard';
 import CoachProfileCard from '@/app/components/ProfileCard';
+import LoginModal from '@/app/components/LoginModal';
+import JoinRequestModal from '@/app/components/JoinRequestModal';
 
 
 interface Profile {
@@ -25,6 +27,7 @@ interface Profile {
   height: number;
   weight: number;
   jersey: number;
+  id: number;
 }
 
 interface CoachData {
@@ -42,8 +45,9 @@ interface CoachData {
   coachimage: string;
   team_type: string;
   team_year: string;
-   
+
   coachSlug: string;
+  id: number;
 }
 
 interface CoachProfileProps {
@@ -65,7 +69,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [playerId, setPlayerId] = useState<string | null>(null);
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
-
+  const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
@@ -121,56 +125,77 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   ));
   return (
     <>
-     <head>
-    <title>Team Roster - D1 NOTES</title>
-    <meta name="description" content="This is the home page of my Next.js application." />
-  </head>
+      <head>
+        <title>Team Roster - D1 NOTES</title>
+        <meta name="description" content="This is the home page of my Next.js application." />
+      </head>
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
-        
-
-      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-  {/* First Column: Team Details */}
-  <div className="flex-1 text-center flex flex-col items-center space-y-4">
-    <div className="flex-shrink-0">
-      <Image
-        src={coachData.logo}
-        alt={coachData.team_name}
-        width={120}
-        height={120}
-        className="rounded-full object-cover"
-      />
-    </div>
-
-    {/* Team Info */}
-    <div>
-      <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
-        {coachData.team_name}
-      </h1>
-      <p className="text-gray-600 text-lg">
-       <b>Team For :</b> {coachData.team_type}
-      </p>
-      <p className="text-gray-600 text-lg">
-      <b>Year :</b> {coachData.team_year}
-      </p>
-    </div>
-
-        
-   
-  </div>
-
-   
 
 
-</div>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+          {/* First Column: Team Details */}
+          <div className="flex-1 text-center flex flex-col items-center space-y-4">
+            <div className="flex-shrink-0">
+              <Image
+                src={coachData.logo}
+                alt={coachData.team_name}
+                width={120}
+                height={120}
+                className="rounded-full object-cover"
+              />
+            </div>
 
-<div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-<h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">About Team</h2>
- 
-</div>
-<div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
- 
-<p>{coachData.description}</p>
-</div>
+            {/* Team Info */}
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
+                {coachData.team_name}
+              </h1>
+              <p className="text-gray-600 text-lg">
+                <b>Team For :</b> {coachData.team_type}
+              </p>
+              <p className="text-gray-600 text-lg">
+                <b>Year :</b> {coachData.team_year}
+              </p>
+            </div>
+
+            <div>
+            {!session ? (
+              <>
+                <button
+                  onClick={() => setIsModalOpen(true)} // Open modal on click
+                  className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                >
+                 Request to Join
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+                className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                Request to Join
+              </button>
+            )}
+
+            </div>
+
+
+
+          </div>
+
+
+
+
+        </div>
+
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+          <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">About Team</h2>
+
+        </div>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+
+          <p>{coachData.description}</p>
+        </div>
 
 
         {/* Header Section */}
@@ -194,55 +219,67 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-<div className="flex flex-col md:flex-row md:space-x-8">
-{coachList?.map((item: any) => {
-  
-  return (
-    <CoachProfileCard
-      key={item?.teamSlug}
-      name={item.firstName}
-      organization={item.clubName} // Ensure `team_name` is correct
-      image={item.image ?? '/default.jpg'}
-      rating={5}
-      slug={item.slug}
-    />
-  );
-})}
+          <div className="flex flex-col md:flex-row md:space-x-8">
+            {coachList?.map((item: any) => {
 
-</div>
-</section>
+              return (
+                <CoachProfileCard
+                  key={item?.teamSlug}
+                  name={item.firstName}
+                  organization={item.clubName} // Ensure `team_name` is correct
+                  image={item.image ?? '/default.jpg'}
+                  rating={5}
+                  slug={item.slug}
+                />
+              );
+            })}
+
+          </div>
+        </section>
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Players
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
- {teamData?.map((profile:any) => (
-                <div className="w-full lg:w-auto" key={profile.slug}>
-                  <ProfileCard
-                    key={profile.slug}
-                    rating={5}
-                    coachName=''
-                   
-                    firstName={toSentenceCase(profile.firstName)}
-                    lastName={toSentenceCase(profile.lastName)}
-                    image={profile.image ?? '/default.jpg'}
-                    jersey={profile.jersey}
-                    slug={profile.slug}
-                    position={toSentenceCase(profile.position)}
-                    grade_level={toSentenceCase(profile.grade_level)}
-                    location={toSentenceCase(profile.location)}
-                    height={profile.height}
-                    weight={profile.weight}
-                  />
+            {teamData?.map((profile: any) => (
+              <div className="w-full lg:w-auto" key={profile.slug}>
+                <ProfileCard
+                  key={profile.slug}
+                  rating={5}
+                  coachName=''
+
+                  firstName={toSentenceCase(profile.firstName)}
+                  lastName={toSentenceCase(profile.lastName)}
+                  image={profile.image ?? '/default.jpg'}
+                  jersey={profile.jersey}
+                  slug={profile.slug}
+                  position={toSentenceCase(profile.position)}
+                  grade_level={toSentenceCase(profile.grade_level)}
+                  location={toSentenceCase(profile.location)}
+                  height={profile.height}
+                  weight={profile.weight}
+                />
 
 
-                </div>
-              ))}
+              </div>
+            ))}
 
           </div>
         </section>
       </div>
+      {isModalOpen && (
+        <LoginModal isOpen={isModalOpen} coachslug={coachData.slug} onClose={() => setIsModalOpen(false)} />
+      )}
+
+      {isJoinRequestModalOpen  && playerId && (
+        <JoinRequestModal 
+        isOpen={isJoinRequestModalOpen} 
+        requestToID={coachData?.id.toString()}
+        type="team"
+        onClose={() => setIsJoinRequestModalOpen(false)}
+        />
+      )}
 
       {/* Modals */}
 

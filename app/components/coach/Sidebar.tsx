@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt, FaUserPlus } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -104,6 +104,12 @@ const Sidebar: React.FC = () => {
                 </ul>
               )}
             </li>
+            <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/joinrequests" className="flex items-center space-x-2 p-2">
+                    <FaUserPlus className="text-xl" />
+                    <span>Join Requests</span>
+                  </a>
+                </li>
             {session?.user.club_id && (
               <>
                 <li className="hover:bg-gray-700 rounded transition duration-200">

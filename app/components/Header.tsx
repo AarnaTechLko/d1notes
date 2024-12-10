@@ -263,7 +263,7 @@ const Header: React.FC = () => {
                             </li>
                           )}
                           {session?.user?.type === 'player' && (
-                            <li className="pt-[8px]">
+                            <li className="pt-[8px] z-40">
                               <Link href="/profile" className={`${isActiveLink(
                             "/profile"
                           )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
@@ -272,7 +272,7 @@ const Header: React.FC = () => {
 
                               <Link href="/changepassword" className={`${isActiveLink(
                             "/profile"
-                          )} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
+                          )} hover:text-black-300 z-40 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={closeMenu}>
                                 Change Password
                               </Link>
                             </li>

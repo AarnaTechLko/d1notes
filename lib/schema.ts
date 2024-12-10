@@ -273,3 +273,25 @@ export const playerbanner = pgTable("playerbanner", {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const joinRequest=pgTable("joinRequest",{
+  id: serial("id").primaryKey(),
+  player_id:integer("player_id"),
+  coach_id:integer("coach_id"),
+  club_id:integer("club_id"),
+  type:text("type"),
+  requestToID:integer("requestToID"),
+  message:text("message"),
+  status:text("status"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
+export const chats=pgTable("chats",{
+  id: serial("id").primaryKey(),
+  sender_id:integer("sender_id"),
+  sender_type:text("sender_type"),
+  receiver_id:integer("receiver_id"),
+  receiver_type:text("receiver_type"),
+  message:text("message"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+

@@ -6,11 +6,11 @@ import Image from 'next/image';
 // Import the modal
 import defaultImage from '../../public/default.jpg'
 import Loading from '@/app/components/Loading';
-
-
+import JoinRequestModal from '@/app/components/JoinRequestModal';
 import { EvaluationData } from '../../types/types';
 import ProfileCard from '@/app/components/teams/ProfileCard';
 import CoachProfileCard from '@/app/components/ProfileCard';
+import LoginModal from '@/app/components/LoginModal';
 
 
 
@@ -29,6 +29,7 @@ interface CoachData {
   city: string;
 
   logo: string;
+  id: string;
 }
 
 interface CoachProfileProps {
@@ -43,7 +44,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [coachList, setCoachList] = useState<[] | []>([]);
   const [teamData, setTeamData] = useState<[] | null>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isevaludationModalopen, setIsevaluationModalOpen] = useState(false);
+  const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -167,6 +168,26 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 </li>
               </ul>
             </div>
+            <div className="flex flex-col items-center ">
+
+            {!session ? (
+              <>
+                <button
+                  onClick={() => setIsModalOpen(true)} // Open modal on click
+                  className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                >
+                 Request to Join
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+                className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                Request to Join
+              </button>
+            )}
+              </div>
           </div>
         </div>
 
@@ -222,6 +243,18 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
 
       </div>
+      {isModalOpen && (
+        <LoginModal isOpen={isModalOpen} coachslug={coachData.slug} onClose={() => setIsModalOpen(false)} />
+      )}
+
+      {isJoinRequestModalOpen  && playerId && (
+        <JoinRequestModal 
+        isOpen={isJoinRequestModalOpen} 
+        requestToID={coachData?.id}
+        type="club"
+        onClose={() => setIsJoinRequestModalOpen(false)}
+        />
+      )}
 
      
 
