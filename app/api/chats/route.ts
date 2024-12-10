@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { chats} from '../../../lib/schema';
-import { eq,isNotNull,and, between, lt,ilike } from 'drizzle-orm';
+import { chats } from '../../../lib/schema';
+import { eq, isNotNull, and, between, lt, ilike,or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
@@ -26,13 +26,25 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function GET(req:NextRequest)
-{
+export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const receiver_id = searchParams.get('receiver_id');
     const receiver_type = searchParams.get('type');
 
-    const messageQuery=await db.select().from(chats).where(and(eq(chats.receiver_id,Number(receiver_id)),eq(chats.receiver_type,String(receiver_type)))).orderBy(chats.createdAt).execute();
+    const messageQuery = await db
+    .select()
+    .from(chats)
+    .where(
+      or(
+        and(
+          eq(chats.receiver_id, Number(receiver_id)),
+          eq(chats.receiver_type, String(receiver_type))
+        ),
+        eq(chats.sender_id, Number(receiver_id))
+      )
+    )
+    .orderBy(chats.createdAt)
+    .execute();
     return NextResponse.json(messageQuery);
 
 
