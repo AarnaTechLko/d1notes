@@ -13,13 +13,11 @@ interface ChatMessage {
 }
 
 interface User {
-    id: number;
-    receivername: string;
-    sendername: string;
-    receiverId: number;
-    receiverType: string;
-    senderid: number;
-    sendertype: string;
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    type: string;
+
     image: string;
 }
 
@@ -34,16 +32,18 @@ const ChatBox: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const { data: session } = useSession();
     const lastMessageRef = useRef(null);
-
+    const [isUserScrolling, setIsUserScrolling] = useState(false);
+    const chatBoxRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         const fetchUsers = async () => {
             if (!session?.user?.id) return;
 
             try {
-                const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=player`);
+                const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=${session.user.type}`);
                 const data = await response.json();
                 console.log(data);
                 setUsers(data);
+
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
@@ -58,12 +58,12 @@ const ChatBox: React.FC = () => {
         const fetchChatMessages = async () => {
             try {
                 const response = await fetch(
-                    `/api/chats?receiver_id=${selectedUser.senderid}&type=${selectedUser.sendertype}`
+                    `/api/chats?receiver_id=${selectedUser.user_id}&type=${selectedUser.type}&sentFor=${session?.user.id}`
                 );
                 const data = await response.json();
 
                 setChatData(data);
-               
+
 
             } catch (error) {
                 console.error("Error fetching chat messages:", error);
@@ -110,8 +110,8 @@ const ChatBox: React.FC = () => {
             const payload: ChatMessage = {
                 sender_id: Number(session.user.id),
                 sender_type: session.user.type,
-                receiver_id: selectedUser.senderid,
-                receiver_type: selectedUser.sendertype,
+                receiver_id: selectedUser.user_id,
+                receiver_type: selectedUser.type,
                 message,
                 createdAt: new Date().toISOString(),
             };
@@ -128,7 +128,18 @@ const ChatBox: React.FC = () => {
             console.error("Error sending message:", error);
         }
     };
- 
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+    }, [chatData]);
+    useEffect(() => {
+        // Automatically select the first user when the component mounts
+        if (users.length > 0) {
+            setSelectedUser(users[0]);
+        }
+    }, [users]);
+
     return (
         <div className="flex flex-col h-screen">
             <header className="bg-gray-900 text-white p-2"></header>
@@ -146,16 +157,23 @@ const ChatBox: React.FC = () => {
                         />
                     </div>
                     <div className="flex-1 overflow-y-auto">
-                        {[...new Map(users.map(user => [user.senderid, user])).values()].map((user, index) => (
-                            user.senderid != Number(session?.user.id) && ( // Ensure the entire div is conditionally rendered
-                                <div
-                                    key={index}
-                                    className="p-4 hover:bg-gray-200 cursor-pointer"
-                                    onClick={() => handleUserSelect(user)}
-                                >
-                                    <div className="font-bold">{user.sendername}</div>
+                        {users.map((user, index) => (
+                            <>
+                                <div className={`flex items-center p-4 cursor-pointer ${
+                        selectedUser === user ? 'bg-gray-300' : 'hover:bg-gray-200'
+                    }`}
+                                    onClick={() => handleUserSelect(user)}>
+                                    <img
+                                        src={user.image && user.image !== 'null' ? user.image : '/default.jpg'}
+                                        alt="User Avatar"
+                                        className="rounded-full h-[32px]"
+                                    />
+                                    <div className="ml-4">
+                                        <h2 className="font-semibold">{user.first_name} {user.last_name}</h2>
+                                    </div>
                                 </div>
-                            )
+
+                            </>
                         ))}
                     </div>
                 </div>
@@ -175,45 +193,43 @@ const ChatBox: React.FC = () => {
                                 </button>
                                 <div className="flex items-center">
                                     <img
-                                        src={selectedUser.image || '/default.jpg'}
+                                        src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
                                         alt="User Avatar"
                                         className="rounded-full h-[32px]"
                                     />
                                     <div className="ml-4">
-                                        <h2 className="font-semibold">{selectedUser.sendername}</h2>
+                                        <h2 className="font-semibold">{selectedUser.first_name} {selectedUser.last_name}</h2>
                                     </div>
                                 </div>
                             </div>
 
                             <div
-    className="flex-1 overflow-y-auto p-4 bg-gray-50"
-    style={{ maxHeight: "400px", overflowY: "auto" }} // Ensure it has a fixed height and can scroll
->
-    {chatData.map((msg, index) => (
-        <div
-            className={`flex mb-4 ${
-                msg.sender_id === Number(session?.user?.id)
-                    ? "justify-end"
-                    : "justify-start"
-            }`}
-            key={index}
-        >
-            <div
-                className={`p-3 rounded-lg shadow ${
-                    msg.sender_id !== Number(session?.user?.id)
-                        ? "bg-blue-100"
-                        : "bg-gray-200"
-                }`}
-                ref={index === chatData.length - 1 ? lastMessageRef : null}
-            >
-                <div
-                    dangerouslySetInnerHTML={{ __html: msg.message }}
-                    className="message-content"
-                ></div>
-            </div>
-        </div>
-    ))}
-</div>
+                                className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
+                                style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
+                            >
+                                {chatData.map((msg, index) => (
+                                    <div
+                                        className={`flex mb-4 ${msg.sender_id === Number(session?.user?.id)
+                                                ? "justify-end"
+                                                : "justify-start"
+                                            }`}
+                                        key={index}
+                                    >
+                                        <div
+                                            className={`p-3 rounded-lg shadow ${msg.sender_id !== Number(session?.user?.id)
+                                                    ? "bg-blue-100"
+                                                    : "bg-gray-200"
+                                                }`}
+                                            ref={index === chatData.length - 1 ? lastMessageRef : null}
+                                        >
+                                            <div
+                                                dangerouslySetInnerHTML={{ __html: msg.message }}
+                                                className="message-content"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
 
 
                             <div className="p-2 border-t bg-white relative">

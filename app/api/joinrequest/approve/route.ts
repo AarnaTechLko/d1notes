@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; // Adjust the path based on your setup
-import { coaches, users, enterprises, joinRequest, teams, chats } from "@/lib/schema";
+import { coaches, users, enterprises, joinRequest, teams, chats, chatfriend } from "@/lib/schema";
 import { eq, sql, and } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -27,6 +27,22 @@ export async function POST(req: Request) {
                 { status: 400 }
             );
         }
+
+        let chatFriend:any={
+            chatfrom: playerId,
+            chatto: requestToID,
+            chattotype: type
+        };
+        const insertChatfriend=await db.insert(chatfriend).values(chatFriend).returning();
+
+
+        let chatFriend2:any={
+            chatfrom:requestToID ,
+            chatto:playerId ,
+            chattotype: 'player'
+        };
+        const insertChatfriend2=await db.insert(chatfriend).values(chatFriend2).returning();
+
 
         let userValues: any = {
             sender_id: requestToID,

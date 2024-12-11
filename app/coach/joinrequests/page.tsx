@@ -98,6 +98,8 @@ const Home: React.FC = () => {
     const type=selectedOrder.type;
     const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
+
+ 
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

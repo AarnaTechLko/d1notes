@@ -286,6 +286,16 @@ export const joinRequest=pgTable("joinRequest",{
 });
 
 
+export const chatfriend=pgTable("chatfriend",{
+  id: serial("id").primaryKey(),
+  chatfrom:integer("chatfrom"),
+  chatto:integer("chatto"),
+  chattoname:text("chattoname"),
+  chattotype:text("chattotype"),
+  
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+})
+
 export const chats=pgTable("chats",{
   id: serial("id").primaryKey(),
   sender_id:integer("sender_id"),

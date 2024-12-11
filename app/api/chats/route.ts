@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
         sender_type,
         receiver_type,
         message,
+        
     };
 
     try {
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const receiver_id = searchParams.get('receiver_id');
     const receiver_type = searchParams.get('type');
+    const sentFor = searchParams.get('sentFor');
 
     const messageQuery = await db
     .select()
@@ -37,10 +39,13 @@ export async function GET(req: NextRequest) {
     .where(
       or(
         and(
-          eq(chats.receiver_id, Number(receiver_id)),
-          eq(chats.receiver_type, String(receiver_type))
+          eq(chats.sender_id, Number(receiver_id)),
+          eq(chats.receiver_id, Number(sentFor))
         ),
-        eq(chats.sender_id, Number(receiver_id))
+        and(
+          eq(chats.sender_id, Number(sentFor)),
+          eq(chats.receiver_id, Number(receiver_id))
+        )
       )
     )
     .orderBy(chats.createdAt)
