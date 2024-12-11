@@ -8,9 +8,10 @@ interface JoinRequestModalProps {
     requestToID: string;
     type:string;
     onClose: () => void;
+    onRequest:()=>void;
 }
 
-const JoinRequestModal: React.FC<JoinRequestModalProps> = ({ onClose, requestToID,type }) => {
+const JoinRequestModal: React.FC<JoinRequestModalProps> = ({ onClose, requestToID,type,onRequest}) => {
     const [message, setMessage] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +44,7 @@ const JoinRequestModal: React.FC<JoinRequestModalProps> = ({ onClose, requestToI
             const responseData = await response.json();
             showSuccess(responseData.message);
             onClose();
+            onRequest();
         } catch (err: any) {
             showError(err.message || 'An error occurred.');
         } finally {

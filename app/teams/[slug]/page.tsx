@@ -60,6 +60,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [teamData, setTeamData] = useState<Profile[]>([]);
+  const [isRequested, setIsRequested] = useState<number>(0);
   const [coachList, setCoachList] = useState<[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isevaludationModalopen, setIsevaluationModalOpen] = useState(false);
@@ -79,7 +80,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }
   // Fetch coach data
   useEffect(() => {
-    const payload = { slug: slug };
+    const payload = { slug: slug,loggeInUser:session?.user.id };
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/teams/profile/`, {
@@ -96,6 +97,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setCoachData(responseData.clubdata);
         setTeamData(responseData.teamplayersList);
         setCoachList(responseData.coach);
+        setIsRequested(responseData.isRequested);
 
       } catch (err) {
         setError("Some error occurred.");
@@ -160,22 +162,42 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
             <div>
             {!session ? (
-              <>
-                <button
-                  onClick={() => setIsModalOpen(true)} // Open modal on click
-                  className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
-                >
-                 Request to Join
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
-                className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Request to Join
-              </button>
-            )}
+  <>
+    {isRequested > 0 ? (
+      <button
+        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+        disabled
+      >
+        Requested
+      </button>
+    ) : (
+      <button
+        onClick={() => setIsModalOpen(true)} // Open modal on click
+        className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+      >
+        Request to Join
+      </button>
+    )}
+  </>
+) : (
+  <>
+    {isRequested > 0 ? (
+      <button
+        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+        disabled
+      >
+        Requested
+      </button>
+    ) : (
+      <button
+        onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+        className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+      >
+        Request to Join
+      </button>
+    )}
+  </>
+)}
 
             </div>
 
@@ -275,6 +297,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       {isJoinRequestModalOpen  && playerId && (
         <JoinRequestModal 
         isOpen={isJoinRequestModalOpen} 
+        onRequest={()=> setIsRequested(1)}
         requestToID={coachData?.id.toString()}
         type="team"
         onClose={() => setIsJoinRequestModalOpen(false)}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers, coaches } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches } from '../../../../lib/schema'
 import debug from 'debug';
-import { desc, eq, asc } from 'drizzle-orm';
+import { desc, eq, asc,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -12,7 +12,7 @@ import { SECRET_KEY } from '@/lib/constants';
 
 
 export async function POST(req: NextRequest) {
-    const { slug } = await req.json();
+    const { slug,loggeInUser } = await req.json();
 
     try {
         // Using 'like' with lower case for case-insensitive search
@@ -87,7 +87,17 @@ export async function POST(req: NextRequest) {
             .where(eq(teamPlayers.teamId, payload[0].id));
 
         const coach=await db.select().from(coaches).where(eq(coaches.id, payload[0].coach_id)).execute();
-        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coach });
+
+        const requested=await db.select().from(joinRequest).where(
+            and(
+              eq(joinRequest.player_id,loggeInUser),
+              eq(joinRequest.requestToID,payload[0].id),
+            )).execute();
+          
+            const isRequested = requested.length;
+
+
+        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coach,isRequested:isRequested });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching teams:', error);

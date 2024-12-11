@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, enterprises, playerEvaluation, teams, users } from '../../../../lib/schema'
+import { coaches, enterprises,joinRequest, playerEvaluation, teams, users } from '../../../../lib/schema'
 import debug from 'debug';
 import { eq ,and, isNotNull} from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -12,7 +12,7 @@ import { SECRET_KEY } from '@/lib/constants';
 
 
 export async function POST(req: NextRequest) {
-    const { slug } = await req.json();
+    const { slug,loggeInUser } = await req.json();
 
     try {
         // Using 'like' with lower case for case-insensitive search
@@ -56,9 +56,15 @@ export async function POST(req: NextRequest) {
                 )
             ).execute();
          
-       
+            const requested=await db.select().from(joinRequest).where(
+                and(
+                  eq(joinRequest.player_id,loggeInUser),
+                  eq(joinRequest.requestToID,payload[0].id),
+                )).execute();
+              
+                const isRequested = requested.length;
 
-        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches });
+        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches,isRequested:isRequested });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching enterprises:', error);
