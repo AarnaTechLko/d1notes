@@ -14,7 +14,7 @@ interface ChatMessage {
 
 interface User {
     id: number;
-    receiverName: string;
+    receivername: string;
     sendername: string;
     receiverId: number;
     receiverType: string;
@@ -180,7 +180,7 @@ const ChatBox: React.FC = () => {
                                         className="rounded-full h-[32px]"
                                     />
                                     <div className="ml-4">
-                                        <h2 className="font-semibold">{selectedUser.receiverName}</h2>
+                                        <h2 className="font-semibold">{selectedUser.sendername}</h2>
                                     </div>
                                 </div>
                             </div>

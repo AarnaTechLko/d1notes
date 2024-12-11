@@ -105,8 +105,8 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess("Join Request Approved successfully.");
-        router.push('/coach/messages');
+        showSuccess("Join Request Approved successfully. A welcome message has been sent.");
+        ///router.push('/coach/messages');
       } else {
         console.error('Failed to accept request');
       }

@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
+import { useRouter } from 'next/navigation';
+import { showSuccess } from '@/app/components/Toastr';
 
 // Define the type for the data
 interface Order {
@@ -10,9 +12,10 @@ interface Order {
   message: string;
   status: string;
   type: string;
-  first_name?:string;
-  last_name?:string;
- 
+  first_name?: string;
+  last_name?: string;
+  playerId?: number;
+  requestToID?: number;
 }
 
 const Home: React.FC = () => {
@@ -20,8 +23,12 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const router = useRouter();
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
+  
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   useEffect(() => {
     const fetchOrders = async () => {
@@ -72,11 +79,63 @@ const Home: React.FC = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+    setSelectedOrder(null);
+  };
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
+  const handleAccept = async () => {
+    if (!selectedOrder) return;
+    console.log(selectedOrder);
+    const playerId=selectedOrder.playerId;
+    const requestToID=selectedOrder.requestToID;
+    const sender_type='player';
+    const type=selectedOrder.type;
+    const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
+    try {
+      const response = await fetch(`/api/joinrequest/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message}),
+      });
 
+      if (response.ok) {
+        showSuccess("Join Request Approved successfully.");
+        router.push('/coach/messages');
+      } else {
+        console.error('Failed to accept request');
+      }
+    } catch (error) {
+      console.error('Error accepting request:', error);
+    }
+
+    handleConfirmationClose(); // Close modal after accepting
+  };
+
+  const handleReject = async () => {
+    if (!selectedOrder) return;
+ 
+    try {
+      const response = await fetch(`/api/rejectRequest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: selectedOrder.id }),
+      });
+
+      if (response.ok) {
+        // Handle successful response (e.g., update UI)
+        console.log('Request rejected');
+      } else {
+        console.error('Failed to reject request');
+      }
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+    }
+
+    handleConfirmationClose(); // Close modal after rejecting
+  };
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -114,17 +173,25 @@ const Home: React.FC = () => {
 </td>
 
         <td>{order.message}</td>
-        <td><button
-    className={`px-4 py-2 rounded-lg text-white ${
-      order.status === "Accepted"
-        ? "bg-green-500"
-        : order.status === "Requested"
-        ? "bg-yellow-500"
-        : "bg-red-500"
-    }`}
-  >
-    {order.status}
-  </button></td>
+        <td>
+        <button
+                          className={`px-4 py-2 rounded-lg text-white ${
+                            order.status === 'Accepted'
+                              ? 'bg-green-500'
+                              : order.status === 'Requested'
+                              ? 'bg-yellow-500'
+                              : 'bg-red-500'
+                          }`}
+                          onClick={() => {
+                            if (order.status === 'Requested') {
+                              setSelectedOrder(order);
+                              setShowConfirmation(true);
+                            }
+                          }}
+                        >
+                          {order.status}
+                        </button>
+        </td>
      
       </tr>
     ))
@@ -171,6 +238,36 @@ const Home: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {showConfirmation && selectedOrder && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
+            {/* Close Button */}
+            <button
+              onClick={handleConfirmationClose}
+              className="absolute top-2 right-2 text-gray-500 text-2xl"
+            >
+              &times;
+            </button>
+
+            <h3 className="text-xl font-semibold mb-4">Are you sure you want to proceed?</h3>
+            <div className="flex justify-center">
+              <button
+                onClick={handleAccept}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg mr-3"
+              >
+                Accept
+              </button>
+              <button
+                onClick={handleReject}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg ml-3"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
