@@ -173,7 +173,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
 {coachData.image && coachData.image == 'null' && (
             <img
-              src={'/default.jpg'}
+              src='/default.jpg'
               alt="Player Thumbnail"
               className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
             />

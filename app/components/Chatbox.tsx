@@ -17,8 +17,16 @@ interface User {
     first_name: string;
     last_name: string;
     type: string;
-
+    location:string;
     image: string;
+    gender: string;
+    grade_level: string;
+    height: string;
+    slug: string;
+    sport: string;
+    bio: string;
+    team: string;
+
 }
 
 
@@ -268,6 +276,40 @@ const ChatBox: React.FC = () => {
                         </>
                     )}
                 </div>
+
+
+
+
+                <div className="col-span-1 md:col-span-3 bg-white border-l border-gray-300 flex flex-col p-4">
+          <h2 className="text-xl font-semibold mb-4">Player Profile</h2>
+          {selectedUser && (
+            <div className="flex flex-col items-center mb-4">
+              <img
+                src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+                alt="User Avatar"
+                className="rounded-full mb-2 h-32 w-32"
+              />
+              <div className="text-center">
+                <h3 className="font-semibold text-lg"></h3>
+                <p className="text-sm text-gray-500"><b>Location:</b> {selectedUser.location} </p>
+                <p className="text-sm text-gray-500"><b>Team/Club:</b> {selectedUser.team}</p>
+               
+                <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
+                <p className="text-sm text-gray-500"><b>Bio:</b> {selectedUser.bio}</p>
+              </div>
+              <a
+                href={`/players/${selectedUser.slug}`}
+                className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
+              >
+                <FaEye className="mr-1" /> View Profile
+              </a>
+            </div>
+          )}
+        </div>
+
+
+
+
             </div>
         </div>
     );

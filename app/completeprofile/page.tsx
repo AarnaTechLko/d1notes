@@ -185,6 +185,9 @@ export default function Register() {
     }
     setLoading(true);
     try {
+      session.user.name=formValues.first_name;
+      session.user.image=formValues.image;
+   
       const token = localStorage.getItem("token");
       const response = await fetch("/api/register", {
         method: "PUT",
