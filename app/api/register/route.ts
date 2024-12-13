@@ -116,29 +116,29 @@ export async function POST(req: NextRequest) {
         const TeamQuery = await db.select().from(teams).where(eq(teams.id, referenceId)).execute();
         userValues.enterprise_id = TeamQuery[0].creator_id; // Insert referenceId into enterprise_id
       }
+
+
+      
+        try {
+          await db.insert(teamPlayers).values(
+            {
+              teamId: Number(team),
+              playerId: Number(insertedUser[0].id),
+              enterprise_id: Number(userValues.enterprise_id),
+            }
+  
+          );
+        }
+        catch (error) {
+  
+          const err = error as any;
+  
+          return NextResponse.json({ message: err }, { status: 500 });
+  
+        }
     }
 
-    if (sendedBy != '' && team != '') {
-      try {
-        await db.insert(teamPlayers).values(
-          {
-            teamId: Number(team),
-            playerId: Number(insertedUser[0].id),
-            enterprise_id: Number(userValues.enterprise_id),
-          }
-
-        );
-      }
-      catch (error) {
-
-        const err = error as any;
-
-        return NextResponse.json({ message: err }, { status: 500 });
-
-      }
-
-
-    }
+    
     const emailResult = await sendEmail({
       to: email,
       subject: "D1 NOTES Player Registration",
