@@ -15,6 +15,8 @@ interface Order {
   last_name?: string;
   playerId?: number;
   requestToID?: number;
+  image?: string;
+  slug?: number;
 }
 
 const Home: React.FC = () => {
@@ -92,18 +94,18 @@ const Home: React.FC = () => {
   const handleAccept = async () => {
     if (!selectedOrder) return;
     console.log(selectedOrder);
-    const playerId=selectedOrder.playerId;
-    const requestToID=selectedOrder.requestToID;
-    const sender_type='player';
-    const type=selectedOrder.type;
-    const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
+    const playerId = selectedOrder.playerId;
+    const requestToID = selectedOrder.requestToID;
+    const sender_type = 'player';
+    const type = selectedOrder.type;
+    const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
 
- 
+
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message}),
+        body: JSON.stringify({ playerId, requestToID, sender_type, type, message }),
       });
 
       if (response.ok) {
@@ -121,7 +123,7 @@ const Home: React.FC = () => {
 
   const handleReject = async () => {
     if (!selectedOrder) return;
- 
+
     try {
       const response = await fetch(`/api/rejectRequest`, {
         method: 'POST',
@@ -169,19 +171,47 @@ const Home: React.FC = () => {
                   paginatedOrders.map((order, index) => (
                     <tr key={order.id}>
                       <td>{(currentPage - 1) * limit + index + 1}</td>
-                      <td>
-                        {order.first_name} {order.last_name}
+                      <td className="flex items-center space-x-4">
+                        <a
+                          href={`/players/${order.slug}`} // Dynamic URL for the user's profile
+                          className="font-medium text-gray-800 flex items-center space-x-4" target='_blank'
+                        >
+                          <div className="w-12 h-12 rounded-full overflow-hidden">
+                            <img
+                              src={order.image !== 'null' ? order.image : '/default.jpg'}
+                              alt={`${order.first_name}'s profile`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+
+                          {/* Name and Type */}
+                          <div className="flex flex-col">
+                            {/* Name */}
+                            <span className="font-medium text-gray-800">{order.first_name} {order.last_name}</span>
+
+                            {/* Type as a badge */}
+                            <span
+                              className={`px-4 py-1 w-fit text-center uppercase rounded-full text-white text-sm font-medium ${order.type === "team"
+                                  ? "bg-green-500"
+                                  : order.type === "coach"
+                                    ? "bg-yellow-500"
+                                    : "bg-red-500"
+                                }`}
+                            >
+                              {order.type}
+                            </span>
+                          </div>
+                        </a>
                       </td>
                       <td>{order.message}</td>
                       <td>
                         <button
-                          className={`px-4 py-2 rounded-lg text-white ${
-                            order.status === 'Accepted'
+                          className={`px-4 py-2 rounded-lg text-white ${order.status === 'Accepted'
                               ? 'bg-green-500'
                               : order.status === 'Requested'
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
-                          }`}
+                                ? 'bg-yellow-500'
+                                : 'bg-red-500'
+                            }`}
                           onClick={() => {
                             if (order.status === 'Requested') {
                               setSelectedOrder(order);
@@ -207,11 +237,10 @@ const Home: React.FC = () => {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-                  currentPage === 1
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 1
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-blue-500 text-white hover:bg-blue-600'
-                }`}
+                  }`}
               >
                 Previous
               </button>
@@ -223,11 +252,10 @@ const Home: React.FC = () => {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-                  currentPage === totalPages
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === totalPages
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-blue-500 text-white hover:bg-blue-600'
-                }`}
+                  }`}
               >
                 Next
               </button>

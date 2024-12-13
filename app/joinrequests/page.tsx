@@ -7,9 +7,11 @@ import Sidebar from '../components/Sidebar';
 interface Order {
   id: number;
   requestedToName: string;
+  requestedToImage: string;
   message: string;
   status: string;
   type: string;
+  slug: string;
  
 }
 
@@ -105,23 +107,40 @@ const Home: React.FC = () => {
         <td>{(currentPage - 1) * limit + index + 1}</td>
        
        
-        <td className="flex flex-col items-left space-y-2">
-  {/* Name on top */}
-  <span className="">{order.requestedToName}</span>
+        <td className="flex items-center space-x-4">
+        <a
+      href={`/coach/${order.slug}`} // Dynamic URL for the user's profile
+      className="font-medium text-gray-800 flex items-center space-x-4" target='_blank'
+    >
+  <div className="w-12 h-12 rounded-full overflow-hidden">
+    <img
+      src={order.requestedToImage !== 'null' ? order.requestedToImage : '/default.jpg'}
+      alt={`${order.requestedToName}'s profile`}
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-  {/* Type as a badge */}
-  <span
-    className={`px-4 py-1 w-[100px] text-center uppercase rounded-full text-white text-sm font-medium ${
-      order.type === "team"
-        ? "bg-green-500"
-        : order.type === "coach"
-        ? "bg-yellow-500"
-        : "bg-red-500"
-    }`}
-  >
-    {order.type}
-  </span>
+  {/* Name and Type */}
+  <div className="flex flex-col">
+    {/* Name */}
+    <span className="font-medium text-gray-800">{order.requestedToName}</span>
+
+    {/* Type as a badge */}
+    <span
+      className={`px-4 py-1 w-fit text-center uppercase rounded-full text-white text-sm font-medium ${
+        order.type === "team"
+          ? "bg-green-500"
+          : order.type === "coach"
+          ? "bg-yellow-500"
+          : "bg-red-500"
+      }`}
+    >
+      {order.type}
+    </span>
+  </div>
+  </a>
 </td>
+
 
         <td>{order.message}</td>
         <td><button

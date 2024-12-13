@@ -69,19 +69,35 @@ if(!type)
     type: joinRequest.type,
     status: joinRequest.status,
     requestToID: joinRequest.requestToID,
+     
     requestedToName: sql`
       CASE 
         WHEN ${joinRequest.type} = 'club' THEN ${enterprises.organizationName}
-        WHEN ${joinRequest.type} = 'coach' THEN ${coaches.firstName}
+        WHEN ${joinRequest.type} = 'coach' THEN CONCAT(${coaches.firstName}, ' ', ${coaches.lastName})
         WHEN ${joinRequest.type} = 'team' THEN ${teams.team_name}
       END
     `.as('requestedToName'),
+    requestedToImage: sql`
+      CASE
+        WHEN ${joinRequest.type} = 'coach' THEN ${coaches.image}
+        WHEN ${joinRequest.type} = 'team' THEN ${teams.logo}
+        WHEN ${joinRequest.type} = 'club' THEN ${enterprises.logo}
+      END
+    `.as('requestedToImage'),
+    slug: sql`
+      CASE
+        WHEN ${joinRequest.type} = 'club' THEN ${enterprises.slug}
+        WHEN ${joinRequest.type} = 'coach' THEN ${coaches.slug}
+        WHEN ${joinRequest.type} = 'team' THEN ${teams.slug}
+      END
+    `.as('slug'),
   })
   .from(joinRequest)
   .leftJoin(enterprises, sql`${joinRequest.type} = 'club' AND ${joinRequest.requestToID} = ${enterprises.id}`)
   .leftJoin(coaches, sql`${joinRequest.type} = 'coach' AND ${joinRequest.requestToID} = ${coaches.id}`)
   .leftJoin(teams, sql`${joinRequest.type} = 'team' AND ${joinRequest.requestToID} = ${teams.id}`)
-  .where(eq(joinRequest.player_id,Number(player_id)));
+  .where(eq(joinRequest.player_id, Number(player_id)));
+
 
 // Convert result to plain JavaScript objects
 const plainResult = queryResult.map(row => ({
@@ -94,6 +110,8 @@ const plainResult = queryResult.map(row => ({
   status: row.status,
   message: row.message,
   requestedToName: row.requestedToName,
+  requestedToImage: row.requestedToImage,
+  slug: row.slug,
 }));
 return NextResponse.json({ data: plainResult }, { status: 200 });
 }
@@ -112,6 +130,8 @@ return NextResponse.json({ data: plainResult }, { status: 200 });
     requestToID: joinRequest.requestToID,
     first_name: users.first_name,
     last_name: users.last_name,
+    image: users.image,
+    slug: users.slug,
      
   })
   .from(joinRequest)
@@ -129,12 +149,14 @@ const plainResult = queryResult.map(row => ({
   playerId: row.playerId,
   coachId: row.coachId,
   clubId: row.clubId,
-  type: row.type,
+  type: 'player',
   requestToID: row.requestToID,
   status: row.status,
   message: row.message,
   first_name: row.first_name,
   last_name: row.last_name,
+  image: row.image,
+  slug: row.slug,
 }));
 return NextResponse.json({ data: plainResult }, { status: 200 });
 }
