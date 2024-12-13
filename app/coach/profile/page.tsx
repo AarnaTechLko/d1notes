@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../../components/coach/Sidebar';
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
+import { countryCodesList, states } from '@/lib/constants';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -22,6 +23,11 @@ const Profile: React.FC = () => {
     image: "",
     certificate: "",
     password: "",
+    countrycode: "",
+    country: "",
+    state: "",
+     
+    city: "",
   });
 
   const { data: session, status } = useSession();
@@ -83,6 +89,7 @@ const Profile: React.FC = () => {
     try {
       const session = await getSession();
       const coachId = session?.user.id;
+     
       const response = await fetch('/api/coach/profile', {
         method: 'PUT',
         headers: {
@@ -122,7 +129,25 @@ const Profile: React.FC = () => {
       console.error("Error updating profile:", error);
     }
   };
-  
+  const formatPhoneNumber = (value: string) => {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, ""); // Remove all non-numeric characters
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+  const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedNumber = formatPhoneNumber(event.target.value);
+    setProfileData({ ...profileData, phoneNumber: formattedNumber });
+  };
 
   const triggerImageUpload = () => {
     imageInputRef.current?.click();
@@ -158,7 +183,7 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-              <label className="block text-lg font-medium text-gray-700">Profile Image</label>
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
               <div
                 onClick={triggerImageUpload}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
@@ -188,10 +213,10 @@ const Profile: React.FC = () => {
             </div>
 
             {/* Profile Information Form */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-lg font-medium text-gray-700">First Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -207,7 +232,7 @@ const Profile: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-lg font-medium text-gray-700">Last Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -220,10 +245,62 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium text-gray-800">{profileData.lastName}</p>
                 )}
               </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="expectedCharge"
+                    value={profileData.expectedCharge}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.expectedCharge}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
+
+                <div className="flex">
+                {isEditMode ? (
+                  <>
+    <select 
+      name="countrycode" 
+      className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
+      value={profileData.countrycode} 
+      onChange={handleChange}
+    >
+      <option value="">Select</option>
+     {countryCodesList.map((item) => (
+        <option key={item.id} value={item.code}>
+          {item.code} ({item.country})
+        </option>
+      ))}
+    </select>
+
+    <input
+      placeholder="(342) 342-3423"
+      type="text"
+      name="number"
+      className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
+      value={profileData.phoneNumber}
+      onChange={handlePhoneNumberChange}
+      maxLength={14} // (123) 456-7890 is 14 characters long
+    /></>
+                ):(
+                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.countrycode} {profileData.phoneNumber}</p>
+                )}
+  </div>
+
+ 
+               
+              </div>
 
               {/* Email */}
               <div>
-                <label className="block text-lg font-medium text-gray-700">Email</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Email<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -236,26 +313,11 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium text-gray-800">{profileData.email}</p>
                 )}
               </div>
-
-              {/* Phone Number */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Phone Number</label>
-                {isEditMode ? (
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={profileData.phoneNumber}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.phoneNumber}</p>
-                )}
-              </div>
+ 
 
               {/* Gender */}
               <div>
-                <label className="block text-lg font-medium text-gray-700">Gender</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="gender"
@@ -273,25 +335,11 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-              {/* Location */}
-              <div>
-                <label className="block text-lg font-medium text-gray-700">Location</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="location"
-                    value={profileData.location}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.location}</p>
-                )}
-              </div>
+           
 
               
               <div>
-                <label className="block text-lg font-medium text-gray-700">Sport</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">You Coach<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -310,7 +358,7 @@ const Profile: React.FC = () => {
 
               {/* Club Name */}
               <div>
-                <label className="block text-lg font-medium text-gray-700">Club/Company Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -324,9 +372,66 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-              {/* Qualifications */}
-              <div >
-                <label className="block text-lg font-medium text-gray-700">Qualifications</label>
+
+              <div>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
+          {isEditMode ? (
+          <select
+            name="country"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={profileData.country  ?? ""}
+            onChange={handleChange}
+          >
+            <option value="">Select</option>
+            <option value="United States of America">United States of America</option>
+           
+          </select>
+           ) : (
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
+          
+          {isEditMode ? (
+          <select
+        name="state"
+        id="state"
+        value={profileData.state  ?? ""}
+        onChange={handleChange}
+        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+      >
+        <option value="">Select a state</option>
+        {states.map((state) => (
+          <option key={state.abbreviation} value={state.abbreviation}>
+            {state.name}
+          </option>
+        ))}
+      </select>
+          ):(
+<p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
+          )}
+          
+        </div>
+        <div>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
+          {isEditMode ? (
+          <input
+            type="text"
+            name="city"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+            value={profileData.city  ?? ""}
+            onChange={handleChange}
+          />
+          ):(
+            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.city}</p>
+          )}
+          
+        </div>
+        </div>
+        <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Qualifications<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <textarea
                     name="qualifications"
@@ -342,23 +447,8 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-              <div >
-                <label className="block text-lg font-medium text-gray-700">Password</label>
-                {isEditMode ? (
-                 <input
-                 type="password"
-                 name="password"
-                 value={profileData.password}
-                 onChange={handleChange}
-                 className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-               />
-                ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
-                    ******************
-                  </p>
-                )}
-              </div>
-            </div>
+            
+             
 
             {/* Certificate Image Thumbnail */}
             <div className="mt-8">

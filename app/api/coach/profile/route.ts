@@ -31,7 +31,11 @@ import { SECRET_KEY } from '@/lib/constants';
           sport:coaches.sport,
           clubName:coaches.clubName,
           qualifications:coaches.qualifications,
-          certificate:coaches.certificate
+          certificate:coaches.certificate,
+          country:coaches.country,
+          countrycode:coaches.countrycode,
+          state:coaches.state,
+          city:coaches.city
 
         })
         .from(coaches)
@@ -48,10 +52,14 @@ import { SECRET_KEY } from '@/lib/constants';
           expectedCharge: coach.expectedCharge,
           gender: coach.gender,
           location: coach.location,
+          city: coach.city,
           
           sport:coach.sport,
           qualifications:coach.qualifications,
           clubName:coach.clubName,
+          country:coach.country,
+          state:coach.state,
+          countrycode:coach.countrycode,
           image: coach.image ? `${coach.image}` : null,
           certificate: coach.certificate ? `${coach.certificate}` : null,
         }));
@@ -84,7 +92,11 @@ import { SECRET_KEY } from '@/lib/constants';
         location,
         qualifications,
         sport,
-        password
+        password,
+        city,
+        country,
+        countrycode,
+        state,
         
       } = finalBody;
       let updateData: any = {
@@ -100,6 +112,10 @@ import { SECRET_KEY } from '@/lib/constants';
         expectedCharge: expectedCharge || null,
         qualifications: qualifications || null,
         image: image || null,
+        city: city || null,
+        country: country || null,
+        countrycode: countrycode || null,
+        state: state || null,
       };
 
       if (password) {
@@ -127,7 +143,11 @@ import { SECRET_KEY } from '@/lib/constants';
             sport:coaches.sport,
             clubName:coaches.clubName,
             qualifications:coaches.qualifications,
-            certificate:coaches.certificate
+            certificate:coaches.certificate,
+            city: coaches.city,
+            country: coaches.country,
+            countrycode: coaches.countrycode,
+            state: coaches.state,
   
           }).from(coaches)
         .where(eq(coaches.id, coachId))

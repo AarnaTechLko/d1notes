@@ -33,10 +33,11 @@ const Home: React.FC = () => {
   const [selectedCoach, setSelectedCoach] =useState<Coach | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
+  const [bulkUpload, setBulkUpload] = useState<boolean>(false);
   const [licenseKey, setLicenseKey] = useState<string>('');
   const limit = 10; // Items per page
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
-
+  const [file, setFile] = useState<File | null>(null);
   const { data: session } = useSession();
 
   const fetchCoaches = async (page = 1, searchQuery = '') => {
@@ -70,6 +71,30 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    if(session)
+    formData.append("coach_id", session?.user.id);
+
+    const response = await fetch("/api/coach/upload-csv", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      alert("CSV uploaded and data inserted successfully!");
+    } else {
+      alert("Failed to upload CSV.");
+    }
+  };
+
   const handleEnterLicense = (coach: Coach) => {
     setSelectedCoach(coach);
     handleLoadLicense();
@@ -186,7 +211,7 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-left">
             <input
               type="text"
               placeholder="Search by name, email, or phone"
@@ -199,6 +224,13 @@ const Home: React.FC = () => {
               className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
             >
               Add Player
+            </button>
+
+            <button
+               onClick={() => setBulkUpload(true)}
+              className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
+            >
+              Bulk Upload
             </button>
           </div>
 
@@ -266,7 +298,7 @@ const Home: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7}>No Player found</td>
+                    <td colSpan={9}>No Player found</td>
                   </tr>
                 )}
               </tbody>
@@ -319,6 +351,32 @@ const Home: React.FC = () => {
               </div>
               <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
                 <PlayerForm onSubmit={handleSubmitCoachForm} />
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Modal */}
+        {bulkUpload && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg w-[50%]  overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
+                <h2 className="text-2xl font-semibold text-gray-800">Upload Upload Players</h2>
+                <button
+                  onClick={() => setBulkUpload(false)}
+                  className="text-xl text-gray-600 hover:text-gray-900"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
+              <div>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={(e) => setFile(e.target.files?.[0] || null)}
+      />
+      <button onClick={handleUpload}>Upload CSV</button>
+    </div>
               </div>
             </div>
           </div>
