@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     console.log('Request body:', body); // Log the incoming request body
 
     try {
-        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId,turnaroundTime } = body;
+        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId,turnaroundTime,status } = body;
 
         // Await the insertion and ensure you are capturing the result
         const result = await db.insert(playerEvaluation).values({
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
             turnaroundTime: turnaroundTime,
             coach_id: coachId,
             status:0,
-            payment_status: "Pending",
+            payment_status:status,
             created_at: new Date(),
             updated_at: new Date(),
         }).returning();

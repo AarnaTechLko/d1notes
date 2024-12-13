@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaUser } from 'react-icons/fa';
+import EvaluationModal from './EvaluationModal';
+import { useSession } from 'next-auth/react';
  
 
 interface ProfileCardProps {
@@ -10,13 +12,24 @@ interface ProfileCardProps {
   organization: string;
   image: string;
   rating: number;
+  usedIn?:string;
+  expectedCharge?:number;
+  id?:number;
+  playerClubId?:number;
+  coachClubId?:number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
-    window.location.href = `/coach/${slug}`;
+    window.open(`/coach/${slug}`, '_blank');
   };
+  const [isevaluationModalopen,setIsevaluationModalOpen]=useState(false);
+  const [playerId,setPlayerId]=useState<string>('');
+  const { data: session } = useSession();
+useEffect(()=>{
+  setPlayerId(session?.user?.id || '');
+},[session])
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
   ));
@@ -51,9 +64,35 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
         <span>View Bio</span>
       </button>
     </div>
+    
+  
   </div>
 </div>
-    
+{usedIn && (
+  <div className="mt-2 flex justify-center">
+  <button 
+    onClick={() =>setIsevaluationModalOpen(true)} // Function to redirect to the bio
+    className="flex items-center space-x-2 bg-blue-600 text-white p-2 rounded-sm text-gray-500 mb-5"
+  >
+  Request Evaluation{isevaluationModalopen}
+  </button>
+</div>
+    )}
+{isevaluationModalopen}
+
+{isevaluationModalopen && playerId && (
+        <EvaluationModal
+          amount={expectedCharge || 0}
+          isOpen={isevaluationModalopen}
+          coachId={String(id)}
+          playerId={playerId}
+          onClose={() => setIsevaluationModalOpen(false)}
+          coachClubId={coachClubId}
+          playerClubId={playerClubId}
+        />
+      )}
+
+
     </>
   );
 };

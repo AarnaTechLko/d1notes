@@ -33,6 +33,7 @@ interface CoachData {
   city: string;
   certificate: string;
   image:string;
+  enterprise_id:number;
 }
 
 interface CoachProfileProps {
@@ -54,7 +55,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
   const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
-
+  const [playerClubId,setPlayerClubid]=useState<string>('')
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
@@ -88,7 +89,7 @@ setEvaluationList(responseData.evaluationlist);
 
     fetchCoachData();
     setPlayerId(session?.user?.id || null);
-
+    setPlayerClubid(session?.user?.club_id || '')
   }, [session, slug]);
 
   if (loading) {
@@ -383,6 +384,8 @@ Previous Evaluations
           coachId={coachData.id}
           playerId={playerId}
           onClose={() => setIsevaluationModalOpen(false)}
+          coachClubId={coachData.enterprise_id}
+          playerClubId={Number(playerClubId)}
         />
       )}
 

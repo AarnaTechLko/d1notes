@@ -118,9 +118,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-
-
-
     if (sendedBy != '' && team != '') {
       try {
         await db.insert(teamPlayers).values(

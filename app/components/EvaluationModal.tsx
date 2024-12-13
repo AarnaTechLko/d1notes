@@ -13,9 +13,11 @@ interface EvaluationModalProps {
   coachId: string | null;
   playerId: string | null;
   amount: number | null;
+  coachClubId?:number;
+  playerClubId?:number;
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount,coachClubId ,playerClubId}) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -72,7 +74,14 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       setLoading(false);
       return;
     }
-
+    let status;
+    if(playerClubId!=coachClubId)
+      {
+  status='Pending';
+      }
+      else{
+          status='Paid';
+      }
     try {
       const response = await fetch('/api/evaluation', {
         method: 'POST',
@@ -88,6 +97,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           coachId,
           playerId,
           turnaroundTime,
+          status
         }),
       });
 
@@ -95,6 +105,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         throw new Error('Submission failed');
       }
 
+      if(playerClubId!=coachClubId)
+      {
       const stripe = await stripePromise;
       if (!stripe) {
         throw new Error('Stripe is not loaded');
@@ -132,8 +144,20 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         text: 'Evaluation submitted successfully. You will now be redirected for payment.',
         confirmButtonText: 'Proceed',
       });
+      
 
       window.location.href = '/dashboard';
+    }
+    else{
+      await Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Evaluation submitted successfully.',
+        confirmButtonText: 'Proceed',
+      });
+      onClose();
+    }
+    
     } catch (err: any) {
       setErrors({ general: err.message || 'An error occurred during submission.' });
     } finally {
@@ -159,7 +183,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           <div className="flex">
           <div className="mb-4 w-3/4 ml-1">
             <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
-              Review Title
+              Review Title  {coachClubId}
+              {playerClubId}
             </label>
             <input
               type="text"
@@ -180,7 +205,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
           <div className="mb-4 w-1/4 ml-1">
             <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
-              Turnaround Time
+              Turnaround Time 
             </label>
              <select name='turnaroundtime' value={turnaroundTime} 
              onChange={(e) => {

@@ -6,6 +6,7 @@ import { getSession } from "next-auth/react";
 import { useTable, Column, CellProps } from "react-table"; // Import Column type
 import { Evaluation, EvaluationsByStatus } from "../types/types"; // Import the correct types
 import { FaEye } from "react-icons/fa";
+import ProfileCard from "../components/ProfileCard";
 
 const Dashboard: React.FC = () => {
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
@@ -15,13 +16,32 @@ const Dashboard: React.FC = () => {
     Declined: [],
     Drafted: [],
   });
-
+  interface Profile {
+    id: number;
+    firstName: string;
+    city: string;
+    email: string;
+    lastName: string;
+    organization: string;
+    image: string | null;
+    rating: number;
+    slug: string;
+    clubName: string;
+    gender: string;
+    sport: string;
+    enterprise_id: number;
+    phoneNumber: string;
+    qualifications: string;
+    expectedCharge: number;
+  }
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const [data, setData] = useState<Evaluation[]>([]); // State to hold the data for the table
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentDescription, setCurrentDescription] = useState<string>("");
+  const [coaches, setCoaches] = useState<Profile[]>([]);
+  const [playerClubId,setPlayerClubid]=useState<string>('')
   
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
@@ -44,7 +64,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const userId = session?.user.id;
-    console.log(userId);
+     
 
     if (!userId) {
       throw new Error("User not authenticated");
@@ -75,6 +95,42 @@ const Dashboard: React.FC = () => {
     setData(evaluationsData); // Set the data for the table
     setLoading(false); // Set loading to false after data is fetched
   };
+
+
+  const fetchCoach = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    const session = await getSession();
+    const userId = session?.user.id;
+    const clubId = session?.user.club_id;
+    setPlayerClubid(clubId || '');
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const response = await fetch("/api/player/coaches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clubId,
+        
+      }),
+    });
+
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error("Failed to fetch evaluations");
+    }
+
+    const coachData = await response.json();
+    
+    setCoaches(coachData);
+ 
+    setLoading(false); // Set loading to false after data is fetched
+  };
+  
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
    
@@ -88,6 +144,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // Fetch data for the initially selected tab
     fetchEvaluations(selectedTab);
+    fetchCoach();
   }, [selectedTab]);
 
   // Define columns for the react-table with proper types
@@ -297,7 +354,34 @@ const Dashboard: React.FC = () => {
   </table>
 </div>
         </div>
+ 
+        <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
+          <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Coaches</h3></div>
+        
+      {coaches.map((profile) => (
+                <div className="w-full lg:w-auto" key={profile.id}>
+                  <ProfileCard
+                    key={profile.id}
+                    id={profile.id}
+                    name={profile.firstName}
+                    organization={profile.clubName}
+                    image={profile.image ?? '/default-image.jpg'}
+                    rating={profile.rating}
+                    slug={profile.slug}
+                    usedIn='playerlogin'
+                    playerClubId={Number(playerClubId)}
+                    coachClubId={profile.enterprise_id}
+                  />
+                </div>
+              ))}
+
+
+       
+        </div>
       </main>
+
+
+      
     </div>
   );
 };

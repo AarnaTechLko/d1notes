@@ -26,6 +26,8 @@ interface User {
     sport: string;
     bio: string;
     team: string;
+    qualifications: string;
+    weight: string;
 
 }
 
@@ -41,11 +43,12 @@ const ChatBox: React.FC = () => {
     const { data: session } = useSession();
     const lastMessageRef = useRef(null);
     const [isUserScrolling, setIsUserScrolling] = useState(false);
+    const [loggedInUserType, setLoggedInUserType] = useState<string>();
     const chatBoxRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         const fetchUsers = async () => {
             if (!session?.user?.id) return;
-
+            
             try {
                 const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=${session.user.type}`);
                 const data = await response.json();
@@ -62,11 +65,19 @@ const ChatBox: React.FC = () => {
 
     useEffect(() => {
         if (!selectedUser) return;
-
+        let type;
+        setLoggedInUserType(session?.user?.type);
+        if (session?.user?.type=='coach')
+        {
+            type='player';
+        }
+        else{
+            type='coach';
+        }
         const fetchChatMessages = async () => {
             try {
                 const response = await fetch(
-                    `/api/chats?receiver_id=${selectedUser.user_id}&type=${selectedUser.type}&sentFor=${session?.user.id}`
+                    `/api/chats?receiver_id=${selectedUser.user_id}&type=${type}&sentFor=${session?.user.id}`
                 );
                 const data = await response.json();
 
@@ -281,29 +292,65 @@ const ChatBox: React.FC = () => {
 
 
                 <div className="col-span-1 md:col-span-3 bg-white border-l border-gray-300 flex flex-col p-4">
-          <h2 className="text-xl font-semibold mb-4">Player Profile</h2>
-          {selectedUser && (
-            <div className="flex flex-col items-center mb-4">
-              <img
-                src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-                alt="User Avatar"
-                className="rounded-full mb-2 h-32 w-32"
-              />
-              <div className="text-center">
-                <h3 className="font-semibold text-lg"></h3>
-                <p className="text-sm text-gray-500"><b>Location:</b> {selectedUser.location} </p>
-                <p className="text-sm text-gray-500"><b>Team/Club:</b> {selectedUser.team}</p>
-               
-                <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
-                <p className="text-sm text-gray-500"><b>Bio:</b> {selectedUser.bio}</p>
-              </div>
-              <a
-                href={`/players/${selectedUser.slug}`}
-                className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
-              >
-                <FaEye className="mr-1" /> View Profile
-              </a>
-            </div>
+                {selectedUser && (
+                    <>
+                    {loggedInUserType=='player' && (
+                        <>
+ <h2 className="text-xl font-semibold mb-4">Coach Profile</h2>
+ <div className="flex flex-col items-center mb-4">
+ <img
+   src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+   alt="User Avatar"
+   className="rounded-full mb-2 h-32 w-32"
+ />
+ <div className="text-center">
+   <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+   <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
+   <p className="text-sm text-gray-500"><b>Qualifications:</b> {selectedUser.qualifications}</p>
+  
+   <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
+   
+ </div>
+ <a
+   href={`/coach/${selectedUser.slug}`}
+   className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
+ >
+   <FaEye className="mr-1" /> View Profile
+ </a>
+</div>
+</>
+                    )}
+                   
+                   {loggedInUserType=='coach' && (
+                        <>
+ <h2 className="text-xl font-semibold mb-4">Coach Profile</h2>
+ <div className="flex flex-col items-center mb-4">
+ <img
+   src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+   alt="User Avatar"
+   className="rounded-full mb-2 h-32 w-32"
+ />
+ <div className="text-center">
+   <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+   <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
+   <p className="text-sm text-gray-500"><b>Location:</b> {selectedUser.location}</p>
+  
+   <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
+   <p className="text-sm text-gray-500"><b>Height:</b> {selectedUser.height}</p>
+   <p className="text-sm text-gray-500"><b>Weight:</b> {selectedUser.weight} Lbs</p>
+   
+ </div>
+ <a
+   href={`/players/${selectedUser.slug}`}
+   className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
+ >
+   <FaEye className="mr-1" /> View Profile
+ </a>
+</div>
+</>
+                    )}
+
+            </>
           )}
         </div>
 
