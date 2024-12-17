@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus, FaUser } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
-
+  const [isDocListOpen, setIsDocListOpen] = useState(false);
+  const { data: session } = useSession();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   const toggleEvaluationList = () => {
     setIsEvaluationListOpen((prev) => !prev);
   };
+  const toggleDocList = () => {
+    setIsDocListOpen((prev) => !prev); // Toggle DOC submenu
+  };
   const handleLogout = async () => {
     await signOut(); // Sign out using NextAuth.js
-    localStorage.setItem('userImage', '')
+   
     window.location.href = '/login';
   };
 
   return (
     <div>
-      {/* Mobile Menu Toggle Button */}
+     
       <button
         className="md:hidden text-white bg-gray-800 p-2 mt-1 focus:outline-none absolute top-4 left-4 z-50"
         onClick={toggleSidebar}
       >
         <FaBars className="text-2xl" />
       </button>
-
-      {/* Sidebar */}
+      {/* {JSON.stringify(session, null, 2)} */}
+    
       <aside
         className={`mt-0.5 fixed top-0 left-0 h-full bg-gray-800 text-white w-64 transform ${
           isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
@@ -93,6 +97,31 @@ const Sidebar: React.FC = () => {
               <span>Purchase Licenses</span>
             </a>
           </li>
+
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+              <button onClick={toggleDocList} className="flex items-center space-x-2 p-2 w-full text-left">
+                <FaUser className='text-xl'/>
+                <span>DOC</span>
+              </button>
+              {/* Submenu for DOC */}
+              {isDocListOpen && (
+                <ul className="pl-8 space-y-2">
+                  <li className="hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/enterprise/doc/overview" className="flex items-center space-x-2 p-2">
+                      <FaUserPlus className="text-lg" />
+                      <span>Add Doc</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-700 rounded transition duration-200">
+                    <a href="/enterprise/roles" className="flex items-center space-x-2 p-2">
+                      <FaClipboardList className="text-lg" />
+                      <span>Roles</span>
+                    </a>
+                  </li>
+                  {/* Add more DOC submenu items as needed */}
+                </ul>
+              )}
+            </li>
         
          
          

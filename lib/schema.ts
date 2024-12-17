@@ -231,6 +231,8 @@ export const enterprises=pgTable('enterprises', {
   logo: text('logo'),
   affiliationDocs: text('affiliationDocs'),
   slug: text('slug'),
+  parent_id: integer('parent_id'),
+  role_id: integer('role_id'),
   password: text('password').notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
@@ -357,3 +359,19 @@ export const chats=pgTable("chats",{
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+
+export const modules=pgTable("modules",{
+  id: serial("id").primaryKey(),
+  name:text("name"),
+  module_fields:text("module_fields"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
+export const roles=pgTable("roles",{
+  id: serial("id").primaryKey(),
+  club_id:integer("club_id"),
+  role_name:text("role_name"),
+  module_id:text("module_id"),
+  permissions:text("permissions"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});

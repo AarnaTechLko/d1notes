@@ -21,6 +21,7 @@ interface ExtendedUser {
   club_id?: string | null;
   expectedCharge?: string | null;
   club_name?: string | null;
+  added_by?: string | null;
 }
   
 const handler = NextAuth({
@@ -57,7 +58,8 @@ const handler = NextAuth({
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id:coach[0].id,
               club_id:coach[0].enterprise_id ?? '',
-              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
+              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
+              added_by:null
             };
           }
         } else if (loginAs === 'player') {
@@ -80,7 +82,8 @@ const handler = NextAuth({
               expectedCharge:0,
               coach_id:user[0].coach_id,
               club_id:user[0].enterprise_id,
-              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
+              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
+              added_by:null
             };
           }
         }
@@ -103,7 +106,7 @@ const handler = NextAuth({
               image: team[0].logo === 'null' ? '/default.jpg' : team[0].logo,
               expectedCharge:0,
               coach_id:team[0].coach_id,
-               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : ''
+               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',added_by:null
             };
           }
         }
@@ -112,17 +115,36 @@ const handler = NextAuth({
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
             return null; // Invalid credentials
           } else {
-            return {
-              id: enterprise[0].id.toString(),
-              name: enterprise[0].organizationName,
-              email: enterprise[0].email,
-              package_id: enterprise[0].package_id,
-              expectedCharge:0,
-              type: 'enterprise', // Custom field indicating player
-              image:enterprise[0].logo,
-              coach_id:null,
-              club_id:null
-            };
+            if(enterprise[0].role_id!=null)
+            {
+              return {
+                id: enterprise[0]?.parent_id?.toString() || '',
+                name: enterprise[0]?.organizationName || '',
+                email: enterprise[0]?.email || '',
+                package_id: enterprise[0]?.package_id || null,
+                expectedCharge: 0,
+                type: 'enterprise', // Custom field indicating player
+                image: enterprise[0]?.logo || '',
+                coach_id: null,
+                club_id: null,
+                added_by:enterprise[0].id.toString()
+              };
+            }
+            else{
+              return {
+                id: enterprise[0].id.toString(),
+                name: enterprise[0].organizationName,
+                email: enterprise[0].email,
+                package_id: enterprise[0].package_id,
+                expectedCharge:0,
+                type: 'enterprise', // Custom field indicating player
+                image:enterprise[0].logo,
+                coach_id:null,
+                club_id:null,
+                added_by:null
+              };
+            }
+            
           }
         }
         return null;
@@ -150,6 +172,7 @@ secret:SECRET_KEY,
         token.image = extendedUser.image;
         token.expectedCharge = extendedUser.expectedCharge;
         token.club_name = extendedUser.club_name;
+        token.added_by = extendedUser.added_by;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -168,6 +191,7 @@ secret:SECRET_KEY,
         session.user.image = token.image as string | null;
         session.user.expectedCharge = token.expectedCharge as string | null;
         session.user.club_name = token.club_name as string | null;
+        session.user.added_by = token.added_by as string | null;
         //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session

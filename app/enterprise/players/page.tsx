@@ -21,6 +21,7 @@ interface Coach {
   status:string;
   position: string;
   team: string;
+  slug: string;
 }
 
 const Home: React.FC = () => {
@@ -185,21 +186,30 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-          <div className="flex justify-between items-center">
-            <input
-              type="text"
-              placeholder="Search by name, email, or phone"
-              className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={search}
-              onChange={handleSearchChange}
-            />
-            <button
-              onClick={handleAddCoachClick}
-              className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
-            >
-              Add Player
-            </button>
-          </div>
+        <div className="flex justify-between items-center">
+  <input
+    type="text"
+    placeholder="Search by name, email, or phone"
+    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={search}
+    onChange={handleSearchChange}
+  />
+  <div className="flex space-x-4">
+    <button
+      onClick={handleAddCoachClick}
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
+    >
+      Add Player
+    </button>
+    <a
+     href={`/enterprise/massupload`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Mass Upload
+    </a>
+  </div>
+</div>
+
 
         
             <table className="w-full text-sm text-left text-gray-700 mt-4">
@@ -228,19 +238,20 @@ const Home: React.FC = () => {
                   coaches.map((coach) => (
                     <tr key={coach.id}>
                       <td className='text-center'> 
-                      {coach.image === null || coach.image === '' ? (
+                      <a href={`/players/${coach.slug}`} target='_blank'>
+                        {coach.image === null || coach.image === '' ? (
                           <img
                             src={defaultImage.src}
-                            className="rounded-full w-32 h-32 object-cover m-auto"
+                            className="rounded-full w-16 h-16 object-cover m-auto"
                             alt={`${coach.first_name} ${coach.last_name}`}
                           />
                         ) : (
                       <img
     src={coach.image} // Use defaultImage if coach.image is null or empty
-    className="rounded-full w-32 h-32 object-cover m-auto"
+    className="rounded-full w-16 h-16 object-cover m-auto"
     alt={`${coach.first_name} ${coach.last_name}`}
   />)}
-                        {coach.first_name} {coach.last_name}</td>
+                        {coach.first_name} {coach.last_name}</a></td>
                       <td>{coach.gender}</td>
                       <td>{coach.email}</td>
                       <td>{coach.countrycode}{coach.number}</td>
