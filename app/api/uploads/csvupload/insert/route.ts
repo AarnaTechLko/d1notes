@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
 import { eq } from "drizzle-orm";
-import { users } from '../../../../../lib/schema';
+import { users,teamPlayers } from '../../../../../lib/schema';
 import { number } from 'zod';
 import { sendEmail } from '@/lib/helpers';
 
@@ -24,6 +24,7 @@ import { sendEmail } from '@/lib/helpers';
       const payload = body.csvData;
       const coach_id = body.coach_id;
       const enterprise_id = body.enterprise_id;
+      const team_id = body.team_id;
   
       if (!Array.isArray(payload)) {
         return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
@@ -33,7 +34,8 @@ import { sendEmail } from '@/lib/helpers';
       const insertData = await Promise.all(payload.map(async (item) => {
         const password = generateRandomPassword(10);
         const hashedPassword = await hash(password, 10);
-  
+        const timestamp = Date.now();
+        const slug = `${item.FirstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
         
   
         const emailResult = await sendEmail({
@@ -61,12 +63,20 @@ import { sendEmail } from '@/lib/helpers';
           bio: null,
           birthday: null,
           password: hashedPassword,
+          slug: slug,
         };
       }));
   
       // Insert data into the database
-      await db.insert(users).values(insertData);
+      const insertedPlayers = await db.insert(users).values(insertData).returning({ id: users.id });;
   
+      const teamPlayerData = insertedPlayers.map(player => ({
+        teamId: Number(team_id),           // Adjusted to match the schema
+        playerId: player.id,       // Adjusted to match the schema
+        enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+      }));
+      
+      await db.insert(teamPlayers).values(teamPlayerData);
       return NextResponse.json({ success: true, message: 'Players inserted and emails sent successfully' });
     } catch (error) {
       console.error('Error:', error);

@@ -171,7 +171,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             />
           )}
 
-{coachData.image && coachData.image == 'null' && (
+{ coachData.image === 'null' || coachData.image === null && (
             <img
               src='/default.jpg'
               alt="Player Thumbnail"
@@ -184,7 +184,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           {/* Text Section */}
           <div className="flex flex-col justify-start items-start">
             <h3 className="text-4xl font-semibold text-white text-stroke mt-8">
-              <span className="bg-blue-500 text-xl p-2 text-white">{coachData.jersey}</span> {coachData.first_name} {coachData.last_name}
+              <span className="bg-blue-500 text-xl p-2 text-white">{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
             </h3>
 
             <div className='bg-white p-6 w-full mt-7'>
