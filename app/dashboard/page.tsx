@@ -304,7 +304,7 @@ const Dashboard: React.FC = () => {
             </div>
 
           {/* Table to display evaluations */}
-          <div className="overflow-x-auto">
+          <div className=" overflow-x-auto max-h-[400px] overflow-y-auto">
   <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
     <thead>
       {tableInstance.headerGroups.map((headerGroup) => (

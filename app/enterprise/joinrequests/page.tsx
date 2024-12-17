@@ -154,7 +154,7 @@ const Home: React.FC = () => {
                 <tr>
                   <th>Sr. No.</th>
                   <th>Player Name</th>
-                  <th>Message</th>
+                  <th>Notes</th>
                   <th>Status</th>
                 </tr>
               </thead>

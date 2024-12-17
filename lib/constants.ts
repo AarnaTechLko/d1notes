@@ -2,6 +2,13 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/';
 export const BASEURL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 export const SECRET_KEY = process.env.SECRET_KEY || 'JHGJHG&^*&^*&HGJHGJ657668768JHJHGJHG*&^*&^*&^';
+export const Grades=[
+  {id:1, label:"Preschool/Pre-Kindergarten", value:"Preschool/Pre-Kindergarten" },
+  {id:2, label:"Kindergarten", value:"Kindergarten" },
+  {id:3, label:"Elementary School", value:"Elementary School" },
+  {id:4, label:"Middle School/Junior High School", value:"Middle School/Junior High School" },
+  {id:5, label:"High School", value:"High School" }
+];
 export const countryCodesList = [
     { id: 1, code: "+1", country: "USA" },
     { id: 2, code: "+44", country: "UK" },
@@ -143,7 +150,7 @@ export const genders=[
   { value:"", label:"Select"},
   { value:"Male", label:"Male"},
   { value:"Female", label:"Female"},
-  { value:"Non Binary", label:"Non Binary"}
+  // { value:"Non Binary", label:"Non Binary"}
 ];
 
 export const playingLevels=[

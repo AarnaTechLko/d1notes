@@ -17,6 +17,7 @@ import FileUploader from '@/app/components/FileUploader';
 const formSchema = z.object({
   organizationName: z.string().min(1, 'Organization Name is required.'),
   contactPerson: z.string().min(1, 'Contact Person is required.'),
+  owner_name: z.string().min(1, 'Owner Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
   address: z.string().min(1, 'Address is required.'),
@@ -38,6 +39,7 @@ export default function Signup() {
   const pdfInputRef = useRef<HTMLInputElement | null>(null);
     const [formValues, setFormValues] = useState<FormValues>({
     organizationName: '',
+    owner_name: '',
     contactPerson: '',
     email: '',
     mobileNumber: '',
@@ -232,9 +234,23 @@ export default function Signup() {
             </div>
 
             {/* Contact Person */}
-            <div className="mb-4">
+            <div className="mb-4 md:flex md:space-x-4">
+            <div className="flex-1">
               <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
-                Contact Person<span className="mandatory">*</span>
+               Owner Name<span className="mandatory">*</span>
+              </label>
+              <input
+                type="text"
+                name="owner_name"
+                value={formValues.owner_name}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex-1">
+              <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
+               Player Director<span className="mandatory">*</span>
               </label>
               <input
                 type="text"
@@ -243,6 +259,7 @@ export default function Signup() {
                 onChange={handleChange}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
             </div>
 
             {/* Email and Mobile Number */}

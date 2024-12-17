@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const organizationName = formData.get('organizationName') as string;
     const contactPerson = formData.get('contactPerson') as string;
+    const owner_name = formData.get('owner_name') as string;
     const email = formData.get('email') as string;
     const mobileNumber = formData.get('mobileNumber') as string;
     const address = formData.get('address') as string;
@@ -51,6 +52,7 @@ export async function POST(req: NextRequest) {
             city,
             logo,
             affiliationDocs,
+            owner_name,
             password: hashedPassword, 
             slug, // Adding the hashed password
             createdAt: new Date(),

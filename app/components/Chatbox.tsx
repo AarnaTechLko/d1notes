@@ -252,38 +252,46 @@ const ChatBox: React.FC = () => {
 
 
                             <div className="p-2 border-t bg-white relative">
-                                <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2">
+        {/* Emoji Button */}
+        <button
+            onClick={handleEmojiClick}
+            className="text-gray-500 hover:text-gray-800 flex-shrink-0"
+        >
+            <FaSmile />
+        </button>
 
+        {/* Textarea/Input */}
+        <textarea
+    className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
+    placeholder="Send a message"
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    onKeyDown={(e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent adding a new line
+            handleSendMessage(); // Call the send message function
+        }
+    }}
+/>
 
-                                    <button
-                                        onClick={handleEmojiClick}
-                                        className="text-gray-500 hover:text-gray-800"
-                                    >
-                                        <FaSmile />
-                                    </button>
+        {/* Send Button */}
+        <button
+            onClick={handleSendMessage}
+            className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
+        >
+            Send
+        </button>
+    </div>
 
-                                    <input
-                                        type="text"
-                                        className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none"
-                                        placeholder="Send a message"
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                    />
+    {/* Emoji Picker */}
+    {showEmojiPicker && (
+        <div className="absolute bottom-16">
+            <EmojiPicker onEmojiClick={onEmojiClick} />
+        </div>
+    )}
+</div>
 
-                                    <button
-                                        onClick={handleSendMessage}
-                                        className="ml-2 bg-green-500 text-white p-2 rounded-lg"
-                                    >
-                                        Send
-                                    </button>
-                                </div>
-
-                                {showEmojiPicker && (
-                                    <div className="absolute bottom-16">
-                                        <EmojiPicker onEmojiClick={onEmojiClick} />
-                                    </div>
-                                )}
-                            </div>
                         </>
                     )}
                 </div>

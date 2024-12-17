@@ -46,6 +46,7 @@ export const users = pgTable(
     playingcountries: text("playingcountries"),
     height: text("height"),
     weight: text("weight"),
+    graduation: text("graduation"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -55,6 +56,55 @@ export const users = pgTable(
     };
   }
 );
+
+
+
+
+
+
+export const tempusers = pgTable(
+  "tempusers",
+  {
+    id: serial("id").primaryKey(),
+    first_name: varchar("first_name"),
+    last_name: varchar("last_name"),
+    grade_level: varchar("grade_level"),
+    location: varchar("location"),
+    birthday: date("birthday"),
+    gender: varchar("gender"),
+    sport: varchar("sport"),
+    team: varchar("team"),
+    jersey:varchar("jersey"),
+    position: varchar("position"),
+    number: varchar("number"),
+    email: varchar("email").notNull().unique(),
+    image: text("image"),
+    bio:text("bio"),
+    country:varchar("country"),
+    state:varchar("state"),
+    city:varchar("city"),
+    league:text("league"),
+    countrycode:text("countrycode"),
+    password: text("password").notNull(),
+    enterprise_id: text("enterprise_id"),
+    coach_id: text("coach_id"),
+    slug: text("slug"),
+    playingcountries: text("playingcountries"),
+    height: text("height"),
+    weight: text("weight"),
+    graduation: text("graduation"),
+    status: varchar("status").default("Inactive"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (tempusers) => {
+    return {
+      uniqueIdx: uniqueIndex("tempusers_unique_idx").on(tempusers.email), // Renamed index for users
+    };
+  }
+);
+
+
+
 
 // Coaches table
 export const coaches = pgTable(
@@ -169,6 +219,7 @@ export const enterprises=pgTable('enterprises', {
   id: serial('id').primaryKey(),
   organizationName: text('organizationName').notNull(),
   contactPerson: text('contactPerson').notNull(),
+  owner_name: text('owner_name'),
   package_id: integer('package_id'),
   email: text('email').notNull(),
   mobileNumber: text('mobileNumber'),

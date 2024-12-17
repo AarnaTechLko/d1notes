@@ -8,6 +8,7 @@ import { upload } from "@vercel/blob/client";
 import DefaultPic from "../../public/default.jpg";
 import FileUploader from '../components/FileUploader';
 import { FaTrash } from 'react-icons/fa';
+import DefaultBanner from  '../../public/defaultBanner.png'
 
 const Banners: React.FC = () => {
     const [playerId, setPlayerId] = useState<number | null>(null);
@@ -155,32 +156,42 @@ useEffect(() => {
                 <div className="bg-white shadow-md rounded-lg p-6 h-auto">
                     <h3 className='text-xl'>Upload Banners</h3>
                     <form onSubmit={handleUpload}>
-                        <div onClick={handleCoverImageClick} className="cursor-pointer">
-                           
-                            {/* Use Image component to show the preview */}
-                            <Image
-                                src={bannerPhoto || DefaultPic}
-                                alt="Cover Image"
-                                width={300}
-                                height={150}
-                                className="rounded-lg mx-auto"
-                            />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref={coverImageInputRef}
-                                onChange={handleCoverImageChange}
-                                className="hidden"
-                            />
-                           {photoUploading && <FileUploader />}
-                        </div>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg mt-4"
-                        >
-                            Upload Banner
-                        </button>
-                    </form>
+    <div 
+        onClick={handleCoverImageClick} 
+        className="cursor-pointer mt-5 relative group"
+    >
+        {/* Use Image component to show the preview */}
+        <Image
+            src={bannerPhoto || DefaultBanner}
+            alt="Cover Image"
+            className="rounded-lg mx-auto w-full"
+        />
+        <input
+            type="file"
+            accept="image/*"
+            ref={coverImageInputRef}
+            onChange={handleCoverImageChange}
+            className="hidden"
+        />
+
+        {/* Overlay with text */}
+        <div 
+            className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+            <p className="text-white font-medium text-lg">Click to Upload</p>
+        </div>
+
+        {photoUploading && <FileUploader />}
+    </div>
+    <div className="flex justify-center">
+        <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg mt-4 m-auto"
+        >
+            Upload Banner
+        </button>
+    </div>
+</form>
 
                     <h3 className='text-xl mt-10'>Your Banners</h3>
                     <div className="grid grid-cols-3 gap-4 mt-4">

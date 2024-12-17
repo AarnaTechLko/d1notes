@@ -182,6 +182,7 @@ export async function PUT(req: NextRequest) {
   const playingcountries = formData.get('playingcountries') as string;
   const height = formData.get('height') as string;
   const weight = formData.get('weight') as string;
+  const graduation = formData.get('graduation') as string;
   const imageFile = formData.get('image') as string | null;
 
   const playerIDAsNumber = parseInt(playerID, 10);
@@ -214,6 +215,7 @@ export async function PUT(req: NextRequest) {
         playingcountries: playingcountries || null,
         height: height || null,
         weight: weight || null,
+        graduation: graduation || null,
         status: "Active",
 
       })

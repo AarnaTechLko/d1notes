@@ -95,7 +95,7 @@ const Home: React.FC = () => {
                 <tr>
                   <th>Sr. No.</th>
                   <th>Reuqested To</th>
-                  <th>Message</th>
+                  <th>Notes</th>
                   <th>Status</th>
                 </tr>
               </thead>

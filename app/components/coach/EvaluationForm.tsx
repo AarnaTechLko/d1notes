@@ -35,7 +35,8 @@ const tactical = [
     { id: 3, label: 'Decisions w/o Balls', options: ['0', '1', '2', '3', '4', '5'] },
     { id: 4, label: 'Understanding of team play', options: ['0', '1', '2', '3', '4', '5'] },
     { id: 5, label: 'Understanding of Role & Position', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 6, label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5'] }
+    { id: 6, label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5'] },
+    { id: 7, label: 'Scanning', options: ['0', '1', '2', '3', '4', '5'] }
 ];
 
 const physical = [
@@ -315,7 +316,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             <li>[2] Needs improvement</li>
             <li>[3] At competition level</li>
             <li>[4] Above competition level</li>
-            <li>[5] Exceeds competition level</li>
+            <li>[5] Excellent competition level</li>
         </ul>
     </div>
 </div>
@@ -348,7 +349,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                                         rows={3}
                                         placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => setTechnicalRemarks(e.target.value)}
+                                        onChange={(e) => {
+                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                            if (words.length <= 500) {
+                                                setTechnicalRemarks(e.target.value); // Update the value if within limit
+                                            }
+                                        }}
                                     />
                                     {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
                                 </div>
@@ -378,7 +384,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         rows={3}
                                         value={tacticalRemarks}
                                         placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => setTacticalRemarks(e.target.value)}
+                                        onChange={(e) => {
+                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                            if (words.length <= 500) {
+                                                setTacticalRemarks(e.target.value); // Update the value if within limit
+                                            }
+                                        }}
+                                        
                                     />
                                     {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
                                 </div>
@@ -408,7 +420,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         rows={3}
                                         value={physicalRemarks}
                                         placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => setPhysicalRemarks(e.target.value)}
+                                        onChange={(e) => {
+                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                            if (words.length <= 500) {
+                                                setPhysicalRemarks(e.target.value); // Update the value if within limit
+                                            }
+                                        }}
+                                         
                                     />
                                     {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
                                 </div>
@@ -424,7 +442,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     rows={4}
                                     placeholder="Add overall feedback, encouragement… recommendations 
 for how to improve or social media links that demonstrate your feedback are extremely helpful."
-                                    onChange={(e) => setFinalRemarks(e.target.value)}
+onChange={(e) => {
+    const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+    if (words.length <= 1000) {
+        setFinalRemarks(e.target.value); // Update the value if within limit
+    }
+}}
+                                    
                                 />
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>

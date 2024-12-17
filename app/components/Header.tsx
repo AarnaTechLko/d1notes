@@ -9,6 +9,7 @@ import Logo from '../public/images/logo.png';
 import Image from 'next/image';
 import defaultImage from '../public/default.jpg';
 import { MdHelpOutline } from 'react-icons/md';
+import LogoutLoader from './LoggingOut';
 
 const Header: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -23,26 +24,29 @@ const Header: React.FC = () => {
   const createAccountRef = useRef<HTMLLIElement>(null);
   const pathname = usePathname();
   const [createAccountOpen, setCreateAccountOpen] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Refs to detect outside click
   const dropdownRef = useRef<HTMLLIElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
   const handleLogout = async () => {
-     
-    
+    setIsLoggingOut(true); // Show the loader
+
     try {
       const result = await signOut({
         redirect: false, // Prevent automatic redirect by NextAuth
-        callbackUrl: '/login', // Specify the callback URL, but we will handle redirection manually
+        callbackUrl: "/login", // Specify the callback URL, but handle redirection manually
       });
-    
-    if(result.url)
-    {
-      window.location.replace('/login');  
-    }
-     
+
+      // Simulate a delay for UX (optional)
+      setTimeout(() => {
+        if (result.url) {
+          window.location.replace(result.url); // Redirect to the login page
+        }
+      }, 2000);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
+      setIsLoggingOut(false); // Hide the loader in case of an error
     }
   };
 
@@ -92,7 +96,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white shadow-md">
-      
+       {isLoggingOut && <LogoutLoader />}
       <div className="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap justify-between items-center p-4">
         
         {/* Logo section - Adjust for mobile to center logo */}

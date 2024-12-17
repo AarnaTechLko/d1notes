@@ -12,7 +12,7 @@ import { upload } from '@vercel/blob/client';
 import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import FileUploader from "../components/FileUploader";
-import { countryCodesList, states, positionOptionsList, genders, playingLevels, countries } from "@/lib/constants";
+import { countryCodesList, states, positionOptionsList, genders, playingLevels, countries, Grades } from "@/lib/constants";
 import { showError } from "../components/Toastr";
 interface FormValues {
   first_name: string;
@@ -35,6 +35,7 @@ interface FormValues {
   playingcountries: string;
   height: string;
   weight: string;
+  graduation: string;
   image: string | null; // Updated to store Base64 string
 }
 
@@ -61,6 +62,7 @@ export default function Register() {
     playingcountries: "",
     height: "",
     weight: "",
+    graduation: "",
     image: null,
   });
 
@@ -117,20 +119,17 @@ export default function Register() {
     if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
 
     const heightRegex = /^\d{1,2}'\d{1,2}"$/;
-    if (!formValues.height.trim()) {
-      newErrors.height = "Height is required.";
-    } else if (!heightRegex.test(formValues.height.trim())) {
+    if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
       newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
     }
-
     const weightRegex = /^\d+(\.\d{1,2})?$/;
-    if (!formValues.weight.trim()) {
-      newErrors.weight = "Weight is required.";
-    } else if (!weightRegex.test(formValues.weight.trim())) {
+    if (formValues.weight.trim() && !weightRegex.test(formValues.weight.trim())) {
       newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
     }
+    
 
     if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+    if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
     if (!formValues.gender) newErrors.gender = "Gender is required.";
@@ -366,9 +365,10 @@ export default function Register() {
                   />
 
                 </div>
-
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height<span className='mandatory'>*</span></label>
+                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
                   <input
                     type="text"
                     name="height"
@@ -381,7 +381,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)<span className='mandatory'>*</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)</label>
                   <input
                     type="text"
                     name="weight"
@@ -389,6 +389,27 @@ export default function Register() {
                     value={formValues.weight}
                     onChange={handleChange}
                   />
+
+                </div>
+
+
+                <div>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Graduation<span className='mandatory'>*</span></label>
+                  <select
+                    name="graduation"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.graduation}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    {Grades
+                      .map((grade) => (
+                        <option key={grade.label} value={grade.label}>
+                          {grade.label}
+                        </option>
+                      ))}
+
+                  </select>
 
                 </div>
 
