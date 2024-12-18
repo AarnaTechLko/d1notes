@@ -38,23 +38,19 @@ export async function GET(req: NextRequest) {
     }
   ).from(teams)
   .leftJoin(coaches, eq(teams.coach_id, coaches.id))
-  .where(
-    and(
-        eq(teams.creator_id,parseInt(enterpriseId)),
-        eq(teams.created_by,'Enterprise'),
-  )).orderBy(desc(teams.id));
+  .where(eq(teams.club_id,parseInt(enterpriseId))).orderBy(desc(teams.id));
 
   const teamplayersList=await db.select().from(teamPlayers).where(eq(teamPlayers.enterprise_id,parseInt(enterpriseId)));
   return NextResponse.json({data,teamplayersList});
 }
 
 export async function POST(req: NextRequest) {
-  const {team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone } = await req.json();
+  const {team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone,club_id } = await req.json();
   const timestamp = Date.now(); 
   const rpassword=generateRandomPassword(12);
   const password = await hash(rpassword, 10);
   const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id,manager_name, manager_email,manager_phone,password }).returning();
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id,manager_name, manager_email,manager_phone,password,club_id }).returning();
   if (manager_name && manager_email && manager_phone) {
     const emailResult = await sendEmail({
       to: manager_email,

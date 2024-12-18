@@ -34,6 +34,7 @@ type FormValues = {
   manager_name?: string;
   manager_email?: string;
   manager_phone?: string;
+  club_id?: string;
 };
 
 export default function TeamModal({
@@ -64,7 +65,8 @@ export default function TeamModal({
     coach_id:0,
     manager_name: "",
     manager_email: "",
-    manager_phone: ""
+    manager_phone: "",
+    club_id:''
   });
   const [photoUploading, setPhotoUploading] = useState(false);
 
@@ -228,6 +230,11 @@ export default function TeamModal({
       if (!formValues.cover_image) {
         showError("Cover Image is required.");
         return;
+      }
+      if (session?.user.club_id) {
+        formValues.club_id = session.user.club_id;
+      } else {
+        formValues.club_id = session?.user.id || '';
       }
    
      onSubmit(formValues);

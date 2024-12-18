@@ -29,10 +29,13 @@ export async function GET(req: NextRequest) {
             email:enterprises.email,
             phone:enterprises.mobileNumber,
             id:enterprises.id,
+            role_id:roles.id,
             
         }
-    ).from(enterprises).rightJoin(roles, eq(enterprises.role_id, roles.id)).where(eq(enterprises.parent_id,Number(club_id)))
-return NextResponse.json(result, { status: 200 });
+    ).from(enterprises).rightJoin(roles, eq(enterprises.role_id, roles.id)).where(eq(enterprises.parent_id,Number(club_id)));
+
+    const rolesList=await db.select().from(roles).where(eq(roles.club_id, Number(club_id)));
+return NextResponse.json({result,rolesList}, { status: 200 });
 
 }
 
@@ -74,4 +77,59 @@ export async function POST(req: NextRequest) {
 catch(err){
   return NextResponse.json({err}, { status: 500 });
 }
+}
+
+
+
+
+export async function PUT(req: NextRequest) {
+  const body = await req.json();
+  const enterprise_id = body.enterprise_id;
+  const enterproseQuery = await db.select().from(enterprises).where(eq(enterprises.id, body.enterprise_id));
+ 
+
+  try {
+    // Perform the update operation
+    await db.update(enterprises)
+      .set({
+        organizationName: enterproseQuery[0].organizationName,
+        owner_name: enterproseQuery[0].owner_name,
+        address: enterproseQuery[0].address,
+        country: enterproseQuery[0].country,
+        state: enterproseQuery[0].state,
+        city: enterproseQuery[0].city,
+        logo: enterproseQuery[0].logo,
+        slug: enterproseQuery[0].slug,
+        contactPerson: body.name,
+        email: body.email,
+        role_id: body.role_id,
+        parent_id: body.enterprise_id,
+        mobileNumber: body.phone,
+         
+      })
+      .where(eq(enterprises.id, body.id)).execute();  // Ensure you're updating the correct record based on the enterprise_id
+ 
+
+    return NextResponse.json({ body }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ err }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const url = new URL(req.url);
+    const id = url.searchParams.get('id') || '';
+
+  try {
+    const deletedRole = await db.delete(enterprises).where(eq(enterprises.id, parseInt(id))).returning();
+
+    if (deletedRole) {
+      return NextResponse.json({ message: 'Sub Admin deleted successfully' }, { status: 200 });
+    } else {
+      return NextResponse.json({ message: 'Sub Admin not found' }, { status: 404 });
+    }
+  } catch (error) {
+    console.error('Error deleting Sub Admin:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
 }

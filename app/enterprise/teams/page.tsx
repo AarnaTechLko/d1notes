@@ -198,7 +198,7 @@ export default function TeamsPage() {
               {loadingData ? (
                  <tbody>
                   <tr>
-                    <td colSpan={5}> <div className="flex justify-center items-center">
+                    <td colSpan={7}> <div className="flex justify-center items-center">
     <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
   </div></td>
                   </tr>

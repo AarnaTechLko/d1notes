@@ -257,21 +257,29 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-          <div className="flex justify-between items-center">
-            <input
-              type="text"
-              placeholder="Search by name, email, or phone"
-              className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={search}
-              onChange={handleSearchChange}
-            />
-            <button
-              onClick={handleAddCoachClick}
-              className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
-            >
-              Add Coach
-            </button>
-          </div>
+        <div className="flex justify-between items-center">
+  <input
+    type="text"
+    placeholder="Search by name, email, or phone"
+    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={search}
+    onChange={handleSearchChange}
+  />
+  <div className="flex space-x-4">
+    <button
+      onClick={handleAddCoachClick}
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
+    >
+      Add Coach
+    </button>
+    <a
+     href={`/enterprise/massuploadcoach`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Mass Upload
+    </a>
+  </div>
+</div>
 
           <div className="overflow-x-auto">
   <table className="w-full text-sm text-left text-gray-700 mt-4">

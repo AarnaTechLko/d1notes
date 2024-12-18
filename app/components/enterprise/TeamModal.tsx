@@ -5,7 +5,7 @@ import DefaultPic from "../../../public/default.jpg";
 import { z } from "zod";
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from "@vercel/blob/client";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import FileUploader from "../FileUploader";
 import { showError } from "../Toastr";
 import CoverImage from '../../../public/coverImage.jpg'
@@ -34,6 +34,7 @@ type FormValues = {
   manager_name?: string;
   manager_email?: string;
   manager_phone?: string;
+  club_id?: string;
 };
 
 export default function TeamModal({
@@ -50,7 +51,7 @@ export default function TeamModal({
   const [creatorId, setCreatorId] = useState<string | null>(null);
   const [creatorName, setCreatorName] = useState<string | null>(null);
   const [coaches, setCoaches] = useState<{ value: string; label: string }[]>([]);
-
+  const { data: session } = useSession();
   const [selectedCoach, setSelectedCoach] = useState<{ value: string; label: string } | null>(null);
   const [formValues, setFormValues] = useState<FormValues>({
     team_name: "",  // Default to empty string
@@ -64,7 +65,8 @@ export default function TeamModal({
     coach_id:0,
     manager_name: "",
     manager_email: "",
-    manager_phone: ""
+    manager_phone: "",
+    club_id: ""
   });
   const [photoUploading, setPhotoUploading] = useState(false);
 
@@ -315,6 +317,12 @@ export default function TeamModal({
       if (!formValues.cover_image) {
         showError("Cover Image is required.");
         return;
+      }
+
+      if (session?.user.club_id) {
+        formValues.club_id = session.user.club_id;
+      } else {
+        formValues.club_id = session?.user.id || '';
       }
    
      onSubmit(formValues);

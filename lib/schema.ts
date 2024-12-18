@@ -290,6 +290,7 @@ export const teams=pgTable('teams', {
   logo: text('logo').notNull(),
   description: text('description').notNull(),
   created_by: text('created_by').notNull(),
+  club_id: integer('club_id'),
   slug: text('slug').notNull(),
   creator_id: integer('creator_id').notNull(),
   coach_id: integer('coach_id').notNull(),

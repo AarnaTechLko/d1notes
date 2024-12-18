@@ -40,11 +40,6 @@ const Home: React.FC = () => {
 
   const handleUpload = async () => {
   
-    if (selectedTeam=="") {
-        
-        showError("Please select a Team.");
-        return;
-      }
     if (!fileInputRef.current?.files?.length) {
       setIsuploadingcsv(false);
       showError("Please select a file to upload.");
@@ -80,12 +75,11 @@ const Home: React.FC = () => {
     e.preventDefault();
     setIsSubmit(true);
     try {
-      const response = await fetch("/api/uploads/csvupload/insert", {
+      const response = await fetch("/api/uploads/csvupload/coach/insert", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           enterprise_id: session?.user.id,
-          team_id: selectedTeam,
           csvData,
         }),
       });
@@ -122,29 +116,13 @@ const Home: React.FC = () => {
         <div className="w-full h-screen flex justify-center items-center">
           <div className="bg-white h-screen p-4 rounded-lg w-[100%] overflow-hidden relative">
             <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
-              <h2 className="text-xl font-semibold text-gray-800">Bulk Upload Players</h2>
+              <h2 className="text-xl font-semibold text-gray-800">Mass Upload Coach</h2>
             </div>
             <div className="pt-16 pb-4 overflow-y-auto h-screen">
               {showUploadControls && (
                 <>
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2">
-                      Select Team<span className="mandatory">*</span>
-                    </label>
-                    <select
-                      name="team"
-                      onChange={(e) => setSelectedTeam(e.target.value)}
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-[350px]"
-                    >
-                      <option value="">Select Team</option>
-                      {teams.map((team) => (
-                        <option key={team.id} value={team.id}>
-                          {team.team_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mt-5">
+                  
+                  <div className="">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">
                       Upload CSV File<span className="mandatory">*</span>
                     </label>
@@ -154,6 +132,7 @@ const Home: React.FC = () => {
                       accept=".csv"
                       ref={fileInputRef}
                     />
+                    <p className="text-sm text-blue-400"><a href="/CoachCsvSample.csv" download>Click Here to Download Sample CSV</a></p>
                   </div>
                   <div className="mt-5">
                     <button
@@ -198,8 +177,8 @@ const Home: React.FC = () => {
                           <th>Email</th>
                           <th>Country Code</th>
                           <th>Phone Number</th>
-                          <th>League</th>
-                          <th>Experience</th>
+                          <th>Evaluation Charges</th>
+                          
                           <th>Remove</th>
                         </tr>
                       </thead>
@@ -256,26 +235,17 @@ const Home: React.FC = () => {
                                 className="w-full"
                               />
                             </td>
-                            <td>
-                              <input
+                            <td className="flex">
+                              $<input
                                 type="text"
-                                value={row.League}
+                                value={row.EvaluationCharges}
                                 onChange={(e) =>
                                   handleInputChange(index, "League", e.target.value)
                                 }
                                 className="w-full"
                               />
                             </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.Experience}
-                                onChange={(e) =>
-                                  handleInputChange(index, "Experience", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
+                            
                             <td>
                               <button
                                 type="button"

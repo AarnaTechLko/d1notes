@@ -193,7 +193,7 @@ const Sidebar: React.FC = () => {
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <button onClick={toggleDocList} className="flex items-center space-x-2 p-2 w-full text-left">
                 <FaUser className='text-xl' />
-                <span>DOC</span>
+                <span>Sub Admin</span>
               </button>
               {/* Submenu for DOC */}
               {isDocListOpen && (
@@ -201,7 +201,7 @@ const Sidebar: React.FC = () => {
                   <li className="hover:bg-gray-700 rounded transition duration-200">
                     <a href="/enterprise/doc" className="flex items-center space-x-2 p-2">
                       <FaUserPlus className="text-lg" />
-                      <span>Add Doc</span>
+                      <span>Add Sub Admin</span>
                     </a>
                   </li>
                   <li className="hover:bg-gray-700 rounded transition duration-200">
