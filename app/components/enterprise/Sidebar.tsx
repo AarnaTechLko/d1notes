@@ -199,7 +199,7 @@ const Sidebar: React.FC = () => {
               {isDocListOpen && (
                 <ul className="pl-8 space-y-2">
                   <li className="hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/enterprise/doc/overview" className="flex items-center space-x-2 p-2">
+                    <a href="/enterprise/doc" className="flex items-center space-x-2 p-2">
                       <FaUserPlus className="text-lg" />
                       <span>Add Doc</span>
                     </a>
