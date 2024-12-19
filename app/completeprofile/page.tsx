@@ -40,7 +40,7 @@ interface FormValues {
 }
 
 export default function Register() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [formValues, setFormValues] = useState<FormValues>({
     first_name: "",
     last_name: "",
@@ -126,7 +126,7 @@ export default function Register() {
     if (formValues.weight.trim() && !weightRegex.test(formValues.weight.trim())) {
       newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
     }
-    
+
 
     if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
@@ -184,9 +184,9 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      session.user.name=formValues.first_name;
-      session.user.image=formValues.image;
-   
+      session.user.name = formValues.first_name;
+      session.user.image = formValues.image;
+
       const token = localStorage.getItem("token");
       const response = await fetch("/api/register", {
         method: "PUT",
@@ -203,7 +203,7 @@ export default function Register() {
       if (session && session.user.id) {
         const email = session?.user?.email;
       }
-      
+
       router.push("/dashboard");
       ///window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
@@ -365,8 +365,8 @@ export default function Register() {
                   />
 
                 </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
                   <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
                   <input

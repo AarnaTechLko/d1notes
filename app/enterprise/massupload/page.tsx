@@ -2,8 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "../../components/enterprise/Sidebar";
-import { showError, showSuccess } from "@/app/components/Toastr";
+import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
 import { FaCheck, FaSpinner } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 
 type Team = {
@@ -22,7 +23,8 @@ const Home: React.FC = () => {
   const [showUploadControls, setShowUploadControls] = useState(true);
   const { data: session } = useSession();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [failedData, setFailedData] = useState<any[]>([]);
+  const router = useRouter();
   const fetchTeams = async () => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
@@ -39,31 +41,31 @@ const Home: React.FC = () => {
   };
 
   const handleUpload = async () => {
-  
-    if (selectedTeam=="") {
-        
-        showError("Please select a Team.");
-        return;
-      }
+    setFailedData([]);
+    if (selectedTeam == "") {
+
+      showError("Please select a Team.");
+      return;
+    }
     if (!fileInputRef.current?.files?.length) {
       setIsuploadingcsv(false);
       showError("Please select a file to upload.");
       return;
     }
 
-   
+
     const file = fileInputRef.current.files[0];
 
     try {
-        setIsuploadingcsv(true);
-        setShowUploadControls(false);
+      setIsuploadingcsv(true);
+      setShowUploadControls(false);
       const response = await fetch(URL.createObjectURL(file));
       const csvData = await response.text();
       const { data } = Papa.parse(csvData, { header: true, skipEmptyLines: true });
       setCsvData(data);
       setIscsvUploaded(true);
       setIsuploadingcsv(false);
-     
+
     } catch (error) {
       setIsuploadingcsv(false);
       showError("Error in Uploading CSV");
@@ -77,6 +79,7 @@ const Home: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     setIsSubmit(true);
     try {
@@ -90,9 +93,17 @@ const Home: React.FC = () => {
         }),
       });
       if (!response.ok) throw new Error("Failed to submit data");
-
-      setShowUploadControls(false);
-      showSuccess("Successfully Imported Players.");
+      const data = await response.json();
+      if (data.success == false) {
+        setFailedData(data.duplicates);
+        showWarning("Coaches Players. But we have found some duplicate records.");
+      }
+      else {
+        router.push("/enterprise/players");
+        showSuccess("Successfully Imported Players.");
+      }
+      setShowUploadControls(true);
+      setCsvData([]);
       setIsSubmit(false);
     } catch (error) {
       setIsSubmit(false);
@@ -175,21 +186,76 @@ const Home: React.FC = () => {
                   </div>
                 </>
               )}
+              {failedData.length > 0 && (
+                <div className="mt-4">
+                  <h3 className=" text-2xl text-center font-semibold text-red-600">We have found Duplicate Entries</h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    The following entries were not uploaded due to duplicates <span className="text-blue-600">Rest data has been imported Successfully</span>
+                  </p>
+                  <table className="w-full mt-2 border border-gray-300">
+                    <thead>
+                      <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Country Code</th>
+                        <th>Phone Number</th>
+                        <th>League</th>
+                        <th>Experience</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {failedData.map((row, index) => (
+                        <tr key={index} className="bg-red-100">
+                          <td>{row.FirstName}</td>
+                          <td>{row.LastName}</td>
+                          <td>{row.Email}</td>
+                          <td>{row.CountryCode}</td>
+                          <td>{row.PhoneNumber}</td>
+                          <td>{row.League}</td>
+                          <td>{row.Experience}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
               {csvData.length > 0 && (
                 <form onSubmit={handleSubmit}>
                   <div className="mt-4">
-                  <div className="w-full flex items-center justify-between">
-  <div>
-    <h3 className="font-semibold">CSV Data Preview</h3>
-    <p className="text-sm text-red-600">
-      (Preview of the CSV data. You can edit values before submission.)
-    </p>
+                    <div className="w-full flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <h3 className="font-semibold">CSV Data Preview</h3>
+                        <p className="text-sm text-red-600">
+                          (Preview of the CSV data. You can edit values before submission.)
+                        </p>
+                      </div>
+                      <div className="flex space-x-4">
+                        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
+                          Go Back
+                        </button>
+
+                        <button
+                          type="submit"
+                          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          disabled={isSubmit}
+                        >
+                          {isSubmit ? (
+                            <>
+                             <div className="flex items-center">
+    {isSubmit && <FaSpinner className="animate-spin mr-2" />}
+    <span>{isSubmit ? "Submitting..." : "Final Submit"}</span>
   </div>
-  <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
-    Go Back
-  </button>
-</div>
-  
+                            </>
+                          ) : (
+                            "Final Submit"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
                     <table className="w-full mt-2">
                       <thead>
                         <tr>
@@ -289,23 +355,24 @@ const Home: React.FC = () => {
                         ))}
                       </tbody>
                     </table>
-                    <div className="mt-4">
-                      <button
-                        type="submit"
-                        className={`px-4 py-2 bg-blue-500 text-white rounded ${
-                          isSubmit ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                        disabled={isSubmit}
-                      >
-                        {isSubmit ? (
-                          <>
-                            <FaSpinner className="animate-spin mr-2" />
-                            Submitting...
-                          </>
-                        ) : (
-                          "Final Submit"
-                        )}
-                      </button>
+                    <div className="mt-4 text-end">
+                    <button
+                          type="submit"
+                          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          disabled={isSubmit}
+                        >
+                          {isSubmit ? (
+                            <>
+                             <div className="flex items-center">
+    {isSubmit && <FaSpinner className="animate-spin mr-2" />}
+    <span>{isSubmit ? "Submitting..." : "Final Submit"}</span>
+  </div>
+                            </>
+                          ) : (
+                            "Final Submit"
+                          )}
+                        </button>
                     </div>
                   </div>
                 </form>

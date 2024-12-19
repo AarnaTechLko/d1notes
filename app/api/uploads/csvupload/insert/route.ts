@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
-import { eq } from "drizzle-orm";
-import { users,teamPlayers } from '../../../../../lib/schema';
+import { eq, inArray,and } from "drizzle-orm";
+import { users,teamPlayers,licenses } from '../../../../../lib/schema';
 import { number } from 'zod';
 import { sendEmail } from '@/lib/helpers';
 
@@ -30,14 +30,28 @@ import { sendEmail } from '@/lib/helpers';
         return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
       }
   
+      const emails = payload.map((item) => item.Email);
+
+        // Check for existing emails
+        const existingCoaches = await db
+            .select()
+            .from(users)
+            .where(inArray(users.email, emails));
+
+        const existingEmails = existingCoaches.map((coach) => coach.email);
+
+        // Separate duplicates and new records
+        const duplicates = payload.filter((item) => existingEmails.includes(item.Email));
+        const newRecords = payload.filter((item) => !existingEmails.includes(item.Email));
+         
       // Generate hashed passwords and prepare emails
-      const insertData = await Promise.all(payload.map(async (item) => {
+      const insertData = await Promise.all(newRecords.map(async (item) => {
         const password = generateRandomPassword(10);
         const hashedPassword = await hash(password, 10);
         const timestamp = Date.now();
         const slug = `${item.FirstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
         
-  
+        
         const emailResult = await sendEmail({
             to: item.Email,
             subject: "D1 NOTES Player Registration",
@@ -67,8 +81,8 @@ import { sendEmail } from '@/lib/helpers';
         };
       }));
   
-      // Insert data into the database
-      const insertedPlayers = await db.insert(users).values(insertData).returning({ id: users.id });;
+      if (insertData.length > 0) {
+      const insertedPlayers = await db.insert(users).values(insertData).returning({ id: users.id });
   
       const teamPlayerData = insertedPlayers.map(player => ({
         teamId: Number(team_id),           // Adjusted to match the schema
@@ -77,7 +91,45 @@ import { sendEmail } from '@/lib/helpers';
       }));
       
       await db.insert(teamPlayers).values(teamPlayerData);
-      return NextResponse.json({ success: true, message: 'Players inserted and emails sent successfully' });
+
+
+
+      for (const player of insertedPlayers) {
+        const checkLicense = await db
+            .select()
+            .from(licenses)
+            .where(
+                and(
+                    eq(licenses.enterprise_id, enterprise_id),
+                    eq(licenses.status, 'Free'),
+                )
+            );
+
+        if (checkLicense.length > 0) {
+            const updateLicense = await db.update(licenses).set({
+                status: 'Consumed',
+                used_by: player.id.toString(),
+                used_for: 'Player',
+            }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
+
+            if (updateLicense.rowCount > 0) {
+                await db.update(users).set({
+                    status: 'Active'
+                }).where(eq(users.id, player.id));
+            }
+        }
+      }
+    }
+    
+
+if(duplicates.length>0)
+{
+  return NextResponse.json({ success: false, message: 'Players inserted and emails sent successfully', duplicates: duplicates, });
+}
+else{
+  return NextResponse.json({ success: true, message: 'Players inserted and emails sent successfully'});
+}
+      
     } catch (error) {
       console.error('Error:', error);
       return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

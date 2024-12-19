@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../../lib/db';
-import { eq } from "drizzle-orm";
-import { coaches,teamPlayers } from '../../../../../../lib/schema';
+import { eq,and,inArray } from "drizzle-orm";
+import { coaches,teamPlayers, licenses } from '../../../../../../lib/schema';
 import { number } from 'zod';
 import { sendEmail } from '@/lib/helpers';
 
@@ -20,57 +20,106 @@ import { sendEmail } from '@/lib/helpers';
 
   export async function POST(req: NextRequest) {
     try {
-      const body = await req.json();  
-      const payload = body.csvData;
-      const coach_id = body.coach_id;
-      const enterprise_id = body.enterprise_id;
-      const team_id = body.team_id;
-  
-      if (!Array.isArray(payload)) {
-        return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
+        const body = await req.json();
+        const payload = body.csvData;
+        const { coach_id, enterprise_id, team_id } = body;
+
+        if (!Array.isArray(payload)) {
+            return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
+        }
+
+        const emails = payload.map((item) => item.Email);
+
+        // Check for existing emails
+        const existingCoaches = await db
+            .select()
+            .from(coaches)
+            .where(inArray(coaches.email, emails));
+
+        const existingEmails = existingCoaches.map((coach) => coach.email);
+
+        // Separate duplicates and new records
+        const duplicates = payload.filter((item) => existingEmails.includes(item.Email));
+        const newRecords = payload.filter((item) => !existingEmails.includes(item.Email));
+
+        // If duplicates are found, return them immediately
+       
+
+        // Prepare new records for insertion
+        const insertData = await Promise.all(newRecords.map(async (item) => {
+            const password = generateRandomPassword(10);
+            const hashedPassword = await hash(password, 10);
+            const timestamp = Date.now();
+            const slug = `${item.FirstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
+
+            await sendEmail({
+                to: item.Email,
+                subject: "D1 NOTES Coach Registration",
+                text: "D1 NOTES Coach Registration",
+                html: `<p>Dear Coach! Your account creation as a Coach on D1 NOTES has been started. </p><p>Please complete your profile in the next step to enjoy the evaluation from the best coaches.</p>\n\nHere are your login details:\nEmail: ${item.Email}\nPassword: ${password}\n\nPlease change your password upon login.\n\nBest Regards,\nYour Team`,
+            });
+
+            return {
+                firstName: item.FirstName,
+                lastName: item.LastName,
+                email: item.Email,
+                countrycode: item.CountryCode,
+                phoneNumber: item.PhoneNumber,
+                enterprise_id,
+                slug,
+                gender: null,
+                location: null,
+                sport: null,
+                clubName: null,
+                qualifications: null,
+                image: null,
+                rating: null,
+                certificate: null,
+                password: hashedPassword,
+                expectedCharge: item.EvaluationCharges,
+            };
+        }));
+        if (insertData.length > 0) {
+        const insertedPlayers = await db.insert(coaches).values(insertData).returning({ id: coaches.id });
+
+        for (const player of insertedPlayers) {
+            const checkLicense = await db
+                .select()
+                .from(licenses)
+                .where(
+                    and(
+                        eq(licenses.enterprise_id, enterprise_id),
+                        eq(licenses.status, 'Free'),
+                    )
+                );
+
+            if (checkLicense.length > 0) {
+                const updateLicense = await db.update(licenses).set({
+                    status: 'Consumed',
+                    used_by: player.id.toString(),
+                    used_for: 'Player',
+                }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
+
+                if (updateLicense.rowCount > 0) {
+                    await db.update(coaches).set({
+                        status: 'Active'
+                    }).where(eq(coaches.id, player.id));
+                }
+            }
+        }
       }
-  
-      // Generate hashed passwords and prepare emails
-      const insertData = await Promise.all(payload.map(async (item) => {
-        const password = generateRandomPassword(10);
-        const hashedPassword = await hash(password, 10);
-        const timestamp = Date.now();
-        const slug = `${item.FirstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-        
-  
-        const emailResult = await sendEmail({
-            to: item.Email,
-            subject: "D1 NOTES Coach Registration",
-            text: "D1 NOTES Coach Registration",
-            html: `<p>Dear Coach! Your account creation as a Coach on D1 NOTES has been started. </p><p>Please complete your profile in the next step to enjoy the evaluation from the best coaches.</p>\n\nHere are your login details:\nEmail: ${item.Email}\nPassword: ${password}\n\nPlease change your password upon login.\n\nBest Regards,\nYour Team`,
-          });
-  
-        return {
-          firstName: item.FirstName,
-          lastName: item.LastName,
-          email: item.Email,
-          countrycode: item.CountryCode,
-          phoneNumber: item.PhoneNumber,
-          enterprise_id: enterprise_id,
-          slug: slug,
-          gender: null,
-          location: null,
-          sport: null,
-          clubName: null,
-          qualifications: null,
-          image: null,
-          rating: null,
-          certificate: null,
-          password: hashedPassword,
-          expectedCharge: item.EvaluationCharges,
-        };
-      }));
-  
- 
-      const insertedPlayers = await db.insert(coaches).values(insertData);
-      return NextResponse.json({ success: true, message: 'Players inserted and emails sent successfully' });
-    } catch (error) {
-      console.error('Error:', error);
-      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+
+        if(duplicates.length>0)
+          {
+            return NextResponse.json({ success: false, message: 'Coaches inserted and emails sent successfully', duplicates: duplicates, });
+          }
+          else{
+            return NextResponse.json({ success: true, message: 'Coaches inserted and emails sent successfully'});
+          }
+    } catch (error:any) {
+        console.error('Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
     }
-  }
+}
+
+  
