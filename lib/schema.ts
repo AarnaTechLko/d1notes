@@ -350,6 +350,7 @@ export const chatfriend=pgTable("chatfriend",{
   chatto:integer("chatto"),
   chattoname:text("chattoname"),
   chattotype:text("chattotype"),
+  club_id:integer("club_id"),
   
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
@@ -362,6 +363,7 @@ export const chats=pgTable("chats",{
   receiver_type:text("receiver_type"),
   message:text("message"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
+  club_id:integer("club_id"),
 });
 
 

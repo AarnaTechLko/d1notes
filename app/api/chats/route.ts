@@ -7,7 +7,7 @@ import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { sender_id, receiver_id, sender_type, receiver_type, message } = body;
+    const { sender_id, receiver_id, sender_type, receiver_type, message,club_id } = body;
 
     // Define chatValues directly without redeclaring sender_id, etc.
     const chatValues = {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         sender_type,
         receiver_type,
         message,
-        
+        club_id
     };
 
     try {

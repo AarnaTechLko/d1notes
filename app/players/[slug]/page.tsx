@@ -88,7 +88,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setTeamData(responseData.teamplayersList);
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
-        setCoaches(responseData.coachesList);
+        setCoaches(responseData.coachesList || []);
       } catch (err) {
         setError('Some error occurred.');
       } finally {
@@ -209,29 +209,30 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           Coaches
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {coaches.map((item: any) => {
-            
-            return (
-              <CoachProfileCard
-              key={item.id}
-              name={item.coachFirstName}
-              organization={item.clubName}
-              image={item.coachImage ?? '/default-image.jpg'}
-              rating={item.rating}
-              slug={item.slug}
-              />
-            );
-          })}
+         {coaches.length > 0 ? (
+  coaches.map((item: any) => (
+    <CoachProfileCard
+      key={item.id}
+      name={item.coachFirstName}
+      organization={item.clubName}
+      image={item.coachImage ?? '/default-image.jpg'}
+      rating={item.rating}
+      slug={item.slug}
+    />
+  ))
+) : (
+  <p>No Coach Associated</p>
+)}
 
         </div>
       <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Teams
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {teams.map((item: any) => {
-            console.log(item); // Check the structure of item
-            return (
-              <ProfileCard
+        {teams.length > 0 ? (
+          teams.map((item: any) => (
+          
+            <ProfileCard
                 key={item?.teamSlug}
                 creatorname={item.creatorName}
                 teamName={item.teamName} // Ensure `team_name` is correct
@@ -239,36 +240,40 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 rating={5}
                 slug={item.teamSlug}
               />
-            );
-          })}
-
+          ) )) : (
+            <p>No Team(s) Associated</p>
+          )}
         </div>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Teammates
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {restTeams.map((item: any) => {
-            console.log(item); // Check the structure of item
-            return (
-              <PlayerProfileCard
-              key={item.playerSlug}
-              rating={5}
-              coachName=''
-             
-              firstName={toSentenceCase(item.firstName)}
-              lastName={toSentenceCase(item.lastName)}
-              image={item.image ?? '/default.jpg'}
-              jersey={item.jersey}
-              slug={item.playerSlug}
-              position={toSentenceCase(item.position)}
-              grade_level={toSentenceCase(item.grade_level)}
-              location={toSentenceCase(item.location)}
-              height={item.height}
-              weight={item.weight}
-              />
-            );
-          })}
+
+        {restTeams.length > 0 ? (
+          restTeams.map((item: any) => (
+            <PlayerProfileCard
+            key={item.playerSlug}
+            rating={5}
+            coachName=''
+           
+            firstName={toSentenceCase(item.firstName)}
+            lastName={toSentenceCase(item.lastName)}
+            image={item.image ?? '/default.jpg'}
+            jersey={item.jersey}
+            slug={item.playerSlug}
+            position={toSentenceCase(item.position)}
+            grade_level={toSentenceCase(item.grade_level)}
+            location={toSentenceCase(item.location)}
+            height={item.height}
+            weight={item.weight}
+            />
+          ) )) : (
+            <p>No Teammates Found</p>
+          )}
+
+
+          
 
  
         </div>

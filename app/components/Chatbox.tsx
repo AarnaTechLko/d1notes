@@ -10,6 +10,7 @@ interface ChatMessage {
     receiver_type: string;
     message: string;
     createdAt: string;
+    club_id?: number;
 }
 
 interface User {
@@ -130,11 +131,12 @@ const ChatBox: React.FC = () => {
                 sender_id: Number(session.user.id),
                 sender_type: session.user.type,
                 receiver_id: selectedUser.user_id,
-                receiver_type: selectedUser.type,
+                receiver_type : session?.user?.type === "coach" ? "player" : "coach",
+                club_id: Number(session?.user?.club_id) || 0, 
                 message,
                 createdAt: new Date().toISOString(),
             };
-
+            
             await fetch("/api/chats", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
