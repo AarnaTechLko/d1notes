@@ -12,7 +12,7 @@ import Select, { NonceProvider } from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { showError, showSuccess } from "../Toastr";
 import FileUploader from "../FileUploader";
-import { countryCodesList, states, positionOptionsList,genders ,playingLevels, countries} from "@/lib/constants";
+import { countryCodesList, states, positionOptionsList,genders ,playingLevels, countries, Grades} from "@/lib/constants";
 interface PlayerFormProps {
     onSubmit: (formData: any) => void;
 }
@@ -43,6 +43,7 @@ interface FormValues {
   playingcountries:string;
   teamId?:string;
   ownerType:string;
+  graduation:string;
   image: string | null; // Updated to store Base64 string
 }
 const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
@@ -69,6 +70,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     enterprise_id:0,
     license:"",
     playingcountries:"",
+    graduation:"",
     height:"",
     weight:"",
     ownerType:"",
@@ -450,9 +452,9 @@ if (!response.ok) {
         </div>
        </div>
 
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
        <div>
-          <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height<span className='mandatory'>*</span></label>
+          <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
          <input
                     type="text"
                     name="height"
@@ -465,7 +467,7 @@ if (!response.ok) {
         </div>
 
         <div>
-          <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)<span className='mandatory'>*</span></label>
+          <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)</label>
           <input
             type="text"
             name="weight"
@@ -476,7 +478,25 @@ if (!response.ok) {
           
         </div>
 
-        
+        <div>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Graduation</label>
+                  <select
+                    name="graduation"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.graduation}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    {Grades
+                      .map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+
+                  </select>
+
+                </div>
 
         <div>
           <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Playing for Country</label>

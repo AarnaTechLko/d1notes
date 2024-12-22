@@ -10,46 +10,44 @@ import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  // const country = searchParams.get('country') || ''; // Keep the search as a string
-  // const state = searchParams.get('state') || '';  
-  // const city = searchParams.get('city') || '';  
-  // const amount = searchParams.get('amount') || '';  
-  // const rating = searchParams.get('rating') || '';  
+  const country = searchParams.get('country') || ''; // Keep the search as a string
+  const state = searchParams.get('state') || '';  
+  const city = searchParams.get('city') || '';  
+  const graduation = searchParams.get('graduation') || '';  
+  const birthyear = searchParams.get('birthyear') || '';  
+  const position = searchParams.get('position') || '';  
 
   try {
-   // const conditions = [eq(users.status, 'Active')];
+   const conditions = [eq(users.status, 'Active')];
     
 
-    //   if (country) {
-    //     conditions.push(eq(teams.country, country));
-    //   }
-    //   if (state) {
-    //     conditions.push(eq(teams.state, state));
-    //   }
-    //   if (city) {
-    //     conditions.push(ilike(teams.city, city));
-    //   }
+      if (country) {
+        conditions.push(eq(users.country, country));
+      }
+      if (state) {
+        conditions.push(eq(users.state, state));
+      }
+      if (city) {
+        conditions.push(ilike(users.city, city));
+      }
+      if (graduation) {
+        conditions.push(ilike(users.graduation, graduation));
+      }
+      if (position && Array.isArray(position) && position.length > 0) {
+        const positionConditions = position.map(pos => ilike(users.position, pos));
+        conditions.push(...positionConditions);
+      } else if (position) {
+        conditions.push(ilike(users.position, position));
+      }
 
-    //   if (rating) {
-    //     if(rating=='0')
-    //     {
+      if (birthyear) {
+        conditions.push(
+          sql`EXTRACT(YEAR FROM ${users.birthday}) = ${birthyear}`
+        );
+      }
 
-    //       conditions.push(between(teams.rating, 0, 5));
-    //     }
-    //     else{
-    //       conditions.push(eq(teams.rating, Number(rating)));
-    //     }
-
-    //   }
-
-    //   if (amount) {
-    //     if (amount=='0') {
-    //     conditions.push(between(teams.expectedCharge, "0", "1000"));
-    //     }
-    //     else{
-    //       conditions.push(lt(teams.expectedCharge, amount));
-    //     }
-    //   }
+   
+ 
 
     const query = db
       .select({
@@ -75,11 +73,7 @@ export async function GET(req: NextRequest) {
         sql`coaches AS coa`, // Alias defined here
         sql`${users.coach_id}::integer = coa.id`
       )
-      .where(
-        and(
-          eq(users.status, 'Active'), 
-          isNotNull(users.first_name)
-      ));
+      .where(and(...conditions));
 
     const result = await query.execute();
 

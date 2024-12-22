@@ -1,7 +1,8 @@
+import { Grades } from '@/lib/constants';
 import React, { useState } from 'react';
 
 interface FiltersProps {
-  onFilterChange: (filters: { country: string; state: string; city: string; amount: number; rating: number | null }) => void;
+  onFilterChange: (filters: { country: string; state: string; city: string; amount: number;year:string,gender:string, rating: number | null }) => void;
 }
 
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
@@ -11,20 +12,38 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [amount, setAmount] = useState<number>(0);
   const [rating, setRating] = useState<number>(0);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
-
+  const [year, setYear] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
   const toggleFilters = () => setIsMobileOpen(!isMobileOpen);
-
+  const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedGender = e.target.value;
+    setGender(selectedGender);
+    onFilterChange({
+      country,
+      state,
+      city,
+      amount,
+      rating,
+      year,
+      gender: selectedGender,
+    });
+  };
+  
   const resetFilters = () => {
     setCountry('');
     setState('');
     setCity('');
     setAmount(0);
     setRating(0);
+    setGender('');
+    setYear('');
 
     onFilterChange({
       country: '',
       state: '',
       city: '',
+      year: '',
+      gender: '',
       amount: 0,
       rating: null,
     });
@@ -41,6 +60,8 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     let newState = state;
     let newCity = city;
     let newRating = rating;
+    let newYear = year;
+    let newGender = gender;
 
     if (field === 'country') {
       newCountry = value as string;
@@ -51,9 +72,18 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     } else if (field === 'city') {
       newCity = value as string;
       setCity(newCity);
-    } else if (field === 'rating') {
+    } 
+    else if (field === 'rating') {
       newRating = value as number;
       setRating(newRating);
+    }
+    else if (field === 'gender') {
+      newGender = gender as string;
+      setGender(newGender);
+    }
+    else if (field === 'year') {
+      newYear = value as string;
+      setYear(newYear);
     }
 
     onFilterChange({
@@ -62,6 +92,8 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       city: newCity,
       amount,
       rating: newRating,
+      year: newYear,
+      gender: newGender,
     });
   };
 
@@ -76,6 +108,8 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       city,
       amount,
       rating,
+      year,
+      gender,
     });
   };
 
@@ -98,10 +132,52 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       <div className={`${isMobileOpen ? 'block' : 'hidden'} md:block`}>
-        {/* Filter Fields */}
-        {/* Country */}
+      <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Team Year</label>
+          <select
+            className="w-full p-2 border rounded-md"
+            value={year}
+            onChange={(e) => handleFilterChange('year', e.target.value)}
+          >
+            <option value="">Select Year</option>
+            {Grades.map((grad) => (
+                        <option key={grad} value={grad}>
+                          {grad}
+                        </option>
+                      ))}
+          </select>
+        </div>
+
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Country</label>
+        <div className="flex items-center space-x-4">
+  <label className="flex items-center">
+    <input
+      type="radio"
+      name="option"
+      value="Men"
+      checked={gender === 'Men'}
+      onChange={handleGenderChange}
+      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+    />
+    <span className="ml-2 text-sm text-gray-900">Men</span>
+  </label>
+  <label className="flex items-center">
+    <input
+      type="radio"
+      name="option"
+      value="Women"
+      checked={gender === 'Women'}
+      onChange={handleGenderChange}
+      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+    />
+    <span className="ml-2 text-sm text-gray-900">Women</span>
+  </label>
+  
+</div>
+
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Country</label>
           <select
             className="w-full p-2 border rounded-md"
             value={country}
@@ -114,7 +190,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
         {/* State */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">State</label>
+          <label className="block text-gray-700 mb-2 font-bold">State</label>
           <select
             className="w-full p-2 border rounded-md"
             value={state}
@@ -131,7 +207,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
         {/* City */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">City</label>
+          <label className="block text-gray-700 mb-2 font-bold">City</label>
           <input
             type="text"
             className="w-full p-2 border rounded-md"
@@ -145,7 +221,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
         {/* Rating */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Star Rating</label>
+          <label className="block text-gray-700 mb-2 font-bold">Star Rating</label>
           <div className="flex flex-col gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <label key={star} className="flex items-center gap-2 cursor-pointer">

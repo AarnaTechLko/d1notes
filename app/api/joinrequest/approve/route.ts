@@ -8,11 +8,11 @@ export async function POST(req: Request) {
         // Parse the incoming request body
         const body = await req.json();
 
-        const { playerId,requestToID,sender_type ,type,message} = body;
+        const { playerId,requestToID,sender_type ,type,message,status} = body;
 
         await db
             .update(joinRequest)
-            .set({ status: 'Aproved' })
+            .set({ status:status})
             .where(
                 and(
                     eq(joinRequest.requestToID, requestToID),

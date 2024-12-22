@@ -298,6 +298,10 @@ export const teams=pgTable('teams', {
   team_year: text('team_year'),
   cover_image: text('cover_image'),
   password: text('password'),
+  country: text('country'),
+  state: text('state'),
+  rating: integer('rating'),
+  city: text('city'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

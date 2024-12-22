@@ -13,11 +13,11 @@ interface EvaluationModalProps {
   coachId: string | null;
   playerId: string | null;
   amount: number | null;
-  coachClubId?:number;
-  playerClubId?:number;
+  coachClubId?: number;
+  playerClubId?: number;
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount,coachClubId ,playerClubId}) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId }) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -31,16 +31,16 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
   const validateUrl = (url: string): boolean => {
     const urlPattern = new RegExp(
-      '^(https?:\\/\\/)?' + 
+      '^(https?:\\/\\/)?' +
       '((([a-zA-Z0-9$_.+!*\'(),;?&=-]+)@)?' +
-      '(([a-zA-Z0-9.-]+)\\.' + 
-      '([a-zA-Z]{2,}))|' + 
-      '(\\d{1,3}\\.){3}\\d{1,3}|' + 
-      '\\[([a-fA-F0-9:]+)\\])' + 
-      '(\\:\\d+)?' + 
-      '(\\/[-a-zA-Z0-9%_.~+@]*)*' + 
-      '(\\?[-a-zA-Z0-9%_.~+=]*)?' + 
-      '(#[-a-zA-Z0-9%_.~+=]*)?$', 
+      '(([a-zA-Z0-9.-]+)\\.' +
+      '([a-zA-Z]{2,}))|' +
+      '(\\d{1,3}\\.){3}\\d{1,3}|' +
+      '\\[([a-fA-F0-9:]+)\\])' +
+      '(\\:\\d+)?' +
+      '(\\/[-a-zA-Z0-9%_.~+@]*)*' +
+      '(\\?[-a-zA-Z0-9%_.~+=]*)?' +
+      '(#[-a-zA-Z0-9%_.~+=]*)?$',
       'i'
     );
     return urlPattern.test(url);
@@ -55,7 +55,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
     const newErrors: { [key: string]: string } = {};
     if (!reviewTitle) newErrors.reviewTitle = 'Review Title is required.';
-    if (!turnaroundTime) newErrors.turnaroundTime = 'Turnaround Time is required.';
+    if (playerClubId === 0) {
+      if (!turnaroundTime) newErrors.turnaroundTime = 'Turnaround Time is required.';
+    }
+
+
+
     if (!primaryVideoUrl) newErrors.primaryVideoUrl = 'Primary Video URL is required.';
     if (!videoDescription) newErrors.videoDescription = 'Video Description is required.';
 
@@ -75,13 +80,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       return;
     }
     let status;
-    if(playerClubId!=coachClubId)
-      {
-  status='Pending';
-      }
-      else{
-          status='Paid';
-      }
+    if (playerClubId != coachClubId) {
+      status = 'Pending';
+    }
+    else {
+      status = 'Paid';
+    }
     try {
       const response = await fetch('/api/evaluation', {
         method: 'POST',
@@ -105,59 +109,58 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         throw new Error('Submission failed');
       }
 
-      if(playerClubId!=coachClubId)
-      {
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe is not loaded');
-      }
+      if (playerClubId != coachClubId) {
+        const stripe = await stripePromise;
+        if (!stripe) {
+          throw new Error('Stripe is not loaded');
+        }
 
-      const evaluationReponse = await response.json();
-      const paymentResponse = await fetch('/api/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          evaluationId: evaluationReponse.result[0].id,
-          coachId: evaluationReponse.result[0].coach_id,
-          playerId: evaluationReponse.result[0].player_id,
-          amount: amount,
-        }),
-      });
+        const evaluationReponse = await response.json();
+        const paymentResponse = await fetch('/api/payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            evaluationId: evaluationReponse.result[0].id,
+            coachId: evaluationReponse.result[0].coach_id,
+            playerId: evaluationReponse.result[0].player_id,
+            amount: amount,
+          }),
+        });
 
-      const session = await paymentResponse.json();
-      const result = await stripe.redirectToCheckout({ sessionId: session.id });
+        const session = await paymentResponse.json();
+        const result = await stripe.redirectToCheckout({ sessionId: session.id });
 
-      if (result.error) {
+        if (result.error) {
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Unable to make payment right now',
+            confirmButtonText: 'Proceed',
+          });
+        }
+
         await Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Unable to make payment right now',
+          icon: 'success',
+          title: 'Success',
+          text: 'Evaluation submitted successfully. You will now be redirected for payment.',
           confirmButtonText: 'Proceed',
         });
+
+
+        window.location.href = '/dashboard';
+      }
+      else {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Evaluation submitted successfully.',
+          confirmButtonText: 'Proceed',
+        });
+        onClose();
       }
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Evaluation submitted successfully. You will now be redirected for payment.',
-        confirmButtonText: 'Proceed',
-      });
-      
-
-      window.location.href = '/dashboard';
-    }
-    else{
-      await Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Evaluation submitted successfully.',
-        confirmButtonText: 'Proceed',
-      });
-      onClose();
-    }
-    
     } catch (err: any) {
       setErrors({ general: err.message || 'An error occurred during submission.' });
     } finally {
@@ -181,50 +184,51 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         <form onSubmit={handleSubmit}>
           {/* Review Title */}
           <div className="flex">
-          <div className="mb-4 w-3/4 ml-1">
-            <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
-              Review Title  {coachClubId}
-              {playerClubId}
-            </label>
-            <input
-              type="text"
-              id="reviewTitle"
-              placeholder="Team name vs Team name on mm/dd/yyyy"
-              className={`w-full px-3 py-2 border ${errors.reviewTitle ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              value={reviewTitle}
-              onChange={(e) => {
-                setReviewTitle(e.target.value);
-                if (errors.reviewTitle) {
-                  const { reviewTitle, ...remainingErrors } = errors;
-                  setErrors(remainingErrors);
-                }
-              }}
-            />
-            {errors.reviewTitle && <p className="text-red-500 text-xs">{errors.reviewTitle}</p>}
-          </div>
+            <div className="mb-4 w-3/4 ml-1">
+              <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
+                Review Title
 
-          <div className="mb-4 w-1/4 ml-1">
-            <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
-              Turnaround Time 
-            </label>
-             <select name='turnaroundtime' value={turnaroundTime} 
-             onChange={(e) => {
-              setTurnaroundTime(e.target.value);
-              if (errors.turnaroundTime) {
-                const { turnaroundTime, ...remainingErrors } = errors;
-                setErrors(remainingErrors);
-              }
-            }}
-             className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
-              <option value=''>Turnaround Time</option>
-              <option value='1'>1 Day</option>
-              <option value='2'>2 Days</option>
-              <option value='3'>3 Days</option>
-              <option value='4'>4 Days</option>
-              <option value='5'>5 Days</option>
-             </select>
-            {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
-          </div>
+              </label>
+              <input
+                type="text"
+                id="reviewTitle"
+                placeholder="Team name vs Team name on mm/dd/yyyy"
+                className={`w-full px-3 py-2 border ${errors.reviewTitle ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                value={reviewTitle}
+                onChange={(e) => {
+                  setReviewTitle(e.target.value);
+                  if (errors.reviewTitle) {
+                    const { reviewTitle, ...remainingErrors } = errors;
+                    setErrors(remainingErrors);
+                  }
+                }}
+              />
+              {errors.reviewTitle && <p className="text-red-500 text-xs">{errors.reviewTitle}</p>}
+            </div>
+            {playerClubId === 0 && (
+              <div className="mb-4 w-1/4 ml-1">
+                <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
+                  Turnaround Time
+                </label>
+                <select name='turnaroundtime' value={turnaroundTime}
+                  onChange={(e) => {
+                    setTurnaroundTime(e.target.value);
+                    if (errors.turnaroundTime) {
+                      const { turnaroundTime, ...remainingErrors } = errors;
+                      setErrors(remainingErrors);
+                    }
+                  }}
+                  className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
+                  <option value=''>Turnaround Time</option>
+                  <option value='1'>1 Day</option>
+                  <option value='2'>2 Days</option>
+                  <option value='3'>3 Days</option>
+                  <option value='4'>4 Days</option>
+                  <option value='5'>5 Days</option>
+                </select>
+                {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
+              </div>
+            )}
           </div>
 
           {/* Video URLs in full width */}
@@ -247,56 +251,56 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 }
               }}
             />
-            <p className="text-xs text-gray-500"> If you want feedback on a Trace video, download the file from Trace, upload to Google Drive, 
-and share that link here for the coach. For Veo, ensure the match is set to public in order to share the 
-link.  If you continue to have technical difficulties, email us at <a href='mailto: team@d1notes.com' className="text-xs text-gray-900">team@d1notes.com</a> .</p>
+            <p className="text-xs text-gray-500"> If you want feedback on a Trace video, download the file from Trace, upload to Google Drive,
+              and share that link here for the coach. For Veo, ensure the match is set to public in order to share the
+              link.  If you continue to have technical difficulties, email us at <a href='mailto: team@d1notes.com' className="text-xs text-gray-900">team@d1notes.com</a> .</p>
             {errors.primaryVideoUrl && <p className="text-red-500 text-xs">{errors.primaryVideoUrl}</p>}
           </div>
 
           <div className="flex">
-          <div className="w-1/2 mr-1">
-            <label htmlFor="videoUrl2" className="block text-gray-700 mb-1">
-              Video Link/URL #2 (Optional)
-            </label>
-            <input
-              type="url"
-              id="videoUrl2"
-              placeholder="www.exampleurl.com"
-              className={`w-full px-3 py-2 border ${errors.videoUrl2 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              value={videoUrl2}
-              onChange={(e) => {
-                setVideoUrl2(e.target.value);
-                if (errors.videoUrl2) {
-                  const { videoUrl2, ...remainingErrors } = errors;
-                  setErrors(remainingErrors);
-                }
-              }}
-            />
+            <div className="w-1/2 mr-1">
+              <label htmlFor="videoUrl2" className="block text-gray-700 mb-1">
+                Video Link/URL #2 (Optional)
+              </label>
+              <input
+                type="url"
+                id="videoUrl2"
+                placeholder="www.exampleurl.com"
+                className={`w-full px-3 py-2 border ${errors.videoUrl2 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                value={videoUrl2}
+                onChange={(e) => {
+                  setVideoUrl2(e.target.value);
+                  if (errors.videoUrl2) {
+                    const { videoUrl2, ...remainingErrors } = errors;
+                    setErrors(remainingErrors);
+                  }
+                }}
+              />
 
-            {errors.videoUrl2 && <p className="text-red-500 text-xs text-xs">{errors.videoUrl2}</p>}
-          </div>
+              {errors.videoUrl2 && <p className="text-red-500 text-xs">{errors.videoUrl2}</p>}
+            </div>
 
-          {/* Video URL #3 */}
-          <div className="w-1/2 ml-1">
-            <label htmlFor="videoUrl3" className="block text-gray-700 mb-1">
-              Video Link/URL #3 (Optional)
-            </label>
-            <input
-              type="url"
-              id="videoUrl3"
-              placeholder="www.exampleurl.com"
-              className={`w-full px-3 py-2 border ${errors.videoUrl3 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              value={videoUrl3}
-              onChange={(e) => {
-                setVideoUrl3(e.target.value);
-                if (errors.videoUrl3) {
-                  const { videoUrl3, ...remainingErrors } = errors;
-                  setErrors(remainingErrors);
-                }
-              }}
-            />
-            {errors.videoUrl3 && <p className="text-red-500 text-xs text-xs">{errors.videoUrl3}</p>}
-          </div>
+            {/* Video URL #3 */}
+            <div className="w-1/2 ml-1">
+              <label htmlFor="videoUrl3" className="block text-gray-700 mb-1">
+                Video Link/URL #3 (Optional)
+              </label>
+              <input
+                type="url"
+                id="videoUrl3"
+                placeholder="www.exampleurl.com"
+                className={`w-full px-3 py-2 border ${errors.videoUrl3 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                value={videoUrl3}
+                onChange={(e) => {
+                  setVideoUrl3(e.target.value);
+                  if (errors.videoUrl3) {
+                    const { videoUrl3, ...remainingErrors } = errors;
+                    setErrors(remainingErrors);
+                  }
+                }}
+              />
+              {errors.videoUrl3 && <p className="text-red-500 text-xs">{errors.videoUrl3}</p>}
+            </div>
           </div>
 
           {/* Video Description */}
@@ -317,10 +321,10 @@ link.  If you continue to have technical difficulties, email us at <a href='mail
                 }
               }}
             />
-              <p className="text-xs text-gray-500">Provide a brief description of the video you are submitting, including if you are starting the first and/ or 
-second halves, position(s) played in each half, jersey color and #, opposing team info and any other 
-specific info you would like the coach to be aware of, such as, team’s style of play, areas to focus on, 
-external factors, etc.</p>
+            <p className="text-xs text-gray-500">Provide a brief description of the video you are submitting, including if you are starting the first and/ or
+              second halves, position(s) played in each half, jersey color and #, opposing team info and any other
+              specific info you would like the coach to be aware of, such as, team’s style of play, areas to focus on,
+              external factors, etc.</p>
             {errors.videoDescription && <p className="text-red-500 text-xs">{errors.videoDescription}</p>}
           </div>
 

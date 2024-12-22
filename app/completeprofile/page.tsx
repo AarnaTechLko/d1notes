@@ -404,8 +404,8 @@ export default function Register() {
                     <option value="">Select</option>
                     {Grades
                       .map((grade) => (
-                        <option key={grade.label} value={grade.label}>
-                          {grade.label}
+                        <option key={grade} value={grade}>
+                          {grade}
                         </option>
                       ))}
 

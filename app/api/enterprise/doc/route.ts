@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
             phone:enterprises.mobileNumber,
             id:enterprises.id,
             role_id:roles.id,
+            countryCodes:enterprises.countryCodes,
             
         }
     ).from(enterprises).rightJoin(roles, eq(enterprises.role_id, roles.id)).where(eq(enterprises.parent_id,Number(club_id)));
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
     slug: enterproseQuery[0].slug,
     contactPerson: body.name,
     email: body.email,
+    countryCodes: body.countryCodes,
     role_id: body.role_id,
     parent_id: body.enterprise_id,
     mobileNumber: body.phone,

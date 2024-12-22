@@ -26,6 +26,8 @@ const Home = () => {
     country: '',
     state: '',
     city: '',
+    year: '',
+    gender: '',
     amount: 0,
     rating: null as number | null,
   });
@@ -38,6 +40,8 @@ const Home = () => {
           country: filters.country || '',
           state: filters.state || '',
           city: filters.city || '',
+          year: filters.year || '',
+          gender: filters.gender || '',
           amount: filters.amount.toString(),
           rating: filters.rating?.toString() || '',
         }).toString();
@@ -74,7 +78,7 @@ const Home = () => {
     );
   }, [searchQuery, profiles]); // Filter profiles based on search query
 
-  const handleFilterChange = (newFilters: { country: string; state: string; city: string; amount: number; rating: number | null }) => {
+  const handleFilterChange = (newFilters: { country: string; state: string; city: string;year:string;gender:string; amount: number; rating: number | null }) => {
     setFilters(newFilters);
     console.log(newFilters);
   };

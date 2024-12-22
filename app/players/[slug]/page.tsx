@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/app/components/Loading';
 import ProfileCard from '@/app/components/teams/ProfileCard';
+import CoachProfileCard from '@/app/components/ProfileCard';
 import PlayerProfileCard from '../../components/players/ProfileCard'
 import Profile from '@/app/coach/profile/page';
 
@@ -56,6 +57,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [teamData, setTeamData] = useState<Profile[]>([]);
   const [banners, setBanners] = useState<string[]>([]);
+  const [coaches, setCoaches] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [restTeams, setRestTeams] = useState<RestTeam[]>([]);
   const [currentBanner, setCurrentBanner] = useState(0); // Track the current banner index
@@ -86,6 +88,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setTeamData(responseData.teamplayersList);
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
+        setCoaches(responseData.coachesList);
       } catch (err) {
         setError('Some error occurred.');
       } finally {
@@ -202,6 +205,25 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </div>
       </div>
       <div className="container mx-auto mt-4 mb-20">
+      <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Coaches
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {coaches.map((item: any) => {
+            
+            return (
+              <CoachProfileCard
+              key={item.id}
+              name={item.coachFirstName}
+              organization={item.clubName}
+              image={item.coachImage ?? '/default-image.jpg'}
+              rating={item.rating}
+              slug={item.slug}
+              />
+            );
+          })}
+
+        </div>
       <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Teams
         </h2>

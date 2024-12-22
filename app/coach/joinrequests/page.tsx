@@ -31,28 +31,28 @@ const Home: React.FC = () => {
 
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
+  const fetchOrders = async () => {
+    const session = await getSession();
+    const enterpriseId = session?.user?.id; // Adjust according to your session structure
 
+    if (!enterpriseId) {
+      console.error('Enterprise ID not found in session');
+      return;
+    }
+
+    const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=coach`);
+
+    if (!response.ok) {
+      console.error('Failed to fetch orders');
+      return;
+    }
+
+    const data = await response.json();
+    setOrders(data.data);
+    setFilteredOrders(data.data); // Initially show all orders
+  };
   useEffect(() => {
-    const fetchOrders = async () => {
-      const session = await getSession();
-      const enterpriseId = session?.user?.id; // Adjust according to your session structure
-
-      if (!enterpriseId) {
-        console.error('Enterprise ID not found in session');
-        return;
-      }
-
-      const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=coach`);
-
-      if (!response.ok) {
-        console.error('Failed to fetch orders');
-        return;
-      }
-
-      const data = await response.json();
-      setOrders(data.data);
-      setFilteredOrders(data.data); // Initially show all orders
-    };
+   
 
     fetchOrders();
   }, []);
@@ -98,6 +98,7 @@ const Home: React.FC = () => {
     const requestToID = selectedOrder.requestToID;
     const sender_type = 'player';
     const type = selectedOrder.type;
+    const status='Approved';
     const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
 
@@ -105,12 +106,12 @@ const Home: React.FC = () => {
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, requestToID, sender_type, type, message }),
+        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status }),
       });
 
       if (response.ok) {
         showSuccess("Join Request Approved successfully. A welcome message has been sent.");
-        ///router.push('/coach/messages');
+        fetchOrders();
       } else {
         console.error('Failed to accept request');
       }
@@ -123,25 +124,33 @@ const Home: React.FC = () => {
 
   const handleReject = async () => {
     if (!selectedOrder) return;
-
+    console.log(selectedOrder);
+    const playerId = selectedOrder.playerId;
+    const requestToID = selectedOrder.requestToID;
+    const sender_type = 'player';
+    const type = selectedOrder.type;
+    const status='Rejected';
+    const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
-      const response = await fetch(`/api/rejectRequest`, {
+
+
+      const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id }),
+        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status }),
       });
 
       if (response.ok) {
-        // Handle successful response (e.g., update UI)
-        console.log('Request rejected');
+        showSuccess("Join Request Rejected successfully. A rejection message has been sent.");
+        fetchOrders();
       } else {
-        console.error('Failed to reject request');
+        console.error('Failed to accept request');
       }
     } catch (error) {
-      console.error('Error rejecting request:', error);
+      console.error('Error accepting request:', error);
     }
 
-    handleConfirmationClose(); // Close modal after rejecting
+    handleConfirmationClose();// Close modal after rejecting
   };
 
   return (
@@ -206,7 +215,7 @@ const Home: React.FC = () => {
                       <td>{order.message}</td>
                       <td>
                         <button
-                          className={`px-4 py-2 rounded-lg text-white ${order.status === 'Accepted'
+                          className={`px-4 py-2 rounded-lg text-white ${order.status === 'Approved'
                               ? 'bg-green-500'
                               : order.status === 'Requested'
                                 ? 'bg-yellow-500'

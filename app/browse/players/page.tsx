@@ -35,6 +35,9 @@ const Home = () => {
     country: '',
     state: '',
     city: '',
+    position: '',
+    graduation: '',
+    birthyear: '',
     amount: 0,
     rating: null as number | null,
   });
@@ -49,6 +52,10 @@ const Home = () => {
           city: filters.city || '',
           amount: filters.amount.toString(),
           rating: filters.rating?.toString() || '',
+          graduation: filters.graduation?.toString() || '',
+         
+          birthyear: filters.birthyear?.toString() || '',
+          position: filters.position?.toString() || '',
         }).toString();
 
         const response = await fetch(`/api/browse/players?${queryParams}`); // Replace with your API endpoint
@@ -72,7 +79,7 @@ const Home = () => {
     setFilteredProfiles(
       profiles.filter((profile) => {
 
-        const organizationName = (profile.firstName || '').toLowerCase();
+        const organizationName = (profile.firstName).toLowerCase();
 
 
         return (
@@ -83,7 +90,7 @@ const Home = () => {
     );
   }, [searchQuery, profiles]); // Filter profiles based on search query
 
-  const handleFilterChange = (newFilters: { country: string; state: string; city: string; amount: number; rating: number | null }) => {
+  const handleFilterChange = (newFilters: { country: string;graduation:string; state: string;birthyear:string; city: string; amount: number; rating: number | null, position:string }) => {
     setFilters(newFilters);
     console.log(newFilters);
   };
@@ -94,16 +101,18 @@ const Home = () => {
 
   return (
     <>
-       <head>
+        
         <title>Profile Directory Players - D1 NOTES</title>
         <meta name="description" content="This is the home page of my Next.js application." />
-      </head>
+      
 
 
       <div className="container-fluid">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/4 p-4">
             <Filters onFilterChange={handleFilterChange} />
+          </div>
+          <div className="w-fullp-4">
           </div>
           <div className="w-full md:w-3/4 p-4">
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />

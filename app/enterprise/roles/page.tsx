@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
+import { showError, showSuccess } from '@/app/components/Toastr';
 
 // Define the type for the data
 interface Order {
@@ -74,7 +75,8 @@ const Home: React.FC = () => {
             });
 
             if (response.ok) {
-                alert("Role added successfully!");
+                showSuccess("Role added successfully!");
+                fetchOrders();
                 setModalOpen(false); // Close modal after successful submission
             } else {
                 const error = await response.json();
@@ -82,38 +84,38 @@ const Home: React.FC = () => {
             }
         } catch (error) {
             console.error("Failed to submit data:", error);
-            alert("Failed to save role. Please try again.");
+            showError("Failed to save role. Please try again.");
         }
     };
 
+    const fetchOrders = async () => {
+        const session = await getSession();
+        const enterpriseId = session?.user?.id; // Adjust according to your session structure
 
+        if (!enterpriseId) {
+            console.error('Enterprise ID not found in session');
+            return;
+        }
+
+        const response = await fetch(`/api/enterprise/roles?club_id=${enterpriseId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error('Failed to fetch orders');
+            return;
+        }
+
+        const data = await response.json();
+        setOrders(data.rolesList);
+        setModules(data.modulesList);
+        setFilteredOrders(data.rolesList); // Initially show all orders
+    };
     useEffect(() => {
-        const fetchOrders = async () => {
-            const session = await getSession();
-            const enterpriseId = session?.user?.id; // Adjust according to your session structure
-
-            if (!enterpriseId) {
-                console.error('Enterprise ID not found in session');
-                return;
-            }
-
-            const response = await fetch(`/api/enterprise/roles?club_id=${enterpriseId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                console.error('Failed to fetch orders');
-                return;
-            }
-
-            const data = await response.json();
-            setOrders(data.rolesList);
-            setModules(data.modulesList);
-            setFilteredOrders(data.rolesList); // Initially show all orders
-        };
+        
 
         fetchOrders();
     }, []);

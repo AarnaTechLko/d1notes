@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { countries,Grades,positionOptionsList,states } from '@/lib/constants';
 
 interface FiltersProps {
-  onFilterChange: (filters: { country: string; state: string; city: string; amount: number; rating: number | null }) => void;
+  onFilterChange: (filters: { country: string;graduation:string; state: string;birthyear:string; city: string; amount: number; rating: number | null, position:string }) => void;
 }
 
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
@@ -10,6 +11,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [city, setCity] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [rating, setRating] = useState<number>(0);
+  const [graduation, setGraduation] = useState<string>('');
+  const [position, setPosition] = useState<string>('');
+  const [birthyear, setBirthyear] = useState<string>('');
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
 
   const toggleFilters = () => setIsMobileOpen(!isMobileOpen);
@@ -18,6 +22,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     setCountry('');
     setState('');
     setCity('');
+    setBirthyear('');
+    setPosition('');
+    setGraduation('');
     setAmount(0);
     setRating(0);
 
@@ -25,22 +32,24 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       country: '',
       state: '',
       city: '',
+      birthyear: '',
+      position: '',
+      graduation: '',
       amount: 0,
       rating: null,
     });
   };
 
-  const states = [
-    { name: "Alabama", abbreviation: "AL" },
-    // ... other states
-    { name: "Wyoming", abbreviation: "WY" }
-  ];
+   
 
   const handleFilterChange = (field: string, value: string | number | null) => {
     let newCountry = country;
     let newState = state;
     let newCity = city;
+    let newgraduation = graduation;
     let newRating = rating;
+    let newPosition = position;
+    let newBirthyear = birthyear;
 
     if (field === 'country') {
       newCountry = value as string;
@@ -49,11 +58,23 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       newState = value as string;
       setState(newState);
     } else if (field === 'city') {
+    } else if (field === 'graduation') {
+      newgraduation = value as string;
+      setGraduation(newgraduation);
+    } else if (field === 'city') {
       newCity = value as string;
       setCity(newCity);
     } else if (field === 'rating') {
       newRating = value as number;
       setRating(newRating);
+    
+    } else if (field === 'birthyear') {
+      newBirthyear = value as string;
+      setBirthyear(newBirthyear);
+    }
+     else if (field === 'position') {
+      newPosition = value as string;
+      setPosition(newPosition);
     }
 
     onFilterChange({
@@ -62,6 +83,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       city: newCity,
       amount,
       rating: newRating,
+      birthyear: newBirthyear,
+      graduation: newgraduation,
+      position: newPosition,
     });
   };
 
@@ -76,6 +100,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       city,
       amount,
       rating,
+      graduation,
+      birthyear,
+      position,
     });
   };
 
@@ -101,20 +128,73 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
         {/* Filter Fields */}
         {/* Country */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Country</label>
+          <label className="block text-gray-700 font-bold mb-2">Grad Year</label>
+          <select
+            className="w-full p-2 border rounded-md"
+            value={graduation}
+            onChange={(e) => handleFilterChange('graduation', e.target.value)}
+          >
+            <option value="">Select Grad Year</option>
+            {Grades.map((grad) => (
+                        <option key={grad} value={grad}>
+                          {grad}
+                        </option>
+                      ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Birth Year</label>
+          <select
+            className="w-full p-2 border rounded-md"
+            value={birthyear}
+            onChange={(e) => handleFilterChange('birthyear', e.target.value)}
+          >
+            <option value="">Select Birth Year</option>
+            {Grades.map((grad) => (
+                        <option key={grad} value={grad}>
+                          {grad}
+                        </option>
+                      ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Positions</label>
+          <select
+            className="w-full p-2 border rounded-md"
+            value={position}
+            onChange={(e) => handleFilterChange('position', e.target.value)}
+          >
+            <option value="">Select Position</option>
+            {positionOptionsList.map((grad) => (
+                        <option key={grad.value} value={grad.label}>
+                          {grad.label}
+                        </option>
+                      ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Country</label>
           <select
             className="w-full p-2 border rounded-md"
             value={country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
           >
             <option value="">Select Country</option>
-            <option value="United States of America">United States of America</option>
+            {countries
+                      .filter((country) =>
+                        country.label.toLowerCase().includes('united states')
+                      )
+                      .map((country) => (
+                        <option key={country.label} value={country.label}>
+                          {country.label}
+                        </option>
+                      ))}
           </select>
         </div>
 
         {/* State */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">State</label>
+          <label className="block text-gray-700 mb-2 font-bold">State</label>
           <select
             className="w-full p-2 border rounded-md"
             value={state}
@@ -131,7 +211,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
         {/* City */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">City</label>
+          <label className="block text-gray-700 mb-2 font-bold">City</label>
           <input
             type="text"
             className="w-full p-2 border rounded-md"
@@ -144,7 +224,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
        
         {/* Rating */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Rating</label>
+          <label className="block text-gray-700 mb-2 font-bold">Rating</label>
           <div className="flex flex-row items-center gap-2">
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -317,39 +397,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   </svg>
   <span className="text-lg font-semibold text-[#D1D1D1]">Diamond</span>
 </div>
-<div className="flex flex-row items-center gap-2">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 120 100"
-    width="60"
-    height="60"
-    fill="none"
-  >
-    {/* First Diamond */}
-    <polygon
-      points="30,10 45,35 30,60 15,35"
-      fill="url(#diamondGradient)"
-      stroke="#A9A9A9"
-      strokeWidth="2"
-    />
-    {/* Second Diamond */}
-    <polygon
-      points="90,10 105,35 90,60 75,35"
-      fill="url(#diamondGradient)"
-      stroke="#A9A9A9"
-      strokeWidth="2"
-    />
-
-    <defs>
-      <linearGradient id="diamondGradient" x1="0" x2="0" y1="0" y2="100%">
-        <stop offset="0%" stopColor="#FFFFFF" />
-        <stop offset="100%" stopColor="#D1D1D1" />
-      </linearGradient>
-    </defs>
-  </svg>
-  <span className="text-lg font-semibold text-[#D1D1D1]">Double Diamond</span>
-</div>
-
+ 
         </div>
       </div>
     </div>

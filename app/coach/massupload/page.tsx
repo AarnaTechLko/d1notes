@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/coach/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
-import { showError, showSuccess } from '@/app/components/Toastr';
+import { showError, showSuccess, showWarning } from '@/app/components/Toastr';
 import defaultImage from '../../public/default.jpg';
 import { FaCheck, FaCross, FaSpinner } from 'react-icons/fa';
 import { type PutBlobResult } from '@vercel/blob';
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [selectedTeam, setSelectedTeam] = useState<string>('');
-
+    const [failedData, setFailedData] = useState<any[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
     const [bulkUpload, setBulkUpload] = useState<boolean>(false);
@@ -52,6 +52,7 @@ const Home: React.FC = () => {
     const [csvData, setCsvData] = useState<any[]>([]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
+    const [showUploadControls, setShowUploadControls] = useState(true);
     const fetchTeams = async () => {
         if (!session || !session.user?.id) {
             console.error("No user logged in");
@@ -76,6 +77,10 @@ const Home: React.FC = () => {
             console.error("Error fetching teams:", error);
         }
     };
+    const handleOpenControl = () => {
+        setShowUploadControls(true);
+        setCsvData([]);
+      };
     const handleUpload = async () => {
         setIsuploadingcsv(true);
         const selectedTeam = document.querySelector<HTMLSelectElement>('select[name="team"]')?.value;
@@ -156,11 +161,19 @@ const Home: React.FC = () => {
             if (!response.ok) {
                 throw new Error("Failed to fetch license");
             }
-         
-            setIsSubmit(false);
-            setBulkUpload(false);
-            showSuccess("Successfully Imported Players.");
-            router.push('/coach/players');
+            const data = await response.json();
+            if (data.success == false) {
+                setFailedData(data.duplicates);
+                showWarning("Imported Players. But we have found some duplicate records.");
+              }
+              else {
+                router.push("/coach/players");
+                showSuccess("Successfully Imported Players.");
+              }
+              setShowUploadControls(true);
+              setCsvData([]);
+              setIsSubmit(false);
+            
         } catch (error) {
             setIsSubmit(false);
         }
@@ -187,12 +200,14 @@ const Home: React.FC = () => {
             <main className="flex-grow h-screen bg-gray-100 p-4 overflow-auto">
 
                 <div className=" w-full h-screenflex justify-center items-center">
-                    <div className="bg-white h-screen p-4 rounded-lg w-[100%]  overflow-hidden relative">
-                        <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
+                    <div className="bg-white h-screen p-4 rounded-lg w-[100%]  overflow-hidden ">
+                        <div className=" top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
                             <h2 className="text-xl font-semibold text-gray-800">Bulk Upload Players</h2>
 
                         </div>
                         <div className="pt-16 pb-4 overflow-y-auto h-screen">
+                        {showUploadControls && (
+                            <>
                         <div>
                             <label className='block text-gray-700 text-sm font-semibold mb-2'>Select Team<span className='mandatory'>*</span></label>
                                 <select name='team' onChange={(e) => {
@@ -203,7 +218,7 @@ const Home: React.FC = () => {
                                             {team.team_name}
                                         </option>
                                     ))}
-                                </select>
+                                </select> 
 
                             </div>
                             <div className=' mt-5'>
@@ -238,12 +253,77 @@ const Home: React.FC = () => {
     )}
   </button>
                                 </div>
+                                </>
+                        )}
+                        {failedData.length > 0 && (
+                <div className="mt-4">
+                  <h3 className=" text-2xl text-center font-semibold text-red-600">We have found Duplicate Entries</h3>
+                  <p className="text-sm text-gray-600 text-center">
+                    The following entries were not uploaded due to duplicates <span className="text-blue-600">Rest data has been imported Successfully</span>
+                  </p>
+                  <table className="w-full mt-2 border border-gray-300">
+                    <thead>
+                      <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Country Code</th>
+                        <th>Phone Number</th>
+                        <th>League</th>
+                        <th>Experience</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {failedData.map((row, index) => (
+                        <tr key={index} className="bg-red-100">
+                          <td>{row.FirstName}</td>
+                          <td>{row.LastName}</td>
+                          <td>{row.Email}</td>
+                          <td>{row.CountryCode}</td>
+                          <td>{row.PhoneNumber}</td>
+                          <td>{row.League}</td>
+                          <td>{row.Experience}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
 
                             {csvData.length > 0 && (
                                 <form onSubmit={handleSubmit}>
                                     <div className="mt-4">
-                                        <h3 className="font-semibold">CSV Data Preview</h3>
-                                        <p className='text-sm text-red-600'>(This is the preview of the CSV data you are trying to upload. You can edit values as per your wish.)</p>
+                                    <div className="w-full flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <h3 className="font-semibold">CSV Data Preview</h3>
+                        <p className="text-sm text-red-600">
+                          (Preview of the CSV data. You can edit values before submission.)
+                        </p>
+                      </div>
+                      <div className="flex space-x-4">
+                        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
+                          Go Back
+                        </button>
+
+                        <button
+                          type="submit"
+                          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          disabled={isSubmit}
+                        >
+                          {isSubmit ? (
+                            <>
+                             <div className="flex items-center">
+    {isSubmit && <FaSpinner className="animate-spin mr-2" />}
+    <span>{isSubmit ? "Submitting..." : "Final Submit"}</span>
+  </div>
+                            </>
+                          ) : (
+                            "Final Submit"
+                          )}
+                        </button>
+                      </div>
+                    </div>
                                         <table className="w-full mt-2">
                                             <thead>
                                                 <tr>
@@ -347,21 +427,25 @@ const Home: React.FC = () => {
                                                 ))}
                                                 <tr>
                                                     <td colSpan={8} className='text-center'>
-                                                        <button
-                                                            type="submit"
-                                                            className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
-                                                                }`}
-                                                            disabled={isSubmit}
-                                                        >
-                                                            {isSubmit ? (
-                                                                <div className="flex items-center">
-                                                                    <FaSpinner className="animate-spin mr-2" />
-                                                                    Submitting...
-                                                                </div>
-                                                            ) : (
-                                                                "Final Submit"
-                                                            )}
-                                                        </button>
+                                                    <div className="mt-4 text-end">
+                    <button
+                          type="submit"
+                          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          disabled={isSubmit}
+                        >
+                          {isSubmit ? (
+                            <>
+                             <div className="flex items-center">
+    {isSubmit && <FaSpinner className="animate-spin mr-2" />}
+    <span>{isSubmit ? "Submitting..." : "Final Submit"}</span>
+  </div>
+                            </>
+                          ) : (
+                            "Final Submit"
+                          )}
+                        </button>
+                    </div>
 
                                                     </td>
                                                 </tr>

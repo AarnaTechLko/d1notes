@@ -198,6 +198,15 @@ const PlayerTransfer: React.FC<PlayerTransferProps> = ({ teamId }) => {
       <p className="w-full mt-4"><b>Add:</b>To assign players to this team, you can simply Drag & Drop players from Available Players to Selected Players.</p>
       <p className="w-full mt-4 mb-5"><b>Remove:</b>To remove players from this team, you can simply Drag & Drop players from Selected Players to Available Players.</p>
       </div>
+      <div className="text-center mt-4 mb-4">
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
+          disabled={isLoading}
+        >
+          {isLoading ? "Assigning..." : "Assign Players"}
+        </button>
+      </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex justify-between items-start">
           <Droppable droppableId="available">

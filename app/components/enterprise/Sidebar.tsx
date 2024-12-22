@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus, FaUser } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus, FaUser, FaEnvelope } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
@@ -187,7 +187,24 @@ const Sidebar: React.FC = () => {
                 <span>Purchase Licenses</span>
               </a>
             </li>
+
+            
     )}
+
+{
+    (session?.user.added_by === null || (session?.user.added_by && hasPurchaseHistory)) && (
+            <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/enterprise/messages" className="flex items-center space-x-2 p-2">
+
+                <FaEnvelope className='text-xl' />
+                <span>Messages</span>
+              </a>
+            </li>
+
+            
+    )}
+
+
 {
     (session?.user.added_by === null || (session?.user.added_by && hasDoc)) && (
             <li className="hover:bg-gray-700 rounded transition duration-200">

@@ -56,11 +56,7 @@ export async function POST(req: NextRequest) {
   const jersey = formData.get('jersey') as string;
   const league = formData.get('league') as string;
   const countrycode = formData.get('countrycode') as string;
-  
- 
-
   const imageFile = formData.get('image') as string | null;
-
   const randomPassword = Array(12)
   .fill(null)
   .map(() => Math.random().toString(36).charAt(2)) // Generate random characters
@@ -80,7 +76,7 @@ export async function POST(req: NextRequest) {
             grade_level: gradeLevel,
             location: location,
             birthday: birthday,
-            gender: gender,
+            gender: gender, 
             sport: sport,
             team: team,
             position: position,

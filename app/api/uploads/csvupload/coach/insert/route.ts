@@ -57,7 +57,7 @@ import { sendEmail } from '@/lib/helpers';
                 subject: "D1 NOTES Coach Registration",
                 text: "D1 NOTES Coach Registration",
                 html: `<p>Dear Coach! Your account creation as a Coach on D1 NOTES has been started. </p><p>Please complete your profile in the next step to enjoy the evaluation from the best coaches.</p>\n\nHere are your login details:\nEmail: ${item.Email}\nPassword: ${password}\n\nPlease change your password upon login.\n\nBest Regards,\nYour Team`,
-            });
+            }); 
 
             return {
                 firstName: item.FirstName,

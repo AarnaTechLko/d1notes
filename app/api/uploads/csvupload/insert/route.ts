@@ -35,7 +35,7 @@ import { sendEmail } from '@/lib/helpers';
         // Check for existing emails
         const existingCoaches = await db
             .select()
-            .from(users)
+            .from(users) 
             .where(inArray(users.email, emails));
 
         const existingEmails = existingCoaches.map((coach) => coach.email);

@@ -58,6 +58,21 @@ export async function POST(req: NextRequest) {
                 teamPlayers: [],
             });
         }
+        const coachesList = await db
+        .select({
+            teamId: teams.id,
+            coachId: teams.coach_id,
+            coachFirstName: coaches.firstName,
+            coachImage: coaches.image,
+            coachLastName: coaches.lastName,
+            rating: coaches.rating,
+            slug: coaches.slug,
+        })
+        .from(teams)
+        .leftJoin(coaches, eq(teams.coach_id, coaches.id))
+        .where(inArray(teams.id, teamIds))
+        .execute();
+
 
         // Step 4: Fetch all players in those teams using SQL `IN` clause
         const placeholders = teamIds.map(() => '?').join(',');
@@ -92,6 +107,7 @@ export async function POST(req: NextRequest) {
             banners,
             playerOfTheTeam: teamsOfPlayer,
             teamPlayers: allTeamPlayers,
+            coachesList:coachesList
         });
     } catch (error) {
         console.error('Error fetching data:', error);

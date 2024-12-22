@@ -326,7 +326,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Responsive Table */}
-            <div className="overflow-x-auto max-h-[400px] overflow-y-auto">{session?.user.name}
+            <div className="overflow-x-auto max-h-[400px] overflow-y-auto"> 
   <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
     <thead>
       {tableInstance.headerGroups.map((headerGroup) => (

@@ -17,7 +17,7 @@ import next from 'next';
 
 export async function POST(req: NextRequest) {
 
-  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId, coach_id} = await req.json();
+  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId, coach_id, graduation} = await req.json();
    
 
   
@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
         sport: sport,
         team: team,
         position: position,
+        graduation: graduation,
         number: number,
         country: country,
         state: state,
