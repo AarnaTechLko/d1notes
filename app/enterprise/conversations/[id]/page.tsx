@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "../../../components/enterprise/Sidebar";
 import { formatDate } from "@/lib/clientHelpers";
-
+ 
+import { useRouter } from "next/navigation";
 interface Conversations {
   params: {
     id: number;
@@ -16,7 +17,7 @@ const Messages: React.FC<Conversations> = ({ params }) => {
   const [modalMessages, setModalMessages] = useState<[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const { data: session } = useSession();
-
+  const router = useRouter();
   const fetchAllMessages = async (id: number) => {
     setLoading(true);
     try {
@@ -53,7 +54,18 @@ const Messages: React.FC<Conversations> = ({ params }) => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full h-full overflow-auto">
-          <h2 className="text-xl font-bold mb-4">Conversation Messages</h2>
+        <div className="p-4 flex justify-between items-center">
+      
+ <h1 className="text-xl font-bold"> Conversation  </h1>
+       
+ 
+  <button
+    onClick={() => router.back()}
+    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+  >
+    Back
+  </button>
+</div>
           {loading ? (
             <p>Loading messages...</p>
           ) : modalMessages.length > 0 ? (

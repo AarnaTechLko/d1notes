@@ -125,7 +125,7 @@ const Home = () => {
                 <div className="w-full lg:w-auto" key={profile.id}>
                   <ProfileCard
                     key={profile.id}
-                    name={profile.firstName}
+                    name={`${profile.firstName} ${profile.lastName}`}
                     organization={profile.clubName}
                     image={profile.image ?? '/default-image.jpg'}
                     rating={profile.rating}

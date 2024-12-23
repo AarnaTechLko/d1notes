@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; // Adjust the path based on your setup
-import { coaches, users, enterprises, joinRequest, teams, chats, chatfriend } from "@/lib/schema";
+import { coaches, users, enterprises, joinRequest, teams, chats, chatfriend, messages } from "@/lib/schema";
 import { eq, sql, and } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
         // Parse the incoming request body
         const body = await req.json();
 
-        const { playerId,requestToID,sender_type ,type,message,status} = body;
+        const { playerId,requestToID,sender_type ,type,message,status,clubId} = body;
 
         await db
             .update(joinRequest)
@@ -29,31 +29,22 @@ export async function POST(req: Request) {
         }
 
         let chatFriend:any={
-            chatfrom: playerId,
-            chatto: requestToID,
-            chattotype: type
+            playerId: playerId,
+            coachId: requestToID,
+            club_id:clubId
+             
         };
-        const insertChatfriend=await db.insert(chatfriend).values(chatFriend).returning();
-
-
-        let chatFriend2:any={
-            chatfrom:requestToID ,
-            chatto:playerId ,
-            chattotype: 'player'
-        };
-        const insertChatfriend2=await db.insert(chatfriend).values(chatFriend2).returning();
+        const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
 
 
         let userValues: any = {
-            sender_id: requestToID,
-            sender_type: type,
+            senderId: requestToID,
+            chatId:insertChatfriend[0].id,
             message: message,
-            receiver_id: playerId,
-            receiver_type: sender_type,
-           
+            club_id:clubId
         };
 
-        const insertedUser = await db.insert(chats).values(userValues).returning();
+        const insertedUser = await db.insert(messages).values(userValues).returning();
 
         // Prepare data for response
         return NextResponse.json(

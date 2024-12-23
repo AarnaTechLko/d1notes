@@ -17,6 +17,7 @@ interface Order {
   requestToID?: number;
   image?: string;
   slug?: number;
+  clubId?: number;
 }
 
 const Home: React.FC = () => {
@@ -90,7 +91,7 @@ const Home: React.FC = () => {
     setShowConfirmation(false);
     setSelectedOrder(null);
   };
-
+    
   const handleAccept = async () => {
     if (!selectedOrder) return;
     console.log(selectedOrder);
@@ -98,15 +99,15 @@ const Home: React.FC = () => {
     const requestToID = selectedOrder.requestToID;
     const sender_type = 'player';
     const type = selectedOrder.type;
+    const clubId = selectedOrder.clubId;
     const status='Approved';
     const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
-
-
+ 
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status }),
+        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status, clubId }),
       });
 
       if (response.ok) {

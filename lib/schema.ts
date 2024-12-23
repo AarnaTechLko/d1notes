@@ -162,7 +162,8 @@ export const evaluationResults = pgTable('evaluation_results', {
   technicalRemarks: text('technicalRemarks'),     // Long text for tactical remarks
   physicalScores: text('physicalScores').notNull(), // JSON field for physical scores
   tacticalScores: text('tacticalScores').notNull(), // JSON field for tactical scores
-  technicalScores: text('technicalScores').notNull(), // JSON field for technical scores
+  technicalScores: text('technicalScores').notNull(), 
+  document:text('document')
 });
 
 export const otps = pgTable('otps', {
