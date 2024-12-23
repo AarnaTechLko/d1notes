@@ -10,6 +10,8 @@ const Messages: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [modalMessages, setModalMessages] = useState<[]>([]);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const limit = 10; // Items per page
   const { data: session } = useSession();
 
@@ -53,6 +55,41 @@ const Messages: React.FC = () => {
     setCurrentPage(1); // Reset to the first page
   };
 
+  const closeModal = () => {
+    setModalVisible(false);
+    setModalMessages([]);
+  };
+
+  const fetchAllMessages = async (message: any) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/enterprise/conversations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+  
+      if (!response.ok) {
+        console.error('Failed to fetch conversation messages');
+        return;
+      }
+  
+      const data = await response.json();
+      setModalMessages(data.result || []);
+      setModalVisible(true);
+    } catch (error) {
+      console.error('Error fetching conversation messages:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleViewAll=(message:any)=>{
+   
+    fetchAllMessages(message);
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -84,33 +121,30 @@ const Messages: React.FC = () => {
                   messages.map((message: any) => (
                     <tr key={message.id}>
                       <td className="text-center">
-                        <a href={`/${message.normalized_sender_type === 'coach' ? 'coach' : 'players'}/${message.sender_slug}`} target="_blank">
+                        <a href={`/coach/${message.coachSlug}`} target="_blank">
                           <img
-                            src={message.sender_image === 'null' || !message.sender_image ? '/default.jpg' : message.sender_image}
+                            src={message.coachPhoto === 'null' || !message.coachPhoto ? '/default.jpg' : message.coachPhoto}
                             className="rounded-full w-16 h-16 object-cover m-auto"
                           />
-                          {message.sender_name}
+                          {message.coachName}
                         </a>
                       </td>
                       <td className="text-center">
-                        <a href={`/${message.normalized_receiver_type === 'coach' ? 'coach' : 'players'}/${message.receiver_slug}`} target="_blank">
+                      <a href={`/players/${message.playerSlug}`} target="_blank">
                           <img
-                            src={message.receiver_image === 'null' || !message.receiver_image ? '/default.jpg' : message.receiver_image}
+                            src={message.playerPhoto === 'null' || !message.playerPhoto ? '/default.jpg' : message.playerPhoto}
                             className="rounded-full w-16 h-16 object-cover m-auto"
                           />
-                          {message.receiver_name}
+                          {message.playerName}
                         </a>
                       </td>
-                      <td>{message.latest_message}</td>
-                      <td>{formatDate(message.latest_message_time)}</td>
+                      <td>{message.messageContent}</td>
+                      <td>{formatDate(message.messageTimestamp)}</td>
                       <td>
-                        <a
-                          href={`/coach/${message.slug}`}
-                          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600"
-                          target="_blank"
-                        >
-                          View All Chats
+                        <a href={`/enterprise/conversations/${message.chatId}`}  className="mb-4 px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
+                          View All
                         </a>
+                      
                       </td>
                     </tr>
                   ))
@@ -143,6 +177,40 @@ const Messages: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {modalVisible && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-2/3 h-3/4 overflow-auto">
+              <button onClick={closeModal} className="text-red-500 float-right mb-2">Close</button>
+              <h2 className="text-xl font-bold mb-4">Conversation Messages</h2>
+              {modalMessages.length > 0 ? (
+                modalMessages.map((msg: any, index) => (
+                  <div
+                  key={msg.id}
+                  className={`message mb-4 ${
+                    msg.sender_type === "coach" ? "text-right" : "text-left"
+                  }`}
+                >
+                  <div
+                    className={`inline-block p-2 rounded-lg ${
+                      msg.sender_type === "coach"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-300 text-black"
+                    }`}
+                  >
+                    <p>{msg.message}</p>
+                    <span className="block text-xs text-gray-700 mt-1">
+                       
+                    </span>
+                  </div>
+                </div>
+                ))
+              ) : (
+                <p>No messages found in this conversation.</p>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

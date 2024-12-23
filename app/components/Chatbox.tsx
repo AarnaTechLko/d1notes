@@ -4,7 +4,7 @@ import { FaEye, FaPaperclip, FaSmile, FaArrowLeft } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { useSession } from "next-auth/react";
 interface ChatMessage {
-    sender_id: number;
+    senderId: number;
     sender_type: string;
     receiver_id: number;
     receiver_type: string;
@@ -128,7 +128,7 @@ const ChatBox: React.FC = () => {
         console.log(selectedUser);
         try {
             const payload: ChatMessage = {
-                sender_id: Number(session.user.id),
+                senderId: Number(session.user.id),
                 sender_type: session.user.type,
                 receiver_id: selectedUser.user_id,
                 receiver_type : session?.user?.type === "coach" ? "player" : "coach",
@@ -230,14 +230,14 @@ const ChatBox: React.FC = () => {
                             >
                                 {chatData.map((msg, index) => (
                                     <div
-                                        className={`flex mb-4 ${msg.sender_id === Number(session?.user?.id)
+                                        className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
                                                 ? "justify-end"
                                                 : "justify-start"
                                             }`}
                                         key={index}
                                     >
                                         <div
-                                            className={`p-3 rounded-lg shadow ${msg.sender_id !== Number(session?.user?.id)
+                                            className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
                                                     ? "bg-blue-100"
                                                     : "bg-gray-200"
                                                 }`}

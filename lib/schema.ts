@@ -62,50 +62,6 @@ export const users = pgTable(
 
 
 
-export const tempusers = pgTable(
-  "tempusers",
-  {
-    id: serial("id").primaryKey(),
-    first_name: varchar("first_name"),
-    last_name: varchar("last_name"),
-    grade_level: varchar("grade_level"),
-    location: varchar("location"),
-    birthday: date("birthday"),
-    gender: varchar("gender"),
-    sport: varchar("sport"),
-    team: varchar("team"),
-    jersey:varchar("jersey"),
-    position: varchar("position"),
-    number: varchar("number"),
-    email: varchar("email").notNull().unique(),
-    image: text("image"),
-    bio:text("bio"),
-    country:varchar("country"),
-    state:varchar("state"),
-    city:varchar("city"),
-    league:text("league"),
-    countrycode:text("countrycode"),
-    password: text("password").notNull(),
-    enterprise_id: text("enterprise_id"),
-    coach_id: text("coach_id"),
-    slug: text("slug"),
-    playingcountries: text("playingcountries"),
-    height: text("height"),
-    weight: text("weight"),
-    graduation: text("graduation"),
-    status: varchar("status").default("Inactive"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-  },
-  (tempusers) => {
-    return {
-      uniqueIdx: uniqueIndex("tempusers_unique_idx").on(tempusers.email), // Renamed index for users
-    };
-  }
-);
-
-
-
-
 // Coaches table
 export const coaches = pgTable(
   "coaches",
@@ -355,17 +311,35 @@ export const chatfriend=pgTable("chatfriend",{
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
-export const chats=pgTable("chats",{
-  id: serial("id").primaryKey(),
-  sender_id:integer("sender_id"),
-  sender_type:text("sender_type"),
-  receiver_id:integer("receiver_id"),
-  receiver_type:text("receiver_type"),
-  message:text("message"),
-  createdAt: timestamp('createdAt').defaultNow().notNull(),
-  club_id:integer("club_id"),
+// export const chats=pgTable("chats",{
+//   id: serial("id").primaryKey(),
+//   sender_id:integer("sender_id"),
+//   sender_type:text("sender_type"),
+//   receiver_id:integer("receiver_id"),
+//   receiver_type:text("receiver_type"),
+//   message:text("message"),
+//   createdAt: timestamp('createdAt').defaultNow().notNull(),
+//   club_id:integer("club_id"),
+// });
+
+export const chats = pgTable('chats', {
+  id: serial('id').primaryKey(),
+  coachId: integer('coachId').notNull(),
+  playerId: integer('playerId').notNull(),
+  club_id: integer('club_id').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  
 });
 
+export const messages = pgTable('messages', {
+  id: serial('id').primaryKey(),
+  chatId: integer('chat_id').notNull(),
+  senderId: integer('sender_id').notNull(),
+  club_id: integer('club_id').notNull(),
+  message: text('message').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  });
 
 export const modules=pgTable("modules",{
   id: serial("id").primaryKey(),

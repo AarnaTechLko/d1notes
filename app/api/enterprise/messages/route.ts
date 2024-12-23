@@ -1,79 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from 'drizzle-orm';
 import { db } from '../../../../lib/db'; // Assuming db is set up correctly
-import { chats, coaches, users } from '../../../../lib/schema';
+import { chats, messages, coaches, users } from '../../../../lib/schema';
+import { eq, desc,sql,and } from 'drizzle-orm';
 
 export async function GET(req: NextRequest) {
-  const clubId = 24;
-
-  // Constructing the SQL query
-  const query = sql`
-    WITH chat_pairs AS (
-      SELECT 
-          LEAST(sender_id, receiver_id) AS normalized_sender_id,
-          GREATEST(sender_id, receiver_id) AS normalized_receiver_id,
-          CASE 
-              WHEN sender_id = LEAST(sender_id, receiver_id) THEN sender_type
-              ELSE receiver_type
-          END AS normalized_sender_type,
-          CASE 
-              WHEN receiver_id = GREATEST(sender_id, receiver_id) THEN receiver_type
-              ELSE sender_type
-          END AS normalized_receiver_type,
-          MAX(message) AS latest_message,
-          MAX("createdAt") AS latest_message_time
-      FROM chats
-      WHERE club_id = ${clubId}
-      GROUP BY 
-          LEAST(sender_id, receiver_id), 
-          GREATEST(sender_id, receiver_id), 
-          CASE 
-              WHEN sender_id = LEAST(sender_id, receiver_id) THEN sender_type
-              ELSE receiver_type
-          END,
-          CASE 
-              WHEN receiver_id = GREATEST(sender_id, receiver_id) THEN receiver_type
-              ELSE sender_type
-          END
-    )
-    SELECT 
-        m.*,
-        CASE 
-            WHEN m.normalized_sender_type = 'coach' THEN c."firstName" || ' ' || c."lastName"
-            ELSE u1.first_name || ' ' || u1.last_name
-        END AS sender_name,
-        CASE 
-            WHEN m.normalized_receiver_type = 'coach' THEN c2."firstName" || ' ' || c2."lastName"
-            ELSE u2.first_name || ' ' || u2.last_name
-        END AS receiver_name,
-        CASE 
-            WHEN m.normalized_sender_type = 'coach' THEN c."image"
-            ELSE u1.image
-        END AS sender_image,
-        CASE 
-            WHEN m.normalized_receiver_type = 'coach' THEN c2."image"
-            ELSE u2.image
-        END AS receiver_image,
-        CASE 
-            WHEN m.normalized_sender_type = 'coach' THEN c."slug"
-            ELSE u1.slug
-        END AS sender_slug,
-        CASE 
-            WHEN m.normalized_receiver_type = 'coach' THEN c2."slug"
-            ELSE u2.slug
-        END AS receiver_slug
-    FROM chat_pairs m
-    LEFT JOIN users u1 ON m.normalized_sender_id = u1.id AND m.normalized_sender_type = 'player'
-    LEFT JOIN coaches c ON m.normalized_sender_id = c.id AND m.normalized_sender_type = 'coach'
-    LEFT JOIN users u2 ON m.normalized_receiver_id = u2.id AND m.normalized_receiver_type = 'player'
-    LEFT JOIN coaches c2 ON m.normalized_receiver_id = c2.id AND m.normalized_receiver_type = 'coach';
-  `;
+  const { searchParams } = new URL(req.url);
+  const club_id = searchParams.get('enterprise_id');
+  if (!club_id) {
+    return NextResponse.json({ error: 'coachId and playerId are required' }, { status: 400 });
+  }
 
   try {
-    // Execute the query and retrieve results
-    const result = await db.execute(query);
-    return NextResponse.json(result.rows, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    const result = await db
+  .select({
+    coachId: chats.coachId,
+    coachName: sql`CONCAT(${coaches.firstName}, ' ', ${coaches.lastName})`.as("coachName"),
+    playerName: sql`CONCAT(${users.first_name}, ' ', ${users.last_name})`.as("playerName"),
+    playerId: chats.playerId,
+    coachPhoto: coaches.image,
+    playerPhoto: users.image,
+    playerSlug:users.slug,
+    coachSlug:coaches.slug,
+    chatId: sql`MAX(${chats.id})`.as("latestChatId"),
+    messageContent: messages.message, // Replace with the actual column name in your `messages` table
+    messageTimestamp: messages.createdAt, // Replace with the actual column name for message timestamps
+  })
+  .from(chats)
+  .leftJoin(
+    messages,
+    sql`${messages.chatId} = ${sql`(
+      SELECT MAX(c.id)
+      FROM chats AS c
+      WHERE c."coachId" = ${chats.coachId}
+        AND c."playerId" = ${chats.playerId}
+    )`}`
+  )
+  .leftJoin(coaches, eq(coaches.id, chats.coachId))
+  .leftJoin(users, eq(users.id, chats.playerId))
+  .where(
+    and(
+      eq(chats.club_id, Number(club_id))
+    )
+  )
+  .orderBy(desc(messages.createdAt))
+  .groupBy(chats.coachId, chats.playerId, messages.message, messages.createdAt, coaches.firstName, coaches.lastName, users.first_name,users.last_name, coaches.image, users.image, users.slug, coaches.slug);
+  
+
+     
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('Error fetching chats and messages:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
