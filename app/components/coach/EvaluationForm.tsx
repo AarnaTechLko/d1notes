@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import EvaluationProfile from '../EvaluationProfile';
 import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import { format } from 'date-fns';
 import defaultImage from '../../public/default.jpg'
 import { getSession } from 'next-auth/react';
-
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
 
 
 type EvaluationFormProps = {
@@ -65,7 +66,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     const [technicalRemarks, setTechnicalRemarks] = useState('');
     const [tacticalRemarks, setTacticalRemarks] = useState('');
     const [physicalRemarks, setPhysicalRemarks] = useState('');
+    const [document, setDocument] = useState('');
     const [finalRemarks, setFinalRemarks] = useState('');
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [fileUploading, setFileUploading] = useState<boolean>(false);
     const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
     const [coachID, setCoachID] = useState<number | undefined>(undefined);
     const [errors, setErrors] = useState<{ technicalRemarks: boolean; tacticalRemarks: boolean; physicalRemarks: boolean; finalRemarks: boolean }>({
@@ -153,6 +157,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             tacticalRemarks,
             physicalRemarks,
             finalRemarks,
+            document,
         };
 
 
@@ -213,7 +218,28 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
         }
     };
-
+    const handleDocumentChange = async () => {
+        if (!fileInputRef.current?.files) {
+          throw new Error('No file selected');
+        }
+        setFileUploading(true);
+        const file = fileInputRef.current.files[0];
+    
+        try {
+          const newBlob = await upload(file.name, file, {
+            access: 'public',
+            handleUploadUrl: '/api/uploads/documentupload',
+          });
+          setFileUploading(false);
+          const imageUrl = newBlob.url;
+          console.log(imageUrl);
+          setDocument(imageUrl);
+    
+        } catch (error) {
+            setFileUploading(false);
+          console.error('Error uploading file:', error);
+        }
+      };
     useEffect(() => {
         fetchEvaluationResultData();
 
@@ -452,7 +478,12 @@ onChange={(e) => {
                                 />
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>
-
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                            <div className="mt-6">
+                            <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
+                            <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef}/>
+                                </div>
+                            </div>
                             <div className="flex justify-end space-x-2 pt-6">
                                 <button
                                     type="submit"

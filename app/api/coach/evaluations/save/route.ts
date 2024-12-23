@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
             technicalRemarks, 
             tacticalRemarks, 
             physicalRemarks, 
-            finalRemarks 
+            finalRemarks, 
+            document 
         } = data;
 
     
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
                 tacticalRemarks: tacticalRemarks,
                 physicalRemarks: physicalRemarks,
                 finalRemarks: finalRemarks,
+                document: document,
               }).returning();
         }
         else
@@ -56,6 +58,7 @@ export async function POST(req: NextRequest) {
                 tacticalRemarks: tacticalRemarks,
                 physicalRemarks: physicalRemarks,
                 finalRemarks: finalRemarks,
+                document: document,
               }).returning();
         }
         
