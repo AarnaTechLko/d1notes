@@ -62,6 +62,7 @@ else{
           player_id: chats.playerId
          })
          .from(chats)
+         .where(eq(chats.coachId, Number(user_id)))
          .orderBy(chats.playerId);
          const playerIds = results.map(result => result.player_id);
          coachData=await db.select(
@@ -88,6 +89,7 @@ else{
             coach_id: chats.coachId
            })
            .from(chats)
+           .where(eq(chats.playerId, Number(user_id)))
            .orderBy(chats.coachId);
            const coachIDs = results.map(result => result.coach_id);
 
