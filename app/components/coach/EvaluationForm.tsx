@@ -4,7 +4,7 @@ import EvaluationProfile from '../EvaluationProfile';
 import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import { format } from 'date-fns';
 import defaultImage from '../../public/default.jpg'
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
@@ -72,6 +72,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     const [fileUploading, setFileUploading] = useState<boolean>(false);
     const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
     const [coachID, setCoachID] = useState<number | undefined>(undefined);
+    const { data: session } = useSession();
     const [errors, setErrors] = useState<{ technicalRemarks: boolean; tacticalRemarks: boolean; physicalRemarks: boolean; finalRemarks: boolean }>({
         technicalRemarks: false,
         tacticalRemarks: false,
@@ -478,12 +479,14 @@ onChange={(e) => {
                                 />
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>
+                            {session?.user.club_id && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                             <div className="mt-6">
                             <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
                             <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef}/>
                                 </div>
                             </div>
+                            )}
                             <div className="flex justify-end space-x-2 pt-6">
                                 <button
                                     type="submit"
