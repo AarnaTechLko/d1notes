@@ -327,7 +327,7 @@ export const chats = pgTable('chats', {
   id: serial('id').primaryKey(),
   coachId: integer('coachId').notNull(),
   playerId: integer('playerId').notNull(),
-  club_id: integer('club_id').notNull(),
+  club_id: integer('club_id'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
   
@@ -337,7 +337,7 @@ export const messages = pgTable('messages', {
   id: serial('id').primaryKey(),
   chatId: integer('chat_id').notNull(),
   senderId: integer('sender_id').notNull(),
-  club_id: integer('club_id').notNull(),
+  club_id: integer('club_id'),
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   });

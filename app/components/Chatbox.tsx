@@ -51,7 +51,7 @@ const ChatBox: React.FC = () => {
             if (!session?.user?.id) return;
             
             try {
-                const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=${session.user.type}`);
+                const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=${session.user.type}&club_id=${session?.user?.club_id}`);
                 const data = await response.json();
                 console.log(data);
                 setUsers(data);

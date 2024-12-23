@@ -1,39 +1,70 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; // Adjust the path based on your setup
 import { coaches, users, enterprises, chats, chatfriend } from "@/lib/schema";
-import { eq, sql, and, or, desc } from "drizzle-orm";
+import { eq, sql, and, or, desc,inArray } from "drizzle-orm";
 import { height } from "@mui/system";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const user_id = searchParams.get('user_id');
   const user_type = searchParams.get('user_type');
+  const club_id = searchParams.get('club_id');
   let userData;
   let coachData;
+if(club_id && club_id!='null')
+{
+   
   if(user_type=='player')
-  {
-    
-      userData=await db.select().from(users).where(eq(users.id,Number(user_id))).execute();
-      coachData=await db.select(
-        {
-          user_id:coaches.id,
-          first_name:coaches.firstName,
-          last_name:coaches.lastName,
-          image:coaches.image,
-          gender:coaches.gender,
-          sport:coaches.sport,
-          clubName:coaches.clubName,
-          qualifications:coaches.qualifications,
-          slug:coaches.slug,
-          id:coaches.id,
-        }
-      ).from(coaches).where(eq(coaches.enterprise_id,String(userData[0].enterprise_id))).execute();
-  }
-
+    {
+      
+        userData=await db.select().from(users).where(eq(users.id,Number(user_id))).execute();
+        coachData=await db.select(
+          {
+            user_id:coaches.id,
+            first_name:coaches.firstName,
+            last_name:coaches.lastName,
+            image:coaches.image,
+            gender:coaches.gender,
+            sport:coaches.sport,
+            clubName:coaches.clubName,
+            qualifications:coaches.qualifications,
+            slug:coaches.slug,
+            id:coaches.id,
+          }
+        ).from(coaches).where(eq(coaches.enterprise_id,String(userData[0].enterprise_id))).execute();
+    }
+  
+    if(user_type=='coach')
+      {
+          userData=await db.select().from(coaches).where(eq(coaches.id,Number(user_id))).execute();
+          coachData=await db.select(
+            {
+              user_id:users.id,
+              first_name:users.first_name,
+              last_name:users.last_name,
+              image:users.image,
+              gender:users.gender,
+              sport:users.sport,
+              location:users.location,
+              height:users.height,
+              weight:users.weight,
+              slug:users.slug,
+              id:users.id,
+            }
+          ).from(users).where(eq(users.enterprise_id,String(userData[0].enterprise_id))).execute();
+      }
+}
+else{
   if(user_type=='coach')
     {
-        userData=await db.select().from(coaches).where(eq(coaches.id,Number(user_id))).execute();
-        coachData=await db.select(
+      const results =  await db.selectDistinct(
+        { 
+          player_id: chats.playerId
+         })
+         .from(chats)
+         .orderBy(chats.playerId);
+         const playerIds = results.map(result => result.player_id);
+         coachData=await db.select(
           {
             user_id:users.id,
             first_name:users.first_name,
@@ -47,8 +78,37 @@ export async function GET(req: Request) {
             slug:users.slug,
             id:users.id,
           }
-        ).from(users).where(eq(users.enterprise_id,String(userData[0].enterprise_id))).execute();
+        ).from(users).where(inArray(users.id,playerIds)).execute();
+       
     }
+    if(user_type=='player')
+      {
+        const results =  await db.selectDistinct(
+          { 
+            coach_id: chats.coachId
+           })
+           .from(chats)
+           .orderBy(chats.coachId);
+           const coachIDs = results.map(result => result.coach_id);
+
+
+        coachData=await db.select(
+          {
+            user_id:coaches.id,
+            first_name:coaches.firstName,
+            last_name:coaches.lastName,
+            image:coaches.image,
+            gender:coaches.gender,
+            sport:coaches.sport,
+            clubName:coaches.clubName,
+            qualifications:coaches.qualifications,
+            slug:coaches.slug,
+            id:coaches.id,
+          }
+        ).from(coaches).where(inArray(coaches.id,coachIDs)).execute();
+      }
+}
+  
   
 
   //let friends;
