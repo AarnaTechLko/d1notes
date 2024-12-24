@@ -46,6 +46,7 @@ export const users = pgTable(
     playingcountries: text("playingcountries"),
     height: text("height"),
     weight: text("weight"),
+    parent_id:integer("parent_id"),
     graduation: text("graduation"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),

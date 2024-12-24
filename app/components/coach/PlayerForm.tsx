@@ -35,6 +35,7 @@ interface FormValues {
   jersey:string;
   enterprise_id:number;
   coach_id:number;
+  parent_id:number;
   league:string;
   countrycode:string;
   license:string;
@@ -76,6 +77,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     ownerType:"",
     teamId:"",
     coach_id:0,
+    parent_id:0,
     image: null,
   });
 
@@ -213,7 +215,11 @@ if (!formValues.weight.trim()) {
     if (!formValues.state.trim()) newErrors.state = "State is required.";
     if (!formValues.city.trim()) newErrors.city = "city is required.";
     if (!formValues.league.trim()) newErrors.league = "League is required.";
-    if (!formValues.license.trim()) newErrors.license = "License key is required.";
+    if(session?.user.type!='player')
+    {
+      if (!formValues.license.trim()) newErrors.license = "License key is required.";
+    }
+   
 
     if (Object.keys(newErrors).length > 0) {
       const orderedErrors = Object.keys(newErrors)
@@ -243,8 +249,14 @@ if (!formValues.weight.trim()) {
         formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
         formValues.ownerType = session.user.type;
       }
+      if(session.user.type=='coach')
+        {
+          formValues.coach_id = Number(session.user.id); // Add user ID to the form values
+          formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
+          formValues.ownerType = session.user.type;
+      }
       else{
-        formValues.coach_id = Number(session.user.id); // Add user ID to the form values
+        formValues.parent_id = Number(session.user.id); // Add user ID to the form values
         formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
         formValues.ownerType = session.user.type;
       }
@@ -733,6 +745,7 @@ if (!response.ok) {
          
         </div>
         </div>
+        {session?.user.type!='player' && (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6 pb-5">
         <div>
           <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">License Key<span className="mandatory">*</span></label>
@@ -763,7 +776,7 @@ if (!response.ok) {
          
         </div>
         </div>
-        
+       )} 
         
 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
   <button

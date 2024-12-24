@@ -63,8 +63,8 @@ import { sendEmail } from '@/lib/helpers';
                 firstName: item.FirstName,
                 lastName: item.LastName,
                 email: item.Email,
-                countrycode: item.CountryCode,
-                phoneNumber: item.PhoneNumber,
+                country: item.Country,
+               
                 enterprise_id,
                 slug,
                 gender: null,
@@ -76,7 +76,7 @@ import { sendEmail } from '@/lib/helpers';
                 rating: null,
                 certificate: null,
                 password: hashedPassword,
-                expectedCharge: item.EvaluationCharges,
+               
             };
         }));
         if (insertData.length > 0) {

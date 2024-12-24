@@ -5,49 +5,51 @@ import { teams, enterprises, coaches, otps, users } from '../../../../lib/schema
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and,not, between, lt, ilike, sql } from 'drizzle-orm';
+import { eq, isNotNull, and, not, between, lt, ilike, sql, ne, isNull, or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const country = searchParams.get('country') || ''; // Keep the search as a string
-  const state = searchParams.get('state') || '';  
-  const city = searchParams.get('city') || '';  
-  const graduation = searchParams.get('graduation') || '';  
-  const birthyear = searchParams.get('birthyear') || '';  
-  const position = searchParams.get('position') || '';  
+  const state = searchParams.get('state') || '';
+  const city = searchParams.get('city') || '';
+  const graduation = searchParams.get('graduation') || '';
+  const birthyear = searchParams.get('birthyear') || '';
+  const position = searchParams.get('position') || '';
 
   try {
-   const conditions = [eq(users.status, 'Active')];
-    
+    const conditions = [eq(users.status, 'Active')];
 
-      if (country) {
-        conditions.push(eq(users.country, country));
-      }
-      if (state) {
-        conditions.push(eq(users.state, state));
-      }
-      if (city) {
-        conditions.push(ilike(users.city, city));
-      }
-      if (graduation) {
-        conditions.push(ilike(users.graduation, graduation));
-      }
-      if (position && Array.isArray(position) && position.length > 0) {
-        const positionConditions = position.map(pos => ilike(users.position, pos));
-        conditions.push(...positionConditions);
-      } else if (position) {
-        conditions.push(ilike(users.position, position));
-      }
+    conditions.push(isNull(users.parent_id));
 
-      if (birthyear) {
-        conditions.push(
-          sql`EXTRACT(YEAR FROM ${users.birthday}) = ${birthyear}`
-        );
-      }
 
-   
- 
+    if (country) {
+      conditions.push(eq(users.country, country));
+    }
+    if (state) {
+      conditions.push(eq(users.state, state));
+    }
+    if (city) {
+      conditions.push(ilike(users.city, city));
+    }
+    if (graduation) {
+      conditions.push(ilike(users.graduation, graduation));
+    }
+    if (position && Array.isArray(position) && position.length > 0) {
+      const positionConditions = position.map(pos => ilike(users.position, pos));
+      conditions.push(...positionConditions);
+    } else if (position) {
+      conditions.push(ilike(users.position, position));
+    }
+
+    if (birthyear) {
+      conditions.push(
+        sql`EXTRACT(YEAR FROM ${users.birthday}) = ${birthyear}`
+      );
+    }
+
+
+
 
     const query = db
       .select({

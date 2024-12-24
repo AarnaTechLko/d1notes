@@ -17,7 +17,7 @@ import next from 'next';
 
 export async function POST(req: NextRequest) {
 
-  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId, coach_id, graduation} = await req.json();
+  const { license, enterprise_id, ownerType, first_name, email, last_name, grade_level, location, birthday, gender, sport, team, position, number, country, state, city, bio, jersey, league, countrycode, imageFile,playingcountries,height,weight, image,teamId, coach_id, graduation,parent_id} = await req.json();
    
 
   
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
        
   ));
     
-  if (checkLicense.length < 1) {
+  if (ownerType !== 'player' && checkLicense.length < 1) {
     return NextResponse.json({ message: "Invalid License Key Found." }, { status: 500 });
   }
  
@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
         position: position,
         graduation: graduation,
         number: number,
+        parent_id: parent_id,
         country: country,
         state: state,
         city: city,
@@ -134,6 +135,7 @@ export async function GET(req: NextRequest) {
   const page = parseInt(url.searchParams.get('page') || '1', 10);  // Default to 1 if not provided
   const limit = parseInt(url.searchParams.get('limit') || '10', 10);  // Default to 10 if not provided
   const enterprise_id = url.searchParams.get('enterprise_id');
+  const type = url.searchParams.get('type');
   try {
     if (!enterprise_id) {
       return NextResponse.json(
@@ -142,8 +144,10 @@ export async function GET(req: NextRequest) {
       );
     }
     const offset = (page - 1) * limit;
-
-    const whereClause = search
+    let whereClause;
+    if(type!='player')
+    {
+     whereClause = search
       ? and(
         eq(users.coach_id, enterprise_id),
         or(
@@ -153,6 +157,19 @@ export async function GET(req: NextRequest) {
         )
       )
       : eq(users.coach_id, enterprise_id);
+    }
+    else{
+       whereClause = search
+      ? and(
+        eq(users.parent_id, Number(enterprise_id)),
+        or(
+          ilike(users.first_name, `%${search}%`),
+          ilike(users.email, `%${search}%`),
+          ilike(users.number, `%${search}%`)
+        )
+      )
+      : eq(users.parent_id,  Number(enterprise_id));
+    }
 
     const coachesData = await db
       .select()

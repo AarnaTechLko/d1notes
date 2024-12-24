@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaImage, FaUserPlus } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaImage, FaUserPlus, FaChild } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -15,7 +15,7 @@ const Sidebar: React.FC = () => {
   };
   const handleLogout = async () => {
     await signOut(); // Sign out using NextAuth.js
-    localStorage.setItem('userImage', '')
+   
     window.location.href = '/login';
   };
 
@@ -131,7 +131,12 @@ const Sidebar: React.FC = () => {
               <span>Messages</span>
             </a>
           </li>
-          
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/children" className="flex items-center space-x-2 p-2">
+            <FaChild className="text-xl" />
+              <span>Children</span>
+            </a>
+          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a  onClick={handleLogout} className="flex items-center space-x-2 p-2">
               <FaSignOutAlt className="text-xl" />

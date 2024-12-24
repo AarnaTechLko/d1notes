@@ -6,7 +6,7 @@ import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import Papa from "papaparse";
 import { useRouter } from "next/navigation";
-
+import Swal from "sweetalert2";
 type Team = {
   id?: number;
   team_name?: string;
@@ -76,7 +76,9 @@ const Home: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmit(true);
+    setIsSubmit(true); 
+    console.log(csvData);
+   
     try {
       const response = await fetch("/api/uploads/csvupload/coach/insert", {
         method: "POST",
@@ -108,8 +110,22 @@ const Home: React.FC = () => {
   };
 
   const handleDelete = (index: number) => {
-    const updatedData = csvData.filter((_, i) => i !== index);
-    setCsvData(updatedData);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedData = csvData.filter((_, i) => i !== index);
+        setCsvData(updatedData);
+  
+        Swal.fire("Deleted!", "The item has been deleted.", "success");
+      }
+    });
   };
 
   const handleOpenControl = () => {
@@ -179,9 +195,8 @@ const Home: React.FC = () => {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
-          <th>Country Code</th>
-          <th>Phone Number</th>
-          <th>Evaluation Charges</th>
+          <th>Country</th>
+          
         </tr>
       </thead>
       <tbody>
@@ -190,9 +205,9 @@ const Home: React.FC = () => {
             <td>{row.FirstName}</td>
             <td>{row.LastName}</td>
             <td>{row.Email}</td>
-            <td>{row.CountryCode}</td>
-            <td>{row.PhoneNumber}</td>
-            <td>{row.EvaluationCharges}</td>
+            <td>{row.Country}</td>
+            
+             
           </tr>
         ))}
       </tbody>
@@ -240,9 +255,8 @@ const Home: React.FC = () => {
                           <th>First Name</th>
                           <th>Last Name</th>
                           <th>Email</th>
-                          <th>Country Code</th>
-                          <th>Phone Number</th>
-                          <th>Evaluation Charges</th>
+                          <th>Country</th>
+                          
                           
                           <th>Remove</th>
                         </tr>
@@ -283,33 +297,14 @@ const Home: React.FC = () => {
                             <td>
                               <input
                                 type="text"
-                                value={row.CountryCode}
+                                value={row.Country}
                                 onChange={(e) =>
-                                  handleInputChange(index, "CountryCode", e.target.value)
+                                  handleInputChange(index, "Country", e.target.value)
                                 }
                                 className="w-full"
                               />
                             </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.PhoneNumber}
-                                onChange={(e) =>
-                                  handleInputChange(index, "PhoneNumber", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
-                            <td className="flex">
-                              $<input
-                                type="text"
-                                value={row.EvaluationCharges}
-                                onChange={(e) =>
-                                  handleInputChange(index, "League", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
+                          
                             
                             <td>
                               <button

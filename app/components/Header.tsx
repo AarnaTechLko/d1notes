@@ -246,7 +246,7 @@ const Header: React.FC = () => {
                         alt="Profile"
                         width={40}
                         height={40}
-                        className="rounded-full"
+                        className="rounded-full h-12 w-12 border-gray-900"
                       />
                     </button>
                     {dropdownOpen && (

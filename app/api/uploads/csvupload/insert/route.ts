@@ -63,14 +63,14 @@ import { sendEmail } from '@/lib/helpers';
           first_name: item.FirstName,
           last_name: item.LastName,
           email: item.Email,
-          countrycode: item.CountryCode,
-          number: item.PhoneNumber,
+          country: item.Country,
+          
           coach_id: coach_id,
           enterprise_id: enterprise_id,
           sport: null,
           team: null,
           position: null,
-          country: null,
+          
           state: null,
           city: null,
           league: null,

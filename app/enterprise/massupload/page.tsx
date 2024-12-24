@@ -6,7 +6,7 @@ import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
-
+import Swal from "sweetalert2";
 type Team = {
   id?: number;
   team_name?: string;
@@ -112,8 +112,22 @@ const Home: React.FC = () => {
   };
 
   const handleDelete = (index: number) => {
-    const updatedData = csvData.filter((_, i) => i !== index);
-    setCsvData(updatedData);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedData = csvData.filter((_, i) => i !== index);
+        setCsvData(updatedData);
+  
+        Swal.fire("Deleted!", "The item has been deleted.", "success");
+      }
+    });
   };
 
   const handleOpenControl = () => {
@@ -199,10 +213,8 @@ const Home: React.FC = () => {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
-                        <th>Country Code</th>
-                        <th>Phone Number</th>
-                        <th>League</th>
-                        <th>Experience</th>
+                        <th>Country</th>
+                       
                       </tr>
                     </thead>
                     <tbody>
@@ -211,10 +223,8 @@ const Home: React.FC = () => {
                           <td>{row.FirstName}</td>
                           <td>{row.LastName}</td>
                           <td>{row.Email}</td>
-                          <td>{row.CountryCode}</td>
-                          <td>{row.PhoneNumber}</td>
-                          <td>{row.League}</td>
-                          <td>{row.Experience}</td>
+                          <td>{row.Country}</td>
+                          
                         </tr>
                       ))}
                     </tbody>
@@ -263,10 +273,8 @@ const Home: React.FC = () => {
                           <th>First Name</th>
                           <th>Last Name</th>
                           <th>Email</th>
-                          <th>Country Code</th>
-                          <th>Phone Number</th>
-                          <th>League</th>
-                          <th>Experience</th>
+                          <th>Country</th>
+                        
                           <th>Remove</th>
                         </tr>
                       </thead>
@@ -306,43 +314,14 @@ const Home: React.FC = () => {
                             <td>
                               <input
                                 type="text"
-                                value={row.CountryCode}
+                                value={row.Country}
                                 onChange={(e) =>
                                   handleInputChange(index, "CountryCode", e.target.value)
                                 }
                                 className="w-full"
                               />
                             </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.PhoneNumber}
-                                onChange={(e) =>
-                                  handleInputChange(index, "PhoneNumber", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.League}
-                                onChange={(e) =>
-                                  handleInputChange(index, "League", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.Experience}
-                                onChange={(e) =>
-                                  handleInputChange(index, "Experience", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
+                           
                             <td>
                               <button
                                 type="button"
