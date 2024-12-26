@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { db } from '../../../lib/db';
-import { payments, playerEvaluation } from '@/lib/schema';
-import { eq, and } from 'drizzle-orm';
+import { payments, playerEvaluation, coachearnings, coachaccount } from '@/lib/schema';
+import { eq, and, sum } from 'drizzle-orm';
+import { COMMISSIONPERCENTAGE } from '@/lib/constants';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-09-30.acacia',
@@ -14,7 +15,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { coachId, playerId, amount, evaluationId } = body;
 
-    // Create a checkout session
+    const accountQuery = await db.select().from(coachaccount).where(eq(coachaccount.coach_id, coachId)).execute();
+    if (accountQuery.length == 0) {
+      await db.insert(coachaccount).values({
+        coach_id: coachId,
+        amount: '0',
+        created_at: new Date(),
+        updated_at: new Date()
+      });
+    }
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -34,7 +43,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${req.headers.get('origin')}/PaymentCancel`,
     });
 
-    await db.insert(payments).values({
+    const paymentdone = await db.insert(payments).values({
       player_id: playerId,
       coach_id: coachId,
       evaluation_id: evaluationId,
@@ -45,7 +54,43 @@ export async function POST(req: NextRequest) {
 
     });
 
+    let totalAmount = 0;
+    let newBalance = 0;
+    if (paymentdone) {
+      // const totalBalance = await db
+      //   .select({ value: sum(coachaccount.amount) })
+      //   .from(coachaccount)
+      //   .where(eq(coachaccount.coach_id, coachId))
+      //   .execute();
 
+      // totalAmount = Number(totalBalance[0]?.value);
+
+      const companycommission = COMMISSIONPERCENTAGE * (amount / 100);
+      const coachPart = amount - companycommission;
+      const coachearningsInsert = {
+        coach_id: coachId,  // Ensure coachId exists and is of the correct type
+        evaluation_id: evaluationId,  // Ensure evaluationId exists and is of the correct type
+        evaluation_title: `Evaluation for Player ${playerId}`,  // Ensure this is correct
+        player_id: playerId,  // Ensure playerId exists and is of the correct type
+        company_amount: companycommission.toString(),  // Convert to string
+        commision_rate: COMMISSIONPERCENTAGE.toString(),  // Convert to string
+        commision_amount: coachPart.toString(),  // Convert to string
+        status: 'In Progress',
+        transaction_id: session.id,  // Use actual session ID
+      };
+
+      await db.insert(coachearnings).values(coachearningsInsert);
+      // newBalance = totalAmount + coachPart;
+      // try{
+      // await db.update(coachaccount)
+      //   .set({ amount: newBalance.toString() })
+      //   .where(eq(coachaccount.coach_id, coachId));
+      // }
+      //  catch (error) {
+      //   console.error('Error updating coach account:', error);
+      //   throw error; // Rethrow the error to handle it in the outer catch block
+      // }
+    }
 
     // Return the session ID to the client
     return NextResponse.json({ id: session.id }, { status: 200 });
@@ -69,7 +114,7 @@ export async function GET(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.retrieve(sessionId as string);
 
-   
+
     // Update payment status in your database based on session status
     if (session.payment_status === 'paid') {
       const updatedepayment = await db.update(payments)

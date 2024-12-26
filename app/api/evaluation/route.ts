@@ -9,11 +9,22 @@ export async function POST(req: NextRequest) {
     console.log('Request body:', body); // Log the incoming request body
 
     try {
-        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId,turnaroundTime,status } = body;
-
-        // Await the insertion and ensure you are capturing the result
+        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId,turnaroundTime,status,child } = body;
+        let player_id;
+        let parent_id;
+        if(child)
+        {
+            player_id=child;
+            parent_id=playerId;
+        }
+        else{
+            player_id=playerId;
+            parent_id=null
+        }
+       
         const result = await db.insert(playerEvaluation).values({
-            player_id: playerId,
+            player_id: player_id,
+            parent_id: parent_id,
             review_title: reviewTitle,
             primary_video_link: primaryVideoUrl,
             video_link_two: videoUrl2,

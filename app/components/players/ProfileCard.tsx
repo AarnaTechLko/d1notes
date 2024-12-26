@@ -69,10 +69,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
       </a>
     </div>
 
-    {/* Jersey Badge */}
+   {jersey && (
     <div className="absolute top-4 right-4 bg-maroon-500 text-white text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center jersyBlock">
       {jersey}
     </div>
+    )}
   </div>
 
   {/* Profile Info Section */}

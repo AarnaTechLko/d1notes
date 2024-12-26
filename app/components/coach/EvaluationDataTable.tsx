@@ -126,9 +126,9 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 <td>
-                                    <a href={item.primary_video_link} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Primary</a>
-                                    <a href={item.video_link_two} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Link#2</a>
-                                    <a href={item.video_link_three} target='_blank' className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">Link#3</a>
+                                    <a href={item.primary_video_link} target='_blank' className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">Primary</a>
+                                    <a href={item.video_link_two} target='_blank' className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">Link#2</a>
+                                    <a href={item.video_link_three} target='_blank' className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">Link#3</a>
                                     </td>
                               
                                 <td>{item.video_description.substring(0, 30)}
@@ -138,7 +138,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                 </td>
                                 <td> 
                                     {item.status === 0 && (
-                                        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Requested</button>
+                                        <button  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Requested</button>
                                     )}
                                     {item.status === 1 && (
                                         <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Accepted</button>

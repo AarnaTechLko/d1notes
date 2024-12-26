@@ -1,12 +1,16 @@
 // File: components/EvaluationModal.tsx
 
 "use client"; // Ensure this is a client component
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
+interface Kids {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
 interface EvaluationModalProps {
   onClose: () => void;
   isOpen: boolean;
@@ -15,9 +19,10 @@ interface EvaluationModalProps {
   amount: number | null;
   coachClubId?: number;
   playerClubId?: number;
+  kids?: Kids[];
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId,kids }) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -26,6 +31,10 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [videoDescription, setVideoDescription] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
+ 
+  const [userType, setUserType]=useState('Myself');
+  const [child, setChild]=useState<string>('');
 
 
 
@@ -59,8 +68,6 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       if (!turnaroundTime) newErrors.turnaroundTime = 'Turnaround Time is required.';
     }
 
-
-
     if (!primaryVideoUrl) newErrors.primaryVideoUrl = 'Primary Video URL is required.';
     if (!videoDescription) newErrors.videoDescription = 'Video Description is required.';
 
@@ -86,6 +93,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     else {
       status = 'Paid';
     }
+     
     try {
       const response = await fetch('/api/evaluation', {
         method: 'POST',
@@ -101,7 +109,9 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           coachId,
           playerId,
           turnaroundTime,
-          status
+          status,
+          userType,
+          child
         }),
       });
 
@@ -116,6 +126,13 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         }
 
         const evaluationReponse = await response.json();
+let paidBy;
+        if (child) {
+          paidBy = evaluationReponse.result[0].parent_id; // Use '=' for assignment
+      } else {
+        paidBy =evaluationReponse.result[0].player_id;
+      }
+      
         const paymentResponse = await fetch('/api/payment', {
           method: 'POST',
           headers: {
@@ -124,7 +141,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           body: JSON.stringify({
             evaluationId: evaluationReponse.result[0].id,
             coachId: evaluationReponse.result[0].coach_id,
-            playerId: evaluationReponse.result[0].player_id,
+            playerId: paidBy,
             amount: amount,
           }),
         });
@@ -168,6 +185,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     }
   };
 
+ 
+  
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-3xl p-6 relative">
@@ -180,9 +199,55 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation</h2>
 
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}
-
+        {loading ? (
+      // Show spinner when loading is true
+      <div className="flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+      </div>
+    ) : (
         <form onSubmit={handleSubmit}>
-          {/* Review Title */}
+          <div className="flex">
+            <div className="mb-4 w-1/2 ml-1">
+              <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
+               Evaluation For?
+
+              </label>
+              <select name='userType' value={userType}
+                  onChange={(e) => {
+                    setUserType(e.target.value);
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md`}>
+                  
+                  <option value='Myself'>Myself</option>
+                  <option value='Child'>Child</option>
+                 
+                </select>
+              
+            </div>
+            {userType === 'Child' && (
+              <div className="mb-4 w-1/2 ml-1">
+                <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
+                 Select Child
+                </label>
+                <select name='child' value={child}
+                  onChange={(e) => {
+                    setChild(e.target.value);
+                    
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md`}>
+                  <option value=''>Select Child</option>
+                  {kids?.map((kid:any)=>{
+                    return(
+                      <option key={kid.id} value={kid.id}>{kid.first_name} {kid.last_name}</option>
+                    )
+                  })}
+                  
+                
+                </select>
+                {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
+              </div>
+            )}
+          </div>
           <div className="flex">
             <div className="mb-4 w-3/4 ml-1">
               <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
@@ -220,7 +285,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                   }}
                   className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
                   <option value=''>Turnaround Time</option>
-                  <option value='1'>1 Day</option>
+                  <option value='1'>24 Hours</option>
                   <option value='2'>2 Days</option>
                   <option value='3'>3 Days</option>
                   <option value='4'>4 Days</option>
@@ -336,6 +401,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
             {loading ? 'Submitting...' : 'Submit'}
           </button>
         </form>
+    )}
       </div>
     </div>
   );

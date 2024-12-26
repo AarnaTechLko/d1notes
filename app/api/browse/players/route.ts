@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   try {
     const conditions = [eq(users.status, 'Active')];
 
-    conditions.push(isNull(users.parent_id));
+   /// conditions.push(isNull(users.parent_id));
 
 
     if (country) {
@@ -61,6 +61,7 @@ export async function GET(req: NextRequest) {
         grade_level: users.grade_level,
         location: users.location,
         height: users.height,
+        jersey: users.jersey,
         weight: users.weight,
         coachName: sql`coa."firstName"`.as("coachName"),
         coachLastName: sql`coa."lastName"`.as("coachLastName"),
@@ -88,6 +89,7 @@ export async function GET(req: NextRequest) {
       slug: coach.slug,
       image: coach.image,
       position: coach.position,
+      jersey: coach.jersey,
       grade_level: coach.grade_level,
       location: coach.location,
       height: coach.height,

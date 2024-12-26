@@ -108,6 +108,7 @@ export const playerEvaluation = pgTable(
     id: serial("id").primaryKey(),
     player_id: integer("player_id").notNull(),
     coach_id: integer("coach_id").notNull(),
+    parent_id: integer("parent_id"),
     review_title: varchar("review_title").notNull(),
     primary_video_link: text("primary_video_link").notNull(),
     video_link_two: text("video_link_two"),
@@ -123,6 +124,38 @@ export const playerEvaluation = pgTable(
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   }
 );
+
+
+export const coachearnings = pgTable(
+  "coachearnings",
+  {
+    id: serial("id").primaryKey(),
+    coach_id: integer("coach_id"),
+    evaluation_id: integer("evaluation_id").notNull(),
+    evaluation_title: varchar("evaluation_title"),
+    player_id: integer("player_id"),
+    company_amount: decimal("company_amount"),
+    commision_rate: decimal("commision_rate"),
+    commision_amount: decimal("commision_amount"),
+    transaction_id:varchar("transaction_id"),
+    status:varchar("status"),
+    coupon:varchar("coupon"),
+    coupon_discount_percentage:decimal("coupon_discount_percentage"),
+    discount_amount:decimal("discount_amount"),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  }
+);
+
+export const coachaccount=pgTable("coachaccount",
+  {
+    id:serial("id").primaryKey(),
+    coach_id:integer("coach_id").notNull(),
+    amount:decimal("amount").notNull(),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  }
+)
 
 // Payments table
 export const payments = pgTable(

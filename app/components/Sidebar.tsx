@@ -131,18 +131,15 @@ const Sidebar: React.FC = () => {
               <span>Messages</span>
             </a>
           </li>
+          {!session?.user.club_id && (
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/children" className="flex items-center space-x-2 p-2">
             <FaChild className="text-xl" />
-              <span>Children</span>
+              <span>Children{session?.user.club_id}</span>
             </a>
           </li>
-          <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a  onClick={handleLogout} className="flex items-center space-x-2 p-2">
-              <FaSignOutAlt className="text-xl" />
-              <span>Sign Out</span>
-            </a>
-          </li>
+          )}
+       
         </ul>
       </nav>
       </aside>

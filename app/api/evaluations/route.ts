@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
 import { playerEvaluation, users, coaches } from '../../../lib/schema'
 import { like } from 'drizzle-orm';
-import { eq } from 'drizzle-orm';
+import { eq,or } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
 import { and } from 'drizzle-orm';
 import next from 'next';
@@ -36,9 +36,15 @@ export async function POST(req: NextRequest) {
       .from(playerEvaluation)  // This selects from the `playerEvaluation` table
       .innerJoin(coaches, eq(playerEvaluation.coach_id, coaches.id)) // Inner join with the `users` table
       .where(
-        and(
-          eq(playerEvaluation.player_id, userId),     // First condition
-          eq(playerEvaluation.status, status)   // Second condition
+        or(
+          and(
+            eq(playerEvaluation.player_id, userId),   // First condition
+            eq(playerEvaluation.status, status)       // Second condition
+          ),
+          and(
+            eq(playerEvaluation.parent_id, userId),   // First condition
+            eq(playerEvaluation.status, status)       // Second condition
+          )     // OR condition
         )
       )
        // Apply the second filter
@@ -71,15 +77,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
     }
 
-    // Base condition: filter by playerId
-    const conditions = [eq(playerEvaluation.player_id, playerId)];
+     
+    const conditions = [
+      or(
+        eq(playerEvaluation.player_id, playerId),
+        eq(playerEvaluation.parent_id, playerId)
+      ),
+    ];
 
-    // Conditionally add the status filter if it's provided
+     
     if (status) {
       conditions.push(eq(playerEvaluation.status, Number(status)));
     }
 
-    // Build the query with conditions
+    
     const query = db
       .select({
         id:playerEvaluation.id,

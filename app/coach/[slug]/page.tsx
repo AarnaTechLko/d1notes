@@ -41,6 +41,11 @@ interface CoachProfileProps {
     slug: string;
   };
 }
+interface Kids {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
 
 const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
@@ -59,9 +64,43 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
+  const [kids, setKids]=useState<Kids[] | undefined>(undefined);
   
-  // Fetch coach data
+
   useEffect(() => {
+    const fetchKids = async () => {
+    
+      let playerId;
+       if(!session)
+       {
+         console.log("You are not a player.");
+       }
+       else{
+        playerId=session.user.id
+       }
+    
+        try {
+          const response = await fetch('/api/player/children', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ playerId }),
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          setKids(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+           
+        }
+      };
+
     const payload = { slug: slug , loggeInUser:session?.user.id};
     const fetchCoachData = async () => {
       try {
@@ -86,7 +125,7 @@ setEvaluationList(responseData.evaluationlist);
         setLoading(false);
       }
     };
-
+    fetchKids()
     fetchCoachData();
     setPlayerId(session?.user?.id || null);
     setPlayerClubid(session?.user?.club_id || '')
@@ -173,65 +212,72 @@ setEvaluationList(responseData.evaluationlist);
               <></>
             )}
 
-            {!session ? (
-              <>
-                <button
-                  onClick={() => setIsModalOpen(true)} // Open modal on click
-                  className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
-                >
-                  Sign in to book
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setIsevaluationModalOpen(true)} // Open modal on click
-                className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Proceed to Evaluation
-              </button>
-            )}
-</div>
-<div>
-
-{!session ? (
+{!(session && session.user && session.user.type === 'coach') && (
   <>
-    {isRequested > 0 ? (
-      <button
-        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-        disabled
-      >
-        Requested
-      </button>
-    ) : (
+    {!session ? (
       <button
         onClick={() => setIsModalOpen(true)} // Open modal on click
         className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
       >
-        Request to Join
-      </button>
-    )}
-  </>
-) : (
-  <>
-    {isRequested > 0 ? (
-      <button
-        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-        disabled
-      >
-        Requested
+        Sign in to book
       </button>
     ) : (
       <button
-        onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+        onClick={() => setIsevaluationModalOpen(true)} // Open modal on click
         className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
       >
-        Request to Join
+        Proceed to Evaluation
       </button>
     )}
   </>
 )}
 
-  </div>
+</div>
+
+<div>
+  {session?.user?.type !== 'coach' && (
+    <>
+      {!session ? (
+        <>
+          {isRequested > 0 ? (
+            <button
+              className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+              disabled
+            >
+              Requested
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsModalOpen(true)} // Open modal on click
+              className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+            >
+              Request to Join
+            </button>
+          )}
+        </>
+      ) : (
+        <>
+          {isRequested > 0 ? (
+            <button
+              className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+              disabled
+            >
+              Requested
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+              className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+            >
+              Request to Join
+            </button>
+          )}
+        </>
+      )}
+    </>
+  )}
+</div>
+
   </div>
   
 </div>
@@ -384,6 +430,7 @@ Previous Evaluations
           coachId={coachData.id}
           playerId={playerId}
           onClose={() => setIsevaluationModalOpen(false)}
+          kids={kids}
           coachClubId={coachData.enterprise_id}
           playerClubId={Number(playerClubId)}
         />

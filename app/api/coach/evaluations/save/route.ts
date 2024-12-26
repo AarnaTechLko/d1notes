@@ -1,8 +1,8 @@
 // app/api/evaluation/save/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '../../../../../lib/db'; // Import your Drizzle ORM database instance
-import { evaluationResults, playerEvaluation } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
+import { coachaccount, coachearnings, evaluationResults, playerEvaluation } from '@/lib/schema';
+import { eq,sum } from 'drizzle-orm';
 import { NextRequest } from 'next/server'; // Import NextRequest
 
 export async function POST(req: NextRequest) {
@@ -62,27 +62,38 @@ export async function POST(req: NextRequest) {
               }).returning();
         }
         
-
+        let totalAmount;
        if(status)
        {
+       
         const updateEvaluation = await db
             .update(playerEvaluation)
             .set({
-                status: 4 // Assuming 2 means "completed" or some status
+                status: 4  
             })
-            .where(eq(playerEvaluation.id, evaluationId)) // Update by evaluation ID
+            .where(eq(playerEvaluation.id, evaluationId))  
             .returning();
+       
+
         }
         else{
             const updateEvaluation = await db
             .update(playerEvaluation)
             .set({
-                status: 2 // Assuming 2 means "completed" or some status
+                status: 2  
             })
-            .where(eq(playerEvaluation.id, evaluationId)) // Update by evaluation ID
+            .where(eq(playerEvaluation.id, evaluationId))  
             .returning();
+
+            await db
+                .update(coachearnings)
+                .set({
+                    status: 'Completed'
+                })
+                .where(eq(coachearnings.evaluation_id, evaluationId))
+                .returning();
         }
-        // Return a success response
+        
         return NextResponse.json({ success: "success"});
     } catch (error) {
         console.error('Error saving evaluation results:', error);

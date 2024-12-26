@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   const logError = debug('app:error');
   const body = await req.json();
   const { email, password, otp, sendedBy, referenceId, team } = body;
-
+let enterprise_id;
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 500 });
   }
@@ -31,6 +31,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: 'This email already exists.' }, { status: 500 });
   }
+if(sendedBy=='Club')
+{
+  enterprise_id=referenceId;
+}
 
   // const existingOtp = await db
   //   .select()
@@ -42,7 +46,7 @@ export async function POST(req: NextRequest) {
   //   .limit(1)
   //   .execute();
 
-
+ 
   const hashedPassword = await hash(password, 10);
 
   try {
@@ -63,11 +67,14 @@ export async function POST(req: NextRequest) {
       country: null,
       state: null,
       city: null,
+      enterprise_id: enterprise_id,
       jersey: null,
       slug: null,
       password: hashedPassword,
       createdAt: new Date(),
     };
+
+    
     const insertedUser = await db.insert(users).values(userValues).returning();
     // Conditionally add coach_id or enterprise_id based on sendedBy and referenceId
     if (sendedBy && referenceId) {
