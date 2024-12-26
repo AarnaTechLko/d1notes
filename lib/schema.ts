@@ -391,3 +391,12 @@ export const roles=pgTable("roles",{
   permissions:text("permissions"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
+
+
+export const evaluation_charges=pgTable("evaluation_charges",{
+  id: serial("id").primaryKey(),
+  coach_id:integer("coach_id"),
+  turnaroundtime:text("turnaroundtime"),
+  amount:text("amount"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});

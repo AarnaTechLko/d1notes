@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
   };
   const handleLogout = async () => {
     await signOut(); // Sign out using NextAuth.js
-    localStorage.setItem('userImage', '');
+    //localStorage.setItem('userImage', '');
     window.location.href = '/login';
   };
 
@@ -64,6 +64,12 @@ const Sidebar: React.FC = () => {
               <a href="/coach/earnings" className="flex items-center space-x-2 p-2">
                 <FaDollarSign className="text-xl" />
                 <span>Earnings</span>
+              </a>
+            </li>
+            <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/coach/charges" className="flex items-center space-x-2 p-2">
+                <FaDollarSign className="text-xl" />
+                <span>Evaluation Charges</span>
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">

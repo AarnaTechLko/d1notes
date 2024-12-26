@@ -32,7 +32,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
- 
+  const [evaluationCharges, setEvaluationCharges] = useState(null);
   const [userType, setUserType]=useState('Myself');
   const [child, setChild]=useState<string>('');
 
@@ -142,7 +142,7 @@ let paidBy;
             evaluationId: evaluationReponse.result[0].id,
             coachId: evaluationReponse.result[0].coach_id,
             playerId: paidBy,
-            amount: amount,
+            amount: evaluationCharges && evaluationCharges > 0 ? evaluationCharges : amount,
           }),
         });
 
@@ -185,7 +185,22 @@ let paidBy;
     }
   };
 
- 
+  const fetchEvaluationCharges = async (time: any) => {
+    try {
+      const response = await fetch('/api/coach/checkcharges', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Ensure the content type is JSON
+        },
+        body: JSON.stringify({ turnaroundime: time,coach_id:coachId }), // Sending the time as JSON in the body
+      });
+  
+      const data = await response.json();
+      setEvaluationCharges(data); // Assuming the API returns { charges }
+    } catch (error) {
+      console.error('Error fetching evaluation charges:', error);
+    }
+  };
   
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -247,6 +262,7 @@ let paidBy;
                 {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
               </div>
             )}
+           
           </div>
           <div className="flex">
             <div className="mb-4 w-3/4 ml-1">
@@ -276,13 +292,18 @@ let paidBy;
                   Turnaround Time
                 </label>
                 <select name='turnaroundtime' value={turnaroundTime}
-                  onChange={(e) => {
-                    setTurnaroundTime(e.target.value);
-                    if (errors.turnaroundTime) {
-                      const { turnaroundTime, ...remainingErrors } = errors;
-                      setErrors(remainingErrors);
-                    }
-                  }}
+                 onChange={(e) => {
+                  const value = e.target.value;
+                  setTurnaroundTime(value);
+        
+                  // Fetch evaluation charges on change
+                  fetchEvaluationCharges(value);
+        
+                  if (errors.turnaroundTime) {
+                    const { turnaroundTime, ...remainingErrors } = errors;
+                    setErrors(remainingErrors);
+                  }
+                }}
                   className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
                   <option value=''>Turnaround Time</option>
                   <option value='1'>24 Hours</option>
@@ -295,8 +316,14 @@ let paidBy;
               </div>
             )}
           </div>
-
-          {/* Video URLs in full width */}
+          {evaluationCharges && evaluationCharges > 0 ? (
+  <div className="mb-4 text-red-500">
+    Evaluation charges for this Turnaround time is <b>USD {evaluationCharges}</b>
+  </div>
+) : (
+ <></>
+)}
+        
           <div className="mb-4">
             {/* Primary Video URL */}
             <label htmlFor="primaryVideoUrl" className="block text-gray-700 mb-1">
