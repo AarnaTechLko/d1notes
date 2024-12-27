@@ -4,8 +4,9 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaSpinner } from 'react-icons/fa';
+import { FaKey, FaSpinner, FaTrash } from 'react-icons/fa';
 import defaultImage from '../../public/default.jpg';
+import ResetPassword from '@/app/components/ResetPassword';
 // Define the type for the coach data
 interface Coach {
   id: number;
@@ -37,7 +38,13 @@ const Home: React.FC = () => {
   const limit = 10; // Items per page
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
   const { data: session } = useSession();
-
+  const [coachId, setCoachId] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handlePasswordChangeSuccess = () => {
+    console.log('Password changed successfully!');
+  };
   const fetchCoaches = async (page = 1, searchQuery = '') => {
     setLoading(true);
 
@@ -180,10 +187,20 @@ const Home: React.FC = () => {
         console.error("Error fetching license:", error);
         alert("Failed to assign license");
     }
-};
+}; 
+const handleResetPassword=(coach: Coach)=>{
+  console.log(coach);
+  setCoachId(coach.id);
+  setIsModalOpen(true)
+}
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
+      <ResetPassword  isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handlePasswordChangeSuccess}
+        type="player"
+        userId={coachId}/>
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
         <div className="flex justify-between items-center">
@@ -268,8 +285,17 @@ const Home: React.FC = () => {
     </button>
   )}</td>
                       <td>
-
-                        <a href={`/coach/${coach.id}`} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" target='_blank'>Delete</a>
+                      <div className="flex items-center space-x-2">
+                      <button
+                  onClick={() => handleResetPassword(coach)}
+                  title='Reset Password'
+                  className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
+                >
+                 <FaKey/>
+                </button>
+                      <a href={`/coach/${coach.id}`} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" target='_blank'><FaTrash/></a>
+                        </div>
+                       
                       </td>
                     </tr>
                   ))

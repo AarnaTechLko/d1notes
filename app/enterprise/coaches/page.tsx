@@ -4,7 +4,8 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import CoachForm from '@/app/components/enterprise/CoachForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaSpinner } from 'react-icons/fa';
+import { FaEye, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
+import ResetPassword from '@/app/components/ResetPassword';
 
 // Define the type for the coach data
 interface Coach {
@@ -30,6 +31,7 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [coachId, setCoachId] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
@@ -41,7 +43,13 @@ const Home: React.FC = () => {
   const [licenseKey, setLicenseKey] = useState<string>('');
   const [totalLicenses, setTotalLicenses] = useState<number>(0);
   const limit = 10; // Items per page
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handlePasswordChangeSuccess = () => {
+    console.log('Password changed successfully!');
+  };
 
   const { data: session } = useSession();
 
@@ -210,6 +218,11 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleResetPassword=(coach: Coach)=>{
+    console.log(coach);
+    setCoachId(coach.id);
+    setIsModalOpen(true)
+  }
   const handleLicenseKeySubmit = async () => {
     try {
       const session = await getSession();
@@ -255,6 +268,11 @@ const Home: React.FC = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
+      <ResetPassword  isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handlePasswordChangeSuccess}
+        type="coach"
+        userId={coachId}/>
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
         <div className="flex justify-between items-center">
@@ -309,7 +327,7 @@ const Home: React.FC = () => {
             <td>{coach.countrycode}{coach.phoneNumber}</td>
             <td>{coach.sport}</td>
             <td>
-            <div className="mt-4">
+            <div className="mt-0">
   <button className="w-24 px-1 py-1 bg-blue-500 text-white rounded-lg">Shared {coach.assignedLicenseCount}</button>
   <button className="w-24 px-1 py-1 bg-red-500 text-white rounded-lg mt-2"> Consumed {coach.consumeLicenseCount}</button>
 </div>
@@ -331,18 +349,27 @@ const Home: React.FC = () => {
             </td>
             <td>
               <div className="flex items-center space-x-2">
+              <button
+                  onClick={() => handleResetPassword(coach)}
+                  title='Reset Password'
+                  className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
+                >
+                 <FaKey/>
+                </button>
                 <a
                   href={`/coach/${coach.slug}`}
+                  title='View Bio'
                   className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                   target="_blank"
                 >
-                  View
+                  <FaEye/>
                 </a>
                 <button
                   onClick={() => handleAssignLicense(coach)}
+                  title="Share License"
                   className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
                 >
-                  Share License
+                 <FaShare/>
                 </button>
               </div>
             </td>
