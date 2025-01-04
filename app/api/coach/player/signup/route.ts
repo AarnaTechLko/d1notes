@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
         enterprise_id: enterprise_id,
         grade_level: grade_level,
         location: location,
-        birthday: birthday,
+        birthday: birthday || null,
         gender: gender,
         sport: sport,
         team: team,

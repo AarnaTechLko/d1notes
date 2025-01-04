@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db'; // Adjust the import based on your file structure
 import { playerEvaluation } from '../../../lib/schema'; // Adjust if necessary
-import { eq } from 'drizzle-orm';
+import { eq,or } from 'drizzle-orm';
 import { and } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
@@ -21,7 +21,22 @@ export async function POST(req: NextRequest) {
             player_id=playerId;
             parent_id=null
         }
-       
+        const checkRejection = await db.select().from(playerEvaluation).where(
+            and(
+              or(
+                eq(playerEvaluation.player_id, player_id),
+                eq(playerEvaluation.parent_id, player_id)
+              ),
+              eq(playerEvaluation.status, 3),
+              eq(playerEvaluation.coach_id, coachId)
+            )
+          );
+
+       if(checkRejection.length>0)
+       {
+        return NextResponse.json({ message:"You can not send Evaluation Request to this coach as this coach has rejected your request 3 Times."}, { status: 500 });
+       }
+
         const result = await db.insert(playerEvaluation).values({
             player_id: player_id,
             parent_id: parent_id,

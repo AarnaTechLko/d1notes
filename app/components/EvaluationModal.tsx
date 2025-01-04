@@ -116,7 +116,13 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       });
 
       if (!response.ok) {
-        throw new Error('Submission failed');
+        const data=await response.json();
+        Swal.fire({
+          title: 'Error!',
+          text: data.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
 
       if (playerClubId != coachClubId) {
@@ -179,7 +185,7 @@ let paidBy;
       }
 
     } catch (err: any) {
-      setErrors({ general: err.message || 'An error occurred during submission.' });
+      ///setErrors({ general: err.message || 'An error occurred during submission.' });
     } finally {
       setLoading(false);
     }
@@ -306,11 +312,11 @@ let paidBy;
                 }}
                   className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
                   <option value=''>Turnaround Time</option>
-                  <option value='1'>24 Hours</option>
-                  <option value='2'>2 Days</option>
-                  <option value='3'>3 Days</option>
-                  <option value='4'>4 Days</option>
-                  <option value='5'>5 Days</option>
+                  <option value='24'>24 Hours</option>
+                  <option value='48'>48 Hours</option>
+                  <option value='72'>72 Hours</option>
+                  <option value='96'>96 Hours</option>
+                  <option value='120'>120 Hours</option>
                 </select>
                 {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
               </div>
@@ -318,7 +324,7 @@ let paidBy;
           </div>
           {evaluationCharges && evaluationCharges > 0 ? (
   <div className="mb-4 text-red-500">
-    Evaluation charges for this Turnaround time is <b>USD {evaluationCharges}</b>
+    Evaluation charges for this Turnaround time is <b>$ {evaluationCharges}</b>
   </div>
 ) : (
  <></>

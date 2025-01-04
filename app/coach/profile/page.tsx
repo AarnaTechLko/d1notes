@@ -246,7 +246,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"

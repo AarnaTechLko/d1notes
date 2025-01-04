@@ -145,7 +145,7 @@ const Home: React.FC = () => {
                         </a>
                       </td>
                       <td>{accounts.evaluation_title}</td>
-                      <td>USD {accounts.commision_amount}</td>
+                      <td>$ {accounts.commision_amount}</td>
                       <td>
                          {accounts.created_at ? new Date(accounts.created_at).toLocaleDateString() : 'N/A'}
                       </td>

@@ -157,7 +157,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <div className="flex flex-col items-center md:items-end">
               <ul className="space-y-4">
                 <li>
-                  <strong>Address:</strong> {coachData.address} USD
+                  <strong>Address:</strong> {coachData.address}
                 </li>
                 <li>
                   <strong>Country:</strong> {coachData.country}

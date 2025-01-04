@@ -447,7 +447,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                     </div>
                                     <div >
-                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD rates ( per evaluation )<span className='mandatory'>*</span></label>
+                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
                                         <input
                                             type="text"
                                             name="expectedCharge"

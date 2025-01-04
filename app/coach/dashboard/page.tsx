@@ -269,7 +269,7 @@ const Dashboard: React.FC = () => {
           <div className="bg-white shadow-md rounded-lg p-6 ">
           <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
   <span className="text-xl font-semibold text-gray-700">Your Evaluation Price:</span>
-  <span className="text-2xl font-bold text-blue-600">{session?.user?.expectedCharge} USD</span>
+  <span className="text-2xl font-bold text-blue-600"> ${session?.user?.expectedCharge}</span>
 </div>
 
             {/* Dropdown for tabs on small screens */}

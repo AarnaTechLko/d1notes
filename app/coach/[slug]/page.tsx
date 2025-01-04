@@ -205,8 +205,8 @@ setEvaluationList(responseData.evaluationlist);
   <div>
     {session ? (
               <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
-                <span>Rate</span>
-                <p className="ml-2">  ${coachData.expectedCharge}</p>
+                <span>Evaluation Charges:</span>
+                <p className="ml-2">  ${coachData.expectedCharge} / Evaluation</p>
               </div>
             ) : (
               <></>
@@ -296,7 +296,7 @@ setEvaluationList(responseData.evaluationlist);
     {/* Column 1 */}
     <div className="flex-1 mb-4 md:mb-0">
       <ul className="space-y-4">
-        <li><strong>Rate per evaluation:</strong> {coachData.expectedCharge} USD</li>
+        <li><strong>Rate per evaluation:</strong> ${coachData.expectedCharge} </li>
         <li><strong>Sport :</strong> {coachData.sport}</li>
         <li><strong>Title/ organization(s)/Affilication(s):</strong> {coachData.clubName}</li>
         <li><strong>Gender:</strong> {coachData.gender}</li>

@@ -173,20 +173,20 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     // }
     if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
-    if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+    // if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+   
+   
     const heightRegex = /^\d{1,2}'\d{1,2}"$/;
-    if (!formValues.height.trim()) {
-      newErrors.height = "Height is required.";
-    } else if (!heightRegex.test(formValues.height.trim())) {
+    if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
       newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
     }
-
     const weightRegex = /^\d+(\.\d{1,2})?$/;
-if (!formValues.weight.trim()) {
-    newErrors.weight = "Weight is required.";
-} else if (!weightRegex.test(formValues.weight.trim())) {
-    newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
-}
+    if (formValues.weight.trim() && !weightRegex.test(formValues.weight.trim())) {
+      newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
+    }
+
+
+
     if (!formValues.email) {
         newErrors.email = 'Email is required';
     } else if (
@@ -194,12 +194,12 @@ if (!formValues.weight.trim()) {
     ) {
         newErrors.email = 'Invalid email format';
     }
-    if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
-    if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
+    // if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
+    // if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
     if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sport is required.";
     
-    if (!formValues.position.trim()) newErrors.position = "Position is required.";
+    // if (!formValues.position.trim()) newErrors.position = "Position is required.";
     
     if (!formValues.countrycode.trim()) newErrors.countrycode = "Country Code is required.";
     if (!formValues.number.trim()) newErrors.number = "Mobile Number is required.";
@@ -210,11 +210,11 @@ if (!formValues.weight.trim()) {
     if (formValues.number.length > 14) newErrors.number = 'Mobile Number Must be of 14 Digits Maximum';
     
 
-    if (!formValues.bio.trim()) newErrors.bio = "Bio is required.";
-    if (!formValues.country.trim()) newErrors.country = "Country is required.";
-    if (!formValues.state.trim()) newErrors.state = "State is required.";
-    if (!formValues.city.trim()) newErrors.city = "city is required.";
-    if (!formValues.league.trim()) newErrors.league = "League is required.";
+    // if (!formValues.bio.trim()) newErrors.bio = "Bio is required.";
+    // if (!formValues.country.trim()) newErrors.country = "Country is required.";
+    // if (!formValues.state.trim()) newErrors.state = "State is required.";
+    // if (!formValues.city.trim()) newErrors.city = "city is required.";
+    // if (!formValues.league.trim()) newErrors.league = "League is required.";
     if(session?.user.type!='player')
     {
       if (!formValues.license.trim()) newErrors.license = "License key is required.";
@@ -238,18 +238,20 @@ if (!formValues.weight.trim()) {
 
     
     if (session && session.user.id) {
+      console.log(session.user.type);
       if(session.user.type=='team')
       {
         formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
         formValues.ownerType = 'enterprise';
         formValues.teamId=session.user.id;
       }
-      if(session.user.type=='enterprise')
+     else if(session.user.type=='enterprise')
         {
         formValues.enterprise_id = Number(session.user.id); // Add user ID to the form values
         formValues.ownerType = session.user.type;
+        formValues.coach_id =0;
       }
-      if(session.user.type=='coach')
+      else if(session.user.type=='coach')
         {
           formValues.coach_id = Number(session.user.id); // Add user ID to the form values
           formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
@@ -441,7 +443,7 @@ if (!response.ok) {
 
         {/* Location */}
         <div>
-          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location<span className="mandatory">*</span></label>
+          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location</label>
           <input
             type="text"
             name="location"
@@ -526,7 +528,7 @@ if (!response.ok) {
        </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className="mandatory">*</span></label>
+          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
           <select
             name="country"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -546,7 +548,7 @@ if (!response.ok) {
          
         </div>
         <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className="mandatory">*</span></label>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
           
         
           <select
@@ -566,7 +568,7 @@ if (!response.ok) {
          
         </div>
         <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className="mandatory">*</span></label>
+          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
           <input
             type="text"
             name="city"
@@ -581,7 +583,7 @@ if (!response.ok) {
         </div>
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
         <div>
-          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className="mandatory">*</span></label>
+          <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
           <input
             type="date"
             name="birthday"
@@ -595,7 +597,7 @@ if (!response.ok) {
 
         {/* Grade Level */}
         <div>
-          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level<span className="mandatory">*</span></label>
+          <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level</label>
           <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
                     {playingLevels.map((level) => (
 
@@ -657,7 +659,7 @@ if (!response.ok) {
 
         {/* Team */}
         <div style={{display:'none'}}>
-          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year<span className="mandatory">*</span></label>
+          <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
           <input
           placeholder="Team Name/ 2024"
             type="text"
@@ -719,7 +721,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className="mandatory">*</span></label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League</label>
           <input
           type="text"
             placeholder="Specify experience league (AYSO, club, school, etc.)"
@@ -733,7 +735,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
         <div>
-          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className="mandatory">*</span></label>
+          <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
           <textarea
             placeholder="Tell us about your player’s experience/ competition level, any 
           accolades and goals."
