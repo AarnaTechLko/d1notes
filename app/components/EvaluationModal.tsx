@@ -35,6 +35,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [evaluationCharges, setEvaluationCharges] = useState(null);
   const [userType, setUserType]=useState('Myself');
   const [child, setChild]=useState<string>('');
+  const [currency, setCurrency]=useState<string>('usd');
 
 
 
@@ -138,18 +139,22 @@ let paidBy;
       } else {
         paidBy =evaluationReponse.result[0].player_id;
       }
-      
+      const payload={
+        evaluationId: evaluationReponse.result[0].id,
+        coachId: evaluationReponse.result[0].coach_id,
+        playerId: paidBy,
+        amount: evaluationCharges && evaluationCharges > 0 ? evaluationCharges : amount,
+        currency:currency
+      };
+
+      // console.log(payload);
+      // return;
         const paymentResponse = await fetch('/api/payment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            evaluationId: evaluationReponse.result[0].id,
-            coachId: evaluationReponse.result[0].coach_id,
-            playerId: paidBy,
-            amount: evaluationCharges && evaluationCharges > 0 ? evaluationCharges : amount,
-          }),
+          body: JSON.stringify(payload),
         });
 
         const session = await paymentResponse.json();
@@ -202,7 +207,8 @@ let paidBy;
       });
   
       const data = await response.json();
-      setEvaluationCharges(data); // Assuming the API returns { charges }
+      setEvaluationCharges(data.amount); // Assuming the API returns { charges }
+      setCurrency(data.currency); // Assuming the API returns { charges }
     } catch (error) {
       console.error('Error fetching evaluation charges:', error);
     }
@@ -324,7 +330,7 @@ let paidBy;
           </div>
           {evaluationCharges && evaluationCharges > 0 ? (
   <div className="mb-4 text-red-500">
-    Evaluation charges for this Turnaround time is <b>$ {evaluationCharges}</b>
+    Evaluation charges for this Turnaround time is <b>{currency} {evaluationCharges}</b>
   </div>
 ) : (
  <></>

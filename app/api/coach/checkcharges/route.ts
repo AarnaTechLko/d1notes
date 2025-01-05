@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
     // Querying for the 'amount' field
     const query = await db
-        .select({amount:evaluation_charges.amount}) // Specify the field to select
+        .select() // Specify the field to select
         .from(evaluation_charges)
         .where(
             and(
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
             )
         );
 if(query.length>0){
-    return NextResponse.json(query[0].amount);
+    return NextResponse.json({amount:query[0].amount,currency:query[0].currency});
 }
 else{
     return NextResponse.json(0);

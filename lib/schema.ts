@@ -84,6 +84,7 @@ export const coaches = pgTable(
     country:varchar("country"),
     state:varchar("state"),
     city:varchar("city"),
+    currency:varchar("currency"),
     rating: integer("rating").default(0),
     password: text("password").notNull(),
     certificate:text("certificate"),
@@ -167,6 +168,7 @@ export const payments = pgTable(
     evaluation_id: integer("evaluation_id").notNull(),
     amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
     status: varchar("status"),
+    currency: varchar("currency"),
     payment_info: text("payment_info"),
     created_at: timestamp("created_at").defaultNow().notNull(),
     description: text("description"),
@@ -396,6 +398,7 @@ export const roles=pgTable("roles",{
 export const evaluation_charges=pgTable("evaluation_charges",{
   id: serial("id").primaryKey(),
   coach_id:integer("coach_id"),
+  currency:text("currency"),
   turnaroundtime:text("turnaroundtime"),
   amount:text("amount"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),

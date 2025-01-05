@@ -102,6 +102,7 @@ export async function PUT(req: NextRequest) {
   const certificate = formData.get('certificate') as string | null;
   const country = formData.get('country') as string | null;
   const state = formData.get('state') as string | null;
+  const currency = formData.get('currency') as string | null;
   const city = formData.get('city') as string | null;
   const countrycode = formData.get('countrycode') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
@@ -124,6 +125,7 @@ export async function PUT(req: NextRequest) {
     certificate: certificate || null,
     country: country || null,
     state: state || null,
+    currency: currency || null,
     city: city || null,
     slug: slug || null, 
     countrycode: countrycode || null,  

@@ -13,7 +13,19 @@ export async function POST(req: NextRequest) {
   try {
     // Parse the request body
     const body = await req.json();
-    const { coachId, playerId, amount, evaluationId } = body;
+    const { coachId, playerId, amount, evaluationId,currency } = body;
+let newcurrency;
+    if(currency=="€")
+    {
+      newcurrency="eur";
+    }
+    else if(currency=="£")
+    {
+      newcurrency="gbp";
+    }
+    else{
+      newcurrency="usd";
+    }
 
     const accountQuery = await db.select().from(coachaccount).where(eq(coachaccount.coach_id, coachId)).execute();
     if (accountQuery.length == 0) {
@@ -29,7 +41,7 @@ export async function POST(req: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency:newcurrency,
             product_data: {
               name: `Evaluation for Player ${playerId} by Coach ${coachId}`,
             },
@@ -48,6 +60,7 @@ export async function POST(req: NextRequest) {
       coach_id: coachId,
       evaluation_id: evaluationId,
       amount: amount,
+      currency: currency,
       status: 'pending',
       payment_info: session.id,
       description: `Evaluation for Player ${playerId} by Coach ${coachId}`

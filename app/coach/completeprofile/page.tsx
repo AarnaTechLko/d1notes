@@ -10,7 +10,7 @@ import { FaCheck, FaSpinner } from 'react-icons/fa';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import FileUploader from '@/app/components/FileUploader';
-import { countryCodesList, states } from '@/lib/constants';
+import { countryCodesList, states, currencies } from '@/lib/constants';
 import { useRouter } from "next/navigation";
 interface FormValues {
   firstName: string;
@@ -30,6 +30,7 @@ interface FormValues {
   city: string | null;
   certificate: string | null;
   countrycode: string;
+  currency: string;
 }
 
 interface FormErrors {
@@ -49,6 +50,7 @@ interface FormErrors {
   city?: string | null;
   image: string | null;
   countrycode: string | null;
+  currency: string | null;
 
 }
 
@@ -69,6 +71,7 @@ export default function Register() {
     country: '',
     state: '',
     city: '',
+    currency: '',
     countrycode: '',
     image: null,
     certificate: null
@@ -88,6 +91,7 @@ export default function Register() {
     password: undefined,
     country: undefined,
     state: undefined,
+    currency: null,
     city: undefined,
     countrycode: null,
     image: null,
@@ -117,6 +121,7 @@ export default function Register() {
       qualifications: undefined,
       expectedCharge: undefined,
       countrycode: null,
+      currency: null,
 
       image: null, // Ensure this property is included
     };
@@ -142,6 +147,7 @@ export default function Register() {
     if (!formValues.sport) errors.sport = 'Sport is required';
     if (!formValues.clubName) errors.clubName = 'Club Name is required';
     if (!formValues.qualifications) errors.qualifications = 'Qualifications are required';
+    if (!formValues.currency) errors.currency = 'Currency required';
     if (!formValues.expectedCharge) {
       errors.expectedCharge = 'Expected Charge is required';
     } else if (!/^\d+(\.\d{1,2})?$/.test(formValues.expectedCharge)) {
@@ -182,8 +188,7 @@ export default function Register() {
       return;
     }
     try {
-     
-
+ 
 
       const response = await fetch('/api/coach/signup', {
         method: 'PUT',
@@ -201,7 +206,19 @@ export default function Register() {
       session.user.expectedCharge = formValues.expectedCharge;
 
      console.log(session.user.expectedCharge);
-     router.push("/coach/dashboard");
+
+      const res = await signIn('credentials', {
+        redirect: false,
+        email:  localStorage.getItem('email'),
+        password: localStorage.getItem('key'),
+        loginAs:'coach',
+      });
+      if (response.ok) {
+        localStorage.clear();
+        router.push("/coach/dashboard");
+
+      }
+   
      //window.location.href = '/coach/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong!');
@@ -387,14 +404,31 @@ export default function Register() {
                     {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                   </div>
                   <div >
-                    <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
-                    <input
+                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Rates ( per evaluation )<span className='mandatory'>*</span></label>
+                  <div className="flex">
+                      <select
+                        name="currency"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 mr-1" // Added mr-4 for margin-right
+                        value={formValues.currency}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select</option>
+                        {currencies.map((crn) => (
+                          <option key={crn.currency} value={crn.unicode}>
+                            {crn.unicode} ({crn.currency})
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                      placeholder='Amount'
                       type="text"
                       name="expectedCharge"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-1/2"
                       value={formValues.expectedCharge}
                       onChange={handleChange}
                     />
+                    </div>
+                    {formErrors.currency && <p className="text-red-600 text-sm">{formErrors.currency}</p>}
                     {formErrors.expectedCharge && <p className="text-red-600 text-sm">{formErrors.expectedCharge}</p>}
                   </div>
                   <div>

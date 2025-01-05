@@ -8,6 +8,20 @@ const endYear = 2030;
 
 
 export const Grades=Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
+export const currencies=[
+  { unicode:"$", currency:"USD"},
+  { unicode:"€", currency:"EUR"},
+  { unicode:"£", currency:"GBP"}
+];
+
+export const turnAroundTime=[
+  { id:1, value:"24", label:"24 Hours"},
+  { id:2, value:"48", label:"48 Hours"},
+  { id:3, value:"72", label:"72 Hours"},
+  { id:4, value:"96", label:"96 Hours"},
+  { id:5, value:"120", label:"120 Hours"},
+  
+];
 export const countryCodesList = [
     { id: 1, code: "+1", country: "USA" },
     { id: 2, code: "+44", country: "UK" },

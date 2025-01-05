@@ -5,12 +5,14 @@ import { showSuccess, showError } from "@/app/components/Toastr";
 import { useSession } from "next-auth/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { currencies, turnAroundTime } from "@/lib/constants";
 
 const Home: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [turnaroundtime, setTurnaroundtime] = useState("");
     const [amount, setAmount] = useState("");
+    const [currency, setCurrency] = useState("");
     const [charges, setCharges] = useState([]);
     const [loading, setLoading] = useState(false);
     const [editChargeId, setEditChargeId] = useState<number | null>(null);
@@ -19,12 +21,13 @@ const Home: React.FC = () => {
     const fetchCharges = async () => {
         try {
             const coachId = session?.user.id;
+            
             const response = await fetch(`/api/coach/evaluationcharges?coachId=${coachId}`);
             if (response.ok) {
                 const data = await response.json();
                 setCharges(data.evaluation_chargesData);
             } else {
-               // showError("Failed to fetch charges.");
+                // showError("Failed to fetch charges.");
             }
         } catch (error) {
             //showError("An error occurred while fetching charges.");
@@ -33,10 +36,15 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         fetchCharges();
+        if(session)
+        {
+            setCurrency(session?.user.coachCurrency || '');
+        }
+       
     }, [session]);
 
     const handleSubmit = async () => {
-        if (!turnaroundtime || !amount) {
+        if (!turnaroundtime || !amount || !currency) {
             showError("Please fill in all fields.");
             return;
         }
@@ -49,22 +57,24 @@ const Home: React.FC = () => {
             type RequestBody = {
                 turnaroundtime: string;
                 amount: string;
+                currency: string;
                 coach_id: string | undefined;
                 id?: number; // Optional id field
             };
-    
+
             const body: RequestBody = {
                 turnaroundtime,
                 amount,
+                currency,
                 coach_id,
             };
-    
+
             if (isEditMode) {
                 body.id = editChargeId || 0; // Add the `id` field only in edit mode
             }
-    
 
-            
+
+
             const response = await fetch("/api/coach/evaluationcharges", {
                 method: isEditMode ? "PUT" : "POST",
                 headers: {
@@ -82,12 +92,13 @@ const Home: React.FC = () => {
                 setIsModalOpen(false);
                 setTurnaroundtime("");
                 setAmount("");
+                setCurrency("");
                 setIsEditMode(false);
                 setEditChargeId(null);
                 fetchCharges(); // Refresh the charges list
             } else {
                 const errorData = await response.json();
-                showError(errorData.message || "Failed to save evaluation charge.");
+                showError(errorData.message);
             }
         } catch (error) {
             showError("An error occurred while saving the evaluation charge.");
@@ -100,41 +111,42 @@ const Home: React.FC = () => {
         setIsEditMode(true);
         setIsModalOpen(true);
         setTurnaroundtime(charge.turnaroundtime);
+        setCurrency(charge.currency);
         setAmount(charge.amount);
         setEditChargeId(charge.id);
     };
 
     const handleDelete = async (id: number) => {
         try {
-          const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
-          });
-      
-          if (result.isConfirmed) {
-            const response = await fetch(`/api/coach/evaluationcharges/${id}`, {
-              method: "DELETE",
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
             });
-      
-            if (response.ok) {
-              showSuccess("Evaluation charge deleted successfully!");
-              fetchCharges(); // Refresh the charges list
+
+            if (result.isConfirmed) {
+                const response = await fetch(`/api/coach/evaluationcharges/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    showSuccess("Evaluation charge deleted successfully!");
+                    fetchCharges(); // Refresh the charges list
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.message || "Failed to delete evaluation charge.");
+                }
             } else {
-              const errorData = await response.json();
-              showError(errorData.message || "Failed to delete evaluation charge.");
+                console.log('Canceled');
             }
-          } else {
-            console.log('Canceled');
-          }
         } catch (error) {
-          showError("An error occurred while deleting the evaluation charge.");
+            showError("An error occurred while deleting the evaluation charge.");
         }
-      };
-      
+    };
+
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -158,7 +170,7 @@ const Home: React.FC = () => {
                         <table className="w-full text-sm text-left text-gray-700">
                             <thead>
                                 <tr>
-                                    <th>Sr. No.</th>
+                                    <th>Sr. No. </th>
                                     <th>Turnaround Time</th>
                                     <th>Evaluation Charges</th>
                                     <th>Action</th>
@@ -169,8 +181,8 @@ const Home: React.FC = () => {
                                     charges.map((charge: any, index) => (
                                         <tr key={charge.id}>
                                             <td>{index + 1}</td>
-                                            <td>{charge.turnaroundtime} Day(s)</td>
-                                            <td>${charge.amount}</td>
+                                            <td>{charge.turnaroundtime} Hours</td>
+                                            <td>{charge.currency}{charge.amount}</td>
                                             <td className="">
                                                 <button
                                                     className="bg-blue-500 text-white p-2 rounded"
@@ -216,22 +228,27 @@ const Home: React.FC = () => {
                                 className="w-full px-3 py-2 border rounded-md"
                             >
                                 <option value="">Select Turnaround Time</option>
-                                <option value="1">24 Hours</option>
-                                <option value="2">2 Days</option>
-                                <option value="3">3 Days</option>
-                                <option value="4">4 Days</option>
-                                <option value="5">5 Days</option>
+                                {turnAroundTime.map((tat) => (
+                                    <option value={tat.value} key={tat.id}>{tat.label}</option>
+                                ))}
+
                             </select>
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium mb-1">Amount</label>
-                            <input
-                                type="number"
-                                className="w-full border rounded px-3 py-2"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                placeholder="Enter amount"
-                            />
+                        <div className="mb-4 flex space-x-4">
+                            
+                            
+
+                            {/* Amount Input */}
+                            <div className="w-1/2">
+                                <label className="block text-sm font-medium mb-1">Amount</label>
+                                <input
+                                    type="number"
+                                    className="w-full border rounded px-3 py-2"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    placeholder="Enter amount"
+                                />
+                            </div>
                         </div>
                         <div className="flex justify-end">
                             <button

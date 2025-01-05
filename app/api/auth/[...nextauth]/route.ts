@@ -21,6 +21,7 @@ interface ExtendedUser {
   club_id?: string | null;
   expectedCharge?: string | null;
   club_name?: string | null;
+  coachCurrency?: string | null;
   added_by?: string | null;
 }
   
@@ -53,6 +54,7 @@ const handler = NextAuth({
               id: coach[0].id.toString(),
               name: coach[0].firstName,
               email: coach[0].email,
+              coachCurrency:coach[0].currency,
               expectedCharge:coach[0].expectedCharge,
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
@@ -171,6 +173,7 @@ secret:SECRET_KEY,
         token.club_id = extendedUser.club_id; 
         token.image = extendedUser.image;
         token.expectedCharge = extendedUser.expectedCharge;
+        token.coachCurrency = extendedUser.coachCurrency;
         token.club_name = extendedUser.club_name;
         token.added_by = extendedUser.added_by;
         if (extendedUser.package_id) {
@@ -185,6 +188,7 @@ secret:SECRET_KEY,
         session.user.id = token.id as string;
         session.user.type = token.type as string; // Add the type to the session
         session.user.name = token.name as string; // Add the type to the session
+        session.user.coachCurrency = token.coachCurrency as string; // Add the type to the session
         session.user.image = token.image as string | null;
         session.user.coach_id = token.coach_id as string | null; // Add the type to the session
         session.user.club_id = token.club_id as string | null;

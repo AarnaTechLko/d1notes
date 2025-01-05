@@ -15,6 +15,7 @@ declare module 'next-auth' {
       expectedCharge?: string | null;
       club_name?: string | null;
       added_by?: string | null;
+      coachCurrency?: string | null;
     }
   }
 }

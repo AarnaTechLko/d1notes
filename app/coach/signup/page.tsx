@@ -127,6 +127,8 @@ if (!termsAccepted) {
          
       }
       console.log(payload);
+      localStorage.setItem('email', payload.email);
+      localStorage.setItem('key', payload.password);
       
       const response = await fetch('/api/coach/signup', {
         method: 'POST',
