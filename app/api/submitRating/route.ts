@@ -12,13 +12,12 @@ export async function PUT(req: NextRequest) {
   try {
     // Parse the request body
     const body = await req.json();
+    const { evaluationId, rating, remarks } = body;
 
-
-    const {
-      evaluationId,
-      rating,
-      remarks
-    } = body;
+    const evaluationIdNumber = Number(evaluationId);
+    if (isNaN(evaluationIdNumber)) {
+      return NextResponse.json({ message: 'Invalid evaluationId' }, { status: 400 });
+    }
 
     // Update the user in the database
     const updatedUser = await db
@@ -26,14 +25,16 @@ export async function PUT(req: NextRequest) {
       .set({
         rating: rating || undefined,
         remarks: remarks || undefined,
-
       })
-      .where(eq(playerEvaluation.id, evaluationId))
+      .where(eq(playerEvaluation.id, evaluationIdNumber))
       .returning({
         coach_id: playerEvaluation.coach_id, // Return the coach_id
       });
 
-    const coach_id = updatedUser[0].coach_id;
+    const coach_id = Number(updatedUser[0].coach_id);
+    if (isNaN(coach_id)) {
+      return NextResponse.json({ message: 'Invalid coach_id' }, { status: 400 });
+    }
 
     const result = await db
       .select({
@@ -44,19 +45,19 @@ export async function PUT(req: NextRequest) {
 
     const averageRating = result[0]?.averageRating || 0;
 
-
     const updateCoaches = await db
-      .update(coaches)
-      .set({
-        rating: Number(averageRating),
-      })
-      .where(eq(coaches.id, coach_id))
-      .returning();
-
-
+    .update(coaches)
+    .set({
+      rating: parseFloat(Number(averageRating).toFixed()), // Ensure averageRating is a number
+    })
+    .where(eq(coaches.id, coach_id))
+    .returning();
 
     let totalAmount;
-    const payment = await db.select().from(coachearnings).where(eq(coachearnings.evaluation_id, evaluationId)).execute();
+    const payment = await db.select().from(coachearnings).where(eq(coachearnings.evaluation_id, evaluationIdNumber)).execute();
+    if (payment.length === 0) {
+      return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
+    }
 
     const totalBalance = await db
       .select({ value: sum(coachaccount.amount) })
@@ -64,33 +65,27 @@ export async function PUT(req: NextRequest) {
       .where(eq(coachaccount.coach_id, coach_id))
       .execute();
 
-    totalAmount = Number(totalBalance[0]?.value) + Number(payment[0]?.commision_amount);
+    const totalBalanceValue = Number(totalBalance[0]?.value) || 0;
+    const commisionAmount = Number(payment[0]?.commision_amount) || 0;
+    totalAmount = totalBalanceValue + commisionAmount;
 
+    await db.update(coachaccount)
+      .set({ amount: totalAmount.toString() })
+      .where(eq(coachaccount.coach_id, coach_id));
 
-    try {
-      await db.update(coachaccount)
-        .set({ amount: totalAmount.toString() })
-        .where(eq(coachaccount.coach_id, coach_id));
-    }
-    catch (error) {
-      console.error('Error updating coach account:', error);
-      throw error;
-    }
-
-
-    
     const updatecoachearnings = await db
       .update(coachearnings)
       .set({
         status: 'Released'
       })
-      .where(eq(coachearnings.evaluation_id, evaluationId))
+      .where(eq(coachearnings.evaluation_id, evaluationIdNumber))
       .returning();
 
     return NextResponse.json({ message: true }, { status: 200 });
 
-  } catch (error) {
-    logError('Error updating user: %O', error);
-    return NextResponse.json({ message: 'Error updating' }, { status: 500 });
+  } catch (error:any) {
+    
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
