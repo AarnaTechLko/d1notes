@@ -5,10 +5,11 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
 import { playerEvaluation, users, coaches } from '../../../lib/schema'
 import { like } from 'drizzle-orm';
-import { eq,or } from 'drizzle-orm';
+import { eq,or,desc } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
 import { and } from 'drizzle-orm';
 import next from 'next';
+import { turnAroundTime } from '@/lib/constants';
 
 
 
@@ -29,7 +30,9 @@ export async function POST(req: NextRequest) {
         video_description: playerEvaluation.video_description,
         status: playerEvaluation.status,
         payment_status: playerEvaluation.payment_status,
+        turnaroundTime: playerEvaluation.turnaroundTime,
         created_at: playerEvaluation.created_at,
+        createdAt: playerEvaluation.created_at,
         updated_at: playerEvaluation.updated_at,
         slug: coaches.slug,
       })
@@ -47,7 +50,7 @@ export async function POST(req: NextRequest) {
           )     // OR condition
         )
       )
-       // Apply the second filter
+      .orderBy(desc(playerEvaluation.id))
       .execute();
 
     return NextResponse.json(evaluationsData);

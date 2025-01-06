@@ -133,9 +133,9 @@ const Sidebar: React.FC = () => {
           </li>
           {!session?.user.club_id && (
           <li className="hover:bg-gray-700 rounded transition duration-200">
-            <a href="/children" className="flex items-center space-x-2 p-2">
+            <a href="/playeraddon" className="flex items-center space-x-2 p-2">
             <FaChild className="text-xl" />
-              <span>Children{session?.user.club_id}</span>
+              <span>Player Addon</span>
             </a>
           </li>
           )}

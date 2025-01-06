@@ -4,6 +4,7 @@ import Sidebar from "../../components/coach/Sidebar";
 import { showSuccess, showError } from "@/app/components/Toastr";
 import { useSession } from "next-auth/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { getCurrencyInUSD } from "@/lib/clientHelpers";
 import Swal from "sweetalert2";
 import { currencies, turnAroundTime } from "@/lib/constants";
 
@@ -92,7 +93,7 @@ const Home: React.FC = () => {
                 setIsModalOpen(false);
                 setTurnaroundtime("");
                 setAmount("");
-                setCurrency("");
+                
                 setIsEditMode(false);
                 setEditChargeId(null);
                 fetchCharges(); // Refresh the charges list
@@ -240,7 +241,7 @@ const Home: React.FC = () => {
 
                             {/* Amount Input */}
                             <div className="w-1/2">
-                                <label className="block text-sm font-medium mb-1">Amount</label>
+                                <label className="block text-sm font-medium mb-1">Enter Amount in {session?.user.coachCurrency}</label>
                                 <input
                                     type="number"
                                     className="w-full border rounded px-3 py-2"

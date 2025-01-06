@@ -29,4 +29,58 @@ export const getInitialsAfterComma = (positions: string | null | undefined): str
       return 'Invalid date';
     }
   };
+
+  export async function calculateAmount(newcurrency: string, amount: GLfloat) {
+    const conversionRate = await getCurrencyInUSD(newcurrency); // Await the promise
+    const convertedAmount = conversionRate * amount; // Now the result can be used in arithmetic
+    return convertedAmount.toFixed(2);
+  }
+  
+  export function calculateHoursFromNow(dateString: string): number | null {
+    try {
+      const givenDate = new Date(dateString);
+      const currentDate = new Date();
+  
+      if (isNaN(givenDate.getTime())) {
+        throw new Error("Invalid date format");
+      }
+  
+      const timeDifferenceInMilliseconds = currentDate.getTime() - givenDate.getTime();
+      const hoursDifference = timeDifferenceInMilliseconds / (1000 * 60 * 60);
+  
+      return parseFloat(hoursDifference.toFixed(2));
+    } catch (error) {
+      console.error("Error calculating hours from now:", error);
+      return null;
+    }
+  }
+
+  export const  getCurrencyInUSD= async (currencyCode:any)=> {
+    const API_URL = 'https://api.currencyfreaks.com/v2.0/rates/latest';
+    const API_KEY = '4338ccbbf22a418187de53f2fc38fb48';
+  
+    try {
+      const response = await fetch(`${API_URL}?apikey=${API_KEY}&symbols=USD,${currencyCode}`);
+  
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      const rates = data.rates;
+      const rateToUSD = parseFloat(rates['USD']);
+      const rateFromCurrency = parseFloat(rates[currencyCode]);
+  
+      if (!rateFromCurrency || !rateToUSD) {
+        throw new Error('Invalid currency rate data');
+      }
+ 
+      const exchangeRateToUSD = rateToUSD / rateFromCurrency;
+      return exchangeRateToUSD;
+    } catch (error:any) {
+      console.error('Error fetching currency rates:', error.message);
+      throw new Error('Failed to fetch currency rate');
+    }
+  }
+  //https://api.currencyfreaks.com/v2.0/rates/latest?apikey=4338ccbbf22a418187de53f2fc38fb48&symbols=EUR,USD
   

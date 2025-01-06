@@ -221,7 +221,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
       onClick={handleAddCoachClick}
       className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
-      Add Children
+      Add Player
     </button>
  
   </div>
@@ -329,7 +329,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg w-11/12 max-h-[100vh] overflow-hidden relative">
               <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
-                <h2 className="text-2xl font-semibold text-gray-800">Add Children</h2>
+                <h2 className="text-2xl font-semibold text-gray-800">Add Player</h2>
                 <button
                   onClick={() => setShowModal(false)}
                   className="text-xl text-gray-600 hover:text-gray-900"

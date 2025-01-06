@@ -20,6 +20,8 @@ export interface Evaluation {
     evaluation_status: string;
     payment_status: string;
     created_at: string;
+    createdAt: string;
+    turnaroundTime: number;
     result:string;
     technicalRemarks:string;
     tacticalRemarks:string;

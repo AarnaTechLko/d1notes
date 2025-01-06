@@ -12,6 +12,7 @@ import { useSession, signOut } from 'next-auth/react';
 import EvaluationForm from '@/app/components/coach/EvaluationForm';
 import { FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
+import { calculateHoursFromNow } from '@/lib/clientHelpers';
   
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
   console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
@@ -105,6 +106,30 @@ const Dashboard: React.FC = () => {
       return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
     },
         
+      },
+      {
+        Header: 'TAT',
+        accessor: 'createdAt',
+        Cell: ({ row }: CellProps<Evaluation>) => {
+          const createdAt = row?.original?.createdAt;
+          const turnaroundTime = row?.original?.turnaroundTime;
+      
+          if (createdAt && turnaroundTime !== undefined && turnaroundTime !== null) {
+            const hoursFromNow = calculateHoursFromNow(createdAt);
+            if (hoursFromNow !== null && hoursFromNow !== undefined) {
+              const remainingTime = turnaroundTime - hoursFromNow;
+              const boxClass = remainingTime >= 0 
+                ? 'bg-green-900 text-white px-2 py-1 rounded' 
+                : 'bg-red-600 text-white px-2 py-1 rounded';
+              return (
+                <span className={boxClass}>
+                   {remainingTime.toFixed(2)} Hours
+                </span>
+              );
+            }
+          }
+          return 'N/A'; // Fallback value if data is missing
+        },
       },
       {
         Header: 'Player Name',
@@ -269,7 +294,7 @@ const Dashboard: React.FC = () => {
           <div className="bg-white shadow-md rounded-lg p-6 ">
           <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
   <span className="text-xl font-semibold text-gray-700">Your Evaluation Price:</span>
-  <span className="text-2xl font-bold text-blue-600"> ${session?.user?.expectedCharge}</span>
+  <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
 </div>
 
             {/* Dropdown for tabs on small screens */}

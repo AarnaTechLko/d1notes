@@ -24,6 +24,8 @@ interface Coach {
   status: string;
   assignedLicenseCount: string;
   consumeLicenseCount: string;
+  earnings: string;
+  totalEvaluations: string;
 }
 
 const Home: React.FC = () => {
@@ -328,20 +330,24 @@ const Home: React.FC = () => {
             <td>{coach.sport}</td>
             <td>
             <div className="mt-0">
-  <button className="w-24 px-1 py-1 bg-blue-500 text-white rounded-lg">Shared {coach.assignedLicenseCount}</button>
-  <button className="w-24 px-1 py-1 bg-red-500 text-white rounded-lg mt-2"> Consumed {coach.consumeLicenseCount}</button>
+  <button className="w-24 px-1 py-1 bg-blue-500 text-xs text-white rounded-lg">Shared {coach.assignedLicenseCount}</button>
+  <button className="w-24 px-1 py-1 bg-red-500 text-xs text-white rounded-lg mt-2"> Consumed {coach.consumeLicenseCount}</button>
+</div>
+<div className="mt-0">
+  <button className="w-24 px-1 py-1 bg-gray-500 text-xs text-white rounded-lg">Evaluations: {coach.totalEvaluations}</button>
+  <button className="w-24 px-1 py-1 bg-green-500 text-xs text-white rounded-lg mt-2"> Earned: $ {coach.earnings}</button>
 </div>
             </td>
             <td>
               {coach.status === 'Inactive' ? (
                 <button
-                  className="bg-red px-4 py-2 rounded bg-red-500 text-white"
+                  className="bg-red px-1 py-2 text-xs rounded bg-red-500 text-white"
                   onClick={() => handleEnterLicense(coach)}
                 >
                   {coach.status}
                 </button>
               ) : (
-                <button className="bg-red px-4 py-2 rounded bg-green-500 text-white">
+                <button className="bg-red px-2 text-xs py-2 rounded bg-green-500 text-white">
                   {coach.status}
                 </button>
               )}

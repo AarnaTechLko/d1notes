@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
-import { coaches, otps, licenses } from '../../../../../lib/schema';
+import { coaches, otps, licenses, coachaccount, playerEvaluation } from '../../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -145,11 +145,14 @@ export async function GET(req: NextRequest) {
         status: coaches.status,
         consumeLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Consumed' THEN 1 END)`,
         assignedLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Assigned' THEN 1 END)`,
-       
+        earnings: sql<number>`SUM(CASE WHEN coachaccount.coach_id = coaches.id THEN coachaccount.amount ELSE 0 END)`, // Sum of earnings
+        totalEvaluations: sql<number>`COUNT(CASE WHEN player_evaluation.status = 2 THEN player_evaluation.id END)` // Total evaluations with status = 2
       }
     )
     .from(coaches)
     .leftJoin(licenses, sql`${licenses.assigned_to} = ${coaches.id}`)
+    .leftJoin(coachaccount, sql`${coachaccount.coach_id} = ${coaches.id}`) // Join coachaccount table
+    .leftJoin(playerEvaluation, sql`${playerEvaluation.coach_id} = ${coaches.id}`) // Join player_evaluation table
     .where(whereClause)
     .groupBy(
       coaches.id,
@@ -167,7 +170,7 @@ export async function GET(req: NextRequest) {
     .offset(offset)
     .orderBy(desc(coaches.createdAt))
     .limit(limit);
-
+  
 
   // Query to get the total count
   const totalCount = await db

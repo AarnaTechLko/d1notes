@@ -152,10 +152,13 @@ export const positionOptionsList = [
   { value: "Goalkeeper", label: "Goalkeeper" },
   { value: "Defender", label: "Defender" },
   { value: "Midfielder", label: "Midfielder" },
-  { value: "Forward", label: "Forward" },
+  { value: "Center Forward", label: "Center Forward" },
   { value: "Striker", label: "Striker" },
-  { value: "Wingback", label: "Wingback" },
-  { value: "Center Back", label: "Center Back" },
+  { value: "Outside Back/ Wingback", label: "Outside Back/ Wingback" },
+  { value: "Centerback", label: "Centerback" },
+  { value: "Holding Mid", label: "Holding Mid" },
+  { value: "Attacking Mid", label: "Attacking Mid" },
+  { value: "Winger", label: "Winger" },
   // Add more positions as needed
 ];
 

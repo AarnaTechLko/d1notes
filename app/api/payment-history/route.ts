@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
 import { playerEvaluation, users, coaches, payments } from '../../../lib/schema'
 import { like } from 'drizzle-orm';
-import { eq,sql } from 'drizzle-orm';
+import { eq,sql,desc } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
 import { and } from 'drizzle-orm';
 import next from 'next';
@@ -37,7 +37,8 @@ export async function GET(request: NextRequest) {
         review_title: playerEvaluation.review_title,
        amount:payments.amount,
        status:payments.status,
-       created_at:payments.created_at
+       created_at:payments.created_at,
+       currency:payments.currency
      
       })
       .from(payments)
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
         sql`CAST(${coaches.id} AS TEXT)`, // Cast the integer to text if needed
         sql`CAST(${payments.coach_id} AS TEXT)` // Cast the other field as text
       ))
-      .leftJoin(playerEvaluation, eq(playerEvaluation.id,payments.evaluation_id));
+      .leftJoin(playerEvaluation, eq(playerEvaluation.id,payments.evaluation_id)).orderBy(desc(payments.id));
        
     const evaluationsData = await query.where(eq(payments.player_id,playerId)).limit(limit).execute();
 

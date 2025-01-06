@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
         expectedCharge: coaches.expectedCharge,
         evaluationId: playerEvaluation.id, // Select specific columns from playerEvaluation
         review_title: playerEvaluation.review_title, 
+        turnaroundTime: playerEvaluation.turnaroundTime, 
         evaluationStatus: playerEvaluation.status,
         video_description:playerEvaluation.video_description,
         createdAt: playerEvaluation.created_at,

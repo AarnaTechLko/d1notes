@@ -7,6 +7,7 @@ import { useTable, Column, CellProps } from "react-table"; // Import Column type
 import { Evaluation, EvaluationsByStatus } from "../types/types"; // Import the correct types
 import { FaEye } from "react-icons/fa";
 import ProfileCard from "../components/ProfileCard";
+import { calculateHoursFromNow } from "@/lib/clientHelpers";
 
 const Dashboard: React.FC = () => {
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
@@ -159,6 +160,30 @@ const Dashboard: React.FC = () => {
       return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
     },
         
+      },
+      {
+        Header: 'TAT',
+        accessor: 'createdAt',
+        Cell: ({ row }: CellProps<Evaluation>) => {
+          const createdAt = row?.original?.createdAt;
+          const turnaroundTime = row?.original?.turnaroundTime;
+      
+          if (createdAt && turnaroundTime !== undefined && turnaroundTime !== null) {
+            const hoursFromNow = calculateHoursFromNow(createdAt);
+            if (hoursFromNow !== null && hoursFromNow !== undefined) {
+              const remainingTime = turnaroundTime - hoursFromNow;
+              const boxClass = remainingTime >= 0 
+                ? 'bg-green-900 text-white px-2 py-1 rounded' 
+                : 'bg-red-600 text-white px-2 py-1 rounded';
+              return (
+                <span className={boxClass}>
+                  {remainingTime.toFixed(2)} Hours
+                </span>
+              );
+            }
+          }
+          return 'N/A'; // Fallback value if data is missing
+        },
       },
       {
         Header: "Coach Name",

@@ -10,12 +10,7 @@ import CertificateModal from '@/app/components/CertificateModal';
 import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
-
-
-
-
 interface CoachData {
- 
   firstName: string;
   lastName: string;
   id:  string;
@@ -33,6 +28,7 @@ interface CoachData {
   city: string;
   certificate: string;
   image:string;
+  currency:string;
   enterprise_id:number;
 }
 
@@ -203,14 +199,12 @@ setEvaluationList(responseData.evaluationlist);
   {/* Additional Text and Button */}
   <div className="md:w-1/3 text-center md:text-left">
   <div>
-    {session ? (
+ 
               <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
                 <span>Evaluation Charges:</span>
-                <p className="ml-2">  ${coachData.expectedCharge} / Evaluation</p>
+                <p className="ml-2">  {coachData.currency}{coachData.expectedCharge} / Evaluation</p>
               </div>
-            ) : (
-              <></>
-            )}
+              
 
 {!(session && session.user && session.user.type === 'coach') && (
   <>

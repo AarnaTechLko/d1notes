@@ -84,7 +84,7 @@ export const coaches = pgTable(
     country:varchar("country"),
     state:varchar("state"),
     city:varchar("city"),
-    currency:varchar("currency"),
+    currency: varchar("currency").default("$"), 
     rating: integer("rating").default(0),
     password: text("password").notNull(),
     certificate:text("certificate"),

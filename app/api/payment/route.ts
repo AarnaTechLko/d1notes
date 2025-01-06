@@ -4,29 +4,32 @@ import { db } from '../../../lib/db';
 import { payments, playerEvaluation, coachearnings, coachaccount } from '@/lib/schema';
 import { eq, and, sum } from 'drizzle-orm';
 import { COMMISSIONPERCENTAGE } from '@/lib/constants';
+import { calculateAmount, getCurrencyInUSD } from '@/lib/clientHelpers';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-09-30.acacia',
 });
+
 
 export async function POST(req: NextRequest) {
   try {
     // Parse the request body
     const body = await req.json();
     const { coachId, playerId, amount, evaluationId,currency } = body;
-let newcurrency;
+    let newcurrency;
     if(currency=="€")
     {
-      newcurrency="eur";
+      newcurrency="EUR";
     }
     else if(currency=="£")
     {
-      newcurrency="gbp";
+      newcurrency="GBP";
     }
     else{
-      newcurrency="usd";
+      newcurrency="USD";
     }
-
+   const convertedAmount=await calculateAmount(newcurrency,parseFloat(amount));
+   
     const accountQuery = await db.select().from(coachaccount).where(eq(coachaccount.coach_id, coachId)).execute();
     if (accountQuery.length == 0) {
       await db.insert(coachaccount).values({
@@ -41,11 +44,11 @@ let newcurrency;
       line_items: [
         {
           price_data: {
-            currency:newcurrency,
+            currency:'USD',
             product_data: {
               name: `Evaluation for Player ${playerId} by Coach ${coachId}`,
             },
-            unit_amount: amount * 100, // Amount in cents
+            unit_amount: Number(convertedAmount) * 100, // Amount in cents
           },
           quantity: 1,
         },
@@ -59,7 +62,7 @@ let newcurrency;
       player_id: playerId,
       coach_id: coachId,
       evaluation_id: evaluationId,
-      amount: amount,
+      amount: String(convertedAmount),
       currency: currency,
       status: 'pending',
       payment_info: session.id,
@@ -70,16 +73,8 @@ let newcurrency;
     let totalAmount = 0;
     let newBalance = 0;
     if (paymentdone) {
-      // const totalBalance = await db
-      //   .select({ value: sum(coachaccount.amount) })
-      //   .from(coachaccount)
-      //   .where(eq(coachaccount.coach_id, coachId))
-      //   .execute();
-
-      // totalAmount = Number(totalBalance[0]?.value);
-
-      const companycommission = COMMISSIONPERCENTAGE * (amount / 100);
-      const coachPart = amount - companycommission;
+      const companycommission = COMMISSIONPERCENTAGE * (Number(convertedAmount) / 100);
+      const coachPart = Number(convertedAmount) - companycommission;
       const coachearningsInsert = {
         coach_id: coachId,  // Ensure coachId exists and is of the correct type
         evaluation_id: evaluationId,  // Ensure evaluationId exists and is of the correct type
@@ -93,16 +88,7 @@ let newcurrency;
       };
 
       await db.insert(coachearnings).values(coachearningsInsert);
-      // newBalance = totalAmount + coachPart;
-      // try{
-      // await db.update(coachaccount)
-      //   .set({ amount: newBalance.toString() })
-      //   .where(eq(coachaccount.coach_id, coachId));
-      // }
-      //  catch (error) {
-      //   console.error('Error updating coach account:', error);
-      //   throw error; // Rethrow the error to handle it in the outer catch block
-      // }
+     
     }
 
     // Return the session ID to the client
@@ -123,12 +109,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Session ID is required" }, { status: 400 });
   }
   try {
-    // Retrieve the session from Stripe
+   
 
     const session = await stripe.checkout.sessions.retrieve(sessionId as string);
 
 
-    // Update payment status in your database based on session status
+    
     if (session.payment_status === 'paid') {
       const updatedepayment = await db.update(payments)
         .set({ status: 'paid' })
@@ -141,7 +127,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(session);
     }
 
-    // Return the session information
+    
 
   } catch (error) {
     return NextResponse.json({ message: "Unable to retrieve data" }, { status: 500 });

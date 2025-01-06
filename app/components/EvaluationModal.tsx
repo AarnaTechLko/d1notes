@@ -246,7 +246,7 @@ let paidBy;
                   className={`w-full px-3 py-2 border rounded-md`}>
                   
                   <option value='Myself'>Myself</option>
-                  <option value='Child'>Child</option>
+                  <option value='Child'>Add on Player</option>
                  
                 </select>
               
@@ -254,7 +254,7 @@ let paidBy;
             {userType === 'Child' && (
               <div className="mb-4 w-1/2 ml-1">
                 <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
-                 Select Child
+                 Select Add on Player
                 </label>
                 <select name='child' value={child}
                   onChange={(e) => {
@@ -262,7 +262,7 @@ let paidBy;
                     
                   }}
                   className={`w-full px-3 py-2 border rounded-md`}>
-                  <option value=''>Select Child</option>
+                  <option value=''>Select Player</option>
                   {kids?.map((kid:any)=>{
                     return(
                       <option key={kid.id} value={kid.id}>{kid.first_name} {kid.last_name}</option>

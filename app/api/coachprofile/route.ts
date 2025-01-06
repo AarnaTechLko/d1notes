@@ -36,6 +36,7 @@ import { SECRET_KEY } from '@/lib/constants';
           location:coach.location,
           sport:coach.sport,
           clubName:coach.clubName,
+          currency:coach.currency,
           qualifications:coach.qualifications,
           certificate:coach.certificate,
           country:coach.country,

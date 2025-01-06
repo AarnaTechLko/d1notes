@@ -196,8 +196,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     }
     // if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     // if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
-    if (!formValues.gender) newErrors.gender = "Gender is required.";
-    if (!formValues.sport) newErrors.sport = "Sport is required.";
+   // if (!formValues.gender) newErrors.gender = "Gender is required.";
+    ///if (!formValues.sport) newErrors.sport = "Sport is required.";
     
     // if (!formValues.position.trim()) newErrors.position = "Position is required.";
     
@@ -613,7 +613,7 @@ if (!response.ok) {
 
         {/* Gender */}
         <div>
-          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className="mandatory">*</span></label>
+          <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
           <select
             name="gender"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -642,7 +642,7 @@ if (!response.ok) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
-          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className="mandatory">*</span></label>
+          <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport</label>
           <select
             name="sport"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -673,7 +673,7 @@ if (!response.ok) {
 
         {/* Position */}
         <div>
-          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className="mandatory">*</span></label>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)</label>
           <Select
             isMulti
             options={positionOptionsList}

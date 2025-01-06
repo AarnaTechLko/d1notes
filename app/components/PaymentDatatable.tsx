@@ -10,6 +10,7 @@ interface Item {
     status:string;
     description: string;
     created_at: string;
+    currency: string;
 }
 
 interface PaymentDatatableProps {
@@ -94,7 +95,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 
-                                <td>${item.amount}</td>
+                                <td>{item.currency} {item.amount}</td>
                                 <td> 
                                     {item.status === 'paid' && (
                                         <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Paid</button>
