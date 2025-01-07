@@ -4,6 +4,8 @@
 import { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
+import { turnAroundTime } from '@/lib/constants';
+import { positionOptionsList } from '@/lib/constants';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 interface Kids {
@@ -36,6 +38,11 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [userType, setUserType]=useState('Myself');
   const [child, setChild]=useState<string>('');
   const [currency, setCurrency]=useState<string>('usd');
+  const [videoOneTiming, setVideoOneTiming]=useState<string>('5');
+  const [videoTwoTiming, setVideoTwoTiming]=useState<string>('5');
+  const [videoThreeTiming, setVideoThreeTiming]=useState<string>('5');
+  const [lighttype, setLighttype]=useState<string>('');
+  const [position, setPosition]=useState<string>('');
 
 
 
@@ -112,7 +119,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           turnaroundTime,
           status,
           userType,
-          child
+          child,
+          videoOneTiming,
+          videoTwoTiming,
+          videoThreeTiming,
+          position,
+          lighttype
         }),
       });
 
@@ -215,8 +227,8 @@ let paidBy;
   };
   
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-3xl p-6 relative">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
+      <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-5xl p-6 relative overflow-y-scroll max-h-[90vh]">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           onClick={onClose}
@@ -233,8 +245,8 @@ let paidBy;
       </div>
     ) : (
         <form onSubmit={handleSubmit}>
-          <div className="flex">
-            <div className="mb-4 w-1/2 ml-1">
+          <div className="mb-4 grid grid-cols-1   md:grid-cols-2 gap-4">
+            <div>
               <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
                Evaluation For?
 
@@ -252,7 +264,7 @@ let paidBy;
               
             </div>
             {userType === 'Child' && (
-              <div className="mb-4 w-1/2 ml-1">
+              <div>
                 <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
                  Select Add on Player
                 </label>
@@ -318,11 +330,10 @@ let paidBy;
                 }}
                   className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
                   <option value=''>Turnaround Time</option>
-                  <option value='24'>24 Hours</option>
-                  <option value='48'>48 Hours</option>
-                  <option value='72'>72 Hours</option>
-                  <option value='96'>96 Hours</option>
-                  <option value='120'>120 Hours</option>
+                  {turnAroundTime.map((tat) => (
+                                    <option value={tat.value} key={tat.id}>{tat.label}</option>
+                                ))}
+
                 </select>
                 {errors.turnaroundTime && <p className="text-red-500 text-xs">{errors.turnaroundTime}</p>}
               </div>
@@ -336,33 +347,53 @@ let paidBy;
  <></>
 )}
         
-          <div className="mb-4">
-            {/* Primary Video URL */}
-            <label htmlFor="primaryVideoUrl" className="block text-gray-700 mb-1">
-              Primary Video Link/URL
-            </label>
-            <input
-              type="url"
-              id="primaryVideoUrl"
-              placeholder="Do not just submit highlights as the low light and activity without the ball are important."
-              className={`w-full px-3 py-2 border ${errors.primaryVideoUrl ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-              value={primaryVideoUrl}
-              onChange={(e) => {
-                setPrimaryVideoUrl(e.target.value);
-                if (errors.primaryVideoUrl) {
-                  const { primaryVideoUrl, ...remainingErrors } = errors;
-                  setErrors(remainingErrors);
-                }
-              }}
-            />
-            <p className="text-xs text-gray-500"> If you want feedback on a Trace video, download the file from Trace, upload to Google Drive,
-              and share that link here for the coach. For Veo, ensure the match is set to public in order to share the
-              link.  If you continue to have technical difficulties, email us at <a href='mailto: team@d1notes.com' className="text-xs text-gray-900">team@d1notes.com</a> .</p>
-            {errors.primaryVideoUrl && <p className="text-red-500 text-xs">{errors.primaryVideoUrl}</p>}
-          </div>
+        <div className="mb-4 grid grid-cols-1   md:grid-cols-[3fr_1fr] gap-4">
+  {/* Primary Video URL */}
+  <div>
+    <label htmlFor="primaryVideoUrl" className="block text-gray-700 mb-1">
+      Primary Video Link/URL
+    </label>
+    <input
+      type="url"
+      id="primaryVideoUrl"
+      placeholder="Do not just submit highlights as the low light and activity without the ball are important."
+      className={`w-full px-3 py-2 border ${errors.primaryVideoUrl ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+      value={primaryVideoUrl}
+      onChange={(e) => {
+        setPrimaryVideoUrl(e.target.value);
+        if (errors.primaryVideoUrl) {
+          const { primaryVideoUrl, ...remainingErrors } = errors;
+          setErrors(remainingErrors);
+        }
+      }}
+    />
+    <p className="text-xs text-gray-500">
+      If you want feedback on a Trace video, download the file from Trace, upload to Google Drive,
+      and share that link here for the coach. For Veo, ensure the match is set to public in order to share the
+      link. If you continue to have technical difficulties, email us at <a href='mailto:team@d1notes.com' className="text-xs text-gray-900">team@d1notes.com</a>.
+    </p>
+    {errors.primaryVideoUrl && <p className="text-red-500 text-xs">{errors.primaryVideoUrl}</p>}
+  </div>
 
-          <div className="flex">
-            <div className="w-1/2 mr-1">
+  {/* Timing Section */}
+  <div>
+    <label htmlFor="videoTiming" className="block text-gray-700 mb-1">
+      Video Timing (Mins)
+    </label>
+    <input
+      type="text"
+      id="videoTiming"
+      placeholder="Enter timing for key moments (e.g. 5:30 - 10:00)"
+      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+      value={videoOneTiming}
+      onChange={(e) => setVideoOneTiming(e.target.value)}
+    />
+  </div>
+</div>
+
+
+          <div className="mb-4 grid grid-cols-1   md:grid-cols-[3fr_1fr] gap-4">
+            <div>
               <label htmlFor="videoUrl2" className="block text-gray-700 mb-1">
                 Video Link/URL #2 (Optional)
               </label>
@@ -383,9 +414,23 @@ let paidBy;
 
               {errors.videoUrl2 && <p className="text-red-500 text-xs">{errors.videoUrl2}</p>}
             </div>
-
+            <div>
+    <label htmlFor="videoTwoTiming" className="block text-gray-700 mb-1">
+      Video Timing (Mins)
+    </label>
+    <input
+      type="text"
+      id="videoTwoTiming"
+      placeholder="Enter timing for key moments (e.g. 5:30 - 10:00)"
+      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+      value={videoTwoTiming}
+      onChange={(e) => setVideoTwoTiming(e.target.value)}
+    />
+  </div>
+  </div>
+  <div className="mb-4 grid grid-cols-1   md:grid-cols-[3fr_1fr] gap-4">
             {/* Video URL #3 */}
-            <div className="w-1/2 ml-1">
+            <div>
               <label htmlFor="videoUrl3" className="block text-gray-700 mb-1">
                 Video Link/URL #3 (Optional)
               </label>
@@ -405,8 +450,61 @@ let paidBy;
               />
               {errors.videoUrl3 && <p className="text-red-500 text-xs">{errors.videoUrl3}</p>}
             </div>
+            <div>
+    <label htmlFor="videoThreeTiming" className="block text-gray-700 mb-1">
+      Video Timing (Mins)
+    </label>
+    <input
+      type="text"
+      id="videoThreeTiming"
+      placeholder="Enter timing for key moments (e.g. 5:30 - 10:00)"
+      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+      value={videoThreeTiming}
+      onChange={(e) => setVideoThreeTiming(e.target.value)}
+    />
+  </div>
           </div>
+          <div className="mb-4 grid grid-cols-1   md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="lighttype" className="block text-gray-700 mb-1">
+               Game Light Type
+              </label>
+              <select name='lighttype' value={lighttype}
+                  onChange={(e) => {
+                    setLighttype(e.target.value);
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md`}>
+                  
+                  <option value=''>Select</option>
+                  <option value='HightLight'>HightLight</option>
+                  <option value='LowLight'>LowLight</option>
+                 
+                </select>
+              
+            </div>
 
+            <div>
+              <label htmlFor="position" className="block text-gray-700 mb-1">
+               Position
+              </label>
+              <select name='position' value={position}
+                  onChange={(e) => {
+                    setPosition(e.target.value);
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md`}>
+                  
+                  <option value=''>Select</option>
+                  
+                  {positionOptionsList?.map((position:any)=>{
+                    return(
+                      <option key={position.value} value={position.value}>{position.label}</option>
+                    )
+                  })}
+                 
+                </select>
+              
+            </div>
+            </div>
           {/* Video Description */}
           <div className="mb-4">
             <label htmlFor="videoDescription" className="block text-gray-700 mb-1">

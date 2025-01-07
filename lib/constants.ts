@@ -14,6 +14,15 @@ export const currencies=[
   { unicode:"£", currency:"GBP"}
 ];
 
+export const licensePackages=[
+  {id:1, minimum_license:1,maximum_license:200, amount:15},
+  {id:1, minimum_license:201,maximum_license:500, amount:12},
+  {id:1, minimum_license:501,maximum_license:1000, amount:10},
+  {id:1, minimum_license:1001,maximum_license:'Unlimited', amount:8},
+  
+];
+
+
 export const turnAroundTime=[
   { id:1, value:"24", label:"24 Hours"},
   { id:2, value:"48", label:"48 Hours"},

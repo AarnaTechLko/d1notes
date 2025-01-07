@@ -121,6 +121,11 @@ export const playerEvaluation = pgTable(
     created_at: timestamp("created_at").defaultNow().notNull(),
     rating: integer("rating"), // New field for rating, nullable by default
     remarks: text("remarks"),
+    videoOneTiming:text('videoOneTiming'),
+    videoTwoTiming:text('videoTwoTiming'),
+    videoThreeTiming:text('videoThreeTiming'),
+    position:text('position'),
+    lighttype:text('lighttype'),
     rejectremarks: text("rejectremarks"),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   }
@@ -240,15 +245,20 @@ export const packages=pgTable('packages', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+ 
+ 
 export const orderHistory=pgTable('orderHistory', {
   id: serial('id').primaryKey(),
-  enterprise_id: integer('enterprise_id').notNull(),
-  package_id: integer('package_id').notNull(),
-  amount: text('amount').notNull(),
-  description: text('description').notNull(),
-  status:text('status').notNull(),
+  enterprise_id: integer('enterprise_id'),
+  package_id: integer('package_id'),
+  amount: text('amount'),
+  licenses: integer('licenses'),
+  rate: integer('rate'),
+  description: text('description'),
+  status:text('status'),
+
   payment_info:text('payment_info'),
-  createdAt: timestamp('createdAt').defaultNow().notNull(),
+  createdAt: timestamp('createdAt').defaultNow(),
 });
 
 export const licenses=pgTable('licenses', {

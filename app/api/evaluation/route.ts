@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db'; // Adjust the import based on your file structure
 import { playerEvaluation } from '../../../lib/schema'; // Adjust if necessary
-import { eq,or } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import { and } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
@@ -9,33 +9,35 @@ export async function POST(req: NextRequest) {
     console.log('Request body:', body); // Log the incoming request body
 
     try {
-        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId,turnaroundTime,status,child } = body;
+        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId, turnaroundTime, status, child, videoOneTiming,
+            videoTwoTiming,
+            videoThreeTiming,
+            position,
+            lighttype } = body;
         let player_id;
         let parent_id;
-        if(child)
-        {
-            player_id=child;
-            parent_id=playerId;
+        if (child) {
+            player_id = child;
+            parent_id = playerId;
         }
-        else{
-            player_id=playerId;
-            parent_id=null
+        else {
+            player_id = playerId;
+            parent_id = null
         }
         const checkRejection = await db.select().from(playerEvaluation).where(
             and(
-              or(
-                eq(playerEvaluation.player_id, player_id),
-                eq(playerEvaluation.parent_id, player_id)
-              ),
-              eq(playerEvaluation.status, 3),
-              eq(playerEvaluation.coach_id, coachId)
+                or(
+                    eq(playerEvaluation.player_id, player_id),
+                    eq(playerEvaluation.parent_id, player_id)
+                ),
+                eq(playerEvaluation.status, 3),
+                eq(playerEvaluation.coach_id, coachId)
             )
-          );
+        );
 
-       if(checkRejection.length>0)
-       {
-        return NextResponse.json({ message:"You can not send Evaluation Request to this coach as this coach has rejected your request 3 Times."}, { status: 500 });
-       }
+        if (checkRejection.length > 0) {
+            return NextResponse.json({ message: "You can not send Evaluation Request to this coach as this coach has rejected your request 3 Times." }, { status: 500 });
+        }
 
         const result = await db.insert(playerEvaluation).values({
             player_id: player_id,
@@ -44,19 +46,24 @@ export async function POST(req: NextRequest) {
             primary_video_link: primaryVideoUrl,
             video_link_two: videoUrl2,
             video_link_three: videoUrl3,
-            video_description: videoDescription,
+            video_description: videoDescription, 
             turnaroundTime: turnaroundTime,
             coach_id: coachId,
-            status:0,
-            payment_status:status,
+            status: 0, 
+            payment_status: status,
+            videoOneTiming:videoOneTiming,
+            videoTwoTiming:videoTwoTiming,
+            videoThreeTiming:videoThreeTiming,
+            position:position,
+            lighttype:lighttype,
             created_at: new Date(),
             updated_at: new Date(),
         }).returning();
 
-        return NextResponse.json({result}, { status: 200 });
+        return NextResponse.json({ result }, { status: 200 });
     } catch (error) {
         console.error('Error during insertion:', error); // Log the error for debugging
-        return NextResponse.json({ message:body}, { status: 500 });
+        return NextResponse.json({ message: body }, { status: 500 });
     }
 }
 
