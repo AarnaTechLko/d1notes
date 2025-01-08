@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
             videoTwoTiming,
             videoThreeTiming,
             position,
-            lighttype } = body;
+            lighttype, percentage } = body;
         let player_id;
         let parent_id;
         if (child) {
@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
             video_description: videoDescription, 
             turnaroundTime: turnaroundTime,
             coach_id: coachId,
+            percentage: percentage,
             status: 0, 
             payment_status: status,
             videoOneTiming:videoOneTiming,

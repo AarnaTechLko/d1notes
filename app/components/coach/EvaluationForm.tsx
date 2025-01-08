@@ -323,12 +323,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             <strong className="mr-2">Primary Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a>
         </div>
         <div className="mb-4">
-            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>
+            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  
         </div>
         <div className="mb-4">
             <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a>
         </div>
-
+        <div className="mb-4">
+            <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
+        </div>
         <div className="mb-4">
             <strong className="mr-2">Video Description:</strong>
             <span className="text-gray-700">{evaluationData?.video_description}</span>

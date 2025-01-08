@@ -126,6 +126,7 @@ export const playerEvaluation = pgTable(
     videoThreeTiming:text('videoThreeTiming'),
     position:text('position'),
     lighttype:text('lighttype'),
+    percentage:text('percentage'),
     rejectremarks: text("rejectremarks"),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   }

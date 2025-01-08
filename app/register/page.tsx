@@ -208,6 +208,7 @@ export default function Register() {
                 type="text"
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 name="email"
+                placeholder='abcd@gmail.com'
                 onChange={handleChange}
                 value={email || formValues.email}
                 readOnly={!!referenceEmail}
@@ -222,6 +223,7 @@ export default function Register() {
               <input
                 type="password"
                 name="password"
+                placeholder='xxxxxxxxxx'
                 value={formValues.password}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleChange}

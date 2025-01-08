@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
         video_link_three:playerEvaluation.video_link_three,
         video_description:playerEvaluation.video_description,
         rating:playerEvaluation.rating,
+        evaluationposition:playerEvaluation.position, 
     }) // Explicitly select the fields
     .from(evaluationResults)
     .innerJoin(playerEvaluation, eq(playerEvaluation.id, evaluationResults.evaluationId))

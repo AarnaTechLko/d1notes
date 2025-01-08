@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
         video_link_two:playerEvaluation.video_link_two,
         video_link_three:playerEvaluation.video_link_three,
         created_at:playerEvaluation.created_at,
+        percentage:playerEvaluation.percentage,
+        lighttype:playerEvaluation.lighttype,
+        evaluationposition:playerEvaluation.position
+        ,
       })
       .from(playerEvaluation)
       .innerJoin(users, eq(playerEvaluation.player_id, users.id)) // Assuming player_id is the foreign key in playerEvaluation

@@ -142,7 +142,7 @@ export default function Register() {
     if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Minimum';
 
     if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Maximum';
-    if (!formValues.gender) errors.gender = 'Gender is required';
+   /// if (!formValues.gender) errors.gender = 'Gender is required';
 
     if (!formValues.sport) errors.sport = 'Sport is required';
     if (!formValues.clubName) errors.clubName = 'Club Name is required';
@@ -383,6 +383,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
                     <input
+                    placeholder='Ex: Tim'
                       type="text"
                       name="firstName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -395,6 +396,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                     <input
+                    placeholder='Ex: Coock'
                       type="text"
                       name="lastName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -469,7 +471,7 @@ export default function Register() {
 
                   {/* Gender */}
                   <div>
-                    <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
+                    <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                     <select
                       name="gender"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -503,6 +505,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
                     <input
+                    placeholder='Club/organization Name'
                       type="text"
                       name="clubName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -551,6 +554,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                     <input
+                    placeholder='Ex: Austin'
                       type="text"
                       name="city"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"

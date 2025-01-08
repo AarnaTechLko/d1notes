@@ -195,8 +195,7 @@ const Home: React.FC = () => {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
-          <th>Country</th>
-          
+         
         </tr>
       </thead>
       <tbody>
@@ -205,7 +204,7 @@ const Home: React.FC = () => {
             <td>{row.FirstName}</td>
             <td>{row.LastName}</td>
             <td>{row.Email}</td>
-            <td>{row.Country}</td>
+          
             
              
           </tr>
@@ -255,7 +254,7 @@ const Home: React.FC = () => {
                           <th>First Name</th>
                           <th>Last Name</th>
                           <th>Email</th>
-                          <th>Country</th>
+                       
                           
                           
                           <th>Remove</th>
@@ -294,17 +293,7 @@ const Home: React.FC = () => {
                                 className="w-full"
                               />
                             </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.Country}
-                                onChange={(e) =>
-                                  handleInputChange(index, "Country", e.target.value)
-                                }
-                                className="w-full"
-                              />
-                            </td>
-                          
+                            
                             
                             <td>
                               <button

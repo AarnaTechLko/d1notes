@@ -132,7 +132,7 @@ export default function Register() {
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
-    if (!formValues.gender) newErrors.gender = "Gender is required.";
+   /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sport is required.";
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
@@ -325,12 +325,13 @@ export default function Register() {
 
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
                 <div>
                   <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
                     First Name<span className='mandatory'>*</span>
                   </label>
                   <input
+                  placeholder="Ex: Sam"
                     type="text"
                     name="first_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -344,6 +345,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                   <input
+                  placeholder="Ex: Thomas"
                     type="text"
                     name="last_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -354,8 +356,8 @@ export default function Register() {
                 </div>
 
                 {/* Location */}
-                <div>
-                  <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location<span className='mandatory'>*</span></label>
+                {/* <div style={{ display: 'none' }}>
+                  <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location </label>
                   <input
                     type="text"
                     name="location"
@@ -364,11 +366,11 @@ export default function Register() {
                     onChange={handleChange}
                   />
 
-                </div>
+                </div> */}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
+                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="height"
@@ -381,7 +383,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)</label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="weight"
@@ -416,14 +418,14 @@ export default function Register() {
 
 
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Playing for Country</label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality <span className="mandatory">*</span></label>
                   <Select
                     isMulti
                     options={countries}
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={handleCountryChange}
-                    placeholder="Select Position(s)"
+                    placeholder="Select Nationality(s)"
                   />
 
                 </div>
@@ -438,7 +440,7 @@ export default function Register() {
                     value={formValues.country}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
+                    <option value="">Select a country</option>
                     {countries
                       .filter((country) =>
                         country.label.toLowerCase().includes('united states')
@@ -476,6 +478,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                   <input
+                  placeholder="Ex: Austin"
                     type="text"
                     name="city"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -520,7 +523,7 @@ export default function Register() {
 
                 {/* Gender */}
                 <div>
-                  <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
+                  <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="gender"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"

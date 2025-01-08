@@ -28,6 +28,9 @@ export interface Evaluation {
     physicalRemarks:string;
     finalRemarks:string;
     rating:number;
+    percentage:number;
+    lighttype:number;
+    evaluationposition:number;
     rejectremarks:string;
     slug:string;
      

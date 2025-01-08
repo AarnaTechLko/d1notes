@@ -63,7 +63,7 @@ import { sendEmail } from '@/lib/helpers';
           first_name: item.FirstName,
           last_name: item.LastName,
           email: item.Email,
-          country: item.Country,
+          country:null,
           
           coach_id: coach_id,
           enterprise_id: enterprise_id,
@@ -120,7 +120,7 @@ import { sendEmail } from '@/lib/helpers';
         }
       }
     }
-    
+     
 
 if(duplicates.length>0)
 {

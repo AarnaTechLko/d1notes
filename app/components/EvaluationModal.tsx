@@ -43,6 +43,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [videoThreeTiming, setVideoThreeTiming]=useState<string>('5');
   const [lighttype, setLighttype]=useState<string>('');
   const [position, setPosition]=useState<string>('');
+  const [percentage, setPercentage]=useState<string>('');
 
 
 
@@ -124,7 +125,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           videoTwoTiming,
           videoThreeTiming,
           position,
-          lighttype
+          lighttype,
+          percentage
         }),
       });
 
@@ -464,7 +466,7 @@ let paidBy;
     />
   </div>
           </div>
-          <div className="mb-4 grid grid-cols-1   md:grid-cols-2 gap-4">
+          <div className="mb-4 grid grid-cols-1   md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="lighttype" className="block text-gray-700 mb-1">
                Game Light Type
@@ -501,6 +503,25 @@ let paidBy;
                     )
                   })}
                  
+                </select>
+              
+            </div>
+            <div>
+              <label htmlFor="percentage" className="block text-gray-700 mb-1">
+               Game Percentage
+              </label>
+              <select name='percentage' value={percentage}
+                  onChange={(e) => {
+                    setPercentage(e.target.value);
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md`}>
+                  
+                  <option value=''>Select</option>
+                  <option value='10'>10%</option>
+                  <option value='20'>20%</option>
+                  <option value='30'>30%</option>
+                  <option value='50'>50%</option>
+                  
                 </select>
               
             </div>

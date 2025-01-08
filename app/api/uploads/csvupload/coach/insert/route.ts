@@ -63,7 +63,7 @@ import { sendEmail } from '@/lib/helpers';
                 firstName: item.FirstName,
                 lastName: item.LastName,
                 email: item.Email,
-                country: item.Country,
+                country:null,
                
                 enterprise_id,
                 slug,
