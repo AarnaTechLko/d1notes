@@ -116,7 +116,7 @@ export default function Register() {
     // }
     if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
-    if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+    
 
     const heightRegex = /^\d{1,2}'\d{1,2}"$/;
     if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
@@ -128,7 +128,7 @@ export default function Register() {
     }
 
 
-   /// if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+   
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
