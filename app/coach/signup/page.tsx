@@ -207,6 +207,7 @@ if (!termsAccepted) {
                   Email<span className='mandatory'>*</span> 
                 </label>
                 <input
+                placeholder='abcd@gmail.com'
                   type="text"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="email"
@@ -220,6 +221,7 @@ if (!termsAccepted) {
                   Password<span className='mandatory'>*</span>
                 </label>
                 <input
+                placeholder='xxxxxxxxx'
                   type="password"
                   name="password"
                   value={formValues.password}

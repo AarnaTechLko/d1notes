@@ -128,7 +128,7 @@ export default function Register() {
     }
 
 
-    if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
+   /// if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
