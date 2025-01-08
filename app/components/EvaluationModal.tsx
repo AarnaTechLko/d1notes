@@ -517,12 +517,18 @@ let paidBy;
                   className={`w-full px-3 py-2 border rounded-md`}>
                   
                   <option value=''>Select</option>
-                  <option value='10'>10%</option>
-                  <option value='20'>20%</option>
-                  <option value='30'>30%</option>
-                  <option value='50'>50%</option>
+                  <option value="">Select</option>
+  {[...Array(10)].map((_, index) => {
+    const value = (index + 1) * 10;
+    return (
+      <option key={value} value={value}>
+        {value}%
+      </option>
+    );
+  })}
+</select>
                   
-                </select>
+              
               
             </div>
             </div>

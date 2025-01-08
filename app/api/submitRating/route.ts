@@ -53,33 +53,6 @@ export async function PUT(req: NextRequest) {
     .where(eq(coaches.id, coach_id))
     .returning();
 
-    let totalAmount;
-    const payment = await db.select().from(coachearnings).where(eq(coachearnings.evaluation_id, evaluationIdNumber)).execute();
-    if (payment.length === 0) {
-      return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
-    }
-
-    const totalBalance = await db
-      .select({ value: sum(coachaccount.amount) })
-      .from(coachaccount)
-      .where(eq(coachaccount.coach_id, coach_id))
-      .execute();
-
-    const totalBalanceValue = Number(totalBalance[0]?.value) || 0;
-    const commisionAmount = Number(payment[0]?.commision_amount) || 0;
-    totalAmount = totalBalanceValue + commisionAmount;
-
-    await db.update(coachaccount)
-      .set({ amount: totalAmount.toString() })
-      .where(eq(coachaccount.coach_id, coach_id));
-
-    const updatecoachearnings = await db
-      .update(coachearnings)
-      .set({
-        status: 'Released'
-      })
-      .where(eq(coachearnings.evaluation_id, evaluationIdNumber))
-      .returning();
 
     return NextResponse.json({ message: true }, { status: 200 });
 

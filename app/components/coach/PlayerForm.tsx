@@ -413,12 +413,13 @@ if (!response.ok) {
 </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
         <div>
           <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
             First Name<span className="mandatory">*</span>
           </label>
           <input
+          placeholder="Ex: Sam"
             type="text"
             name="first_name"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -432,6 +433,7 @@ if (!response.ok) {
         <div>
           <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className="mandatory">*</span></label>
           <input
+          placeholder="Ex: Thomas"
             type="text"
             name="last_name"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -442,20 +444,11 @@ if (!response.ok) {
         </div>
 
         {/* Location */}
-        <div>
-          <label htmlFor="location" className="block text-gray-700 text-sm font-semibold mb-2">Playing Location</label>
-          <input
-            type="text"
-            name="location"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={formValues.location}
-            onChange={handleChange}
-          />
-          
-        </div>
+       
         <div>
           <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className="mandatory">*</span></label>
           <input
+          placeholder="abcd@gmail.com"
             type="text"
             name="email"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -483,6 +476,7 @@ if (!response.ok) {
         <div>
           <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)</label>
           <input
+          placeholder="50"
             type="text"
             name="weight"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -513,14 +507,14 @@ if (!response.ok) {
                 </div>
 
         <div>
-          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Playing for Country</label>
+          <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality</label>
           <Select
             isMulti
             options={countries}
             className="basic-multi-select"
             classNamePrefix="select"
             onChange={handleCountryChange}
-            placeholder="Select Position(s)"
+            placeholder="Select Country(s)"
           />
           
         </div>
@@ -535,7 +529,7 @@ if (!response.ok) {
             value={formValues.country}
             onChange={handleChange}
           >
-            <option value="">Select</option>
+            <option value="">Select a country</option>
             {countries.map((country) => (
                       <option key={country.label} value={country.label}>
                         {country.label}
@@ -570,6 +564,7 @@ if (!response.ok) {
         <div>
           <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
           <input
+          placeholder="Ex: texas"
             type="text"
             name="city"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -631,6 +626,7 @@ if (!response.ok) {
         <div>
           <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="text-xs text-gray-500">(Optional)</span></label>
           <input
+          placeholder="Ex: 10"
             type="text"
             name="jersey"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
