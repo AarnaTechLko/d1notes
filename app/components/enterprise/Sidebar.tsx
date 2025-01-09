@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus, FaUser, FaEnvelope } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus, FaUser, FaEnvelope, FaAssistiveListeningSystems } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
@@ -237,9 +237,9 @@ const Sidebar: React.FC = () => {
 
 
             <li className="hover:bg-gray-700 rounded transition duration-200">
-              <a onClick={handleLogout} className="flex items-center space-x-2 p-2">
-                <FaSignOutAlt className="text-xl" />
-                <span>Sign Out</span>
+              <a href="/enterprise/settings/" className="flex items-center space-x-2 p-2">
+                <FaCog className="text-xl" />
+                <span>Settings</span>
               </a>
             </li>
           </ul>

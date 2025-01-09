@@ -414,3 +414,12 @@ export const evaluation_charges=pgTable("evaluation_charges",{
   amount:text("amount"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
+
+
+
+export const freerequests=pgTable("freerequests",{
+  id: serial("id").primaryKey(),
+  clubId:integer("clubId"),
+  requests:integer("requests"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
