@@ -580,7 +580,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             onChange={handleChange}
                                         >
                                             <option value="">Select</option>
-                                            <option value="United States of America">United States of America</option>
+                                            <option value="USA">USA</option>
 
                                         </select>
 

@@ -16,10 +16,12 @@ interface ProfileCardProps {
   expectedCharge?:number;
   id?:number;
   playerClubId?:number;
+  freeEvaluations?:number;
+  allowedFreeRequests?:number;
   coachClubId?:number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.open(`/coach/${slug}`, '_blank');
@@ -86,6 +88,8 @@ useEffect(()=>{
           isOpen={isevaluationModalopen}
           coachId={String(id)}
           playerId={playerId}
+          freeEvaluations={freeEvaluations}
+          allowedFreeRequests={allowedFreeRequests}
           onClose={() => setIsevaluationModalOpen(false)}
           coachClubId={coachClubId}
           playerClubId={playerClubId}

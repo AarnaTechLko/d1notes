@@ -42,6 +42,8 @@ const Dashboard: React.FC = () => {
   const [currentDescription, setCurrentDescription] = useState<string>("");
   const [coaches, setCoaches] = useState<Profile[]>([]);
   const [playerClubId,setPlayerClubid]=useState<string>('')
+  const [freeEvaluations,setFreeEvaluations]=useState(0);
+  const [allowedFreeRequests,setAllowedFreeRequests]=useState(0);
   
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
@@ -59,7 +61,36 @@ const Dashboard: React.FC = () => {
       </div>
     );
   };
-
+  const fetchRequests = async () => {
+    const session = await getSession();
+    const clubId =session?.user.club_id;
+    if (!clubId) {
+      console.error("Club ID is not available.");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/freerequests?clubId=${clubId}`);
+      
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.statusText} (Status: ${response.status})`);
+      }
+  
+      const textResponse = await response.text(); // Read response as text
+      if (!textResponse) {
+        throw new Error("Empty response body received.");
+      }
+  
+      const body = JSON.parse(textResponse); // Parse text as JSON
+      if (body && body.requests) {
+        setAllowedFreeRequests(body.requests);
+      } else {
+        throw new Error("Invalid response structure.");
+      }
+    } catch (error) {
+      console.error("Failed to fetch free requests:", error);
+    }
+  };
   const fetchEvaluations = async (status: string) => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
@@ -130,6 +161,36 @@ const Dashboard: React.FC = () => {
  
     setLoading(false); // Set loading to false after data is fetched
   };
+
+
+  const fetchFreeEvaluations = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    const session = await getSession();
+    const player_id = session?.user.id;
+    
+
+    const response = await fetch("/api/freeevaluations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_id,
+        
+      }),
+    });
+
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error("Failed to fetch evaluations");
+    }
+
+    const coachData = await response.json();
+    
+    setFreeEvaluations(coachData.countRecords);
+ 
+    setLoading(false); // Set loading to false after data is fetched
+  };
   
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
@@ -144,6 +205,8 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // Fetch data for the initially selected tab
     fetchEvaluations(selectedTab);
+    fetchFreeEvaluations();
+    fetchRequests();
     fetchCoach();
   }, [selectedTab]);
 
@@ -263,8 +326,11 @@ const Dashboard: React.FC = () => {
                     id={profile.id}
                     name={profile.firstName}
                     organization={profile.clubName}
-                    image={profile.image ?? '/default-image.jpg'}
+                    image={profile.image ?? '/default.jpg'}
                     rating={profile.rating}
+                    freeEvaluations={freeEvaluations}
+                    expectedCharge={profile.expectedCharge}
+                    allowedFreeRequests={allowedFreeRequests}
                     slug={profile.slug}
                     usedIn='playerlogin'
                     playerClubId={Number(playerClubId)}
@@ -275,7 +341,7 @@ const Dashboard: React.FC = () => {
 
 
        
-        </div>
+        </div> 
       </main>
 
 

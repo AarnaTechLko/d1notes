@@ -184,7 +184,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             onChange={(e) => handleFilterChange('country', e.target.value)}
           >
             <option value="">Select Country</option>
-            <option value="United States of America">United States of America</option>
+            <option value="USA">USA</option>
           </select>
         </div>
 

@@ -390,42 +390,48 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                 {/* Profile Image */}
 
                                 <div className="mb-4">
-                                    <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
-                                    <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
-                                        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
-                                            <Image
-                                                src={formValues.image ? formValues.image : DefaultPic}
-                                                alt="Profile Image"
-                                                width={100}
-                                                height={100}
-                                                className="object-cover w-full h-full"
-                                            />
-                                        </div>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                            className="hidden"
-                                            ref={fileInputRef}
-                                        />
-                                        {photoUpoading ? (
-                                            <>
-                                                <FileUploader />
-                                            </>
-                                        ) : (
-                                            <>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
+                  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
+                    <Image
+                      src={formValues.image ? formValues.image : DefaultPic}
+                      alt="Profile Image"
+                      width={100}
+                      height={100}
+                      className="object-cover w-full h-full"
+                    />
+                    {!formValues.image && (
+                      <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+                        <p className="text-white text-xs font-medium">Click to Upload</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    ref={fileInputRef}
+                  />
+                  {photoUpoading ? (
+                    <>
+                      <FileUploader />
+                    </>
+                  ) : (
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
+                  )}
 
-                                            </>
-                                        )}
+                </div>
 
-
-                                    </div>
-                                </div>
+              </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                                     <div>
                                         <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
                                         <input
+                                        placeholder='Ex: Sam'
                                             type="text"
                                             name="firstName"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -438,6 +444,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     <div>
                                         <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
                                         <input
+                                        placeholder='Ex: Thomas'
                                             type="text"
                                             name="lastName"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -449,6 +456,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     <div >
                                         <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
                                         <input
+                                        placeholder='Ex: 50'
                                             type="text"
                                             name="expectedCharge"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -491,6 +499,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     <div>
                                         <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email<span className='mandatory'>*</span></label>
                                         <input
+                                        placeholder='abcdz@gmail.com'
                                             type="text"
                                             name="email"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -510,7 +519,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             onChange={handleChange}
                                         >
                                             <option value="">Select</option>
-                                            <option value="United States of America">United States of America</option>
+                                            <option value="USA">USA</option>
 
                                         </select>
 
@@ -539,6 +548,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                     <div>
                                         <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                                         <input
+                                        placeholder='Ex: texas'
                                             type="text"
                                             name="city"
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"

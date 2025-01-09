@@ -21,10 +21,12 @@ interface EvaluationModalProps {
   amount: number | null;
   coachClubId?: number;
   playerClubId?: number;
+  freeEvaluations?: number;
+  allowedFreeRequests?: number;
   kids?: Kids[];
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids,freeEvaluations,allowedFreeRequests }) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -44,6 +46,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
   const [lighttype, setLighttype] = useState<string>('');
   const [position, setPosition] = useState<string>('');
   const [percentage, setPercentage] = useState<string>('');
+ 
 
 
 
@@ -148,7 +151,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         });
       }
 
-      if (playerClubId != coachClubId) {
+      if (playerClubId !== coachClubId && (freeEvaluations ?? 0) > (allowedFreeRequests ?? 0)) {
         const stripe = await stripePromise;
         if (!stripe) {
           throw new Error('Stripe is not loaded');
@@ -236,6 +239,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     }
   };
 
+  
+ 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-5xl p-6 relative overflow-y-scroll max-h-[90vh]">
@@ -245,7 +250,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         >
           ✖
         </button>
-        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation</h2>
+        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation{freeEvaluations} {allowedFreeRequests}-{amount}</h2>
 
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}
         {loading ? (

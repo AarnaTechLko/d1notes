@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
     if (!clubId) {
       console.error("Club ID is not available.");
       return;
-    }
+    } 
     
     try {
       const response = await fetch(`/api/freerequests?clubId=${clubId}`);
