@@ -433,7 +433,7 @@ const Profile: React.FC = () => {
                   <div className="flex">
                     <select
                       name="countrycode"
-                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
+                      className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
                       value={profileData.countrycode}
                       onChange={handleChange}
                     >
