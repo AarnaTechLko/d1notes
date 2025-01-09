@@ -44,7 +44,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
             icon: 'success',
           }).then(() => {
             setTimeout(() => {
-              window.location.href = '/coach/dashboard';
+              window.location.href = window.location.href;
             }, 1000);
           });
         } catch (error) {
@@ -100,7 +100,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
             icon: 'error',
           }).then(() => {
             setTimeout(() => {
-              window.location.href = '/coach/dashboard';
+              window.location.href = window.location.href;
             }, 1000);
           });
         } catch (error) {

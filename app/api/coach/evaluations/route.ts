@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
         created_at:playerEvaluation.created_at,
         percentage:playerEvaluation.percentage,
         lighttype:playerEvaluation.lighttype,
-        evaluationposition:playerEvaluation.position
+        evaluationposition:playerEvaluation.position,
+        id:playerEvaluation.id
         ,
       })
       .from(playerEvaluation)
@@ -119,7 +120,9 @@ export async function GET(req: NextRequest) {
         video_link_three: playerEvaluation.video_link_three,
         status: playerEvaluation.status,
         rejectremarks: playerEvaluation.rejectremarks,
+        player_id: playerEvaluation.player_id,
         video_description: playerEvaluation.video_description,
+        id: playerEvaluation.id,
       })
       .from(playerEvaluation)
       .innerJoin(users, eq(playerEvaluation.player_id, users.id))

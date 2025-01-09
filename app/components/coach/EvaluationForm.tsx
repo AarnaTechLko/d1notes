@@ -118,7 +118,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             .then((data) => {
 
                 onClose();
-                ///window.location.href = '/coach/dashboard';
+                window.location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -175,7 +175,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             .then((data) => {
 
                 onClose();
-                ///window.location.href = '/coach/dashboard';
+                window.location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);
