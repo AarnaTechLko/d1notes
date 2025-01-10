@@ -77,18 +77,32 @@ export default function Register() {
   const [height, setHeight] = useState("");
 
   const formatHeight = (value: string) => {
-    // Remove non-numeric characters
-    const numericValue = value.replace(/\D/g, "");
-
+    // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
+    const numericValue = value.replace(/[^0-9.'"]/g, "");
+  
     if (numericValue.length === 0) return ""; // Return empty if no input
-    if (numericValue.length === 1) return `${numericValue}'`; // Format single digit as feet only
-
-    // Format as feet and inches
-    const feet = numericValue.slice(0, -1);
-    const inches = numericValue.slice(-1);
-
-    return `${feet}'${inches}"`;
+  
+    // Split the input by the apostrophe (')
+    const parts = numericValue.split("'");
+  
+    let feet = parts[0]; // The whole number part for feet
+  
+    // If there's something after the apostrophe, handle inches
+    let inches = parts[1] || "";
+    
+    // If there's a decimal point in inches, keep it intact
+    if (inches.includes('"')) {
+      inches = inches.replace('"', "");
+    }
+  
+    if (inches) {
+      return `${feet}' ${inches}"`; // Format as feet and decimal inches
+    } else {
+      return `${feet}'`; // Format as feet only
+    }
   };
+  
+  
 
   const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -282,7 +296,7 @@ export default function Register() {
         <div className="flex flex-col justify-center bg-white p-4 w-full">
           <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
             <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-            {/* <p className="text-red-500">( All fields are mandatory including player&lsquo;s photo upload.)</p> */}
+            <p className="text-red-500">( Fields marked with * are mandatory.)</p>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit} >
@@ -396,7 +410,7 @@ export default function Register() {
 
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Graduation<span className='mandatory'>*</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">College Graduation<span className='mandatory'>*</span></label>
                   <select
                     name="graduation"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -418,7 +432,7 @@ export default function Register() {
 
 
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality <span className="mandatory">*</span></label>
+                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="text-xs text-gray-500">(Optional)</span></label>
                   <Select
                     isMulti
                     options={countries}
@@ -431,7 +445,7 @@ export default function Register() {
                 </div>
 
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
                   <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                   <select
@@ -487,9 +501,6 @@ export default function Register() {
                   />
 
                 </div>
-
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
                   <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
                   <input
@@ -502,6 +513,9 @@ export default function Register() {
                   />
 
                 </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+              
 
                 {/* Grade Level */}
                 <div>
@@ -550,8 +564,6 @@ export default function Register() {
                   />
 
                 </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
                   <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
                   <select
@@ -567,10 +579,13 @@ export default function Register() {
                   <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
 
                 </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+             
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year<span className='mandatory'>*</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / Year<span className='mandatory'>*</span></label>
                   <input
                     placeholder="Team Name/ 2024"
                     type="text"
@@ -584,7 +599,7 @@ export default function Register() {
 
                 {/* Position */}
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className='mandatory'>*</span></label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
                   <Select
                     isMulti
                     options={positionOptionsList}
@@ -635,7 +650,7 @@ export default function Register() {
                   <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
                   <input
                     type="text"
-                    placeholder="Rec, AYSO, Club, Pre EcnL, Ercl, Acedemy, NPL, BPC, MSL, High School and College"
+                    placeholder="Pre ECNL, ECNL and ECRL"
                     name="league"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.league}

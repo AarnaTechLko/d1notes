@@ -216,7 +216,7 @@ const Dashboard: React.FC = () => {
               }
               else
               {
-                return 'Rejected';
+                return 'Declined';
               }
             
           }

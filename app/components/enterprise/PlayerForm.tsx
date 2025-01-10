@@ -698,7 +698,7 @@ if (!response.ok) {
           <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className="mandatory">*</span></label>
           <input
           type="text"
-            placeholder="Specify experience league (AYSO, club, school, etc.)"
+            placeholder="Pre ECNL, ECNL and ECRL"
             name="league"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
             value={formValues.league}

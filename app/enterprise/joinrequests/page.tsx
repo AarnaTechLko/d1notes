@@ -68,8 +68,8 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search is updated
   }, [search, orders]);
 
-  const totalPages = Math.ceil(filteredOrders.length / limit);
-
+ 
+  const totalPages = filteredOrders.length === 0 ? 1 : Math.ceil(filteredOrders.length / limit);
   // Get the paginated orders
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * limit,
@@ -126,7 +126,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         // Handle successful response (e.g., update UI)
-        console.log('Request rejected');
+       
       } else {
         console.error('Failed to reject request');
       }

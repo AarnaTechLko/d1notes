@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         weight: users.weight,
         playingcountries: users.playingcountries,
         league: users.league,
+        graduation: users.graduation,
        
 
       })
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
       playingcountries: user.playingcountries,
       league: user.league,
       weight: user.weight,
+      graduation: user.graduation,
       image: user.image ? `${user.image}` : null,
 
     }));

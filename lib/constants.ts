@@ -3,8 +3,8 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000
 export const BASEURL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 export const SECRET_KEY = process.env.SECRET_KEY || 'JHGJHG&^*&^*&HGJHGJ657668768JHJHGJHG*&^*&^*&^';
 export const COMMISSIONPERCENTAGE=18;
-const startYear = 2000; // Starting year
-const endYear = 2030; 
+const startYear = 1985; // Starting year
+const endYear = 2050; 
 
 
 export const Grades=Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);

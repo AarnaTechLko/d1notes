@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
               onClick={toggleEvaluationList}
             >
               <FaClipboardList className="text-xl" />
-              <span>Evaluation List</span>
+              <span>Evaluation Activity</span>
             </a>
             {isEvaluationListOpen && (
               <ul className="ml-4 mt-1 space-y-1">
@@ -97,7 +97,7 @@ const Sidebar: React.FC = () => {
                 </li>
                 <li className="hover:bg-gray-600 rounded transition duration-200">
                   <a href="/evaluations?status=3" className="flex items-center space-x-2 p-2">
-                    <span>Rejected</span>
+                    <span>Declined</span>
                   </a>
                 </li>
               </ul>
@@ -135,7 +135,7 @@ const Sidebar: React.FC = () => {
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/playeraddon" className="flex items-center space-x-2 p-2">
             <FaChild className="text-xl" />
-              <span>Player Addon</span>
+              <span>Add Player</span>
             </a>
           </li>
           )}

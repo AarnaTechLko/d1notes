@@ -71,7 +71,7 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search is updated
   }, [search, orders]);
 
-  const totalPages = Math.ceil(filteredOrders.length / limit);
+  const totalPages = filteredOrders.length === 0 ? 1 : Math.ceil(filteredOrders.length / limit);
 
   // Get the paginated orders
   const paginatedOrders = filteredOrders.slice(
@@ -142,7 +142,7 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess("Join Request Rejected successfully. A rejection message has been sent.");
+        showSuccess("Join Request Declined successfully. A rejection message has been sent.");
         fetchOrders();
       } else {
         console.error('Failed to accept request');

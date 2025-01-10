@@ -59,7 +59,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
         setSort(prev => prev.startsWith(column) && prev.endsWith('asc') ? `${column},desc` : `${column},asc`);
     };
 
-    const totalPages = Math.ceil(total / limit); // Calculate total pages
+    const totalPages = total === 0 ? 1 : Math.ceil(total / limit); // Calculate total pages
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US');

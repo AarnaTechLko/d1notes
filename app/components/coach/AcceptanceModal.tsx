@@ -95,8 +95,8 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
           }
 
           Swal.fire({
-            title: 'Rejected!',
-            text: 'You have rejected the evaluation request.',
+            title: 'Declined!',
+            text: 'You have Declined the evaluation request.',
             icon: 'error',
           }).then(() => {
             setTimeout(() => {

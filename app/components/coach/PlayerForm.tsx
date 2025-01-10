@@ -93,17 +93,29 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
 
   const formatHeight = (value: string) => {
-    // Remove non-numeric characters
-    const numericValue = value.replace(/\D/g, "");
-
+    // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
+    const numericValue = value.replace(/[^0-9.'"]/g, "");
+  
     if (numericValue.length === 0) return ""; // Return empty if no input
-    if (numericValue.length === 1) return `${numericValue}'`; // Format single digit as feet only
-
-    // Format as feet and inches
-    const feet = numericValue.slice(0, -1);
-    const inches = numericValue.slice(-1);
-
-    return `${feet}'${inches}"`;
+  
+    // Split the input by the apostrophe (')
+    const parts = numericValue.split("'");
+  
+    let feet = parts[0]; // The whole number part for feet
+  
+    // If there's something after the apostrophe, handle inches
+    let inches = parts[1] || "";
+    
+    // If there's a decimal point in inches, keep it intact
+    if (inches.includes('"')) {
+      inches = inches.replace('"', "");
+    }
+  
+    if (inches) {
+      return `${feet}' ${inches}"`; // Format as feet and decimal inches
+    } else {
+      return `${feet}'`; // Format as feet only
+    }
   };
 
   const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -457,7 +469,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
+                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="height"
@@ -470,7 +482,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)</label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs) <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     placeholder="50"
                     type="text"
@@ -483,7 +495,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Graduation</label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">College Graduation <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="graduation"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -503,7 +515,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality</label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="text-xs text-gray-500">(Optional)</span></label>
                   <Select
                     isMulti
                     options={countries}
@@ -518,7 +530,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
-                  <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+                  <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="country"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -538,7 +550,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
                 </div>
                 <div>
-                  <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+                  <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State <span className="text-xs text-gray-500">(Optional)</span></label>
 
 
                   <select
@@ -558,7 +570,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
                 </div>
                 <div>
-                  <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+                  <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     placeholder="Ex: texas"
                     type="text"
@@ -574,7 +586,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
+                  <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="date"
                     name="birthday"
@@ -588,7 +600,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
                 {/* Grade Level */}
                 <div>
-                  <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level</label>
+                  <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2">Level <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
                     {playingLevels.map((level) => (
 
@@ -604,7 +616,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
                 {/* Gender */}
                 <div>
-                  <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+                  <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="gender"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -634,7 +646,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
-                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport</label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -650,8 +662,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                 </div>
 
                 {/* Team */}
-                <div style={{ display: 'none' }}>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
+                <div>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     placeholder="Team Name/ 2024"
                     type="text"
@@ -665,7 +677,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
                 {/* Position */}
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)</label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s) <span className="text-xs text-gray-500">(Optional)</span></label>
                   <Select
                     isMulti
                     options={positionOptionsList}
@@ -713,10 +725,11 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League</label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
+
                     type="text"
-                    placeholder="Specify experience league (AYSO, club, school, etc.)"
+                    placeholder="Pre ECNL, ECNL and ECRL"
                     name="league"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.league}
@@ -727,7 +740,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades <span className="text-xs text-gray-500">(Optional)</span></label>
                   <textarea
                     placeholder="Tell us about your player’s experience/ competition level, any 
           accolades and goals."

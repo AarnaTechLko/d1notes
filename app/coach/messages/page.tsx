@@ -9,7 +9,7 @@ const Home: React.FC = () => {
   
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-gray-900 text-white p-2"></header>
+      <header className="bg-gray-900 text-white"></header>
 
     <ChatBox/>
     </div>

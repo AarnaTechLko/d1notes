@@ -179,7 +179,7 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search is updated
   }, [search, filteredOrders]);
 
-  const totalPages = Math.ceil(filteredOrders.length / limit);
+  const totalPages = filteredOrders.length === 0 ? 1 : Math.ceil(filteredOrders.length / limit);
 
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * limit,

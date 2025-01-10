@@ -9,7 +9,7 @@ const Messages: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-gray-900 text-white p-2 md:p-1">
+      <header className="bg-gray-900 text-white  md:p-1">
         {/* Header Content */}
       </header>
 

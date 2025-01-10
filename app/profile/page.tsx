@@ -5,13 +5,17 @@ import Sidebar from '../components/Sidebar';
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import Select from "react-select";
-import { countryCodesList, countries, states,positionOptionsList } from '@/lib/constants';
+import { countryCodesList, countries, states,positionOptionsList, Grades } from '@/lib/constants';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const [countriesArray, setCountriesArray] = useState([]);
+  const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
+  const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
 
+let nationalities;
+let ppositons;
   const [profileData, setProfileData] = useState({
     first_name: "",
     last_name: "",
@@ -36,6 +40,7 @@ const Profile: React.FC = () => {
     weight: "",
     playingcountries: "",
     league: "",
+    graduation: "",
   });
 
 
@@ -60,10 +65,35 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
-          const playingCountries = data.playingcountries;
+         
+          if (data.playingcountries.includes(',')) {
+            nationalities = data.playingcountries
+              .split(',')
+              .map((country: string) => 
+                countries.find(option => option.value.trim() === country.trim())
+              )
+              .filter(Boolean);
+          } else {
+             
+            nationalities =[data.playingcountries.trim()];
+          }
+          
+          setNationality({label:nationalities,value:nationalities});
 
 
-
+          if (data.position.includes(',')) {
+            ppositons = data.position
+              .split(',')
+              .map((country: string) => 
+                positionOptionsList.find(option => option.value.trim() === country.trim())
+              )
+              .filter(Boolean);
+          } else {
+             
+            ppositons =[data.position.trim()];
+          }
+          console.log(ppositons);
+          setPosition(ppositons);
 
         } else {
           console.error("Error fetching profile data:", response.statusText);
@@ -72,9 +102,42 @@ const Profile: React.FC = () => {
         console.error("Error fetching profile data:", error);
       }
     };
-
+   
     fetchProfileData();
   }, []);
+
+
+  const formatHeight = (value: string) => {
+    // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
+    const numericValue = value.replace(/[^0-9.'"]/g, "");
+  
+    if (numericValue.length === 0) return ""; // Return empty if no input
+  
+    // Split the input by the apostrophe (')
+    const parts = numericValue.split("'");
+  
+    let feet = parts[0]; // The whole number part for feet
+  
+    // If there's something after the apostrophe, handle inches
+    let inches = parts[1] || "";
+    
+    // If there's a decimal point in inches, keep it intact
+    if (inches.includes('"')) {
+      inches = inches.replace('"', "");
+    }
+  
+    if (inches) {
+      return `${feet}' ${inches}"`; // Format as feet and decimal inches
+    } else {
+      return `${feet}'`; // Format as feet only
+    }
+  };
+
+  const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    const formattedValue = formatHeight(value);
+    setProfileData((prevValues) => ({ ...prevValues, height: formattedValue }));
+  };
   const mapCountriesToOptions = (playingCountries: any) => {
     return playingCountries
       .split(',')
@@ -167,6 +230,7 @@ const Profile: React.FC = () => {
   const handleCountryChange = (selectedOptions: any) => {
     const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
     setProfileData({ ...profileData, playingcountries: playingcountries });
+     
   };
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -190,6 +254,8 @@ const Profile: React.FC = () => {
     const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
     setProfileData({ ...profileData, position: positions });
   };
+
+ 
   return (
     <>
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -277,20 +343,7 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.last_name}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Playing location</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="location"
-                    value={profileData.location}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.location}</p>
-                )}
-              </div>
+           
 
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
@@ -299,7 +352,7 @@ const Profile: React.FC = () => {
                     type="text"
                     name="height"
                     value={profileData.height}
-                    onChange={handleChange}
+                    onChange={handleHeightChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
@@ -318,12 +371,33 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.weight}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.weight} Lbs</p>
                 )}
               </div>
-
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Playing for Country</label>
+                <label htmlFor="graduation" className="block text-gray-700 text-sm font-semibold mb-2">College Graduation</label>
+                {isEditMode ? (
+                  <select
+                  name="graduation"
+                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  value={profileData.graduation}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  {Grades
+                    .map((grade) => (
+                      <option key={grade} value={grade}>
+                        {grade}
+                      </option>
+                    ))}
+
+                </select>
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.graduation}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(s)</label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -332,6 +406,7 @@ const Profile: React.FC = () => {
                   classNamePrefix="select"
                   onChange={handleCountryChange}
                   placeholder="Select Country(s)"
+                  value={nationality}
 
                 />
                 ) : (
@@ -428,7 +503,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+                <label className="block text-gray-700 text-sm font-semibold ">Mobile Number</label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -463,7 +538,7 @@ const Profile: React.FC = () => {
                   <input
                     type="date"
                     name="birthday"
-                    value={formatDate(profileData.birthday)}
+                    value={ profileData.birthday ? new Date(profileData.birthday).toISOString().split('T')[0] : ''}
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
@@ -563,7 +638,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position (s)<span className='mandatory'>*</span></label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)</label>
                   {isEditMode ? (
                   <Select
                     isMulti
@@ -572,6 +647,7 @@ const Profile: React.FC = () => {
                     classNamePrefix="select"
                     onChange={handlePositionChange}
                     placeholder="Select Position(s)"
+                    value={position}
                   />
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.position}</p>
@@ -590,7 +666,7 @@ const Profile: React.FC = () => {
                 {isEditMode ? (
                   <input
                     name="league"
-                    
+                    placeholder='Pre ECNL, ECNL and ECRL'
                     value={profileData.league}
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"

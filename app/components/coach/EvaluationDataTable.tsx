@@ -132,7 +132,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
         setSort(prev => prev.startsWith(column) && prev.endsWith('asc') ? `${column},desc` : `${column},asc`);
     };
 
-    const totalPages = Math.ceil(total / limit); // Calculate total pages
+    const totalPages = total === 0 ? 1 : Math.ceil(total / limit);// Calculate total pages
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0'); // Get day and pad with leading zero if necessary
@@ -209,7 +209,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                         <button className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Completed</button>
                                     )}
                                     {item.status === 3 && (
-                                        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Rejected</button>
+                                        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Declined</button>
                                     )}
                                     {item.status === 4 && (
                                         <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-red-600">Open Draft</button>

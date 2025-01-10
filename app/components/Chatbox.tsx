@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaEye, FaPaperclip, FaSmile, FaArrowLeft } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 interface ChatMessage {
     senderId: number;
     sender_type: string;
@@ -46,6 +47,11 @@ const ChatBox: React.FC = () => {
     const [isUserScrolling, setIsUserScrolling] = useState(false);
     const [loggedInUserType, setLoggedInUserType] = useState<string>();
     const chatBoxRef = useRef<HTMLDivElement | null>(null);
+    const router = useRouter();
+    const handleGoBack = () => {
+        router.back(); // This goes back to the previous page
+      };
+    
     useEffect(() => {
         const fetchUsers = async () => {
             if (!session?.user?.id) return;
@@ -163,7 +169,14 @@ const ChatBox: React.FC = () => {
 
     return (
         <div className="flex flex-col h-screen">
-            <header className="bg-gray-900 text-white p-2"></header>
+            <header className="bg-gray-900 text-white text-right">
+            <button 
+      onClick={handleGoBack} 
+      className="bg-blue-500 text-white px-4 mx-auto py-2 rounded hover:bg-blue-600"
+    >
+      Go Back
+    </button>
+            </header>
 
             <div className="grid grid-cols-1 md:grid-cols-12 flex-1 mb-10 overflow-hidden">
                 <div

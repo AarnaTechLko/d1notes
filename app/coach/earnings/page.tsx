@@ -48,8 +48,8 @@ const Home: React.FC = () => {
 
     const data = await response.json();
     setAccounts(data.earnings);
-    console.log(data.accounts[0].amount)
-    setAccountBalance(data.accounts[0].amount);
+    
+    setAccountBalance(data?.accounts?.[0]?.amount ?? 0);
     setFilterAccounts(data.earnings);  
   };
   useEffect(() => {
@@ -71,7 +71,8 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search is updated
   }, [search, accounts]);
 
-  const totalPages = Math.ceil(filterAccounts.length / limit);
+  
+  const totalPages = filterAccounts.length === 0 ? 1 : Math.ceil(filterAccounts.length / limit);
 
   // Get the paginated orders
   const paginatedOrders = filterAccounts.slice(
