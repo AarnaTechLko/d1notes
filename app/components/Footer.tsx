@@ -15,7 +15,8 @@ export default function Footer() {
           <nav className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8">
             <a href="/" className="hover:text-blue-400">Home</a>
             <a href="/about" className="hover:text-blue-400">About</a>
-            <a href="/browse" className="hover:text-blue-400">Coaches</a>
+            <a href="/news" className="hover:text-blue-400">News</a>
+           
             <a href="/contact" className="hover:text-blue-400">Contact</a>
           </nav>
 
@@ -24,7 +25,7 @@ export default function Footer() {
             <a href="#" aria-label="Facebook">
               <FaFacebook className="h-6 w-6 hover:text-blue-600" />
             </a>
-            <a href="#" aria-label="Twitter" className='text-2xl pb-5 font-bold h-6 w-6 mb-2 text-white hover:text-blue-600'>
+            <a href="" target='_blank' aria-label="Twitter" className='text-2xl pb-5 font-bold h-6 w-6 mb-2 text-white hover:text-blue-600'>
             <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -41,7 +42,7 @@ export default function Footer() {
   </svg>
               
             </a>
-            <a href="#" aria-label="Instagram">
+            <a href="https://www.instagram.com/d1.notes/" target='_blank' aria-label="Instagram">
               <FaInstagram className="h-6 w-6 hover:text-pink-500" />
             </a>
           </div>

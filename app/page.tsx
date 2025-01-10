@@ -7,7 +7,8 @@ import Footer from './components/Footer';
 import Head from 'next/head';
 import ProfileCard from './components/ProfileCard';
 import Loading from './components/Loading';
-import Ground from './public/ground.jpg'
+import Player from '../public/Player.jpg'
+import { FaArrowLeft, FaCheckCircle, FaCreditCard, FaList, FaPaperPlane, FaSearch, FaUserPlus } from 'react-icons/fa';
 
 // Define the types for the coaches' data
 
@@ -120,7 +121,7 @@ export default function Home(): JSX.Element {
         {/* Left Side: How it works steps */}
         <div className="space-y-12">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            How It Works
+            How It Works for Players
           </h2>
           <div className="space-y-8">
             {/* Step 1 */}
@@ -128,26 +129,13 @@ export default function Home(): JSX.Element {
               <div className="flex-shrink-0">
                 <span className="inline-block p-3 bg-gray-100 rounded-full">
                   {/* Icon for Find a coach */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M8 9l3-3 3 3m0 6l-3 3-3-3"
-                    />
-                  </svg>
+                <FaUserPlus/>
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Find a coach</h3>
+                <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                 <p className="mt-2 text-base text-gray-500">
-                  Choose one of our elite coaches that we’ve vetted to review your game film remotely and send you summarized written feedback to store.
+                Create account for player(s) and find a registered coach
                 </p>
               </div>
             </div>
@@ -156,27 +144,13 @@ export default function Home(): JSX.Element {
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  {/* Icon for Submit an evaluation */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
+                 <FaSearch/>
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Submit an evaluation request</h3>
+                <h3 className="text-lg font-medium text-gray-900">Search and choose one of our experienced coaches </h3>
                 <p className="mt-2 text-base text-gray-500">
-                  Confirm payment and send a request to the coach for an evaluation. The coach has 48 hours to accept, and we won’t charge you until the coach accepts.
+                that we’ve vetted to review your game film remotely and send you summarized written feedback to store.
                 </p>
               </div>
             </div>
@@ -185,27 +159,13 @@ export default function Home(): JSX.Element {
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  {/* Icon for Coach accepts */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 20l9-5-9-5-9 5 9 5z"
-                    />
-                  </svg>
+                  <FaPaperPlane/>
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Coach accepts your request</h3>
+                <h3 className="text-lg font-medium text-gray-900">Submit an evaluation request</h3>
                 <p className="mt-2 text-base text-gray-500">
-                  You’ll get a notification when the coach accepts. The coach has 5 days to return your evaluation.
+                  With some video footage which shows your game.
                 </p>
               </div>
             </div>
@@ -214,30 +174,44 @@ export default function Home(): JSX.Element {
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0">
                 <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  {/* Icon for Evaluation */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <FaCreditCard/>
+                </span>
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-gray-900">Make Payment</h3>
+                <p className="mt-2 text-base text-gray-500">
+                Confirm payment and send a request to the coach for an evaluation. The coach has 48 hours to accept, and we won’t charge you until the coach accepts.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0">
+                <span className="inline-block p-3 bg-gray-100 rounded-full">
+                  <FaCheckCircle/>
+                </span>
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-gray-900">Coach accepts your request</h3>
+                <p className="mt-2 text-base text-gray-500">
+                You’ll get a notification when the coach accepts. The coach has 5 days to return your evaluation.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0">
+                <span className="inline-block p-3 bg-gray-100 rounded-full">
+                 <FaArrowLeft/>
+                
                 </span>
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-900">Coach returns an evaluation</h3>
                 <p className="mt-2 text-base text-gray-500">
-                  Receive the evaluation and feedback to improve your game!
+                Receive the evaluation and feedback to improve your game!
                 </p>
               </div>
             </div>
+            <div className="flex items-start space-x-4"><a href="/howitworks" className="inline-block px-2 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md  font-medium text-sm">Read More...</a></div>
           </div>
         </div>
 
@@ -245,7 +219,7 @@ export default function Home(): JSX.Element {
         <div className="flex justify-center lg:justify-end">
           <div className="relative w-full h-96 lg:h-auto lg:w-[90%]">
             <Image
-              src={Ground}
+              src={Player}
               alt="Soccer ball on the field"
               layout="fill"
               objectFit="cover"

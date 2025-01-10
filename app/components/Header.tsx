@@ -135,6 +135,7 @@ const Header: React.FC = () => {
             <ul className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-4 md:mt-0">
               {session ? (
                 <>
+                
                   <li  className="pt-[8px]">
                     <Link href="/browse"  className={`${isActiveLink(
                             "/browse"
@@ -146,7 +147,7 @@ const Header: React.FC = () => {
                     <Link href="/browse/clubs" className={`${isActiveLink(
                             "/browse/clubs"
                           )} hover:text-blue-300`} onClick={closeMenu}>
-                       Clubs
+                       Organizations
                     </Link>
                   </li>
                   <li  className="pt-[8px]">
@@ -325,7 +326,7 @@ const Header: React.FC = () => {
                 </>
               ) : (
                 <>
-                 
+                   
                   <li>
                     <Link href="/browse"  className={`${isActiveLink(
                             "/browse"
@@ -337,7 +338,7 @@ const Header: React.FC = () => {
                     <Link href="/browse/clubs" className={`${isActiveLink(
                             "/browse/clubs"
                           )} hover:text-blue-300`} onClick={closeMenu}>
-                       Clubs
+                       Organizations
                     </Link>
                   </li>
                   <li >
@@ -373,7 +374,7 @@ const Header: React.FC = () => {
                           </li>
                           <li className="pt-[8px]">
                             <Link href="/enterprise/signup" className="block px-4 py-2 text-black hover:bg-blue-300" onClick={() => setCreateAccountOpen(false)}>
-                              Club Signup
+                            Organization Signup
                             </Link>
                           </li>
                         </ul>
@@ -388,6 +389,13 @@ const Header: React.FC = () => {
                       Login
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/howitworks"  className={`${isActiveLink(
+                            "/howitworks"
+                          )} hover:text-blue-300`} onClick={closeMenu}>
+                       How it works?
+                    </Link>
+                  </li>
                 </>
               )}
               <li className="relative" ref={helpRef}>
@@ -396,7 +404,7 @@ const Header: React.FC = () => {
                 </button>
                 {helpOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
-                    <p>For technical difficulties and general site feedback, Email us at </p>
+                    <p>For technical difficulties and other feedback, email us at </p>
                     <a className="font-bold" href='mailto:team@d1notes.com'>team@d1notes.com</a>
                     <button onClick={toggleHelp} className="text-blue-500 mt-2">
                       Close
