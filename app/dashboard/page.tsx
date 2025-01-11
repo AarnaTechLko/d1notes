@@ -261,7 +261,7 @@ const Dashboard: React.FC = () => {
       },
       { Header: "Review Title", accessor: "review_title" }, // Use the correct accessor
       {
-        Header: "Video Links",  // Combine all video links under this column
+        Header: "Video Link",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
