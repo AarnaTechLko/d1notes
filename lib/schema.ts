@@ -49,6 +49,7 @@ export const users = pgTable(
     parent_id:integer("parent_id"),
     graduation: text("graduation"),
     status: varchar("status").default("Inactive"),
+    visibility: varchar("visibility").default("on"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (users) => {
@@ -79,6 +80,7 @@ export const coaches = pgTable(
     qualifications: text("qualifications"),
     expectedCharge: decimal("expectedCharge", { precision: 10, scale: 2 }), // Decimal type with precision and scale
     image: text("image"),
+    visibility: varchar("visibility").default("on"),
     slug: text("slug"),
     enterprise_id: text("enterprise_id"),
     country:varchar("country"),

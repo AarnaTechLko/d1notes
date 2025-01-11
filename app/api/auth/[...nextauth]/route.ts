@@ -23,6 +23,7 @@ interface ExtendedUser {
   club_name?: string | null;
   coachCurrency?: string | null;
   added_by?: string | null;
+  visibility?: string | null;
 }
   
 const handler = NextAuth({
@@ -61,7 +62,8 @@ const handler = NextAuth({
               coach_id:coach[0].id,
               club_id:coach[0].enterprise_id ?? '',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
-              added_by:null
+              added_by:null,
+              visibility:coach[0].visibility
             };
           }
         } else if (loginAs === 'player') {
@@ -85,7 +87,8 @@ const handler = NextAuth({
               coach_id:user[0].coach_id,
               club_id:user[0].enterprise_id,
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
-              added_by:null
+              added_by:null,
+              visibility:user[0].visibility
             };
           }
         }
@@ -108,6 +111,7 @@ const handler = NextAuth({
               image: team[0].logo === 'null' ? '/default.jpg' : team[0].logo,
               expectedCharge:0,
               coach_id:team[0].coach_id,
+              visibility:'on',
                club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',added_by:null
             };
           }
@@ -129,6 +133,7 @@ const handler = NextAuth({
                 image: enterprise[0]?.logo || '',
                 coach_id: null,
                 club_id: null,
+                visibility:'on',
                 added_by:enterprise[0].id.toString()
               };
             }
@@ -143,6 +148,7 @@ const handler = NextAuth({
                 image:enterprise[0].logo,
                 coach_id:null,
                 club_id:null,
+                visibility:'on',
                 added_by:null
               };
             }
@@ -157,8 +163,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-//secret: process.env.NEXTAUTH_SECRET, 
+//secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     
@@ -176,6 +182,7 @@ secret:SECRET_KEY,
         token.coachCurrency = extendedUser.coachCurrency;
         token.club_name = extendedUser.club_name;
         token.added_by = extendedUser.added_by;
+        token.visibility = extendedUser.visibility;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -196,11 +203,39 @@ secret:SECRET_KEY,
         session.user.expectedCharge = token.expectedCharge as string | null;
         session.user.club_name = token.club_name as string | null;
         session.user.added_by = token.added_by as string | null;
+        session.user.visibility = token.visibility as string | null;
         //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session
         }
       }
+
+      if(session.user.type=='coach')
+      {
+        const updatedUser = await db.select().from(coaches).where(eq(coaches.id, Number(session.user.id))).execute();
+        if (updatedUser.length > 0) {
+          const user = updatedUser[0];
+          session.user.name = user.firstName;
+          session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
+         
+          session.user.visibility = user.visibility;
+        }
+      }
+      if(session.user.type=='player')
+        {
+          const updatedUser = await db.select().from(users).where(eq(users.id, Number(session.user.id))).execute();
+          if (updatedUser.length > 0) {
+            const user = updatedUser[0];
+            session.user.name = user.first_name;
+            session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
+           
+            session.user.visibility = user.visibility;
+          }
+        }
+      
+
+
+
       return session;
     },
   },

@@ -16,6 +16,7 @@ declare module 'next-auth' {
       club_name?: string | null;
       added_by?: string | null;
       coachCurrency?: string | null;
+      visibility?: string | null;
     }
   }
 }

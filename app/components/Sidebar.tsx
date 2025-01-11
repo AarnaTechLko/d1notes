@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaImage, FaUserPlus, FaChild } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
+import Visibility from './Visibility';
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -49,6 +50,13 @@ const Sidebar: React.FC = () => {
         )}
         <nav className="flex-grow mt-10">
         <ul className="space-y-2 p-4">
+          <li>
+            <Visibility  
+          playerId={session?.user.id}
+          type="Player"
+          visibilitystatus={session?.user.visibility}
+          />
+          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/dashboard" className="flex items-center space-x-2 p-2">
               <MdDashboard className="text-xl" />
