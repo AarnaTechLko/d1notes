@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress } from '@mui/material';
 import { showError, showSuccess } from './Toastr';
 
-const ForgotPassword = () => {
+interface ForgotPasswordProps {
+  type:string; // Define the prop for the role
+}
+
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState<'Coach' | 'Player' | 'Enterprise' | ''>('');
-  const [loading, setLoading] = useState(false); // State to track loading status
+  const [role, setRole] = useState<string>(type); // Initialize with the type prop
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Start loading when the form is submitted
+    setLoading(true);
 
     // Make API call to reset password
     try {
@@ -34,23 +38,27 @@ const ForgotPassword = () => {
     } catch (error) {
       alert('An error occurred.');
     } finally {
-      setLoading(false); // Stop loading after the API call
+      setLoading(false);
       closeModal();
     }
   };
 
+  useEffect(() => {
+    setRole(type.toUpperCase()); // Update role when the type prop changes
+  }, [type]);
+
   return (
     <>
       <Button
-        variant="text" // 'text' variant makes it look like a link
+        variant="text"
         onClick={openModal}
         sx={{
-          color: 'primary.main', // You can change this color to match the link style
-          textTransform: 'none', // Prevents the text from being capitalized
-          padding: 0, // Removes padding for a link-like appearance
+          color: 'primary.main',
+          textTransform: 'none',
+          padding: 0,
           '&:hover': {
-            backgroundColor: 'transparent', // Ensures no background on hover
-            textDecoration: 'underline', // Adds underline on hover, like a link
+            backgroundColor: 'transparent',
+            textDecoration: 'underline',
           },
         }}
       >
@@ -62,21 +70,21 @@ const ForgotPassword = () => {
         onClose={closeModal}
         aria-labelledby="forgot-password-modal"
       >
-        <Box sx={{ 
-          width: 400, 
-          bgcolor: 'background.paper', 
-          p: 4, 
-          borderRadius: 2, 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
+        <Box sx={{
+          width: 400,
+          bgcolor: 'background.paper',
+          p: 4,
+          borderRadius: 2,
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <h2 id="forgot-password-modal">Enter Registered Email ID</h2>
+          <h2 id="forgot-password-modal">Enter Registered Email ID {type}</h2>
           <form onSubmit={handleSubmit}>
             <div>
               <TextField
@@ -96,18 +104,18 @@ const ForgotPassword = () => {
                 value={role}
                 onChange={(e) => setRole(e.target.value as 'Coach' | 'Player' | 'Enterprise')}
               >
-                <FormControlLabel value="coach" control={<Radio />} label="Coach" />
-                <FormControlLabel value="player" control={<Radio />} label="Player" />
-                <FormControlLabel value="enterprise" control={<Radio />} label="Club" />
+                <FormControlLabel value="Coach" control={<Radio checked={type === 'coach'} />} label="Coach" />
+                <FormControlLabel value="Player" control={<Radio checked={type === 'player'} />} label="Player" />
+                <FormControlLabel value="Enterprise" control={<Radio checked={type === 'enterprise'} />} label="Organization" />
               </RadioGroup>
             </FormControl>
 
-            <Button 
-              type="submit" 
-              variant="contained" 
-              fullWidth 
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
               sx={{ mb: 1 }}
-              disabled={loading} // Disable button while loading
+              disabled={loading}
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
             </Button>

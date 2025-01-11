@@ -140,7 +140,7 @@ export default function Login() {
                     disabled={loading}
                     className="form-radio"
                   />
-                  <span className="ml-2">Club </span>
+                  <span className="ml-2">Organization </span>
                 </label>
                 
                 {/* <label className="inline-flex items-center ">
@@ -203,17 +203,24 @@ export default function Login() {
 
             <p className="text-center text-gray-600 text-sm mt-4">
               Do not have an account?{' '}
-              <a href="/register" className="text-blue-500 hover:underline">
-                Register
-              </a>
+              <a 
+  href={
+    formValues.loginAs === 'coach' ? '/coach/signup' :
+    formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
+    '/register'
+  } 
+  className="text-blue-500 hover:underline"
+>
+  Register
+</a>
             </p>
             <p className="text-center text-gray-600 text-sm mt-4">
              Forgot password?{' '}
-             <ForgotPassword/>
+             <ForgotPassword type={formValues.loginAs}/>
             </p>
           </div>
         </div>
-
+      
         <div className="flex-1 bg-white">
           <Image src={Brand} alt="brand" layout="responsive" width={500} height={500} className="object-cover" />
         </div>
