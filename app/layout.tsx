@@ -21,10 +21,10 @@ export default function RootLayout({
       
       <body className={inter.className}>
         <SessionProvider>
-          <Header />
+          {/*<Header />*/}
           <Toastr/>
           {children}
-          <Footer />
+          {/* <Footer />*/}
         </SessionProvider>
       </body>
     </html>
