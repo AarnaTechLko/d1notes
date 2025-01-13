@@ -23,13 +23,16 @@ const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus 
     const newState = !isOn;
 
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to turn the visibility ${newState ? 'on' : 'off'} for Marketplace?`,
+      title: `Turn visibility ${newState ? 'on' : 'off'}?`,
+      text: newState 
+        ? 'Do you want to make your profile public?' 
+        : 'Do you want to make your profile private?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
+      confirmButtonText: newState ? 'Yes, turn on' : 'Yes, turn off',
+      cancelButtonText: 'No, keep it as is',
     });
+    
 
     if (!result.isConfirmed) return;
 
@@ -60,7 +63,7 @@ const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus 
 
   return (
     <div className="flex flex-col items-center">
-      <span className="text-white mb-2">MarketPlace Visibility</span>
+      <span className="text-white mb-2">Public Visibility</span>
       <label className="relative inline-flex items-center cursor-pointer">
         <input
           type="checkbox"

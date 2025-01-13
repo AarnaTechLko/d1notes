@@ -106,16 +106,16 @@ const Home: React.FC = () => {
     value={search}
     onChange={(e) => setSearch(e.target.value)}
   />
-  <span className="text-lg font-semibold text-gray-800">Total Earning: ${accountBalance}</span>
+  <span className="text-lg font-semibold text-gray-800">Total Earning: USD ${accountBalance}</span>
 </div>
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  <th>Sr. No.</th>
+                <th>Date</th>
                   <th>Player Name</th>
-                  <th>Evaluation Title</th>
-                  <th>Amount</th>
-                  <th>Date</th>
+                  <th>Review Title</th>
+                  <th>USD Rate</th>
+                 
                   <th>Status</th>
                 </tr>
               </thead>
@@ -123,7 +123,9 @@ const Home: React.FC = () => {
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((accounts, index) => (
                     <tr key={accounts.id}>
-                      <td>{(currentPage - 1) * limit + index + 1}</td>
+                     <td>
+                         {accounts.created_at ? new Date(accounts.created_at).toLocaleDateString() : 'N/A'}
+                      </td>
                       <td className="flex items-center space-x-4">
                         <a
                           href={`/players/${accounts.slug}`} // Dynamic URL for the user's profile
@@ -147,9 +149,7 @@ const Home: React.FC = () => {
                       </td>
                       <td>{accounts.evaluation_title}</td>
                       <td>$ {accounts.commision_amount}</td>
-                      <td>
-                         {accounts.created_at ? new Date(accounts.created_at).toLocaleDateString() : 'N/A'}
-                      </td>
+                     
                       <td>{accounts.status}</td>
                     </tr>
                   ))

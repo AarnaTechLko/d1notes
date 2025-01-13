@@ -53,16 +53,17 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
         variant="text"
         onClick={openModal}
         sx={{
+          textDecoration: 'underline',
           color: 'primary.main',
           textTransform: 'none',
           padding: 0,
+          marginLeft:-1,
           '&:hover': {
             backgroundColor: 'transparent',
-            textDecoration: 'underline',
+            textDecoration: 'underline'
           },
         }}
-      >
-        Click to Reset
+      >Reset
       </Button>
 
       <Modal
@@ -84,7 +85,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <h2 id="forgot-password-modal">Enter Registered Email ID {type}</h2>
+          <h2 id="forgot-password-modal">Enter Registered Email ID</h2>
           <form onSubmit={handleSubmit}>
             <div>
               <TextField

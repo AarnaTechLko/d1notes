@@ -190,7 +190,11 @@ const Profile: React.FC = () => {
               >
                 {profileData.image ? (
                   <img
-                    src={profileData.image}
+                  src={
+                    !profileData.image || profileData.image === 'null'
+                      ? '/default.jpg'
+                      : profileData.image
+                  }
                     alt="Profile"
                     className="h-32 w-32 object-cover rounded-full"
                   />
@@ -213,7 +217,7 @@ const Profile: React.FC = () => {
             </div>
 
             {/* Profile Information Form */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
@@ -245,8 +249,10 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium text-gray-800">{profileData.lastName}</p>
                 )}
               </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> USD $ Rate (per Evaluation)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -325,7 +331,7 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
-                    <option value="">Select Gender</option>
+                    <option value="">Select</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
@@ -347,7 +353,7 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
-                    <option value="">Select Sport</option>
+                    <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
                     {/* Add other sports as options */}
                   </select>
@@ -358,7 +364,7 @@ const Profile: React.FC = () => {
 
               {/* Club Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -402,7 +408,7 @@ const Profile: React.FC = () => {
         onChange={handleChange}
         className="border border-gray-300 rounded-lg py-2 px-4 w-full"
       >
-        <option value="">Select a state</option>
+        <option value="">Select</option>
         {states.map((state) => (
           <option key={state.abbreviation} value={state.abbreviation}>
             {state.name}
@@ -431,7 +437,7 @@ const Profile: React.FC = () => {
         </div>
         </div>
         <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Qualifications<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Background/Qualifications<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <textarea
                     name="qualifications"
@@ -457,7 +463,11 @@ const Profile: React.FC = () => {
                 <div onClick={triggerCertificateUpload} className="mt-4 cursor-pointer">
                   {profileData.certificate ? (
                     <img
-                      src={profileData.certificate}
+                    src={
+                      !profileData.certificate || profileData.certificate === 'null'
+                        ? '/certificate.png'
+                        : profileData.certificate
+                    }
                       alt="Certificate"
                       className="h-32 w-32 object-cover rounded-lg border-4 border-indigo-300 hover:shadow-lg transition-all"
                     />

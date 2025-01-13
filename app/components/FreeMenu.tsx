@@ -1,25 +1,56 @@
-// FreeMenu.tsx
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { MdHelpOutline } from "react-icons/md";
 
 interface FreeMenuProps {
-    session: any; // Adjust to your actual session type
+  session: any; // Adjust to your actual session type
   closeMenu: () => void;
   isActiveLink: (path: string) => string;
   handleLogout: () => void;
-  toggleHelp:()=>void;
-  toggleDropdown:()=>void;
-  toggleCreateAccount:()=>void;
-  helpRef:any;
-  helpOpen:any;
+  toggleHelp: () => void;
+  toggleDropdown: () => void;
+  toggleCreateAccount: () => void;
+  helpRef: any;
+  helpOpen: any;
 }
 
-const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, handleLogout,toggleHelp,toggleDropdown,helpRef,helpOpen,toggleCreateAccount }) => {
+const FreeMenu: React.FC<FreeMenuProps> = ({
+  session,
+  closeMenu,
+  isActiveLink,
+  handleLogout,
+  toggleHelp,
+  toggleDropdown,
+  helpRef,
+  helpOpen,
+  toggleCreateAccount,
+}) => {
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
 
+  const handleCreateAccountToggle = () => {
+    setCreateAccountOpen((prev) => !prev);
+  };
 
+  const handleOptionClick = () => {
+    setCreateAccountOpen(false);
+    closeMenu(); // Close the main menu as well if needed
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        createAccountRef.current &&
+        !createAccountRef.current.contains(event.target as Node)
+      ) {
+        setCreateAccountOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -60,7 +91,10 @@ const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, h
         </Link>
       </li>
       <li ref={createAccountRef} className="relative">
-        <button onClick={toggleCreateAccount} className="text-black hover:text-blue-300">
+        <button
+          onClick={handleCreateAccountToggle}
+          className="text-black hover:text-blue-300"
+        >
           Create Account
         </button>
         {createAccountOpen && (
@@ -70,7 +104,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, h
                 <Link
                   href="/register"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
-                  onClick={() => setCreateAccountOpen(false)}
+                  onClick={handleOptionClick}
                 >
                   Player Signup
                 </Link>
@@ -79,7 +113,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, h
                 <Link
                   href="/coach/signup"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
-                  onClick={() => setCreateAccountOpen(false)}
+                  onClick={handleOptionClick}
                 >
                   Coach Signup
                 </Link>
@@ -88,7 +122,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, h
                 <Link
                   href="/enterprise/signup"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
-                  onClick={() => setCreateAccountOpen(false) }
+                  onClick={handleOptionClick}
                 >
                   Organization Signup
                 </Link>
@@ -115,7 +149,6 @@ const FreeMenu: React.FC<FreeMenuProps> = ({ session, closeMenu, isActiveLink, h
           How it works?
         </Link>
       </li>
-     
     </>
   );
 };

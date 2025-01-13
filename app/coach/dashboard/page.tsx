@@ -141,7 +141,7 @@ const Dashboard: React.FC = () => {
         accessor: 'review_title',
       },
       {
-        Header: "Video Link",  // Combine all video links under this column
+        Header: "Video Links",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
@@ -293,7 +293,7 @@ const Dashboard: React.FC = () => {
         <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
           <div className="bg-white shadow-md rounded-lg p-6 ">
           <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
-  <span className="text-xl font-semibold text-gray-700">Your Evaluation Price:</span>
+  <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
   <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
 </div>
 

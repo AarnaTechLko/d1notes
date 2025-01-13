@@ -209,14 +209,13 @@ export default function Login() {
     formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
     '/register'
   } 
-  className="text-blue-500 hover:underline"
+  className="text-blue-500 underline"
 >
   Register
 </a>
             </p>
             <p className="text-center text-gray-600 text-sm mt-4">
-             Forgot password?{' '}
-             <ForgotPassword type={formValues.loginAs}/>
+             Forgot password?<ForgotPassword type={formValues.loginAs}/>
             </p>
           </div>
         </div>

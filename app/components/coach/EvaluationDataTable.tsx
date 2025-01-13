@@ -170,11 +170,13 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                         <th onClick={() => handleSort('created_at')}>Date</th>
                         <th onClick={() => handleSort('firstName')}>Player Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
-                        <th onClick={() => handleSort('primary_video_link')}>Video Link</th>
+                        <th onClick={() => handleSort('primary_video_link')}>Video Links</th>
 
                         <th onClick={() => handleSort('video_description')}>Video Description</th>
                         <th onClick={() => handleSort('evaluation_status')}>Status</th>
+                        {(Number(status) === 2 || Number(status) === 4) && (
                         <th onClick={() => handleSort('evaluation_status')}>View Evaluation</th>
+                    )}
                     </tr>
                 </thead>
                 <tbody>
@@ -215,6 +217,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                         <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-red-600">Open Draft</button>
                                     )}
                                 </td>
+                                {(Number(status) === 2 || Number(status) === 4) && (
                                 <td>
                                     {item.status === 2 && (
                                         <a href={`/evaluationdetails?evaluationId=${item.id}`} target="_blank">
@@ -227,6 +230,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                         "N/A"
                                     )}
                                 </td>
+                                 )}
                             </tr>
                         ))
                     )}
