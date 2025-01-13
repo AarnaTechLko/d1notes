@@ -52,7 +52,7 @@ export default function UnderDevelopment() {
         <img src='/logo.png' className='mx-auto mb-20'/>
       
         <p className="mt-4 mb-6 text-lg text-gray-600">
-          This page is currently under construction. Contact us for more information.
+         Contact us for more information.
         </p>
         <a 
           href='/contact'
