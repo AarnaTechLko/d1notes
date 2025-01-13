@@ -242,7 +242,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   )}
       <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">
-    Email <span className="text-sm text-gray-500">(Use comma to add multiple emails)</span>
+    Email  
   </label>
   {emails.map((email, index) => (
     <div key={index} className="flex space-x-3 mb-4">
@@ -284,7 +284,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
       {/* Mobile Input */}
       <div className="mb-6">
         <label className="block text-xl font-medium text-gray-700 mb-4">
-          Phone Number <span className="text-sm text-gray-500">(With country code)</span>
+          Phone Number  
         </label>
         {mobiles.map((mobile, index) => (
           <div key={index} className="flex space-x-3 mb-4 items-center">
