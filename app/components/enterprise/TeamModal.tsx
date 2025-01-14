@@ -344,6 +344,7 @@ export default function TeamModal({
             Name<span className="mandatory">*</span>
           </label>
           <input
+          placeholder="Ex. LA Storm Blue"
             type="text"
             value={formValues.team_name}
             onChange={handleChange}
@@ -360,7 +361,7 @@ export default function TeamModal({
             value={selectedCoach}
             onChange={handleCoachChange}
             isClearable
-            placeholder="Select a Coach"
+            placeholder="Select"
             formatOptionLabel={getOptionLabel}
             components={{ Option: CustomOption }}
           />

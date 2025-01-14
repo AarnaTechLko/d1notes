@@ -225,6 +225,7 @@ export default function Signup() {
                 Organization Name<span className="mandatory">*</span>
               </label>
               <input
+              placeholder='Ex. LA Storm FC'
                 type="text"
                 name="organizationName"
                 value={formValues.organizationName}
@@ -237,9 +238,10 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
               <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
-               Owner Name<span className="mandatory">*</span>
+              Administrator Name<span className="mandatory">*</span>
               </label>
               <input
+              placeholder='Ex. Rod Smith'
                 type="text"
                 name="owner_name"
                 value={formValues.owner_name}
@@ -248,7 +250,7 @@ export default function Signup() {
               />
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 hidden" >
               <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
                Player Director<span className="mandatory">*</span>
               </label>
@@ -266,9 +268,10 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
               <div className="flex-1">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Email<span className="mandatory">*</span>
+                Administrator Email<span className="mandatory">*</span>
                 </label>
                 <input
+                placeholder='Ex. rich@lastormfc.com'
                   type="text"
                   name="email"
                   value={formValues.email}
@@ -280,7 +283,7 @@ export default function Signup() {
               
               <div className="flex-1">
                 <label htmlFor="mobileNumber" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Mobile Number<span className="mandatory">*</span>
+                Administrator Mobile Number<span className="mandatory">*</span>
                 </label>
                 <div className="flex">
     <select  
@@ -318,9 +321,10 @@ export default function Signup() {
             {/* Address */}
             <div className="mb-4">
               <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-                Address<span className="mandatory">*</span>
+              Organization Address<span className="mandatory">*</span>
               </label>
               <input
+              placeholder='Ex. 12 Fireside Road Suite 200'
                 type="text"
                 name="address"
                 value={formValues.address}
@@ -333,9 +337,10 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
               <div className="flex-1">
                 <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Country<span className="mandatory">*</span>
+                Organization Country<span className="mandatory">*</span>
                 </label>
                 <input
+                placeholder='Ex. USA'
                   type="text"
                   name="country"
                   value={formValues.country}
@@ -345,9 +350,10 @@ export default function Signup() {
               </div>
               <div className="flex-1">
                 <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">
-                  State<span className="mandatory">*</span>
+                Organization State or Other<span className="mandatory">*</span>
                 </label>
                 <input
+                placeholder='Ex. California'
                   type="text"
                   name="state"
                   value={formValues.state}
@@ -357,9 +363,10 @@ export default function Signup() {
               </div>
               <div className="flex-1">
                 <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">
-                  City<span className="mandatory">*</span>
+                Organization City<span className="mandatory">*</span>
                 </label>
                 <input
+                placeholder='Ex. Los Angeles'
                   type="text"
                   name="city"
                   value={formValues.city}
@@ -371,33 +378,47 @@ export default function Signup() {
 
             {/* Logo Upload */}
             <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
-              <div onClick={handleImageClick}>
-                <label className="block text-gray-700 text-sm font-semibold mb-2 text-center">Organization Logo<span className="mandatory">*</span></label>
-                <Image
-                  src={formValues.logo || DefaultPic}
-                  alt="Profile Image"
-                  width={100}
-                  height={100}
-                  className="rounded-full mx-auto"
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  ref={fileInputRef}
-                />
-                {photoUpoading ? (
-                                            <>
-                                                <FileUploader/>
-                                            </>
-                                        ) : (
-                                            <>
-                                                
-                                            </>
-                                        )}
+            <label  htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Organization Description<span className='mandatory'>*</span></label>
+            <textarea className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'></textarea>
               </div>
-            </div>
+              <div className="mb-4">
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
+                  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
+                    <Image
+                      src={formValues.logo ? formValues.logo : '/defaultlogo.jpeg'}
+                      alt="Profile Image"
+                      width={100}
+                      height={100}
+                      className="object-cover w-full h-full"
+                    />
+                    {!formValues.logo && (
+                      <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+                        <p className="text-white text-xs font-medium">Click to Upload</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    ref={fileInputRef}
+                  />
+                  {photoUpoading ? (
+                    <>
+                      <FileUploader />
+                    </>
+                  ) : (
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
+                  )}
+
+                </div>
+
+              </div>
 
             {/* Affiliation Documents */}
             <div className="mb-4">

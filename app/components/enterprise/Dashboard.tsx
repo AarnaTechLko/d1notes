@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
     { label: 'Total Coaches', value: stats.totalCoaches, bgColor: 'bg-blue-500', icon: '🧑‍🏫' },
     { label: 'Total Players', value: stats.totalPlayers, bgColor: 'bg-green-500', icon: '⚽' },
     { label: 'Licenses Available', value: stats.activeLicenses, bgColor: 'bg-yellow-500', icon: '🎫' },
-    { label: 'Licenses Consumed', value: stats.consumeLicenses, bgColor: 'bg-red-500', icon: '🔥' },
+    { label: 'Licenses Used', value: stats.consumeLicenses, bgColor: 'bg-red-500', icon: '🔥' },
   ];
 
   return (

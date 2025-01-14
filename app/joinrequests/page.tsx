@@ -85,7 +85,7 @@ const Home: React.FC = () => {
           <div>
             <input
               type="text"
-              placeholder="Search by customer name or status"
+              placeholder="Search by Player Name or Status"
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -93,8 +93,8 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  <th>Sr. No.</th>
-                  <th>Reuqested To</th>
+                  <th>Serial Number</th>
+                  <th>Requested To</th>
                   <th>Notes</th>
                   <th>Status</th>
                 </tr>
@@ -159,7 +159,7 @@ const Home: React.FC = () => {
     ))
   ) : (
     <tr>
-      <td colSpan={5}>No Requests Key found</td>
+      <td colSpan={5}>No Requests found</td>
     </tr>
   )}
 </tbody>

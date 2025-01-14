@@ -242,7 +242,7 @@ const Home: React.FC = () => {
                     <table className="w-full text-sm text-left text-gray-700">
                         <thead>
                             <tr>
-                                <th>Sr. No.</th>
+                                <th>Serial Number</th>
                                 <th>Role Title</th>
                                 <th>Permission</th>
                                 

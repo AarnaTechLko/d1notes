@@ -47,26 +47,42 @@ const handleOptionClick = () => {
   return (
     <>
 
-      <li className="pt-[8px]">
-        <Link href="/enterprise/coaches" className={`${isActiveLink("/enterprise/coaches")} hover:text-blue-300`} onClick={closeMenu}>
-          Coaches
-        </Link>
-      </li>
-      <li className="pt-[8px]">
-        <Link href="/enterprise/players" className={`${isActiveLink("/enterprise/players")} hover:text-blue-300`} onClick={closeMenu}>
-          Players
-        </Link>
-      </li>
-      <li className="pt-[8px]">
-        <Link href="/enterprise/teams" className={`${isActiveLink("/enterprise/teams")} hover:text-blue-300`} onClick={closeMenu}>
-          Teams
-        </Link>
-      </li>
-      <li className="pt-[8px]">
-        <Link href="/enterprise/clubs" className={`${isActiveLink("/enterprise/clubs")} hover:text-blue-300`} onClick={closeMenu}>
-          Clubs
-        </Link>
-      </li>
+<li className="pt-[8px] border-b-1 md:border-b-0">
+                <Link
+                    href="/browse"
+                    className={`${isActiveLink("/browse")} hover:text-blue-300`}
+                    onClick={closeMenu}
+                >
+                    Coaches
+                </Link>
+            </li>
+            <li className="pt-[8px]">
+                <Link
+                    href="/browse/clubs"
+                    className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
+                    onClick={closeMenu}
+                >
+                    Organizations
+                </Link>
+            </li>
+            <li className="pt-[8px]">
+                <Link
+                    href="/browse/teams"
+                    className={`${isActiveLink("/browse/teams")} hover:text-blue-300`}
+                    onClick={closeMenu}
+                >
+                    Teams
+                </Link>
+            </li>
+            <li className="pt-[8px]">
+                <Link
+                    href="/browse/players"
+                    className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
+                    onClick={closeMenu}
+                >
+                    Players
+                </Link>
+            </li>
       <li className="pt-[8px]">
         <Link href="/enterprise/dashboard" className={`${isActiveLink("/enterprise/dashboard")} hover:text-blue-300`} onClick={closeMenu}>
           Dashboard

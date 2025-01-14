@@ -89,7 +89,7 @@ const handleOptionClick = () => {
                     className="flex  mx-auto"
                 >
                     <Image
-                        src={session?.user?.image || '/default-image.jpg'}
+                        src={session?.user?.image || '/default.jpg'}
                         alt="Profile"
                         width={40}
                         height={40}
