@@ -170,7 +170,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 </li>
               </ul>
             </div>
-            <div className="flex flex-col items-center ">
+            {/* <div className="flex flex-col items-center ">
 
             {!session ? (
   <>
@@ -209,7 +209,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     )}
   </>
 )}
-              </div>
+              </div> */}
           </div>
         </div>
 

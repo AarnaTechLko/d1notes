@@ -219,7 +219,7 @@ export const otps = pgTable('otps', {
 export const enterprises=pgTable('enterprises', {
   id: serial('id').primaryKey(),
   organizationName: text('organizationName').notNull(),
-  contactPerson: text('contactPerson').notNull(),
+  contactPerson: text('contactPerson'),
   owner_name: text('owner_name'),
   package_id: integer('package_id'),
   email: text('email').notNull(),
@@ -235,6 +235,7 @@ export const enterprises=pgTable('enterprises', {
   parent_id: integer('parent_id'),
   role_id: integer('role_id'),
   password: text('password').notNull(),
+  description: text('description'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
@@ -304,6 +305,7 @@ export const teams=pgTable('teams', {
   team_year: text('team_year'),
   cover_image: text('cover_image'),
   password: text('password'),
+  status: text('status'),
   country: text('country'),
   state: text('state'),
   rating: integer('rating'),
@@ -424,4 +426,24 @@ export const freerequests=pgTable("freerequests",{
   clubId:integer("clubId"),
   requests:integer("requests"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
+
+
+export const countries=pgTable("countries",{
+  id: serial("id").primaryKey(),
+  shortname:text("shortname"),
+  name:text("name"),
+  phonecode:text("phonecode"),
+ 
+});
+
+
+
+export const states=pgTable("states",{
+  id: serial("id").primaryKey(),
+ 
+  name:text("name"),
+  country_id:integer("country_id"),
+ 
 });

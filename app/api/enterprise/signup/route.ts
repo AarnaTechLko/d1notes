@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     const logo = formData.get('logo') as string;
     const affiliationDocs = formData.get('affiliationDocs') as string;
     const password = formData.get('password') as string;
+    const description = formData.get('description') as string;
 
     const emailCkeck=await db.select().from(enterprises).where(eq(enterprises.email,email));
     if(emailCkeck.length>0){
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
             logo,
             affiliationDocs,
             owner_name,
+            description,
             password: hashedPassword, 
             slug, // Adding the hashed password
             createdAt: new Date(),

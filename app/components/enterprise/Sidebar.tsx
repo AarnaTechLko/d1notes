@@ -117,16 +117,7 @@ const Sidebar: React.FC = () => {
                 <span>Dashboard</span>
               </a>
             </li>
-            {
-    (session?.user.added_by === null || (session?.user.added_by && hasJoinRequest)) && (
-            <li className="hover:bg-gray-700 rounded transition duration-200">
-              <a href="/enterprise/joinrequests" className="flex items-center space-x-2 p-2">
-
-                <FaUserPlus className='text-xl' />
-                <span>Join Requests</span>
-              </a>
-            </li>
-    )}
+  
     {
     (session?.user.added_by === null || (session?.user.added_by && hasTeams)) && (
             <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -143,7 +134,7 @@ const Sidebar: React.FC = () => {
               <a href="/enterprise/coaches" className="flex items-center space-x-2 p-2">
 
                 <FaCompressAlt className='text-xl' />
-                <span>Coaches</span>
+                <span>Your Coaches</span>
               </a>
             </li>
     )}
@@ -153,7 +144,7 @@ const Sidebar: React.FC = () => {
               <a href="/enterprise/players" className="flex items-center space-x-2 p-2">
 
                 <FaCompressAlt className='text-xl' />
-                <span>Players</span>
+                <span>Your Players</span>
               </a>
             </li>
               )

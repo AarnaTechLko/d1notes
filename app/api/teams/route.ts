@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
       firstName: coaches.firstName,
       lastName: coaches.lastName,
       coachSlug: coaches.slug,
+      status:teams.status
     }
   ).from(teams)
   .leftJoin(coaches, eq(teams.coach_id, coaches.id))
@@ -45,12 +46,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const {team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone,club_id } = await req.json();
+  const {team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone,club_id,status } = await req.json();
   const timestamp = Date.now(); 
   const rpassword=generateRandomPassword(12);
   const password = await hash(rpassword, 10);
   const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id,manager_name, manager_email,manager_phone,password,club_id }).returning();
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id,manager_name, manager_email,manager_phone,password,club_id,status }).returning();
   if (manager_name && manager_email && manager_phone) {
     const emailResult = await sendEmail({
       to: manager_email,
@@ -64,17 +65,17 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-      const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone } = await req.json();
+      const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone ,status} = await req.json();
   
    
   
-      if (!id || !team_name || !description || !created_by || !creator_id) {
+      if (!id || !team_name  || !created_by || !creator_id) {
         return NextResponse.json({ error: "All fields are required" }, { status: 400 });
       }
      
       const result = await db
         .update(teams)
-        .set({ team_name, description, logo, created_by, creator_id,team_type,team_year,cover_image,coach_id })
+        .set({ team_name, description, logo, created_by, creator_id,team_type,team_year,cover_image,coach_id ,status})
         .where(eq(teams.id, id))
         .returning();
   

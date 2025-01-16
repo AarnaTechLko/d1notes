@@ -12,10 +12,11 @@ import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 type Team = {
   id?: number;
   team_name?: string;
+  status?: string | undefined;
   description?: string;
   logo?: string;
   created_by?: string;
-  creator_id?: number;
+  creator_id?: number; 
   team_type?: string;
   team_year?: string;
   slug?: string;
@@ -53,7 +54,7 @@ export default function TeamsPage() {
       console.error("No user logged in");
       return;
     }
-
+ 
     try {
       setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
@@ -96,6 +97,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }),
       };
+       
       await fetch("/api/teams", {
         method,
         headers: { "Content-Type": "application/json" },
@@ -167,7 +169,35 @@ export default function TeamsPage() {
     fetchTeams();
     fetchPlayers();
   }, [session]);
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Team; direction: 'asc' | 'desc' } | null>(null);
 
+  const sortedTeams = [...teams].sort((a, b) => {
+    if (!sortConfig) return 0;
+    const { key, direction } = sortConfig;
+    const order = direction === 'asc' ? 1 : -1;
+  
+    const aValue = a[key as keyof Team] ?? '';  // Safely accessing with fallback for undefined
+    const bValue = b[key as keyof Team] ?? '';
+  
+    if (aValue < bValue) return -1 * order;
+    if (aValue > bValue) return 1 * order;
+    return 0;
+  });
+
+  const renderArrow = (key: keyof Team) => {
+    if (sortConfig?.key !== key) return null;
+    return sortConfig.direction === 'asc' ? ' ▲' : ' ▼';
+  };
+
+
+  const handleSort = (key: keyof Team) => {
+    setSortConfig((prev) => {
+      if (prev && prev.key === key) {
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
+      }
+      return { key, direction: 'asc' };
+    });
+  };
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -183,101 +213,84 @@ export default function TeamsPage() {
             </button>
 
             <div className="mt-4 overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200">
-                <thead>
-                  <tr className="bg-gray-100 border-b">
-                    <th className="text-left px-4 py-2">Year</th>
-                    <th className="text-left px-4 py-2">Name</th>
-                    <th className="text-left px-4 py-2">Logo</th>
-                    <th className="text-left px-4 py-2">Description</th>
-                    <th className="text-left px-4 py-2">Players</th>
-                    <th className="text-left px-4 py-2">Roster</th>
-                    <th className="text-left px-4 py-2">Actions</th>
-                  </tr>
-                </thead>
-              {loadingData ? (
-                 <tbody>
-                  <tr>
-                    <td colSpan={7}> <div className="flex justify-center items-center">
-    <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
-  </div></td>
-                  </tr>
-                 </tbody>
-  
-) : (
- 
-                <tbody>
-                  {teams.map((team) => (
-                    <tr key={team.id} className="border-b">
-                      <td className="px-4 py-2">{team.team_year}
-                       
-                      </td>
-                      <td className="px-4 py-2">{team.team_name}
-                        <a href={`/coach/${team.coachSlug}`} target="_blank">
-<span className="inline-block bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-Coach: {team.firstName} {team.lastName}
-</span></a>
-                      </td>
-                      <td className="px-4 py-2">
-                      <img src={team.logo} className="w-12 h-12 rounded-full" />
-                      </td>
-                      <td className="px-4 py-2">
-                        <p>
-                          {team.description
-                            ? team.description.length > 100
-                              ? `${team.description.slice(0, 100)}...`
-                              : team.description
-                            : "No description available"}
-                        </p>
-                        {team.description && team.description.length > 100 && (
-                          <button
-                            onClick={() => handleShowFullDescription(team.description || '')}
-                            className="text-blue-500 underline mt-2"
-                          >
-                            Read More
-                          </button>
-                        )}
-                      </td>
-                      
-                      <td className="px-4 py-2">
-                      <Link
-  href={`/enterprise/addplayers/${team.id}`}
-  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-  style={{ minWidth: '120px', whiteSpace: 'nowrap' }}
->
-  Add Players
-</Link>
-                      </td>
-                      <td className="px-4 py-2">
-                        <a
-                            href={`/teams/${team.slug}`}
-                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            target="_blank" style={{ minWidth: '50px', whiteSpace: 'nowrap' }}
-                          >
-                            View
-                          </a></td>
-                      <td className="px-4 py-2">
-                        <div className="flex items-center space-x-2">
-                          
-                          <button
-                            className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            onClick={() => handleEdit(team)}
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                            onClick={() => handleDelete(team.id)}
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-              </table>
+            <table className="min-w-full bg-white border border-gray-200">
+      <thead>
+       <tr className="bg-gray-100 border-b">
+          <th onClick={() => handleSort('team_name')} className="text-left px-4 py-2 cursor-pointer">
+            Name{renderArrow('team_name')}
+          </th>
+          <th className="text-left px-4 py-2">Logo</th>
+          <th onClick={() => handleSort('team_year')} className="text-left px-4 py-2 cursor-pointer">
+            Year{renderArrow('team_year')}
+          </th>
+          <th onClick={() => handleSort('team_type')} className="text-left px-4 py-2 cursor-pointer">
+            Gender{renderArrow('team_type')}
+          </th>
+          <th className="text-left px-4 py-2">Players</th>
+          <th className="text-left px-4 py-2">Roster</th>
+          <th className="text-left px-4 py-2">Status</th>
+          <th className="text-left px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      {loadingData ? (
+        <tbody>
+          <tr>
+            <td colSpan={7}>
+              <div className="flex justify-center items-center">
+                <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      ) : (
+        <tbody>
+          {sortedTeams.map((team) => (
+            <tr key={team.id} className="border-b">
+              <td className="px-4 py-2">
+                {team.team_name}
+                <a href={`/coach/${team.coachSlug}`} target="_blank">
+                  <span className="inline-block bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    Coach: {team.firstName} {team.lastName}
+                  </span>
+                </a>
+              </td>
+              <td className="px-4 py-2">
+                <img src={team.logo} className="w-12 h-12 rounded-full" alt={`${team.team_name} logo`} />
+              </td>
+              <td className="px-4 py-2">{team.team_year}</td>
+              <td className="px-4 py-2">{team.team_type}</td>
+              <td className="px-4 py-2">
+                <Link href={`/enterprise/addplayers/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                  Add Players
+                </Link>
+              </td>
+              <td className="px-4 py-2">
+                <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
+                  Players
+                </a>
+              </td>
+              <td>
+  <button 
+    className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} text-white`}
+  >
+    {team.status}
+  </button>
+</td>
+              <td className="px-4 py-2">
+                <div className="flex items-center space-x-2">
+                  <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" onClick={() => handleEdit(team)}>
+                    <FaEdit />
+                  </button>
+                  <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)}>
+                    <FaTrash />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      )}
+    </table>
             </div>
 
             {modalOpen && (

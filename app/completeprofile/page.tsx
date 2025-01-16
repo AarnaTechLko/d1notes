@@ -12,7 +12,7 @@ import { upload } from '@vercel/blob/client';
 import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import FileUploader from "../components/FileUploader";
-import { countryCodesList, states, positionOptionsList, genders, playingLevels, countries, Grades } from "@/lib/constants";
+import { countryCodesList, states, positionOptionsList, genders, playingLevels, Grades,countries } from "@/lib/constants";
 import { showError } from "../components/Toastr";
 interface FormValues {
   first_name: string;
@@ -75,7 +75,18 @@ export default function Register() {
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState('');
   const [height, setHeight] = useState("");
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
 
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
   const formatHeight = (value: string) => {
     // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
     const numericValue = value.replace(/[^0-9.'"]/g, "");
@@ -96,7 +107,7 @@ export default function Register() {
     }
   
     if (inches) {
-      return `${feet}' ${inches}"`; // Format as feet and decimal inches
+      return `${feet}'${inches}"`; // Format as feet and decimal inches
     } else {
       return `${feet}'`; // Format as feet only
     }
@@ -132,7 +143,8 @@ export default function Register() {
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
     
 
-    const heightRegex = /^\d{1,2}'\d{1,2}"$/;
+    const heightRegex = /^(\d{1,2})'(\d{1,2}(?:\.\d{1,2})?)?"$/;
+
     if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
       newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
     }
@@ -230,6 +242,9 @@ export default function Register() {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
     setValidationErrors({ ...validationErrors, [name]: "" }); // Clear error when input is changed
+    if (name === 'country') {
+      fetchStates(Number(value));
+    }
   };
 
   const handleImageChange = async () => {
@@ -253,6 +268,16 @@ export default function Register() {
       console.error('Error uploading file:', error);
     }
   };
+
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
+
+
+
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -454,14 +479,11 @@ export default function Register() {
                     value={formValues.country}
                     onChange={handleChange}
                   >
-                    <option value="">Select a country</option>
-                    {countries
-                      .filter((country) =>
-                        country.label.toLowerCase().includes('united states')
-                      )
-                      .map((country) => (
-                        <option key={country.label} value={country.label}>
-                          {country.label}
+                    <option value="">Select</option>
+                    {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
                         </option>
                       ))}
 
@@ -480,12 +502,12 @@ export default function Register() {
                     onChange={handleChange}
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                   >
-                    <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option key={state.abbreviation} value={state.abbreviation}>
-                        {state.name}
-                      </option>
-                    ))}
+                    <option value="">Select</option>
+                    {statesList.map((state: any, index) => (
+    <option key={index} value={state.name}>
+      {state.name}
+    </option>
+  ))}
                   </select>
 
                 </div>

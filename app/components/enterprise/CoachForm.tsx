@@ -115,7 +115,25 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
     const certificateInputRef = useRef<HTMLInputElement | null>(null);
     const { data: session } = useSession();
     const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
+    const [countriesList, setCountriesList] = useState([]);
+    const [statesList, setStatesList] = useState([]);
 
+    const fetchStates = async (country: number) => {
+        try {
+          const response = await fetch(`/api/masters/states?country=${country}`);
+          const data = await response.json();
+          setStatesList(data); // Adjust key if necessary based on your API response structure
+        } catch (error) {
+          console.error('Failed to fetch states:', error);
+        }
+      };
+
+      useEffect(() => {
+        fetch('/api/masters/countries')
+          .then((response) => response.json())
+          .then((data) => setCountriesList(data || []))
+          .catch((error) => console.error('Error fetching countries:', error));
+      }, []);
     // Validation function
     const validateForm = (): boolean => {
         const errors: FormErrors = {
@@ -253,6 +271,9 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         if (formErrors[name as keyof FormErrors]) {
             setFormErrors({ ...formErrors, [name]: undefined });
         }
+        if (name === 'country') {
+            fetchStates(Number(value));
+          }
     };
 
     const handleImageChange = async () => {
@@ -454,7 +475,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
 
                                     </div>
                                     <div >
-                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">$ rates ( per evaluation )<span className='mandatory'>*</span></label>
+                                        <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">USD $ rates ( per Evaluation )<span className='mandatory'>*</span></label>
                                         <input
                                         placeholder='Ex: 50'
                                             type="text"
@@ -519,7 +540,13 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             onChange={handleChange}
                                         >
                                             <option value="">Select</option>
-                                            <option value="USA">USA</option>
+                                            {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
+
 
                                         </select>
 
@@ -536,12 +563,12 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
                                             onChange={handleChange}
                                             className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                                         >
-                                            <option value="">Select a state</option>
-                                            {states.map((state) => (
-                                                <option key={state.abbreviation} value={state.abbreviation}>
-                                                    {state.name}
-                                                </option>
-                                            ))}
+                                            <option value="">Select</option>
+                                            {statesList.map((state: any, index) => (
+    <option key={index} value={state.name}>
+      {state.name}
+    </option>
+  ))}
                                         </select>
 
                                     </div>

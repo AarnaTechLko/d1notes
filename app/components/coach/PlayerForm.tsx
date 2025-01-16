@@ -91,6 +91,26 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState('');
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
+
 
   const formatHeight = (value: string) => {
     // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
@@ -112,7 +132,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     }
   
     if (inches) {
-      return `${feet}' ${inches}"`; // Format as feet and decimal inches
+      return `${feet}'${inches}"`; // Format as feet and decimal inches
     } else {
       return `${feet}'`; // Format as feet only
     }
@@ -188,7 +208,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     // if (!formValues.location.trim()) newErrors.location = "Playing Location is required.";
 
 
-    const heightRegex = /^\d{1,2}'\d{1,2}"$/;
+    const heightRegex = /^(\d{1,2})'(\d{1,2}(?:\.\d{1,2})?)?"$/;
+
     if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
       newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
     }
@@ -313,7 +334,9 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
     setValidationErrors({ ...validationErrors, [name]: "" }); // Clear error when input is changed
-
+    if (name === 'country') {
+      fetchStates(Number(value));
+    }
   };
 
   const handleImageChange = async () => {
@@ -538,11 +561,12 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                     onChange={handleChange}
                   >
                     <option value="">Select a country</option>
-                    {countries.map((country) => (
-                      <option key={country.label} value={country.label}>
-                        {country.label}
-                      </option>
-                    ))}
+                    {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
 
 
                   </select>
@@ -561,11 +585,11 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                   >
                     <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option key={state.abbreviation} value={state.abbreviation}>
-                        {state.name}
-                      </option>
-                    ))}
+                    {statesList.map((state: any, index) => (
+    <option key={index} value={state.name}>
+      {state.name}
+    </option>
+  ))}
                   </select>
 
                 </div>

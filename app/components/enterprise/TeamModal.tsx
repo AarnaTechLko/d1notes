@@ -35,6 +35,7 @@ type FormValues = {
   manager_email?: string;
   manager_phone?: string;
   club_id?: string;
+  status?: string;
 };
 
 export default function TeamModal({
@@ -66,7 +67,8 @@ export default function TeamModal({
     manager_name: "",
     manager_email: "",
     manager_phone: "",
-    club_id: ""
+    club_id: "",
+    status: ""
   });
   const [photoUploading, setPhotoUploading] = useState(false);
 
@@ -192,6 +194,7 @@ export default function TeamModal({
         team_type: team.team_type || "",
         team_year: team.team_year || "",
         coach_id: team.coach_id || 0, 
+        status: team.status || "", 
       });
     }
   }, [team]);
@@ -289,10 +292,7 @@ export default function TeamModal({
         return;
       }
   
-      if (!formValues.description) {
-        showError("Description is required.");
-        return;
-      }
+    
 
       // if (!formValues.manager_name) {
       //   showError("Manager Name is required.");
@@ -376,7 +376,7 @@ export default function TeamModal({
             name="team_year"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Select Year</option>
+            <option value="">Select</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026">2026</option>
@@ -384,89 +384,43 @@ export default function TeamModal({
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Team for<span className="mandatory">*</span>
+            Gender<span className="mandatory">*</span>
           </label>
-          <div className="flex space-x-6">
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="men"
-                name="team_type"
-                value="Men"
-                checked={formValues.team_type === 'Men' || !formValues.team_type}
-                onChange={handleChange}
-                className="focus:ring-2 focus:ring-blue-500"
-              />
-              <label htmlFor="men" className="ml-2 text-sm text-gray-700">Men</label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="women"
-                name="team_type"
-                value="Women"
-                checked={formValues.team_type === 'Women'}
-                onChange={handleChange}
-                className="focus:ring-2 focus:ring-blue-500"
-              />
-              <label htmlFor="women" className="ml-2 text-sm text-gray-700">Women</label>
-            </div>
-          </div>
+          <select
+            value={formValues.team_type}
+            onChange={handleChange}
+            name="team_type"
+            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+           
+          </select>
+        
         </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Description<span className="mandatory">*</span>
+            Status<span className="mandatory">*</span>
           </label>
-          <textarea
-            value={formValues.description}
+          <select
+            value={formValues.status}
             onChange={handleChange}
-            name="description"
+            name="status"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
+          >
+            <option value="">Select</option>
+            <option value="Active">Active</option>
+            <option value="Not Active">Not Active</option>
+           
+          </select>
+        
         </div>
+     
       </div>
 
-      {/* Second Column: Management Details */}
-      {/* <div className="space-y-4 shadow p-8">
-        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Manager Details</h3>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Manager Name<span className="mandatory">*</span>
-          </label>
-          <input
-            type="text"
-            value={formValues.manager_name}
-            onChange={handleChange}
-            name="manager_name"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Manager Email<span className="mandatory">*</span>
-          </label>
-          <input
-            type="email"
-            value={formValues.manager_email}
-            onChange={handleChange}
-            name="manager_email"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Manager Phone<span className="mandatory">*</span>
-          </label>
-          <input
-            type="tel"
-            value={formValues.manager_phone}
-            onChange={handleChange}
-            name="manager_phone"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div> */}
-
+     
       {/* Third Column: Image Upload */}
       <div className="space-y-4 shadow p-8">
         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Images</h3>

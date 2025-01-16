@@ -16,7 +16,7 @@ import FileUploader from '@/app/components/FileUploader';
 // Zod schema for validation
 const formSchema = z.object({
   organizationName: z.string().min(1, 'Organization Name is required.'),
-  contactPerson: z.string().min(1, 'Contact Person is required.'),
+  ////contactPerson: z.string().min(1, 'Contact Person is required.'),
   owner_name: z.string().min(1, 'Owner Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
@@ -28,8 +28,9 @@ const formSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters long.'),
   //otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required
   loginAs: z.literal('enterprise'),
-  logo:z.string(), // File instance for logo
+  logo:z.string().min(1,'Logo Required'),
   affiliationDocs: z.string(), // File instance for PDF docs
+  description: z.string().min(1, 'Organization Description is required.'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -40,7 +41,7 @@ export default function Signup() {
     const [formValues, setFormValues] = useState<FormValues>({
     organizationName: '',
     owner_name: '',
-    contactPerson: '',
+    
     email: '',
     mobileNumber: '',
     countryCodes: '',
@@ -53,6 +54,7 @@ export default function Signup() {
     loginAs: 'enterprise',
     logo: '',
     affiliationDocs:'',
+    description:'',
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -63,6 +65,25 @@ export default function Signup() {
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
   const [pdfUpoading, setPdfUploading] = useState<boolean>(false);
   const { data: session } = useSession();
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -157,10 +178,13 @@ export default function Signup() {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
     if (name === "email") setOtpSent(false);
+    if (name === 'country') {
+      fetchStates(Number(value));
+    }
   };
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
@@ -249,19 +273,7 @@ export default function Signup() {
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
-            <div className="flex-1 hidden" >
-              <label htmlFor="contactPerson" className="block text-gray-700 text-sm font-semibold mb-2">
-               Player Director<span className="mandatory">*</span>
-              </label>
-              <input
-                type="text"
-                name="contactPerson"
-                value={formValues.contactPerson}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+ 
             </div>
 
             {/* Email and Mobile Number */}
@@ -339,27 +351,42 @@ export default function Signup() {
                 <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">
                 Organization Country<span className="mandatory">*</span>
                 </label>
-                <input
-                placeholder='Ex. USA'
-                  type="text"
-                  name="country"
-                  value={formValues.country}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <select
+                    name="country"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.country}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
+
+
+                  </select>
+            
               </div>
               <div className="flex-1">
                 <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">
                 Organization State or Other<span className="mandatory">*</span>
                 </label>
-                <input
-                placeholder='Ex. California'
-                  type="text"
-                  name="state"
-                  value={formValues.state}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <select
+                    name="state"
+                    id="state"
+                    value={formValues.state}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  >
+                    <option value="">Select</option>
+                    {statesList.map((state: any, index) => (
+    <option key={index} value={state.name}>
+      {state.name}
+    </option>
+  ))}
+                  </select>
               </div>
               <div className="flex-1">
                 <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">
@@ -379,11 +406,14 @@ export default function Signup() {
             {/* Logo Upload */}
             <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
             <label  htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Organization Description<span className='mandatory'>*</span></label>
-            <textarea className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
-            placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'></textarea>
+            <textarea name="description" className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
+            value={formValues.description}
+            onChange={handleChange}
+            ></textarea>
               </div>
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image

@@ -184,12 +184,10 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto p-8 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 shadow-xl rounded-xl space-y-6"
+      className="max-w-3xl mx-auto p-8  shadow-xl rounded-xl space-y-6"
     >
-      <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">
-        {usertype === "coach" || usertype=='Team'
-          ? "Send Invitation to Players"
-          : "Send Invitation"}
+      <h2 className="text-xl font-semibold text-center text-gray-900 mb-6">
+      Get started by clicking on Your Teams and create Your Teams…
           
       </h2>
 

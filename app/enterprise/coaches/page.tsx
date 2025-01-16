@@ -4,7 +4,7 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import CoachForm from '@/app/components/enterprise/CoachForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaEye, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
+import { FaEye, FaHistory, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
 import ResetPassword from '@/app/components/ResetPassword';
 
 // Define the type for the coach data
@@ -302,7 +302,7 @@ const Home: React.FC = () => {
 </div>
 
           <div className="overflow-x-auto">
-  <table className="w-full text-sm text-left text-gray-700 mt-4">
+  <table className="min-w-full table-auto border-collapse border border-gray-300">
     <thead>
       <tr>
         <th>Name</th>
@@ -310,7 +310,9 @@ const Home: React.FC = () => {
         <th>Email</th>
         <th>Phone</th>
         <th>Sport</th>
-        <th>License</th>
+        <th>Available License</th>
+        <th>Used License</th>
+        <th>History</th>
         <th>Status</th>
         <th style={{width:225}}>Action</th>
       </tr>
@@ -328,16 +330,16 @@ const Home: React.FC = () => {
             <td>{coach.email}</td>
             <td>{coach.countrycode}{coach.phoneNumber}</td>
             <td>{coach.sport}</td>
-            <td>
-            <div className="mt-0">
-  <button className="w-24 px-1 py-1 bg-blue-500 text-xs text-white rounded-lg">Shared {coach.assignedLicenseCount}</button>
-  <button className="w-24 px-1 py-1 bg-red-500 text-xs text-white rounded-lg mt-2"> Consumed {coach.consumeLicenseCount}</button>
-</div>
-<div className="mt-0">
-  <button className="w-24 px-1 py-1 bg-gray-500 text-xs text-white rounded-lg">Evaluations: {coach.totalEvaluations}</button>
-  <button className="w-24 px-1 py-1 bg-green-500 text-xs text-white rounded-lg mt-2"> Earned: $ {coach.earnings}</button>
-</div>
-            </td>
+            <td>{coach.assignedLicenseCount}</td>
+            <td>{coach.consumeLicenseCount}</td>
+            <td align='center'><a
+                  href={`/coach/history/${coach.slug}`}
+                  title='History'
+                  
+                  target="_blank"
+                >
+                  <FaEye/>
+                </a></td>
             <td>
               {coach.status === 'Inactive' ? (
                 <button
@@ -370,6 +372,7 @@ const Home: React.FC = () => {
                 >
                   <FaEye/>
                 </a>
+               
                 <button
                   onClick={() => handleAssignLicense(coach)}
                   title="Share License"
