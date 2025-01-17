@@ -15,6 +15,7 @@ import { states, countryCodesList } from '@/lib/constants';
 
 interface CoachFormProps {
     onSubmit: (formData: any) => void;
+    teamId?:string;
 }
 interface FormValues {
     firstName: string;
@@ -60,7 +61,7 @@ interface FormErrors {
 
 }
 
-const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
+const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
     const [formValues, setFormValues] = useState<FormValues>({
         firstName: '',
         lastName: '',
@@ -82,7 +83,29 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         certificate: null,
         license: ''
     });
-
+    const resetForm = () => {
+        setFormValues({
+            firstName: '',
+            lastName: '',
+            email: '',
+            phoneNumber: '',
+            gender: '',
+            location: '',
+            sport: '',
+            clubName: '',
+            qualifications: '',
+            expectedCharge: '',
+            password: '',
+            country: '',
+            state: '',
+            city: '',
+            countrycode: '',
+            enterprise_id: '',
+            image: null,
+            certificate: null,
+            license: ''
+        });
+      };
     const [formErrors, setFormErrors] = useState<FormErrors>({
         firstName: undefined,
         lastName: undefined,
@@ -235,6 +258,11 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             setError("User is not authenticated");
             return;
         }
+
+        if(teamId)
+        {
+            formData.append("teamId",teamId); // Assuming user.id is the ID
+        }
         try {
             const response = await fetch('/api/enterprise/coach/signup', {
                 method: 'POST',
@@ -253,6 +281,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
             const data = await response.json();
             showSuccess('Coach added successfully.');
             onSubmit(formData);
+            resetForm()
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Something went wrong!');
         } finally {

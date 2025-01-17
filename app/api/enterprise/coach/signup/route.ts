@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
-import { coaches, otps, licenses, coachaccount, playerEvaluation } from '../../../../../lib/schema';
+import { coaches, otps, licenses, coachaccount, playerEvaluation, teamCoaches } from '../../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
   const state = formData.get('state') as string | null;
   const city = formData.get('city') as string | null;
   const countrycode = formData.get('countrycode') as string | null;
+  const teamId = formData.get('teamId') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
   const timestamp = Date.now();
@@ -91,7 +92,17 @@ export async function POST(req: NextRequest) {
       used_by: updatedUser[0].id.toString(),
       used_for: 'Player',
     }).where(eq(licenses.licenseKey, license));
+    if (teamId) {
+      await db.insert(teamCoaches).values(
+        {
+          teamId: Number(teamId),
+          coachId: updatedUser[0].id,
+          enterprise_id: Number(enterprise_id),
+        }
+        
+      ).returning();
 
+    }
   const emailResult = await sendEmail({
     to: email,
     subject: "D1 NOTES Coach Registration",

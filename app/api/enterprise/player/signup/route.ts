@@ -102,6 +102,9 @@ export async function POST(req: NextRequest) {
       used_for: 'Player',
     }).where(eq(licenses.licenseKey, license));
     
+
+
+    
     const emailResult = await sendEmail({
       to: email,
       subject: "D1 NOTES Player Registration",

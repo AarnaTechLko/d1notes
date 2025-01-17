@@ -320,6 +320,14 @@ export const teamPlayers = pgTable("teamPlayers", {
   enterprise_id: integer("enterprise_id").notNull(),
 });
 
+
+export const teamCoaches = pgTable("teamCoaches", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull(),
+  coachId: integer("coachId").notNull(),
+  enterprise_id: integer("enterprise_id").notNull(),
+});
+
 export const invitations = pgTable("invitations", {
   id: serial("id").primaryKey(),
   sender_type: text("sender_type").notNull(),

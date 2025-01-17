@@ -16,7 +16,7 @@ type Team = {
   description?: string;
   logo?: string;
   created_by?: string;
-  creator_id?: number; 
+  creator_id?: number;
   team_type?: string;
   team_year?: string;
   slug?: string;
@@ -54,7 +54,7 @@ export default function TeamsPage() {
       console.error("No user logged in");
       return;
     }
- 
+
     try {
       setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
@@ -97,7 +97,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }),
       };
-       
+
       await fetch("/api/teams", {
         method,
         headers: { "Content-Type": "application/json" },
@@ -175,10 +175,10 @@ export default function TeamsPage() {
     if (!sortConfig) return 0;
     const { key, direction } = sortConfig;
     const order = direction === 'asc' ? 1 : -1;
-  
+
     const aValue = a[key as keyof Team] ?? '';  // Safely accessing with fallback for undefined
     const bValue = b[key as keyof Team] ?? '';
-  
+
     if (aValue < bValue) return -1 * order;
     if (aValue > bValue) return 1 * order;
     return 0;
@@ -213,81 +213,87 @@ export default function TeamsPage() {
             </button>
 
             <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-       <tr className="bg-gray-100 border-b">
-          <th onClick={() => handleSort('team_name')} className="text-left px-4 py-2 cursor-pointer">
-            Name{renderArrow('team_name')}
-          </th>
-         
-          <th onClick={() => handleSort('team_year')} className="text-left px-4 py-2 cursor-pointer">
-            Year{renderArrow('team_year')}
-          </th>
-          <th onClick={() => handleSort('team_type')} className="text-left px-4 py-2 cursor-pointer">
-            Gender{renderArrow('team_type')}
-          </th>
-          <th className="text-left px-4 py-2">Players</th>
-          <th className="text-left px-4 py-2">Roster</th>
-          <th className="text-left px-4 py-2">Status</th>
-          <th className="text-left px-4 py-2">Actions</th>
-        </tr>
-      </thead>
-      {loadingData ? (
-        <tbody>
-          <tr>
-            <td colSpan={8}>
-              <div className="flex justify-center items-center">
-                <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      ) : (
-        <tbody>
-          {sortedTeams.map((team) => (
-            <tr key={team.id} className="border-b">
-           <td className="px-4 py-2">
-  <div className="text-center items-center">
-  <img src={team.logo} className="w-12 h-12 mx-auto rounded-full" alt={`${team.team_name} logo`} />
-    <div className="mb-1">{team.team_name}</div>
- 
-  </div>
-</td>
-             
-              <td className="px-4 py-2">{team.team_year}</td>
-              <td className="px-4 py-2">{team.team_type}</td>
-              <td className="px-4 py-2">
-                <Link href={`/enterprise/addplayers/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                  Add Players
-                </Link>
-              </td>
-              <td className="px-4 py-2">
-                <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
-                  Players
-                </a>
-              </td>
-              <td>
-  <button 
-    className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} text-white`}
-  >
-    {team.status}
-  </button>
-</td>
-              <td className="px-4 py-2">
-                <div className="flex items-center space-x-2">
-                  <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" onClick={() => handleEdit(team)}>
-                    <FaEdit />
-                  </button>
-                  <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)}>
-                    <FaTrash />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      )}
-    </table>
+              <table className="min-w-full bg-white border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-100 border-b">
+                    <th onClick={() => handleSort('team_name')} className="text-left px-4 py-2 cursor-pointer">
+                      Name{renderArrow('team_name')}
+                    </th>
+
+                    <th onClick={() => handleSort('team_year')} className="text-left px-4 py-2 cursor-pointer">
+                      Year{renderArrow('team_year')}
+                    </th>
+                    <th onClick={() => handleSort('team_type')} className="text-left px-4 py-2 cursor-pointer">
+                      Gender{renderArrow('team_type')}
+                    </th>
+                    <th className="text-left px-4 py-2">Players</th>
+                    <th className="text-left px-4 py-2">Coaches</th>
+                    <th className="text-left px-4 py-2">Roster</th>
+                    <th className="text-left px-4 py-2">Status</th>
+                    <th className="text-left px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                {loadingData ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan={8}>
+                        <div className="flex justify-center items-center">
+                          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {sortedTeams.map((team) => (
+                      <tr key={team.id} className="border-b">
+                        <td className="px-4 py-2">
+                          <div className="text-center items-center">
+                            <img src={team.logo} className="w-12 h-12 mx-auto rounded-full" alt={`${team.team_name} logo`} />
+                            <div className="mb-1">{team.team_name}</div>
+
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-2">{team.team_year}</td>
+                        <td className="px-4 py-2">{team.team_type}</td>
+                        <td className="px-4 py-2">
+                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Players
+                          </Link>
+                        </td>
+                        <td className="px-4 py-2">
+                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Coaches
+                          </Link>
+                        </td>
+                        <td className="px-4 py-2">
+                          <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
+                            Players
+                          </a>
+                        </td>
+                        <td>
+                          <button
+                            className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} text-white`}
+                          >
+                            {team.status}
+                          </button>
+                        </td>
+                        <td className="px-4 py-2">
+                          <div className="flex items-center space-x-2">
+                            <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" onClick={() => handleEdit(team)}>
+                              <FaEdit />
+                            </button>
+                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)}>
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
+              </table>
             </div>
 
             {modalOpen && (

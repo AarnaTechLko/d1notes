@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../../lib/db';
 import { eq,and,inArray } from "drizzle-orm";
-import { coaches,teamPlayers, licenses } from '../../../../../../lib/schema';
+import { coaches,teamPlayers, licenses, teamCoaches } from '../../../../../../lib/schema';
 import { number } from 'zod';
 import { sendEmail } from '@/lib/helpers';
 
@@ -22,7 +22,7 @@ import { sendEmail } from '@/lib/helpers';
     try {
         const body = await req.json();
         const payload = body.csvData;
-        const { coach_id, enterprise_id, team_id } = body;
+        const { coach_id, enterprise_id, teamId } = body;
 
         if (!Array.isArray(payload)) {
             return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
@@ -77,10 +77,20 @@ import { sendEmail } from '@/lib/helpers';
                 certificate: null,
                 password: hashedPassword,
                
-            };
+            }; 
         }));
         if (insertData.length > 0) {
         const insertedPlayers = await db.insert(coaches).values(insertData).returning({ id: coaches.id });
+
+        
+  
+        const teamCoachData = insertedPlayers.map(player => ({
+          teamId: Number(teamId),           // Adjusted to match the schema
+          coachId: player.id,       // Adjusted to match the schema
+          enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+        }));
+        
+        await db.insert(teamCoaches).values(teamCoachData);
 
         for (const player of insertedPlayers) {
             const checkLicense = await db

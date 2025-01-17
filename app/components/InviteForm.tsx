@@ -157,8 +157,8 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
   useEffect(() => {
     fetchTeams();
    
-    if (usertype === "coach") {
-      setRegistrationType("player");
+    if (usertype === "Coach") {
+      setRegistrationType("coach");
     }
    
     if(session?.user.type==='Team')
@@ -177,7 +177,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
     >
       
 
-      {usertype !== "coach" && usertype !== "Team" && (
+      {usertype !== "Coach" && usertype !== "Team" && (
         <div className="mb-6 flex justify-center space-x-10">
           <label className="flex items-center space-x-2">
             <input
