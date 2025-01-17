@@ -300,7 +300,7 @@ export const teams=pgTable('teams', {
   club_id: integer('club_id'),
   slug: text('slug').notNull(),
   creator_id: integer('creator_id').notNull(),
-  coach_id: integer('coach_id').notNull(),
+  coach_id: integer('coach_id'),
   team_type: text('team_type'),
   team_year: text('team_year'),
   cover_image: text('cover_image'),

@@ -13,7 +13,7 @@ import { SECRET_KEY } from '@/lib/constants';
 
 export async function POST(req: NextRequest) {
     const { slug,loggeInUser } = await req.json();
-
+let coach;
     try {
         // Using 'like' with lower case for case-insensitive search
         const teamList = await db
@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
             .innerJoin(users, eq(users.id, teamPlayers.playerId))
             .orderBy(asc(users.jersey))
             .where(eq(teamPlayers.teamId, payload[0].id));
-
-        const coach=await db.select().from(coaches).where(eq(coaches.id, payload[0].coach_id)).execute();
-
+            if (payload[0].coach_id !== null) {
+          coach=await db.select().from(coaches).where(eq(coaches.id, payload[0].coach_id)).execute();
+            }
         const requested=await db.select().from(joinRequest).where(
             and(
               eq(joinRequest.player_id,loggeInUser),

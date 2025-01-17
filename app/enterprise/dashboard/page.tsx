@@ -6,6 +6,7 @@ import { getSession, useSession, signIn } from "next-auth/react";
 import Packages from "@/app/components/enterprise/Packages";
 import DashboardContent from "@/app/components/enterprise/Dashboard";
 import InviteForm from "@/app/components/InviteForm";
+import PurchaseLicense from "@/app/components/PurchaseLicense";
 
 
 const Dashboard: React.FC = () => {
@@ -56,12 +57,13 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
-        <div className="bg-white shadow-md rounded-lg p-6 h-screen">
+        <div className="bg-white shadow-md rounded-lg p-6">
         <DashboardContent/>
           
         </div>
         <div className="bg-white shadow-md rounded-lg p-6 ">
         {/*<InviteForm usertype="Club"/>*/}
+        <PurchaseLicense organizationId={sessions?.user.id || ''}/>
         </div>
       </main>
     </div>

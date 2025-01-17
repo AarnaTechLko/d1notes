@@ -277,10 +277,10 @@ export default function TeamModal({
         return;
       }
   
-      if (!formValues.coach_id) {
-        showError("Coach is required.");
-        return;
-      }
+      // if (!formValues.coach_id) {
+      //   showError("Coach is required.");
+      //   return;
+      // }
   
       if (!formValues.team_year) {
         showError("Team Year is required.");
@@ -352,7 +352,7 @@ export default function TeamModal({
             className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700">
             Coach<span className="mandatory">*</span>
           </label>
@@ -365,7 +365,7 @@ export default function TeamModal({
             formatOptionLabel={getOptionLabel}
             components={{ Option: CustomOption }}
           />
-        </div>
+        </div> */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Year<span className="mandatory">*</span>
