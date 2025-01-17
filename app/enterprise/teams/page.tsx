@@ -219,7 +219,7 @@ export default function TeamsPage() {
           <th onClick={() => handleSort('team_name')} className="text-left px-4 py-2 cursor-pointer">
             Name{renderArrow('team_name')}
           </th>
-          <th className="text-left px-4 py-2">Logo</th>
+         
           <th onClick={() => handleSort('team_year')} className="text-left px-4 py-2 cursor-pointer">
             Year{renderArrow('team_year')}
           </th>
@@ -235,7 +235,7 @@ export default function TeamsPage() {
       {loadingData ? (
         <tbody>
           <tr>
-            <td colSpan={7}>
+            <td colSpan={8}>
               <div className="flex justify-center items-center">
                 <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
               </div>
@@ -246,17 +246,14 @@ export default function TeamsPage() {
         <tbody>
           {sortedTeams.map((team) => (
             <tr key={team.id} className="border-b">
-              <td className="px-4 py-2">
-                {team.team_name}
-                <a href={`/coach/${team.coachSlug}`} target="_blank">
-                  <span className="inline-block bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    Coach: {team.firstName} {team.lastName}
-                  </span>
-                </a>
-              </td>
-              <td className="px-4 py-2">
-                <img src={team.logo} className="w-12 h-12 rounded-full" alt={`${team.team_name} logo`} />
-              </td>
+           <td className="px-4 py-2">
+  <div className="text-center items-center">
+  <img src={team.logo} className="w-12 h-12 mx-auto rounded-full" alt={`${team.team_name} logo`} />
+    <div className="mb-1">{team.team_name}</div>
+ 
+  </div>
+</td>
+             
               <td className="px-4 py-2">{team.team_year}</td>
               <td className="px-4 py-2">{team.team_type}</td>
               <td className="px-4 py-2">

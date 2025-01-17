@@ -56,12 +56,12 @@ const Dashboard: React.FC = () => {
     <div className="flex h-screen">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
-        <div className="bg-white shadow-md rounded-lg p-6 ">
+        <div className="bg-white shadow-md rounded-lg p-6 h-screen">
         <DashboardContent/>
           
         </div>
         <div className="bg-white shadow-md rounded-lg p-6 ">
-        <InviteForm usertype="Club"/>
+        {/*<InviteForm usertype="Club"/>*/}
         </div>
       </main>
     </div>

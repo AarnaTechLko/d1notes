@@ -15,6 +15,7 @@ import FileUploader from "../FileUploader";
 import { countryCodesList, states, positionOptionsList, genders, playingLevels, countries, Grades } from "@/lib/constants";
 interface PlayerFormProps {
   onSubmit: (formData: any) => void;
+  teamId?:string;
 }
 interface FormValues {
   first_name: string;
@@ -47,7 +48,7 @@ interface FormValues {
   graduation: string;
   image: string | null; // Updated to store Base64 string
 }
-const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
+const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit,teamId }) => {
 
   const [formValues, setFormValues] = useState<FormValues>({
     first_name: "",
@@ -93,7 +94,39 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
   const [photoUpoading, setPhotoUploading] = useState<boolean>(false);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-
+  const resetForm = () => {
+    setFormValues({
+      first_name: "",
+      last_name: "",
+      email: "",
+      grade_level: "",
+      location: "",
+      birthday: "",
+      gender: "",
+      sport: "",
+      team: "",
+      position: "",
+      number: "",
+      bio: "",
+      country: "",
+      state: "",
+      city: "",
+      jersey: "",
+      league: "",
+      countrycode: "",
+      enterprise_id: 0,
+      license: "",
+      playingcountries: "",
+      graduation: "",
+      height: "",
+      weight: "",
+      ownerType: "",
+      teamId: "",
+      coach_id: 0,
+      parent_id: 0,
+      image: null,
+    });
+  };
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -191,7 +224,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
       ...formValues,
       coach_id: session?.user?.id ? Number(session.user.id) : 0,
     });
-
+ 
     // Validation
     const newErrors: Partial<FormValues> = {};
     // if (!formValues.image) {
@@ -270,7 +303,11 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
 
     if (session && session.user.id) {
-      console.log(session.user.type);
+      if(teamId)
+        {
+          formValues.teamId=teamId;
+        }
+
       if (session.user.type == 'team') {
         formValues.enterprise_id = Number(session.user.club_id); // Add user ID to the form values
         formValues.ownerType = 'enterprise';
@@ -314,7 +351,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
         if (response.status === 500) {
           const data = await response.json();
           showError(data.message);
-          setLoading(false);
+       
         }
         return; // Stop further processing if there's an error
       }
@@ -323,6 +360,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit }) => {
 
       showSuccess('Player added successfully.');
       onSubmit(formValues);
+      setLoading(false);
+      resetForm();
     } catch (err) {
       setLoading(false);
 

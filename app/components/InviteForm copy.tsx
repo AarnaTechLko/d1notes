@@ -7,11 +7,10 @@ import { countryCodesList } from "@/lib/constants";
 
 interface InviteFormProps {
   usertype: string;
-  teamId?:string;
 }
 
 
-const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
+const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
   const [emails, setEmails] = useState<string[]>([""]);
   const [mobiles, setMobiles] = useState<{ code: string; number: string }[]>([
     { code: "+1", number: "" },
@@ -21,7 +20,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
   const [registrationType, setRegistrationType] = useState<"coach" | "player">("player");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [teams, setTeams] = useState<[] | null >([]);
- 
+  const [selectedTeam, setSelectedTeam] = useState<string>("");
   const { data: session } = useSession();
 
   const validateEmail = (email: string): boolean => {
@@ -86,9 +85,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
 
     const isAnyEmailValid = emails.some((email) => email.trim() && validateEmail(email));
     const isAnyMobileValid = mobiles.some((mobile) => validateMobile(mobile));
-    
-    if (!isAnyEmailValid) {
-      setError("Please provide a valid email.");
+    if (registrationType !== "coach" && !selectedTeam) {
+      setError("Please Select a Team.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!isAnyEmailValid && !isAnyMobileValid) {
+      setError("Please provide a valid email or mobile number.");
       setIsSubmitting(false);
       return;
     }
@@ -100,7 +103,14 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
       return;
     }
 
- 
+    const invalidMobiles = mobiles.filter(
+      (mobile) => mobile.number.trim() && (!validateMobile(mobile) || mobile.number.length !== 14)
+    );
+    if (invalidMobiles.length > 0) {
+      setError("Some mobile numbers are invalid. Ensure they are 14 digits (excluding country code).");
+      setIsSubmitting(false);
+      return;
+    }
 
     setError(null);
 
@@ -112,7 +122,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
 
     const userId = session.user.id;
     const userName = session.user.name;
-  
+
     const inviteData = {
       emails,
       mobiles: mobiles.map((mobile) => `${mobile.code}${mobile.number}`),
@@ -120,7 +130,8 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
       userId,
       userName,
       registrationType,
-      teamId,
+      selectedTeam,
+     
     };
 
     try {
@@ -161,21 +172,24 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
       setRegistrationType("player");
     }
    
-    if(session?.user.type==='Team')
+    if(session?.user.type==='team')
     {
-      
+      setSelectedTeam(session?.user.id);
     }
     else{
-      
+      setSelectedTeam('');
     }
   }, [usertype, session]);
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl p-8 rounded-xl space-y-6"
+      className="max-w-3xl mx-auto p-8  shadow-xl rounded-xl space-y-6"
     >
-      
+      <h2 className="text-xl font-semibold text-center text-gray-900 mb-6">
+      Get started by clicking on Your Teams and create Your Teams…
+          
+      </h2>
 
       {usertype !== "coach" && usertype !== "Team" && (
         <div className="mb-6 flex justify-center space-x-10">
@@ -203,7 +217,27 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
           </label>
         </div>
       )}
- 
+ {registrationType !== "coach" && (
+<div className="mb-6">
+  <label className="block text-xl font-medium text-gray-700 mb-4">
+    Select Team: <span className="text-sm text-gray-500">*</span>
+  </label>
+  <select
+              value={selectedTeam}
+              onChange={(e) => setSelectedTeam(e.target.value)}
+              disabled={selectedTeam !== ''}
+              className="px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full"
+            >
+              <option value="">Select</option>
+              {teams?.map((items:any) => (
+                <option key={items.id} value={items?.id}>
+                  {items.team_name}
+                </option>
+              ))}
+            </select>
+
+  </div>
+  )}
       <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">
     Email  
@@ -218,7 +252,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
           newEmails[index] = e.target.value;
           setEmails(newEmails);
         }}
-        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+        className="w-full px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
         placeholder="Enter email address"
       />
       {/* Remove email button */}
@@ -245,7 +279,43 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
   </button>
 </div>
 
-      
+      {/* Mobile Input */}
+      <div className="mb-6">
+        <label className="block text-xl font-medium text-gray-700 mb-4">
+          Phone Number  
+        </label>
+        {mobiles.map((mobile, index) => (
+          <div key={index} className="flex space-x-3 mb-4 items-center">
+            <select
+              value={mobile.code}
+              onChange={(e) => handleMobileChange(index, "code", e.target.value)}
+              className="px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            >
+              <option value="">Select</option>
+              {countryCodesList.map((country, index) => (
+                <option key={index} value={country.code}>
+                  {country.country} ({country.code})
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              value={mobile.number}
+              placeholder="(444) 444-4444"
+              onChange={(e) => handleMobileChange(index, "number", e.target.value)}
+              className="w-full px-5 py-3 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+               
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={handleAddMobile}
+          className="text-blue-600 hover:text-blue-800 font-medium"
+        >
+          + Add another phone number
+        </button>
+      </div>
 
       {/* Error Message */}
       {error && <p className="text-red-600 text-center text-lg">{error}</p>}
@@ -254,7 +324,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
       <div className="text-center">
         <button
           type="submit"
-          className="w-full sm:w-auto px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 flex items-center justify-center"
+          className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg transition-all duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 flex items-center justify-center"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

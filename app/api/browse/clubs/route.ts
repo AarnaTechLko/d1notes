@@ -59,6 +59,7 @@ export async function GET(req: NextRequest) {
             country: enterprises.country,
             logo: enterprises.logo,
             slug: enterprises.slug,
+            club_id:enterprises.id
           
         })
         .from(enterprises)
@@ -69,7 +70,9 @@ export async function GET(req: NextRequest) {
             organizationName: coach.organizationName,
             country: coach.country,
             logo:coach.logo,
-            slug:coach.slug
+            slug:coach.slug,
+            club_id:coach.club_id
+           
         }));
       // Return the coach list as a JSON response
       return NextResponse.json(formattedCoachList);

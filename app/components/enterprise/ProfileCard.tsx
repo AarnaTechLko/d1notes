@@ -1,22 +1,52 @@
 import React from 'react';
 import Image from 'next/image';
 import { FaUser } from 'react-icons/fa';
+import { getSession } from 'next-auth/react';
+import { showError } from '../Toastr';
+import Swal from 'sweetalert2';
 
 interface ProfileCardProps {
   slug: string;
+  id: string;
   logo: string;
   organization: string;
   country: string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country }) => {
-  const handleRedirect = (slug: string) => {
-    window.location.href = `/enterprise/${slug}`;
+const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country,id }) => {
+  
+  const handleRedirect =async (slug: string, id:string) => {
+    const session = await getSession();
+    if(session)
+    {
+      if(session.user.club_id==id)
+      {
+        window.location.href = `/enterprise/${slug}`;
+      }
+      else{
+        Swal.fire({
+          title: 'Unauthorized!',
+          text: 'Only Associated  Members and Administrators of this Organization / Team may view.',
+          icon: 'error', // 'success' displays a green checkmark icon
+          confirmButtonText: 'OK',
+        });
+        
+      }
+    }
+    else{
+      Swal.fire({
+        title: 'Unauthorized!',
+        text: 'Only logged in Members and Administrators of this Organization / Team may view.',
+        icon: 'error', // 'success' displays a green checkmark icon
+        confirmButtonText: 'OK',
+      });
+    
+    }
   };
 
   return (
     <div
-      onClick={() => handleRedirect(slug)}
+      onClick={() => handleRedirect(slug,id)}
       className="flex-none w-64 h-150 bg-white rounded-lg shadow-md mt-5 overflow-hidden snap-center cursor-pointer"
       key={slug}
     >
@@ -36,7 +66,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
         {/* Bio Icon Section */}
         <div className="mt-2 flex justify-center">
           <button
-            onClick={() => handleRedirect(slug)} // Function to redirect to the bio
+           onClick={(e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            handleRedirect(slug, id);
+          }}
             className="flex items-center space-x-2 text-gray-500 mb-5"
           >
             <FaUser />
