@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FaEye } from 'react-icons/fa';
+import { getRemainingTime } from '@/lib/clientHelpers';
 
 interface Item {
     id: number;
@@ -13,6 +14,7 @@ interface Item {
     video_description: string;
     status: number;
     created_at: string;
+    turnaroundTime: string;
 }
 
 interface EvaluationDataTableProps {
@@ -81,6 +83,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                 <thead>
                     <tr>
                         <th onClick={() => handleSort('created_at')}>Date</th>
+                        <th>Time Remaining</th>
                         <th onClick={() => handleSort('firstName')}>Coach Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
                         <th onClick={() => handleSort('primary_video_link')}>Video Link</th>
@@ -97,6 +100,21 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                         data.map(item => (
                             <tr key={item.id}>
                                 <td>{formatDate(item.created_at)}</td>
+                                <td>
+  <button
+    style={{
+      backgroundColor: getRemainingTime(item.created_at, Number(item.turnaroundTime)) >= 0 ? 'green' : 'red',
+      color: 'white',
+      padding: '5px 3px',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '12px',
+    }}
+  >
+    {getRemainingTime(item.created_at, Number(item.turnaroundTime)).toFixed(2)} Hours
+  </button>
+</td>
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 <td>

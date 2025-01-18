@@ -104,6 +104,7 @@ export async function GET(request: NextRequest) {
         video_link_two: playerEvaluation.video_link_two,
         video_link_three: playerEvaluation.video_link_three,
         video_description: playerEvaluation.video_description,
+        turnaroundTime: playerEvaluation.turnaroundTime,
         status: playerEvaluation.status,
         payment_status: playerEvaluation.payment_status,
         created_at: playerEvaluation.created_at,

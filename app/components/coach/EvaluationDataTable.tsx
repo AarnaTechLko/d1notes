@@ -4,6 +4,7 @@ import { FaEye } from 'react-icons/fa';
 import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import EvaluationForm from './EvaluationForm';
 import AcceptanceModal from './AcceptanceModal';
+import { getRemainingTime } from '@/lib/clientHelpers';
 interface Item {
     id: number;
     firstName: string;
@@ -14,6 +15,7 @@ interface Item {
     video_link_two: string;
     video_link_three: string;
     video_description: string;
+    turnaroundTime: string;
     status: number;
     created_at: string;
 }
@@ -168,6 +170,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                 <thead>
                     <tr>
                         <th onClick={() => handleSort('created_at')}>Date</th>
+                        <th>Time Remaining</th>
                         <th onClick={() => handleSort('firstName')}>Player Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
                         <th onClick={() => handleSort('primary_video_link')}>Video Links</th>
@@ -187,6 +190,21 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                             <tr key={item.id}>
 
                                 <td>{formatDate(item.created_at)}</td>
+                                <td>
+  <button
+    style={{
+      backgroundColor: getRemainingTime(item.created_at, Number(item.turnaroundTime)) >= 0 ? 'green' : 'red',
+      color: 'white',
+      padding: '5px 3px',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '12px',
+    }}
+  >
+    {getRemainingTime(item.created_at, Number(item.turnaroundTime)).toFixed(2)} Hours
+  </button>
+</td>
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 <td>

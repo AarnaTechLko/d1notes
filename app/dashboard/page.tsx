@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
         
       },
       {
-        Header: 'TAT',
+        Header: 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
           const createdAt = row?.original?.createdAt;

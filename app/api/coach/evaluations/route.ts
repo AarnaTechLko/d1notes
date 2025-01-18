@@ -122,6 +122,7 @@ export async function GET(req: NextRequest) {
         rejectremarks: playerEvaluation.rejectremarks,
         player_id: playerEvaluation.player_id,
         video_description: playerEvaluation.video_description,
+        turnaroundTime: playerEvaluation.turnaroundTime,
         id: playerEvaluation.id,
       })
       .from(playerEvaluation)

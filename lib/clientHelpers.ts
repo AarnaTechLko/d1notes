@@ -82,5 +82,17 @@ export const getInitialsAfterComma = (positions: string | null | undefined): str
       throw new Error('Failed to fetch currency rate');
     }
   }
-  //https://api.currencyfreaks.com/v2.0/rates/latest?apikey=4338ccbbf22a418187de53f2fc38fb48&symbols=EUR,USD
+ 
+  
+  export function getRemainingTime(createdAt: string, turnaroundTime: number): number {
+    const createdDate = new Date(createdAt); // Convert created_at to a Date object
+    const currentDate = new Date(); // Get current date and time
+    const turnaroundTimeInMilliseconds = turnaroundTime * 60 * 60 * 1000; // Assuming turnaroundTime is in hours
+  
+    const endTime = createdDate.getTime() + turnaroundTimeInMilliseconds; // Calculate end time
+    const remainingTimeInMilliseconds = endTime - currentDate.getTime(); // Calculate remaining time
+  
+    const remainingHours = remainingTimeInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+    return Number(remainingHours.toFixed(2)); // Return remaining time in hours (can be negative)
+  }
   
