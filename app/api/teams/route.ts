@@ -67,7 +67,7 @@ export async function PUT(req: NextRequest) {
     try {
       const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone ,status} = await req.json();
   
-   
+      
   
       if (!id || !team_name  || !created_by || !creator_id) {
         return NextResponse.json({ error: "All fields are required" }, { status: 400 });

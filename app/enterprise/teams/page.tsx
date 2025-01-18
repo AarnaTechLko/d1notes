@@ -281,9 +281,9 @@ export default function TeamsPage() {
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">
-                            <button className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" onClick={() => handleEdit(team)}>
+                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
                               <FaEdit />
-                            </button>
+                            </a>
                             <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)}>
                               <FaTrash />
                             </button>
