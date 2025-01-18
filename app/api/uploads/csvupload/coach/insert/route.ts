@@ -107,7 +107,7 @@ import { sendEmail } from '@/lib/helpers';
                 const updateLicense = await db.update(licenses).set({
                     status: 'Consumed',
                     used_by: player.id.toString(),
-                    used_for: 'Player',
+                    used_for: 'Coach',
                 }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
 
                 if (updateLicense.rowCount > 0) {

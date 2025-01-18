@@ -25,7 +25,7 @@ interface FormValues {
     gender: string;
     location: string;
     sport: string;
-    clubName: string;
+    clubName?: string;
     qualifications: string;
     expectedCharge: string;
     password: string;
@@ -70,7 +70,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
         gender: '',
         location: '',
         sport: '',
-        clubName: '',
+        
         qualifications: '',
         expectedCharge: '',
         password: '',
@@ -92,7 +92,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
             gender: '',
             location: '',
             sport: '',
-            clubName: '',
+           
             qualifications: '',
             expectedCharge: '',
             password: '',
@@ -114,7 +114,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
         gender: undefined,
         location: undefined,
         sport: undefined,
-        clubName: undefined,
+       
         qualifications: undefined,
         expectedCharge: undefined,
         password: undefined,
@@ -205,7 +205,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
         if (!formValues.gender) errors.gender = 'Gender is required';
 
         if (!formValues.sport) errors.sport = 'Sport is required';
-        if (!formValues.clubName) errors.clubName = 'Club Name is required';
+       
         if (!formValues.qualifications) errors.qualifications = 'Qualifications are required';
         if (!formValues.expectedCharge) {
             errors.expectedCharge = 'Expected Charge is required';

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches, teamCoaches } from '../../../../lib/schema'
 import debug from 'debug';
 import { desc, eq, asc,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -13,6 +13,7 @@ import { SECRET_KEY } from '@/lib/constants';
 
 export async function POST(req: NextRequest) {
     const { slug,loggeInUser } = await req.json();
+   
 let coach;
     try {
         // Using 'like' with lower case for case-insensitive search
@@ -41,11 +42,11 @@ let coach;
             .where(
                 eq(teams.slug, slug)
             )
-            .innerJoin(coaches, eq(teams.coach_id, coaches.id))
+            .leftJoin(coaches, eq(teams.coach_id, coaches.id))
             .limit(1)
             .execute();
 
-
+        
 
         const payload = teamList.map(club => ({
             team_name: club.team_name,
@@ -80,14 +81,33 @@ let coach;
                 weight: users.weight,
                 player_id: teamPlayers.playerId,
                 jersey: users.jersey,
+                id: users.id,
             })
             .from(teamPlayers)
             .innerJoin(users, eq(users.id, teamPlayers.playerId))
             .orderBy(asc(users.jersey))
             .where(eq(teamPlayers.teamId, payload[0].id));
-            if (payload[0].coach_id !== null) {
-          coach=await db.select().from(coaches).where(eq(coaches.id, payload[0].coach_id)).execute();
-            }
+
+
+
+           
+                const coachesData = await db
+                .select({
+                    coachId:coaches.id,
+                    firstName:coaches.firstName,
+                    lastName:coaches.lastName,
+                    image:coaches.image,
+                    slug:coaches.slug,
+                })
+                .from(teamCoaches)
+                .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))
+                .innerJoin(teams, eq(teamCoaches.teamId, teams.id))
+                .where(eq(teamCoaches.teamId,payload[0].id))
+                .execute();
+          
+
+
+
         const requested=await db.select().from(joinRequest).where(
             and(
               eq(joinRequest.player_id,loggeInUser),
@@ -97,10 +117,10 @@ let coach;
             const isRequested = requested.length;
 
 
-        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coach,isRequested:isRequested });
+        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coachesData,isRequested:isRequested });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching teams:', error);
-        return NextResponse.json({ message: 'Failed to fetch Teams' }, { status: 500 });
+        return NextResponse.json({ message:err}, { status: 500 });
     }
 }
