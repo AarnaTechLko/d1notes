@@ -5,6 +5,7 @@ interface StatsData {
   totalPlayers: number;
   activeLicenses: number;
   consumeLicenses: number;
+  totalTeams: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -66,12 +67,13 @@ const Dashboard: React.FC = () => {
   const statsArray = [
     { label: 'Total Coaches', value: stats.totalCoaches, bgColor: 'bg-blue-500', icon: '🧑‍🏫' },
     { label: 'Total Players', value: stats.totalPlayers, bgColor: 'bg-green-500', icon: '⚽' },
+    { label: 'Total Team', value: stats.totalTeams, bgColor: 'bg-pink-500', icon: '⚽' },
     { label: 'Licenses Available', value: stats.activeLicenses, bgColor: 'bg-yellow-500', icon: '🎫' },
     { label: 'Licenses Used', value: stats.consumeLicenses, bgColor: 'bg-red-500', icon: '🔥' },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2 p-2">
       {statsArray.map((stat, index) => (
         <div
           key={index}

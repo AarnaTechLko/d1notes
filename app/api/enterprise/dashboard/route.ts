@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { licenses, coaches, users} from '../../../../lib/schema';
+import { licenses, coaches, users, teams} from '../../../../lib/schema';
  
 
 import { eq, and, gt,desc, count } from 'drizzle-orm';
@@ -43,8 +43,11 @@ export async function POST(req: NextRequest) {
     .where(eq(users.enterprise_id, enterprise_id)); // Ensure the `coaches` table is correct here
   const totalPlayers = totalPlayersResult[0]?.count || 0;
 
+  const totalTeamsResult=await db.select({count:count()}).from(teams).where(and(eq(teams.created_by,'Enterprise'), eq(teams.club_id,enterprise_id)));
+
+  const totalTeams=totalTeamsResult[0]?.count || 0;
   return NextResponse.json(
-    { consumeLicenses, activeLicenses, totalCoaches, totalPlayers },
+    { consumeLicenses, activeLicenses, totalCoaches, totalPlayers, totalTeams },
     { status: 200 }
   );
 }

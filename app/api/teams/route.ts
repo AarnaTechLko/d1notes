@@ -1,22 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { teams,teamPlayers,coaches } from "@/lib/schema";
-import { eq,and,desc } from "drizzle-orm";
+import { teams, teamPlayers, coaches, teamCoaches } from "@/lib/schema";
+import { eq, and, desc,count } from "drizzle-orm";
 import { sendEmail } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/helpers";
 import { hash } from 'bcryptjs';
 
 export async function GET(req: NextRequest) {
-    const url = new URL(req.url);
-    const enterpriseId = url.searchParams.get("enterprise_id");
+  const url = new URL(req.url);
+  const enterpriseId = url.searchParams.get("enterprise_id");
 
-    if (!enterpriseId) {
-      return NextResponse.json(
-        { error: "Enterprise ID is required" },
-        { status: 400 }
-      );
-    }
-  const data = await db.select(
+  if (!enterpriseId) {
+    return NextResponse.json(
+      { error: "Enterprise ID is required" },
+      { status: 400 }
+    );
+  }
+  const query = await db.select(
     {
       id: teams.id,
       team_name: teams.team_name,
@@ -35,23 +35,65 @@ export async function GET(req: NextRequest) {
       firstName: coaches.firstName,
       lastName: coaches.lastName,
       coachSlug: coaches.slug,
-      status:teams.status
+      status: teams.status
     }
   ).from(teams)
-  .leftJoin(coaches, eq(teams.coach_id, coaches.id))
-  .where(eq(teams.club_id,parseInt(enterpriseId))).orderBy(desc(teams.id));
+    .leftJoin(coaches, eq(teams.coach_id, coaches.id))
+    .where(eq(teams.club_id, parseInt(enterpriseId)))
+    .orderBy(desc(teams.id));
+  
+  const data = await Promise.all(
+    query.map(async (team) => {
+      const totalCoachesResult = await db
+        .select({ count: count() })
+        .from(teamCoaches)
+        .where(eq(teamCoaches.teamId, team.id));
+      const totalCoaches = totalCoachesResult[0]?.count || 0;
+  
+      const totalPlayersResult = await db
+        .select({ count: count() })
+        .from(teamPlayers)
+        .where(eq(teamPlayers.teamId, team.id));
+      const totalPlayers = totalPlayersResult[0]?.count || 0;
+  
+      return {
+        id: team.id,
+        team_name: team.team_name,
+        description: team.description,
+        logo: team.logo,
+        created_by: team.created_by,
+        creator_id: team.creator_id,
+        slug: team.slug,
+        team_type: team.team_type,
+        team_year: team.team_year,
+        cover_image: team.cover_image,
+        coach_id: team.coach_id,
+        manager_name: team.manager_name,
+        manager_email: team.manager_email,
+        manager_phone: team.manager_phone,
+        firstName: team.firstName,
+        lastName: team.lastName,
+        coachSlug: team.coachSlug,
+        status: team.status,
+        totalPlayers: totalPlayers,
+        totalCoaches: totalCoaches,
+      };
+    })
+  );
+  
 
-  const teamplayersList=await db.select().from(teamPlayers).where(eq(teamPlayers.enterprise_id,parseInt(enterpriseId)));
-  return NextResponse.json({data,teamplayersList});
+
+  const teamplayersList = await db.select().from(teamPlayers).where(eq(teamPlayers.enterprise_id, parseInt(enterpriseId)));
+  return NextResponse.json({ data, teamplayersList });
 }
 
 export async function POST(req: NextRequest) {
-  const {team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone,club_id,status } = await req.json();
-  const timestamp = Date.now(); 
-  const rpassword=generateRandomPassword(12);
+  const { team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, club_id, status } = await req.json();
+  const timestamp = Date.now();
+  const rpassword = generateRandomPassword(12);
   const password = await hash(rpassword, 10);
   const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id,slug,team_type,team_year,cover_image,coach_id,manager_name, manager_email,manager_phone,password,club_id,status }).returning();
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id, slug, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, password, club_id, status }).returning();
   if (manager_name && manager_email && manager_phone) {
     const emailResult = await sendEmail({
       to: manager_email,
@@ -64,35 +106,35 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    try {
-      const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email,manager_phone ,status} = await req.json();
-  
-      
-  
-      if (!id || !team_name  || !created_by || !creator_id) {
-        return NextResponse.json({ error: "All fields are required" }, { status: 400 });
-      }
-     
-      const result = await db
-        .update(teams)
-        .set({ team_name, description, logo, created_by, creator_id,team_type,team_year,cover_image,coach_id ,status})
-        .where(eq(teams.id, id))
-        .returning();
-  
-    
-      if (result.length === 0) {
-        return NextResponse.json({ error: "Team not found or no changes made" }, { status: 404 });
-      }
-  
-     
+  try {
+    const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, status } = await req.json();
 
-      return NextResponse.json(result);
-    } catch (error) {
-      console.error("Error in PUT handler:", error);
-      return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+
+
+    if (!id || !team_name || !created_by || !creator_id) {
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
+
+    const result = await db
+      .update(teams)
+      .set({ team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, status })
+      .where(eq(teams.id, id))
+      .returning();
+
+
+    if (result.length === 0) {
+      return NextResponse.json({ error: "Team not found or no changes made" }, { status: 404 });
+    }
+
+
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Error in PUT handler:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-  
+}
+
 
 export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
