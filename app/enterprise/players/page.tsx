@@ -23,6 +23,7 @@ interface Coach {
   position: string;
   team: string;
   slug: string;
+  totalEvaluations: string;
 }
 
 const Home: React.FC = () => {
@@ -239,6 +240,7 @@ const handleResetPassword=(coach: Coach)=>{
                   <th>Sport</th>
                   <th>Team</th>
                   <th>Position</th>
+                  <th>Evaluations</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -275,6 +277,16 @@ const handleResetPassword=(coach: Coach)=>{
                       <td>{coach.sport}</td>
                       <td>{coach.team}</td>
                       <td>{coach.position}</td>
+                      <td>
+                      <a
+                  href={`/player/history/${coach.slug}`}
+                  title='History'
+                  className='underline text-blue-500'
+                  target="_blank"
+                >
+                        {coach.totalEvaluations}
+                        </a>
+                        </td>
                       <td>{coach.status === 'Inactive' ? (
     <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
       {coach.status}

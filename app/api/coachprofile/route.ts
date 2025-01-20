@@ -50,6 +50,7 @@ import { SECRET_KEY } from '@/lib/constants';
  
         const evaluationlist = await db
         .select({
+          id: playerEvaluation.id,
           review_title: playerEvaluation.review_title,
           rating: playerEvaluation.rating,
           first_name: users.first_name, // Assuming the users table has a `name` field
@@ -58,7 +59,11 @@ import { SECRET_KEY } from '@/lib/constants';
         })
         .from(playerEvaluation)
         .innerJoin(users, eq(playerEvaluation.player_id, users.id)) // Join condition
-        .where(eq(playerEvaluation.coach_id, coachlist[0].id))
+        .where(
+          and(
+            eq(playerEvaluation.coach_id, coachlist[0].id),
+            eq(playerEvaluation.status, 2))
+          )
         .execute();
         
        const requested=await db.select().from(joinRequest).where(

@@ -100,7 +100,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     const payload = { slug: slug , loggeInUser:session?.user.id};
     const fetchCoachData = async () => {
       try {
-        const response = await fetch(`/api/coachprofile/`, {
+        const response = await fetch(`/api/playerhistory/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -131,20 +131,12 @@ setEvaluationList(responseData.evaluationlist);
     return <Loading />;
   }
   if (error) return <div>{error}</div>;
-  if (!coachData) return <div>Coach not found</div>;
+  
 
-  const joiningDate = new Date(coachData.createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < coachData.rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
-  ));
   return (
     <>
      <head>
-    <title>Coach Roster - D1 NOTES</title>
+    <title>History - D1 NOTES</title>
     <meta name="description" content="This is the home page of my Next.js application." />
   </head>
       <div className="container mx-auto px-4 py-8 animate-fadeIn z-0" >
@@ -199,14 +191,9 @@ Evaluation History
             <p className="text-gray-600">Rating:
             {stars}    
                {evaluation.rating || 0} / 5</p>
-               <div>
-            <p className="text-gray-600">Rating:
-            {stars}    
-               {evaluation.rating || 0} / 5</p>
 <div className=' mt-5'>
                <a href={`/evaluationdetails?evaluationId=${evaluation.id}`} className='underline' target='_blank'>View Evaluation</a>
                </div>
-          </div>
           </div>
         </li>
       );

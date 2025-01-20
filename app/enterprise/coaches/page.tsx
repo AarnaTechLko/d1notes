@@ -312,7 +312,7 @@ const Home: React.FC = () => {
         <th>Sport</th>
         <th>Available License</th>
         <th>Used License</th>
-        <th>History</th>
+        <th>Evaluations Completed</th>
         <th>Status</th>
         <th style={{width:225}}>Action</th>
       </tr>
@@ -335,10 +335,10 @@ const Home: React.FC = () => {
             <td align='center'><a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
-                  
+                  className='underline text-blue-500'
                   target="_blank"
                 >
-                  <FaEye/>
+                  {coach.totalEvaluations}
                 </a></td>
             <td>
               {coach.status === 'Inactive' ? (
