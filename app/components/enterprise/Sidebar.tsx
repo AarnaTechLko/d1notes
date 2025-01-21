@@ -224,15 +224,7 @@ const Sidebar: React.FC = () => {
             </li>
     )}
 
-
-
-
-            <li className="hover:bg-gray-700 rounded transition duration-200">
-              <a href="/enterprise/settings/" className="flex items-center space-x-2 p-2">
-                <FaCog className="text-xl" />
-                <span>Settings</span>
-              </a>
-            </li>
+ 
           </ul>
         </nav>
       </aside>

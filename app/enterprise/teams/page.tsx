@@ -263,7 +263,11 @@ export default function TeamsPage() {
                       <tr key={team.id} className="border-b">
                         <td className="px-4 py-2">
                           <div className="text-center items-center">
-                            <img src={team.logo} className="w-12 h-12 mx-auto rounded-full" alt={`${team.team_name} logo`} />
+                          <img 
+  src={team.logo ? team.logo : '/team.jpg'} 
+  className="w-12 h-12 mx-auto rounded-full" 
+  alt={`${team.team_name} logo`} 
+/>
                             <div className="mb-1">{team.team_name}</div>
 
                           </div>

@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
                     const user = await db.insert(users).values({
                         email: userEmail,
                         password: hashedPassword,
-                        status: 'Active',
+                        status: 'Inactive',
                         enterprise_id: enterprise_id
                     }).returning({ userId: users.id });
 
@@ -125,13 +125,53 @@ export async function POST(req: NextRequest) {
                 const teamId = teamInserted[i].teamId; // Get the inserted teamId
 
                 // Insert players into teamPlayers (one player can belong to multiple teams)
-                await db.insert(teamPlayers).values(
+                const insertedPlayers = await db.insert(teamPlayers).values(
                     teamData.playersToInsert.map((player) => ({
                         enterprise_id: Number(enterprise_id),
                         teamId: Number(teamId),
                         playerId: Number(player.userId),
                     }))
-                );
+                ).returning({playerId:teamPlayers.playerId}); // Adjust based on your database and library support
+                
+                // Process the result if needed
+                for (const insertedPlayer of insertedPlayers) {
+                    const player_id = insertedPlayer.playerId;
+                  
+                    // Find one free license for the given enterprise
+                    const licenseToUse = await db.select()
+                      .from(licenses)
+                      .where(
+                        and(
+                          eq(licenses.enterprise_id, Number(enterprise_id)),
+                          eq(licenses.status, 'Free')
+                        )
+                      )
+                      .limit(1);  // Fetch only one license
+                  
+                    if (licenseToUse.length > 0) {
+                      const updateLicenses = await db.update(licenses)
+                        .set({
+                          status: 'Consumed',
+                          used_by: player_id.toString(),
+                          used_for: 'Player',
+                        })
+                        .where(eq(licenses.id, licenseToUse[0].id));  // Update specific license
+                  
+                      if (updateLicenses) {
+                        await db.update(users)
+                          .set({
+                            status: 'Active'
+                          })
+                          .where(eq(users.id, player_id));
+                      }
+                    }
+                  }
+                  
+
+
+
+                
+
             }
         }
 
