@@ -264,7 +264,7 @@ export default function TeamsPage() {
                         <td className="px-4 py-2">
                           <div className="text-center items-center">
                           <img 
-  src={team.logo ? team.logo : '/team.jpg'} 
+  src={team.logo ? team.logo : '/Team.jpg'} 
   className="w-12 h-12 mx-auto rounded-full" 
   alt={`${team.team_name} logo`} 
 />
