@@ -213,12 +213,12 @@ const handleResetPassword=(coach: Coach)=>{
     onChange={handleSearchChange}
   />
   <div className="flex space-x-4">
-    <button
+    {/* <button
       onClick={handleAddCoachClick}
       className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
       Add Player
-    </button>
+    </button> */}
     <a
      href={`/enterprise/massupload`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"

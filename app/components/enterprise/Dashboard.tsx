@@ -67,7 +67,21 @@ const Dashboard: React.FC = () => {
   const statsArray = [
     { label: 'Total Coaches', value: stats.totalCoaches, bgColor: 'bg-blue-500', icon: '🧑‍🏫' },
     { label: 'Total Players', value: stats.totalPlayers, bgColor: 'bg-green-500', icon: '⚽' },
-    { label: 'Total Team', value: stats.totalTeams, bgColor: 'bg-pink-500', icon: '⚽' },
+    { 
+      label: 'Total Team', 
+      value: stats.totalTeams, 
+      bgColor: 'bg-pink-500', 
+      icon: (
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-12 w-12 text-white" 
+          fill="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path d="M16 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm-8 0c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-2.21 0-4 1.343-4 3v2h8v-2c0-1.657-1.79-3-4-3zm8 0c-2.21 0-4 1.343-4 3v2h8v-2c0-1.657-1.79-3-4-3z" />
+        </svg>
+      ),
+    },
     { label: 'Licenses Available', value: stats.activeLicenses, bgColor: 'bg-yellow-500', icon: '🎫' },
     { label: 'Licenses Used', value: stats.consumeLicenses, bgColor: 'bg-red-500', icon: '🔥' },
   ];
