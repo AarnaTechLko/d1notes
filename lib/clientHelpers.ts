@@ -95,4 +95,15 @@ export const getInitialsAfterComma = (positions: string | null | undefined): str
     const remainingHours = remainingTimeInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
     return Number(remainingHours.toFixed(2)); // Return remaining time in hours (can be negative)
   }
+
+  export const formatCurrency = (amount: number | string): string => {
+    // Convert to string if the input is a number
+    const numString = amount.toString();
+  
+    // Regular expression for Indian numbering system
+    const regex = /(\d)(?=(\d\d)+\d$)/g;
+  
+    // Replace matches with formatted commas
+    return numString.replace(/\B(?=(\d{3})+(?!\d))/g, ',').replace(regex, "$1,");
+  };
   

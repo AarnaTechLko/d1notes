@@ -14,7 +14,16 @@ import Email from 'next-auth/providers/email';
 // Zod schema for validation - Removed .optional() to make 'otp' a required string
 const formSchema = z.object({
   email: z.string().email('Invalid email format.'),
-  password: z.string().min(6, 'Password must be at least 6 characters long.'),
+  password: z
+  .string()
+  .refine(
+    (value) =>
+      /^(?=(.*\d){6})(?=(.*[a-zA-Z]){2})(?=(.*[!@#$%^&*()_\-+=|:;<>,.?]){2}).{10,}$/.test(value),
+    {
+      message:
+        "Password must contain at least 6 numbers, 2 letters, 2 special characters, and be at least 10 characters long.",
+    }
+  ),
   ///otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required to be 6 characters
   loginAs: z.literal('player'),
   referenceId: z.string().optional(),
@@ -218,7 +227,7 @@ export default function Register() {
 
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
-                Password<span className='mandatory'>*</span>
+                Create Password<span className='mandatory'>*</span>
               </label>
               <input
                 type="password"

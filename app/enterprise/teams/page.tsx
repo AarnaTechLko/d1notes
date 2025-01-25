@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 
 import Link from "next/link";
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
+import { FaArchive, FaClipboard, FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 type Team = {
   id?: number;
@@ -127,10 +127,10 @@ export default function TeamsPage() {
   const handleDelete = async (id?: number) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This action cannot be undone!',
+      text: 'This will archive this team!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Yes, Archive it!',
       cancelButtonText: 'Cancel',
     });
     try {
@@ -213,7 +213,7 @@ export default function TeamsPage() {
       className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       onClick={() => setModalOpen(true)}
     >
-     Manually Add Teams
+     Manually Add Team
     </button>
     
     {/* Right Column: Mass Upload Button */}
@@ -221,7 +221,7 @@ export default function TeamsPage() {
       className="bg-green-500 text-white px-4 ml-5 py-2 rounded hover:bg-green-600"
        
     >
-      Mass Upload
+      Mass Team Upload
     </a>
   </div>
 
@@ -240,9 +240,10 @@ export default function TeamsPage() {
                     <th onClick={() => handleSort('team_type')} className="text-left px-4 py-2 cursor-pointer">
                       Gender{renderArrow('team_type')}
                     </th>
-                    <th className="text-left px-4 py-2">Players</th>
                     <th className="text-left px-4 py-2">Coaches</th>
-                    <th className="text-left px-4 py-2">Roster</th>
+                    <th className="text-left px-4 py-2">Players</th>
+                   
+                   
                     <th className="text-left px-4 py-2">Status</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
@@ -276,36 +277,38 @@ export default function TeamsPage() {
                         <td className="px-4 py-2">{team.team_year}</td>
                         <td className="px-4 py-2">{team.team_type}</td>
                         <td className="px-4 py-2">
-                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Players
-                          </Link>
-                          <p  className="mt-2"> Total Players : {team.totalPlayers}</p>
-                        </td>
-                        <td className="px-4 py-2">
-                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Coaches
+                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Coache(s) to Team
                           </Link>
                           <p className="mt-2"> Total Coaches : {team.totalCoaches}</p>
                         </td>
                         <td className="px-4 py-2">
-                          <a href={`/teams/${team.slug}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank">
-                            Players
-                          </a>
+                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Player(s) to Team
+                          </Link>
+                          <p  className="mt-2"> Total Players : {team.totalPlayers}</p>
                         </td>
+                       
+                        
                         <td>
                           <button
-                            className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} text-white`}
+                            className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-blue-500' : 'bg-red-500'} text-white`}
                           >
                             {team.status}
                           </button>
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">
+                           
+                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
+                            <FaClipboard/>
+                            </a>
                             <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
                               <FaEdit />
                             </a>
-                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)}>
-                              <FaTrash />
+                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
+                             
+                              <FaArchive/>
                             </button>
                           </div>
                         </td>

@@ -12,6 +12,7 @@ import { upload } from '@vercel/blob/client';
 import FileUploader from '@/app/components/FileUploader';
 import { countryCodesList, states, currencies } from '@/lib/constants';
 import { useRouter } from "next/navigation";
+import { showError } from '@/app/components/Toastr';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -72,7 +73,7 @@ export default function Register() {
     state: '',
     city: '',
     currency: '',
-    countrycode: '',
+    countrycode: '+1',
     image: null,
     certificate: null
   });
@@ -176,8 +177,21 @@ export default function Register() {
 
     if (!formValues.city) errors.city = 'City is required';
 
-    setFormErrors(errors); // Set errors once validation is done
-    return Object.keys(errors).every(key => errors[key as keyof FormErrors] === undefined || errors[key as keyof FormErrors] === null);
+    ///setFormErrors(errors); // Set errors once validation is done
+
+    // Collect errors to display in SweetAlert
+    Object.entries(errors) .reverse()
+    .filter(([_, value]) => value !== undefined && value !== null)
+    .forEach(([field, message]) => {
+      showError(message); // Display each error in a separate toastr
+    });
+  
+  // Return false if there are any errors
+  if (Object.values(errors).some(value => value !== undefined && value !== null)) {
+    return false; // Validation failed
+  }
+  
+    return true;
   };
 
 

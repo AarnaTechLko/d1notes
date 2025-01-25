@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 import { licensePackages } from "@/lib/constants";
+import { formatCurrency } from "@/lib/clientHelpers";
 interface License {
   id: number;
   minimum_license: number;
@@ -85,14 +86,14 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-6 text-blue-800">Purchase Licenses</h1>
+      <h1 className="text-2xl font-bold mb-6 text-blue-800">Player Evaluation Pricing Options</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-300 shadow-sm">
           <thead>
             <tr className="bg-gradient-to-r from-blue-500 to-purple-500 text-black">
               <th className="border border-gray-300 px-4 py-2 text-left">Number of Licenses</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Amount per License</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Purchase</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Rate per Evaluation</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Buy</th>
             </tr>
           </thead>
           <tbody>
@@ -109,7 +110,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
                     className="bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold py-2 px-4 rounded shadow-md hover:from-green-500 hover:to-green-700"
                     onClick={() => handlePurchase(license)}
                   >
-                    Purchase
+                    Buy Now
                   </button>
                 </td>
               </tr>
@@ -121,20 +122,20 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
       {showModal && selectedLicense && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
-            <h2 className="text-xl font-bold text-blue-700 mb-4">Purchase License</h2>
+            <h2 className="text-xl font-bold text-blue-700 mb-4">Purchase Evaluations</h2>
             <label className="block mb-4">
-              <span className="text-gray-700">Number of Licenses:</span>
-              <p className="text-xs">(You can edit as per your wish.)</p>
+              <span className="text-gray-700">Number of Evaluations:</span>
+              </label>
               <input
                 type="number"
-                className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={licenseCount}
                 min={1}
                 onChange={(e) => handleLicenseCountChange(Number(e.target.value))}
               />
-            </label>
+            
             <div className="text-lg mb-4">
-              Total Cost: <span className="font-bold text-blue-600">${totalAmount}</span>
+              Total Cost: <span className="font-bold text-blue-600">${formatCurrency(totalAmount)}</span>
             </div>
             <div className="flex justify-end gap-4">
               <button

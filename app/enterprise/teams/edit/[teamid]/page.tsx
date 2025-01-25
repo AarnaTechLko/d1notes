@@ -34,6 +34,7 @@ type Team = {
     slug?: string;
     cover_image?: string;
     firstName?: string;
+    leage?: string;
     lastName?: string;
     coachSlug?: string;
     playerIds?: number[];
@@ -56,6 +57,7 @@ type FormValues = {
     manager_phone?: string;
     club_id?: string;
     status?: string;
+    leage?: string;
 };
 type Player = {
     id: number;
@@ -196,10 +198,10 @@ const EditTeam = ({ params }: TeamProps) => {
             return;
         }
 
-        if (!formValues.cover_image) {
-            showError("Cover Image is required.");
-            return;
-        }
+        // if (!formValues.cover_image) {
+        //     showError("Cover Image is required.");
+        //     return;
+        // }
 
         if (session?.user.club_id) {
             formValues.club_id = session.user.club_id;
@@ -251,55 +253,80 @@ const EditTeam = ({ params }: TeamProps) => {
         }
     }, [teamId]);
 
-    
 
 
-const handleDelete = async (teamId: any, id: any, type: any) => {
-  // Show SweetAlert confirmation dialog
-  const result = await Swal.fire({
-    title: 'Are you sure?',
-    text: `This will remove this ${type} from this team!`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'No, keep it',
-  });
 
-  // If the user confirms, proceed with the deletion
-  if (result.isConfirmed) {
-    try {
-      const res = await fetch(`/api/teams/removal`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, type, teamid: teamId }), // Pass the necessary parameters
-      });
+    const handleDelete = async (teamId: any, id: any, type: any) => {
+        // Show SweetAlert confirmation dialog
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: `This will remove this ${type} from this team!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+        });
 
-      if (res.ok) {
-        showSuccess('Coach deleted successfully!');
-        fetchTeam(teamId);
-      } else {
-        const data = await res.json();
-        showError(data.message || 'Failed to delete coach');
-      }
-    } catch (error) {
-      showError('An error occurred while deleting the coach');
-    } finally {
-      //setLoading(false);
-    }
-  }
-};
+        // If the user confirms, proceed with the deletion
+        if (result.isConfirmed) {
+            try {
+                const res = await fetch(`/api/teams/removal`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id, type, teamid: teamId }), // Pass the necessary parameters
+                });
+
+                if (res.ok) {
+                    showSuccess('Coach deleted successfully!');
+                    fetchTeam(teamId);
+                } else {
+                    const data = await res.json();
+                    showError(data.message || 'Failed to delete coach');
+                }
+            } catch (error) {
+                showError('An error occurred while deleting the coach');
+            } finally {
+                //setLoading(false);
+            }
+        }
+    };
 
     return (
         <div className="flex h-screen">
             <Sidebar />
             <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
                 <div className="bg-white shadow-md rounded-lg p-6">
-                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* First Column: Team Details */}
                         <div className="space-y-4 shadow p-8">
                             <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
+                            <div onClick={handleImageClick} className="cursor-pointer relative">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Team Logo<span className="mandatory">*</span>
+                                </label>
+                                <div className="relative">
+                                    <Image
+                                        src={formValues.logo || DefaultPic}
+                                        alt="Team Logo"
+                                        width={100}
+                                        height={100}
+                                        className="rounded-full mx-auto"
+                                    />
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold h-10 w-[95px] mx-auto text-xs rounded top-8">
+                                        Click to Upload
+                                    </div>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileInputRef}
+                                    onChange={handleImageChange}
+                                    className="hidden"
+                                />
+                                {photoUploading && <FileUploader />}
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
                                     Name<span className="mandatory">*</span>
@@ -329,7 +356,7 @@ const handleDelete = async (teamId: any, id: any, type: any) => {
         </div> */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
-                                    Year<span className="mandatory">*</span>
+                                    Age<span className="mandatory">*</span>
                                 </label>
                                 <select
                                     value={formValues.team_year}
@@ -356,6 +383,7 @@ const handleDelete = async (teamId: any, id: any, type: any) => {
                                     <option value="">Select</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
 
                                 </select>
 
@@ -379,93 +407,37 @@ const handleDelete = async (teamId: any, id: any, type: any) => {
 
                             </div>
 
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Leage<span className="mandatory">*</span>
+                                </label>
+                                <input
+                                    placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."
+                                    type="text"
+                                    value={formValues.leage}
+                                    onChange={handleChange}
+                                    name="leage"
+                                    className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="flex justify-center space-x-4 mt-4">
+                                <button
+                                    type="button"
+
+                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Update
+                                </button>
+                            </div>
                         </div>
 
-
-                        {/* Third Column: Image Upload */}
                         <div className="space-y-4 shadow p-8">
-                            <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Images</h3>
-
-                            {/* Logo Image */}
-                            <div onClick={handleImageClick} className="cursor-pointer relative">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Upload Logo<span className="mandatory">*</span>
-                                </label>
-                                <div className="relative">
-                                    <Image
-                                        src={formValues.logo || DefaultPic}
-                                        alt="Team Logo"
-                                        width={100}
-                                        height={100}
-                                        className="rounded-full mx-auto"
-                                    />
-                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold h-10 w-[95px] mx-auto text-xs rounded top-8">
-                                        Click to Upload
-                                    </div>
-                                </div>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    ref={fileInputRef}
-                                    onChange={handleImageChange}
-                                    className="hidden"
-                                />
-                                {photoUploading && <FileUploader />}
-                            </div>
-
-                            {/* Cover Image */}
-                            <div onClick={handleCoverImageClick} className="cursor-pointer relative">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Upload Cover Image<span className="mandatory">*</span>
-                                </label>
-                                <div className="relative">
-                                    <Image
-                                        src={formValues.cover_image || CoverImage}
-                                        alt="Cover Image"
-                                        width={300}
-                                        height={150}
-                                        className="rounded-lg mx-auto"
-                                    />
-                                    <div className="text-xs absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold">
-                                        Click to Upload
-                                    </div>
-                                </div>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    ref={coverImageInputRef}
-                                    onChange={handleCoverImageChange}
-                                    className="hidden"
-                                />
-                                {photoUploading && <FileUploader />}
-                            </div>
-                        </div>
-
-                        {/* Submit Buttons */}
-                        <div className="flex justify-center space-x-4 mt-4">
-                            <button
-                                type="button"
-
-                                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                            >
-                                Update
-                            </button>
-                        </div>
-
-
-
-                    </form>
-                </div>
-
-                <div className="bg-white shadow-md rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Coaches Section */}
-                    <div className="space-y-4 shadow p-8">
                         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Coaches</h3>
                         <div className="overflow-x-auto">
                             <table className="w-full table-auto">
@@ -512,7 +484,6 @@ const handleDelete = async (teamId: any, id: any, type: any) => {
                         </div>
                     </div>
 
-                    {/* Players Section */}
                     <div className="space-y-4 shadow p-8">
                         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Players</h3>
                         <div className="overflow-x-auto">
@@ -560,8 +531,12 @@ const handleDelete = async (teamId: any, id: any, type: any) => {
                             </table>
                         </div>
                     </div>
+
+
+                    </form>
                 </div>
 
+               
 
             </main>
         </div>

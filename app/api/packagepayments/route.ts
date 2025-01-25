@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Package Purchase`,
+              name: `Package Price to be Charged`,
             },
             unit_amount: amount * 100, // Amount in cents
           },

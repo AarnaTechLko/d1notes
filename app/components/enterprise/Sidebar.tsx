@@ -117,6 +117,18 @@ const Sidebar: React.FC = () => {
                 <span>Dashboard</span>
               </a>
             </li>
+            {
+    (session?.user.added_by === null || (session?.user.added_by && hasPurchaseHistory)) && (
+            <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/enterprise/upgrade" className="flex items-center space-x-2 p-2">
+
+                <FaDollarSign className='text-xl' />
+                <span>Purchase Evaluations</span>
+              </a>
+            </li>
+
+            
+    )}
   
     {
     (session?.user.added_by === null || (session?.user.added_by && hasTeams)) && (
@@ -149,7 +161,7 @@ const Sidebar: React.FC = () => {
             </li>
               )
 }
-{
+{/* {
     (session?.user.added_by === null || (session?.user.added_by && hasOrderHistory)) && (
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/enterprise/orderhistory" className="flex items-center space-x-2 p-2">
@@ -158,7 +170,7 @@ const Sidebar: React.FC = () => {
                 <span>Order History</span>
               </a>
             </li>
-    )}
+    )} */}
     {
     (session?.user.added_by === null || (session?.user.added_by && hasLicenses)) && (
             <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -169,18 +181,7 @@ const Sidebar: React.FC = () => {
               </a>
             </li>
     )}
- {
-    (session?.user.added_by === null || (session?.user.added_by && hasPurchaseHistory)) && (
-            <li className="hover:bg-gray-700 rounded transition duration-200">
-              <a href="/enterprise/upgrade" className="flex items-center space-x-2 p-2">
 
-                <FaDollarSign className='text-xl' />
-                <span>Purchase Licenses</span>
-              </a>
-            </li>
-
-            
-    )}
 
 {/* {
     (session?.user.added_by === null || (session?.user.added_by && hasPurchaseHistory)) && (

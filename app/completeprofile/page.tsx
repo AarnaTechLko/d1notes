@@ -58,7 +58,7 @@ export default function Register() {
     city: "",
     jersey: "",
     league: "",
-    countrycode: "",
+    countrycode: "+1",
     playingcountries: "",
     height: "",
     weight: "",

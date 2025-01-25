@@ -310,6 +310,7 @@ export const teams=pgTable('teams', {
   state: text('state'),
   rating: integer('rating'),
   city: text('city'),
+  leage: text('leage'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

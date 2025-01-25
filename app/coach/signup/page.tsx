@@ -13,7 +13,16 @@ import { useSearchParams } from 'next/navigation';
 // Zod schema for validation
 const formSchema = z.object({
   email: z.string().email('Invalid email format.'),
-  password: z.string().min(6, 'Password must be at least 6 characters long.'),
+  password: z
+  .string()
+  .refine(
+    (value) =>
+      /^(?=(.*\d){6})(?=(.*[a-zA-Z]){2})(?=(.*[!@#$%^&*()_\-+=|:;<>,.?]){2}).{10,}$/.test(value),
+    {
+      message:
+        "Password must contain at least 6 numbers, 2 letters, 2 special characters, and be at least 10 characters long.",
+    }
+  ),
  /// otp: z.string().min(6, 'OTP must be 6 characters.'),
   loginAs: z.literal('coach'), // In case loginAs should always be 'player'
   referenceId: z.string().optional(),
@@ -218,7 +227,7 @@ if (!termsAccepted) {
               </div>
               <div className="mb-4">
                 <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Password<span className='mandatory'>*</span>
+                  Create Password<span className='mandatory'>*</span>
                 </label>
                 <input
                 placeholder='xxxxxxxxx'

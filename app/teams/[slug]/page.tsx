@@ -153,14 +153,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 {coachData.team_name}
               </h1>
               <p className="text-gray-600 text-lg">
-                <b>Team For :</b> {coachData.team_type}
+                <b>Team Gender :</b> {coachData.team_type}
               </p>
               <p className="text-gray-600 text-lg">
                 <b>Year :</b> {coachData.team_year}
               </p>
             </div>
 
-            <div>
+            {/* <div>
             {!session ? (
   <>
     {isRequested > 0 ? (
@@ -199,7 +199,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   </>
 )}
 
-            </div>
+            </div> */}
 
 
 

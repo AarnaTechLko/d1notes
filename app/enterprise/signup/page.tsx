@@ -17,7 +17,7 @@ import FileUploader from '@/app/components/FileUploader';
 const formSchema = z.object({
   organizationName: z.string().min(1, 'Organization Name is required.'),
   ////contactPerson: z.string().min(1, 'Contact Person is required.'),
-  owner_name: z.string().min(1, 'Owner Name is required.'),
+  owner_name: z.string().min(1, 'Administrator Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
   address: z.string().min(1, 'Address is required.'),
@@ -25,7 +25,16 @@ const formSchema = z.object({
   countryCodes: z.string().min(1, 'Country Code is required.'),
   state: z.string().min(1, 'State is required.'),
   city: z.string().min(1, 'City is required.'),
-  password: z.string().min(6, 'Password must be at least 6 characters long.'),
+  password: z
+  .string()
+  .refine(
+    (value) =>
+      /^(?=(.*\d){6})(?=(.*[a-zA-Z]){2})(?=(.*[!@#$%^&*()_\-+=|:;<>,.?]){2}).{10,}$/.test(value),
+    {
+      message:
+        "Password must contain at least 6 numbers, 2 letters, 2 special characters, and be at least 10 characters long.",
+    }
+  ),
   //otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required
   loginAs: z.literal('enterprise'),
   logo:z.string().min(1,'Logo Required'),
@@ -44,7 +53,7 @@ export default function Signup() {
     
     email: '',
     mobileNumber: '',
-    countryCodes: '',
+    countryCodes: '+1',
     address: '',
     country: '',
     state: '',
@@ -254,6 +263,7 @@ export default function Signup() {
                 name="organizationName"
                 value={formValues.organizationName}
                 onChange={handleChange}
+                maxLength={50}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -406,14 +416,14 @@ export default function Signup() {
             {/* Logo Upload */}
             <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
             <label  htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Organization Description<span className='mandatory'>*</span></label>
-            <textarea name="description" className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+            <textarea name="description"   maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
             placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
             value={formValues.description}
             onChange={handleChange}
             ></textarea>
               </div>
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Organization Logo<span className='mandatory'>*</span></label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image
@@ -451,7 +461,7 @@ export default function Signup() {
               </div>
 
             {/* Affiliation Documents */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Affiliation Documents (PDF)</label>
               <input type="file" name="affiliationDocs" accept="application/pdf" onChange={handleFileChange}  ref={pdfInputRef} />
               {pdfUpoading ? (
@@ -463,10 +473,10 @@ export default function Signup() {
                                                 
                                             </>
                                         )}
-            </div>
+            </div> */}
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Create Password<span className='mandatory'>*</span></label>
               <input type="password" name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.password}
                 onChange={handleChange} />
             </div>

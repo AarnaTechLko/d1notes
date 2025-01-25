@@ -349,7 +349,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
               ></path>
             </svg>
           ) : null}
-          {isSubmitting ? "Sending..." : "Send Invite"}
+          {isSubmitting ? "Sending..." : "SEND INVITE"}
         </button>
       </div>
     </form>

@@ -36,6 +36,7 @@ type FormValues = {
   manager_phone?: string;
   club_id?: string;
   status?: string;
+  leage?: string;
 };
 
 export default function TeamModal({
@@ -68,7 +69,8 @@ export default function TeamModal({
     manager_email: "",
     manager_phone: "",
     club_id: "",
-    status: ""
+    leage: "",
+    status: "Active"
   });
   const [photoUploading, setPhotoUploading] = useState(false);
 
@@ -193,6 +195,7 @@ export default function TeamModal({
         cover_image: team.cover_image || "",
         team_type: team.team_type || "",
         team_year: team.team_year || "",
+        leage: team.leage || "",
         coach_id: team.coach_id || 0, 
         status: team.status || "", 
       });
@@ -292,6 +295,11 @@ export default function TeamModal({
         return;
       }
   
+      if (!formValues.leage) {
+        showError("Leage is required.");
+        return;
+      }
+  
     
 
       // if (!formValues.manager_name) {
@@ -314,10 +322,10 @@ export default function TeamModal({
         return;
       }
   
-      if (!formValues.cover_image) {
-        showError("Cover Image is required.");
-        return;
-      }
+      // if (!formValues.cover_image) {
+      //   showError("Cover Image is required.");
+      //   return;
+      // }
 
       if (session?.user.club_id) {
         formValues.club_id = session.user.club_id;
@@ -331,14 +339,42 @@ export default function TeamModal({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
   <div
-    className="bg-white rounded-lg shadow-lg w-full max-w-6xl p-6 overflow-y-auto"
+    className="bg-white rounded-lg shadow-lg w-[500px] max-w-6xl p-6 overflow-y-auto"
     style={{ maxHeight: '90vh' }}
   >
     <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-1 gap-6">
       {/* First Column: Team Details */}
+      
       <div className="space-y-4 shadow p-8">
-        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
+        
+        <div>
+      <div onClick={handleImageClick} className="cursor-pointer relative">
+          <label className="block text-sm font-medium text-gray-700">
+            Team Logo<span className="mandatory">*</span>
+          </label>
+          <div className="relative">
+            <Image
+              src={formValues.logo || DefaultPic}
+              alt="Team Logo"
+              width={100}
+              height={100}
+              className="rounded-full mx-auto"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold h-10 w-[95px] mx-auto text-xs rounded top-8">
+            Click to Upload
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          {photoUploading && <FileUploader />}
+        </div>
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name<span className="mandatory">*</span>
@@ -368,7 +404,7 @@ export default function TeamModal({
         </div> */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Year<span className="mandatory">*</span>
+            Age<span className="mandatory">*</span>
           </label>
           <select
             value={formValues.team_year}
@@ -395,93 +431,26 @@ export default function TeamModal({
             <option value="">Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
+            <option value="Other">Other</option>
            
           </select>
         
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Status<span className="mandatory">*</span>
+            Leage<span className="mandatory">*</span>
           </label>
-          <select
-            value={formValues.status}
+          <input
+          placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."
+            type="text"
+            value={formValues.leage}
             onChange={handleChange}
-            name="status"
+            name="leage"
             className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select</option>
-            <option value="Active">Active</option>
-            <option value="Not Active">Not Active</option>
-           
-          </select>
+          />
+        </div>
         
-        </div>
-     
-      </div>
-
-     
-      {/* Third Column: Image Upload */}
-      <div className="space-y-4 shadow p-8">
-        <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Images</h3>
-
-        {/* Logo Image */}
-        <div onClick={handleImageClick} className="cursor-pointer relative">
-          <label className="block text-sm font-medium text-gray-700">
-            Upload Logo<span className="mandatory">*</span>
-          </label>
-          <div className="relative">
-            <Image
-              src={formValues.logo || DefaultPic}
-              alt="Team Logo"
-              width={100}
-              height={100}
-              className="rounded-full mx-auto"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold h-10 w-[95px] mx-auto text-xs rounded top-8">
-            Click to Upload
-            </div>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-          />
-          {photoUploading && <FileUploader />}
-        </div>
-
-        {/* Cover Image */}
-        <div onClick={handleCoverImageClick} className="cursor-pointer relative">
-          <label className="block text-sm font-medium text-gray-700">
-            Upload Cover Image<span className="mandatory">*</span>
-          </label>
-          <div className="relative">
-            <Image
-              src={formValues.cover_image || CoverImage}
-              alt="Cover Image"
-              width={300}
-              height={150}
-              className="rounded-lg mx-auto"
-            />
-            <div className="text-xs absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold">
-             Click to Upload
-            </div>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            ref={coverImageInputRef}
-            onChange={handleCoverImageChange}
-            className="hidden"
-          />
-          {photoUploading && <FileUploader />}
-        </div>
-      </div>
-
-      {/* Submit Buttons */}
-      <div className="flex justify-center space-x-4 mt-4">
+        <div className="flex justify-center space-x-4 mt-4">
         <button
           type="button"
           onClick={onClose}
@@ -496,6 +465,11 @@ export default function TeamModal({
           {team ? "Update" : "Add"}
         </button>
       </div>
+      </div>
+
+     
+     
+     
     </form>
   </div>
 </div>
