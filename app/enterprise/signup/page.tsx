@@ -310,7 +310,7 @@ export default function Signup() {
                 <div className="flex">
     <select  
       name="countryCodes" 
-      className="border border-gray-300 rounded-lg py-2 px-4 w-1/3 mr-1" // Added mr-4 for margin-right
+      className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
       value={formValues.countryCodes} 
       onChange={handleChange}
     >
@@ -326,7 +326,7 @@ export default function Signup() {
       placeholder="(342) 342-3423"
       type="text"
       name="number"
-      className="border border-gray-300 rounded-lg py-2 px-4 w-2/3"
+      className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
       value={formValues.mobileNumber}
       onChange={handlePhoneNumberChange}
       maxLength={14} 
@@ -477,6 +477,7 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Create Password<span className='mandatory'>*</span></label>
+              <p className="text-gray-400 text-xs">(Must Contain  6 Number, 2 Text, 2 Special characters)</p>
               <input type="password" name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.password}
                 onChange={handleChange} />
             </div>
