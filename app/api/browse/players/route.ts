@@ -18,7 +18,11 @@ export async function GET(req: NextRequest) {
   const position = searchParams.get('position') || '';
 
   try {
-    const conditions = [eq(users.status, 'Active')];
+    const conditions = [and(
+      eq(users.status, 'Active'),
+      not(eq(users.first_name, '')),
+      eq(users.visibility, 'on')
+    )];
 
    /// conditions.push(isNull(users.parent_id));
 
