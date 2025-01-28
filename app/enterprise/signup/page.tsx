@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import DefaultPic from "../../public/default.jpg";
-import { FaCheck, FaSpinner } from 'react-icons/fa';
+import { FaCheck, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 import { countryCodesList } from '@/lib/constants';
 import TermsAndConditions from '@/app/components/TermsAndConditions';
 import FileUploader from '@/app/components/FileUploader';
@@ -26,21 +26,25 @@ const formSchema = z.object({
   state: z.string().min(1, 'State is required.'),
   city: z.string().min(1, 'City is required.'),
   password: z
-  .string()
-  .refine(
-    (value) =>
-      /^(?=(.*\d){6})(?=(.*[a-zA-Z]){2})(?=(.*[!@#$%^&*()_\-+=|:;<>,.?]){2}).{10,}$/.test(value),
-    {
-      message:
-        "Password must contain at least 6 numbers, 2 letters, 2 special characters, and be at least 10 characters long.",
-    }
-  ),
+      .string()
+      .refine(
+        (value) =>
+          /^(?=.*\d)(?=.*[!@#$%^&*()_\-+=|:;<>,.?]).{6,}$/.test(value),
+        {
+          message:
+            "Password must contain at least 6 characters, including at least 1 number and 1 special character.",
+        }
+      ),
+    confirm_password: z.string(),
   //otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required
   loginAs: z.literal('enterprise'),
   logo:z.string().min(1,'Logo Required'),
   affiliationDocs: z.string(), // File instance for PDF docs
   description: z.string().min(1, 'Organization Description is required.'),
-});
+}) .refine((data) => data.password === data.confirm_password, {
+  message: "Confirm Password must match Password.",
+  path: ['confirm_password'], // Point the error at the confirm_password field
+});;
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -59,6 +63,7 @@ export default function Signup() {
     state: '',
     city: '',
     password: '',
+    confirm_password: '',
     //otp: '',
     loginAs: 'enterprise',
     logo: '',
@@ -76,7 +81,7 @@ export default function Signup() {
   const { data: session } = useSession();
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-
+const [showPassword, setShowPassword] = useState(false);
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -323,7 +328,7 @@ export default function Signup() {
     </select>
 
     <input
-      placeholder="(342) 342-3423"
+      placeholder="(XXX) XXX-XXXX"
       type="text"
       name="number"
       className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
@@ -477,9 +482,32 @@ export default function Signup() {
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Create Password<span className='mandatory'>*</span></label>
-              <p className="text-gray-400 text-xs">(Must Contain  6 Number, 2 Text, 2 Special characters)</p>
-              <input type="password" name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.password}
+              <p className="text-gray-400 text-xs">(Must contain at least 6 chars, including at least 1 number and 1 special char)</p>
+              <div className="relative">
+              <input type={showPassword ? "text" : "password"} name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.password}
                 onChange={handleChange} />
+                 <span
+          className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
+            </div>
+            </div>
+
+            <div className="flex-1 md:pt-8 pt-4">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Confirm Password<span className='mandatory'>*</span></label>
+             
+              <div className="relative">
+              <input type={showPassword ? "text" : "password"} name="confirm_password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.confirm_password}
+                onChange={handleChange} />
+                 <span
+          className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
+            </div>
             </div>
             </div>
             {otpSent && (

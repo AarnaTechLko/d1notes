@@ -214,9 +214,9 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit }) => {
         if (!formValues.clubName) errors.clubName = 'Club Name is required';
         if (!formValues.qualifications) errors.qualifications = 'Qualifications are required';
         if (!formValues.expectedCharge) {
-            errors.expectedCharge = 'Expected Charge is required';
+            errors.expectedCharge = 'Expected Rate is required';
         } else if (!/^\d+(\.\d{1,2})?$/.test(formValues.expectedCharge)) {
-            errors.expectedCharge = 'Expected Charge must be a valid number with up to 2 decimal places';
+            errors.expectedCharge = 'Expected Rate must be a valid number with up to 2 decimal places';
         }
 
         if (!formValues.country) errors.country = 'Country  is required';

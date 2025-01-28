@@ -6,29 +6,35 @@ import Image from 'next/image';
 import crypto from 'crypto';
 import { showError, showSuccess } from '../components/Toastr';
 import { z } from 'zod';
-import { FaCheck, FaSpinner } from 'react-icons/fa';
+import { FaCheck, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 import TermsAndConditions from '../components/TermsAndConditions';
 import { useSearchParams } from 'next/navigation';
 import Email from 'next-auth/providers/email';
 
 // Zod schema for validation - Removed .optional() to make 'otp' a required string
-const formSchema = z.object({
-  email: z.string().email('Invalid email format.'),
-  password: z
-  .string()
-  .refine(
-    (value) =>
-      /^(?=(.*\d){6})(?=(.*[a-zA-Z]){2})(?=(.*[!@#$%^&*()_\-+=|:;<>,.?]){2}).{10,}$/.test(value),
-    {
-      message:
-        "Password must contain at least 6 numbers, 2 letters, 2 special characters, and be at least 10 characters long.",
-    }
-  ),
-  ///otp: z.string().min(6, 'OTP must be 6 characters.'), // Now required to be 6 characters
-  loginAs: z.literal('player'),
-  referenceId: z.string().optional(),
-  sendedBy: z.string().optional(),
-});
+const formSchema = z
+  .object({
+    email: z.string().email('Invalid email format.'),
+    password: z
+      .string()
+      .refine(
+        (value) =>
+          /^(?=.*\d)(?=.*[!@#$%^&*()_\-+=|:;<>,.?]).{6,}$/.test(value),
+        {
+          message:
+            "Password must contain at least 6 characters, including at least 1 number and 1 special character.",
+        }
+      ),
+    confirm_password: z.string(),
+    loginAs: z.literal('player'),
+    referenceId: z.string().optional(),
+    sendedBy: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Confirm Password must match Password.",
+    path: ['confirm_password'], // Point the error at the confirm_password field
+  });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -36,6 +42,7 @@ export default function Register() {
   const [formValues, setFormValues] = useState<FormValues>({
     email: '',
     password: '',
+    confirm_password: '',
     //otp: '', // Ensure otp is always a string
     loginAs: 'player',
     referenceId: '',
@@ -53,6 +60,7 @@ export default function Register() {
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // Set isClient to true once the component has mounted on the client
@@ -99,9 +107,7 @@ export default function Register() {
   }, [session]);
 
   const sendOtp = async () => {
-    if (!formSchema.shape.email.safeParse(formValues.email).success) {
-      return; // Don't send OTP if email is invalid
-    }
+   
 
     setOtpLoading(true); // Set OTP loading state to true
     try {
@@ -228,10 +234,11 @@ export default function Register() {
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
                 Create Password<span className='mandatory'>*</span>
-                <p className="text-gray-400 text-xs">(Must Contain  6 Number, 2 Text, 2 Special characters)</p>
+                <p className="text-gray-400 text-xs">(Must contain at least 6 chars, including at least 1 number and 1 special char)</p>
               </label>
+              <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder='xxxxxxxxxx'
                 value={formValues.password}
@@ -241,8 +248,40 @@ export default function Register() {
               //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
               // }}
               />
+              <span
+          className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
               {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />}
-            </div>
+            </div></div>
+
+            <div className="mb-4">
+              <label htmlFor="confirm_password" className="block text-gray-700 text-sm font-semibold mb-2">
+                Confirm Password<span className='mandatory'>*</span>
+               
+              </label>
+              <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirm_password"
+                placeholder='xxxxxxxxxx'
+                value={formValues.confirm_password}
+                className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={handleChange}
+              // onFocus={() => {
+              //   if (!otpSent) sendOtp(); // Trigger OTP when focusing on the password field
+              // }}
+              />
+              <span
+          className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
+              {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />}
+            </div></div>
 
             {otpSent && (
               <div className="mb-4">
@@ -298,7 +337,7 @@ export default function Register() {
               <label htmlFor="terms" className="text-gray-700 text-sm">
                 I accept the{' '}
                 <a href="#" className="text-blue-500 hover:underline" onClick={() => setIsModalOpen(true)}>
-                  terms & conditions
+                  terms and conditions
                 </a>
               </label>
             </div>

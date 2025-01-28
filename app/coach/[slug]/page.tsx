@@ -201,7 +201,7 @@ setEvaluationList(responseData.evaluationlist);
   <div>
  
               <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
-                <span>Evaluation Charges:</span>
+                <span>Evaluation Rate:</span>
                 <p className="ml-2">  {coachData.currency}{coachData.expectedCharge} / Evaluation</p>
               </div>
               

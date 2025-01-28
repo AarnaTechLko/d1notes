@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface FiltersProps {
   onFilterChange: (filters: { country: string; state: string; city: string; amount: number; rating: number | null }) => void;
@@ -11,7 +11,23 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [amount, setAmount] = useState<number>(0);
   const [rating, setRating] = useState<number>(0);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
-
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
   const toggleFilters = () => setIsMobileOpen(!isMobileOpen);
 
   const resetFilters = () => {
@@ -45,6 +61,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     if (field === 'country') {
       newCountry = value as string;
       setCountry(newCountry);
+      fetchStates(Number(value));
     } else if (field === 'state') {
       newState = value as string;
       setState(newState);
@@ -107,8 +124,13 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
           >
-            <option value="">Select Country</option>
-            <option value="USA">USA</option>
+            <option value="">Select</option>
+            {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
           </select>
         </div>
 
@@ -120,12 +142,13 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={state}
             onChange={(e) => handleFilterChange('state', e.target.value)}
           >
-            <option value="">Select State</option>
-            {states.map((state) => (
-              <option key={state.abbreviation} value={state.abbreviation}>
-                {state.name}
-              </option>
-            ))}
+            
+            <option value="">Select</option>
+                      {statesList.map((state: any, index) => (
+    <option key={index} value={state.name}>
+      {state.name}
+    </option>
+  ))}
           </select>
         </div>
 
@@ -140,10 +163,9 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             placeholder="Enter City"
           />
         </div>
-
-        {/* Expected Charge */}
+ 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Expected Charge</label>
+          <label className="block text-gray-700 mb-2">Expected Rate</label>
           <input
             type="range"
             min="0"

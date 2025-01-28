@@ -166,14 +166,14 @@ export default function Register() {
     if (!formValues.qualifications) errors.qualifications = 'Qualifications are required';
     if (!formValues.currency) errors.currency = 'Currency required';
     if (!formValues.expectedCharge) {
-      errors.expectedCharge = 'Expected Charge is required';
+      errors.expectedCharge = 'Expected Rate is required';
     } else if (!/^\d+(\.\d{1,2})?$/.test(formValues.expectedCharge)) {
-      errors.expectedCharge = 'Expected Charge must be a valid number with up to 2 decimal places';
+      errors.expectedCharge = 'Expected Rate must be a valid number with up to 2 decimal places';
     }
 
     if (!formValues.country) errors.country = 'Country  is required';
 
-    if (!formValues.state) errors.state = 'State is required';
+    if (!formValues.state) errors.state = 'State/Province is required';
 
     if (!formValues.city) errors.city = 'City is required';
 
@@ -485,7 +485,7 @@ export default function Register() {
                       </select>
 
                       <input
-                        placeholder="(342) 342-3423"
+                        placeholder="(XXX) XXX-XXXX"
                         type="text"
                         name="number"
                         className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
@@ -570,7 +570,7 @@ export default function Register() {
                     {formErrors.country && <p className="text-red-500 text-sm">{formErrors.country}</p>}
                   </div>
                   <div>
-                    <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
+                    <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
 
 
                     <select

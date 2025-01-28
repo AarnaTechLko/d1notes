@@ -174,7 +174,7 @@ export default function Register() {
 
     if (!formValues.bio.trim()) newErrors.bio = "Experience/Accolades is required.";
     if (!formValues.country.trim()) newErrors.country = "Country is required.";
-    if (!formValues.state.trim()) newErrors.state = "State is required.";
+    if (!formValues.state.trim()) newErrors.state = "State/Province is required.";
     if (!formValues.city.trim()) newErrors.city = "City is required.";
     if (!formValues.league.trim()) newErrors.league = "League details is required.";
 
@@ -492,7 +492,7 @@ export default function Register() {
 
                 </div>
                 <div>
-                  <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
+                  <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
 
 
                   <select
@@ -653,7 +653,7 @@ export default function Register() {
                     </select>
 
                     <input
-                      placeholder="(342) 342-3423"
+                      placeholder="(XXX) XXX-XXXX"
                       type="text"
                       name="number"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-2/3"

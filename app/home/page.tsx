@@ -17,20 +17,38 @@ export default function Home(): JSX.Element {
   const [profiles, setProfiles] = useState<any[]>([]); // Initialize as an empty array
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('Soccer');
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
 
-  // Scroll handling
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   const handleScrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft -= 300;
     }
   };
-
+  const selectValue = (value: string) => {
+    setSelectedValue(value);
+    setIsDropdownOpen(false); // Close the dropdown after selection
+  };
   const handleScrollRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += 300;
     }
   };
-
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -68,10 +86,39 @@ export default function Home(): JSX.Element {
       <div className="max-w-7xl mx-auto px-4 mt-24 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center py-10">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Find coaches that specialize in{' '}
-            <span className="text-blue-600">Youth Soccer</span>
-          </h1>
+        <h1 className="text-4xl font-bold text-gray-900">
+      Find coaches that specialize in{' '}
+      <div className="inline-block relative" ref={dropdownRef}>
+        <button
+          className="text-blue-600 flex items-center"
+          onClick={toggleDropdown}
+        >
+          <span className="text-blue-600">{selectedValue}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="ml-2 h-4 w-4 text-blue-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+        {isDropdownOpen && (
+          <div className="absolute bg-white shadow-md mt-1 rounded-md w-40 z-50">
+            <ul>
+              <li className="px-4 py-2 text-xl hover:text-blue-600" onClick={() => selectValue('Soccer')}>Soccer</li>
+               
+            </ul>
+          </div>
+        )}
+      </div>
+    </h1>
           <p className="mt-4 text-lg text-gray-500">
             D1 NOTES is setting the standard for game film evaluation that offers
             young athletes the edge they have been missing.

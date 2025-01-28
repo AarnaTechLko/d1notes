@@ -208,14 +208,14 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
        
         if (!formValues.qualifications) errors.qualifications = 'Qualifications are required';
         if (!formValues.expectedCharge) {
-            errors.expectedCharge = 'Expected Charge is required';
+            errors.expectedCharge = 'Expected Rate is required';
         } else if (!/^\d+(\.\d{1,2})?$/.test(formValues.expectedCharge)) {
-            errors.expectedCharge = 'Expected Charge must be a valid number with up to 2 decimal places';
+            errors.expectedCharge = 'Expected Rate must be a valid number with up to 2 decimal places';
         }
 
         if (!formValues.country) errors.country = 'Country  is required';
 
-        if (!formValues.state) errors.state = 'State is required';
+        if (!formValues.state) errors.state = 'State/Province is required';
 
         if (!formValues.city) errors.city = 'City is required';
         if (!formValues.license) errors.license = 'License is required';
@@ -582,7 +582,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
 
                                     </div>
                                     <div>
-                                        <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
+                                        <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
 
 
                                         <select

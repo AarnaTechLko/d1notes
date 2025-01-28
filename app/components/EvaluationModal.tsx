@@ -356,7 +356,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
             </div>
             {evaluationCharges && evaluationCharges > 0 ? (
               <div className="mb-4 text-red-500">
-                Evaluation charges for this Turnaround time is <b>{currency} {evaluationCharges}</b>
+                Evaluation rates for this Turnaround time is <b>{currency} {evaluationCharges}</b>
               </div>
             ) : (
               <></>

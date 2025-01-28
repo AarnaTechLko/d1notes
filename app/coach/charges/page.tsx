@@ -173,7 +173,7 @@ const Home: React.FC = () => {
                                 <tr>
                                     <th>Serial Number</th>
                                     <th>Turnaround Time</th>
-                                    <th>Evaluation Charges</th>
+                                    <th>Evaluation Rate</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

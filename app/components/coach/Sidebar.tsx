@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/charges" className="flex items-center space-x-2 p-2">
                 <FaDollarSign className="text-xl" />
-                <span>Evaluation Charges</span>
+                <span>Evaluation Rates</span>
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">
