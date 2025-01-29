@@ -237,7 +237,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
        
         {/* Rating */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-gray-700 mb-2 font-bold">Rating</label>
           <div className="flex flex-row items-center gap-2">
   <svg
@@ -412,7 +412,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   <span className="text-lg font-semibold text-[#D1D1D1]">Diamond</span>
 </div>
  
-        </div>
+        </div> */}
       </div>
     </div>
   );
