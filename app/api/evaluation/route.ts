@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
             )
         );
 
-        if (checkRejection.length > 0) {
+        if (checkRejection.length > 3) {
             return NextResponse.json({ message: "You can not send Evaluation Request to this coach as this coach has rejected your request 3 Times." }, { status: 500 });
         }
 

@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../../lib/db';
-import { playerEvaluation, users, coaches } from '../../../../lib/schema';
+import { playerEvaluation, users, coaches, messages, chats } from '../../../../lib/schema';
 import { eq, and } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
@@ -64,11 +64,35 @@ export async function PUT(req: NextRequest) {
     const { evaluationId, status, remark } = await req.json();
     const parsedEvaluationId = parseInt(evaluationId, 10);
 
+    const evaluationData=await db.select().from(playerEvaluation).where(eq(playerEvaluation.id,parsedEvaluationId));
+    let playerId=evaluationData[0].player_id;
+    let requestToID=evaluationData[0].coach_id;
     const result = await db
       .update(playerEvaluation)
       .set({ status: status || undefined ,rejectremarks: remark || undefined }) // Set the new status value
       .where(eq(playerEvaluation.id, parsedEvaluationId)) // Condition for evaluation ID
       .returning();
+
+      let chatFriend:any={
+        playerId: playerId,
+        coachId: requestToID,
+        club_id:0        
+    };
+
+
+    const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
+
+    const message="Hi! I have accepted your evaluation request!";
+
+    let userValues: any = {
+        senderId: requestToID,
+        chatId:insertChatfriend[0].id,
+        message: message,
+        club_id:0
+    };
+
+    const insertedUser = await db.insert(messages).values(userValues).returning();
+
 
     return NextResponse.json("Success");
 

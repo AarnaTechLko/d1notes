@@ -108,12 +108,13 @@ const Dashboard: React.FC = () => {
         
       },
       {
-        Header: 'Time Remaining',
+        Header: selectedTab === '0' ? 'Completion Time' : 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
           const createdAt = row?.original?.createdAt;
           const turnaroundTime = row?.original?.turnaroundTime;
-      
+         if(selectedTab=='1')
+         {
           if (createdAt && turnaroundTime !== undefined && turnaroundTime !== null) {
             const hoursFromNow = calculateHoursFromNow(createdAt);
             if (hoursFromNow !== null && hoursFromNow !== undefined) {
@@ -128,7 +129,18 @@ const Dashboard: React.FC = () => {
               );
             }
           }
-          return 'N/A'; // Fallback value if data is missing
+         }
+         else{
+          const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
+          return (
+
+            <span className={boxClass}>
+               {turnaroundTime} Hours
+            </span>
+          );
+          
+         }
+           // Fallback value if data is missing
         },
       },
       {
@@ -178,7 +190,7 @@ const Dashboard: React.FC = () => {
         },
       },
       {
-        Header: 'Action',
+        Header: selectedTab === '2' ? 'Evaluation' : 'Action',
         Cell: ({ row }: CellProps<Evaluation>) => {
           const evaluation = row.original;
           if (selectedTab === '0') {

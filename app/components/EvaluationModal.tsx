@@ -150,8 +150,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           confirmButtonText: 'OK'
         });
       }
-
-      if (playerClubId !== coachClubId && (freeEvaluations ?? 0) > (allowedFreeRequests ?? 0)) {
+ 
+      if (playerClubId !== coachClubId && (freeEvaluations ?? 0) <= (allowedFreeRequests ?? 0)) {
         const stripe = await stripePromise;
         if (!stripe) {
           throw new Error('Stripe is not loaded');
@@ -251,7 +251,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           ✖
         </button>
         <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation</h2>
-
+ 
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}
         {loading ? (
           // Show spinner when loading is true

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { coaches, joinRequest, playerEvaluation, users, } from '../../../lib/schema'
+import { coaches, joinRequest, playerEvaluation, users,countries } from '../../../lib/schema'
 import debug from 'debug';
 import { eq,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -17,8 +17,32 @@ import { SECRET_KEY } from '@/lib/constants';
     try {
       // Using 'like' with lower case for case-insensitive search
       const coachlist = await db
-        .select()
+        .select({
+          firstName:coaches.firstName,
+          lastName:coaches.lastName,
+          id:coaches.id,
+          expectedCharge:coaches.expectedCharge,
+          createdAt:coaches.createdAt,
+          slug:coaches.slug,
+          rating:coaches.rating,
+          gender:coaches.gender,
+          location:coaches.location,
+          sport:coaches.sport,
+          clubName:coaches.clubName,
+          currency:coaches.currency,
+          qualifications:coaches.qualifications,
+          certificate:coaches.certificate,
+          country:countries.name,
+          state:coaches.state,
+          city:coaches.city,
+          enterprise_id:coaches.enterprise_id,
+          image:coaches.image,
+        })
         .from(coaches)
+       .leftJoin(
+      countries,
+      eq(countries.id, isNaN(Number(coaches.country)) ? 231 : Number(coaches.country)) // Prevent NaN error
+    )
         .where(
           eq(coaches.slug,slug)
         )

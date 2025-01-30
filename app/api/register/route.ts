@@ -70,6 +70,7 @@ if(sendedBy=='Club')
       enterprise_id: enterprise_id,
       jersey: null,
       slug: null,
+      visibility: "off",
       password: hashedPassword,
       createdAt: new Date(),
     };
@@ -224,6 +225,7 @@ export async function PUT(req: NextRequest) {
         weight: weight || null,
         graduation: graduation || null,
         status: "Active",
+      
 
       })
       .where(eq(users.id, playerIDAsNumber))
