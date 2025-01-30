@@ -321,13 +321,13 @@ export default function Register() {
         <div className="flex flex-col justify-center bg-white p-4 w-full">
           <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
             <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-            <p className="text-red-500">( Fields marked with * are mandatory.)</p>
+            {/* <p className="text-red-500">( Fields marked with * are mandatory.)</p> */}
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit} >
 
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Player Image</label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image
@@ -367,7 +367,7 @@ export default function Register() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
                 <div>
                   <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
-                    First Name<span className='mandatory'>*</span>
+                   Player First Name<span className='mandatory'>*</span>
                   </label>
                   <input
                   placeholder="Ex: Sam"
@@ -382,7 +382,7 @@ export default function Register() {
 
                 {/* Last Name */}
                 <div>
-                  <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
+                  <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                   <input
                   placeholder="Ex: Thomas"
                     type="text"
@@ -422,7 +422,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in Lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="weight"
@@ -435,7 +435,7 @@ export default function Register() {
 
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">College Graduation<span className='mandatory'>*</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
                   <select
                     name="graduation"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -607,9 +607,9 @@ export default function Register() {
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / Year<span className='mandatory'>*</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / (Birth Year or Age Group)<span className='mandatory'>*</span></label>
                   <input
-                    placeholder="Team Name/ 2024"
+                    placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"
                     name="team"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -640,7 +640,7 @@ export default function Register() {
                   <div className="flex">
                     <select
                       name="countrycode"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-1/3 mr-1" // Added mr-4 for margin-right
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
                       value={formValues.countrycode}
                       onChange={handleChange}
                     >
@@ -685,7 +685,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
                   <textarea
-                    placeholder="Tell us about your player’s experience/competition level, any accolades and aspirations."
+                    placeholder="Tell us about your  experience/competition level, any accolades and aspirations."
                     name="bio"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.bio}

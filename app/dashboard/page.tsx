@@ -253,7 +253,7 @@ const Dashboard: React.FC = () => {
         accessor: "first_name",
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-          <a href={`coach/${row.original.slug}`} target="_blank" rel="noopener noreferrer">
+          <a href={`coach/${row.original.slug}`} className='underline text-bold text-blue-700' target="_blank" rel="noopener noreferrer">
    {row.original.first_name} {row.original.last_name}
 </a>
          </div>
@@ -266,7 +266,7 @@ const Dashboard: React.FC = () => {
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
             <a href={row.original.primary_video_link} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">
-              Primary
+              Link#1
             </a>
             <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
              Link#2
@@ -301,13 +301,13 @@ const Dashboard: React.FC = () => {
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
             {
-              Header: "View Evaluation",
+              Header: "Evaluation",
               Cell: ({ row }: CellProps<Evaluation>) => (
                 <button
                   onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 underline"
                 >
-                  <FaEye className="inline" /> {/* Render the view icon */}
+                  View
                 </button>
               ),
             },

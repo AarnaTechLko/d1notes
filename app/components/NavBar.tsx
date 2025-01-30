@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { MdHelpOutline } from "react-icons/md";
+import TeamMenu from "./TeamMenu";
 
 // Lazy load the menu components
 const FreeMenu = lazy(() => import("./FreeMenu"));
@@ -37,6 +38,10 @@ const NavBar: React.FC<NavBarProps> = ({ session, closeMenu, isActiveLink, handl
         ) : session?.user?.type === "enterprise" ? (
           <Suspense fallback={<div>Loading...</div>}>
             <EnterpriseMenu session={session} closeMenu={closeMenu} isActiveLink={isActiveLink} handleLogout={handleLogout} toggleHelp={toggleHelp} toggleDropdown={toggleDropdown} toggleCreateAccount={toggleCreateAccount} helpRef={helpRef} helpOpen={helpOpen} />
+          </Suspense>
+        ) : session?.user?.type === "team" ? (
+          <Suspense fallback={<div>Loading...</div>}>
+            <TeamMenu session={session} closeMenu={closeMenu} isActiveLink={isActiveLink} handleLogout={handleLogout} toggleHelp={toggleHelp} toggleDropdown={toggleDropdown} toggleCreateAccount={toggleCreateAccount} helpRef={helpRef} helpOpen={helpOpen} />
           </Suspense>
         ) : (
           <></>

@@ -87,9 +87,9 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     if (!videoOneTiming) newErrors.videoOneTiming = 'Timing is required.';
     if (!videoDescription) newErrors.videoDescription = 'Video Description is required.';
 
-    if (!lighttype) newErrors.lighttype = 'Game Light Type is required.';
-    if (!position) newErrors.position = 'Position is required.';
-    if (!percentage) newErrors.percentage = 'Percentage is required.';
+    // if (!lighttype) newErrors.lighttype = 'Game Light Type is required.';
+    // if (!position) newErrors.position = 'Position is required.';
+    // if (!percentage) newErrors.percentage = 'Percentage is required.';
     
     if (primaryVideoUrl && !validateUrl(primaryVideoUrl)) {
       newErrors.primaryVideoUrl = 'Primary Video URL is not valid. Please provide a valid URL.';
@@ -250,7 +250,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         >
           ✖
         </button>
-        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation{freeEvaluations} {allowedFreeRequests}-{amount}</h2>
+        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation</h2>
 
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}
         {loading ? (
@@ -260,7 +260,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className="mb-4 grid grid-cols-1   md:grid-cols-2 gap-4">
+            {/* <div className="mb-4 grid grid-cols-1   md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
                   Evaluation For?
@@ -302,7 +302,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
               )}
 
-            </div>
+            </div> */}
             <div className="flex">
               <div className="mb-4 w-3/4 ml-1">
                 <label htmlFor="reviewTitle" className="block text-gray-700 mb-1">
@@ -312,7 +312,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 <input
                   type="text"
                   id="reviewTitle"
-                  placeholder="Team name vs Team name on mm/dd/yyyy"
+                  placeholder="Ex: Team Name vs Team Name on mm/dd/yyyy"
                   className={`w-full px-3 py-2 border ${errors.reviewTitle ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={reviewTitle}
                   onChange={(e) => {
@@ -344,7 +344,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                       }
                     }}
                     className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
-                    <option value=''>Turnaround Time</option>
+                    <option value=''>Select</option>
                     {turnAroundTime.map((tat) => (
                       <option value={tat.value} key={tat.id}>{tat.label}</option>
                     ))}
@@ -366,12 +366,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               {/* Primary Video URL */}
               <div>
                 <label htmlFor="primaryVideoUrl" className="block text-gray-700 mb-1">
-                  Primary Video Link/URL<span className='mandatory'>*</span>
+                  Video Link/URL #1<span className='mandatory'>*</span>
                 </label>
                 <input
                   type="url"
                   id="primaryVideoUrl"
-                  placeholder="Do not just submit highlights as the low light and activity without the ball are important."
+                  placeholder="Ex: Do not just submit highlights as the low light and activity without the ball are important."
                   className={`w-full px-3 py-2 border ${errors.primaryVideoUrl ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={primaryVideoUrl}
                   onChange={(e) => {
@@ -393,12 +393,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               {/* Timing Section */}
               <div>
                 <label htmlFor="videoTiming" className="block text-gray-700 mb-1">
-                  Video Timing (Mins)<span className='mandatory'>*</span>
+                  Video Length (Mins)<span className='mandatory'>*</span>
                 </label>
                 <input
                   type="text"
                   id="videoTiming"
-                  placeholder="(e.g. 5:30 - 10:00)"
+                  placeholder="(Ex: 5:30 - 10:00)"
                   className={`w-full px-3 py-2 border ${errors.videoOneTiming ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={videoOneTiming}
                   onChange={(e) => setVideoOneTiming(e.target.value)}
@@ -416,7 +416,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 <input
                   type="url"
                   id="videoUrl2"
-                  placeholder="www.exampleurl.com"
+                  placeholder="Ex: www.exampleurl.com"
                   className={`w-full px-3 py-2 border ${errors.videoUrl2 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={videoUrl2}
                   onChange={(e) => {
@@ -432,12 +432,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               </div>
               <div>
                 <label htmlFor="videoTwoTiming" className="block text-gray-700 mb-1">
-                  Video Timing (Mins)
+                  Video Length (Mins)
                 </label>
                 <input
                   type="text"
                   id="videoTwoTiming"
-                  placeholder="(e.g. 5:30 - 10:00)"
+                  placeholder="(Ex. 5:30 - 10:00)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   value={videoTwoTiming}
                   onChange={(e) => setVideoTwoTiming(e.target.value)}
@@ -453,7 +453,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 <input
                   type="url"
                   id="videoUrl3"
-                  placeholder="www.exampleurl.com"
+                  placeholder="Ex: www.exampleurl.com"
                   className={`w-full px-3 py-2 border ${errors.videoUrl3 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={videoUrl3}
                   onChange={(e) => {
@@ -468,19 +468,19 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               </div>
               <div>
                 <label htmlFor="videoThreeTiming" className="block text-gray-700 mb-1">
-                  Video Timing (Mins)
+                  Video Length (Mins)
                 </label>
                 <input
                   type="text"
                   id="videoThreeTiming"
-                  placeholder="(e.g. 5:30 - 10:00)"
+                  placeholder="(Ex:  5:30 - 10:00)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   value={videoThreeTiming}
                   onChange={(e) => setVideoThreeTiming(e.target.value)}
                 />
               </div>
             </div>
-            <div className="mb-4 grid grid-cols-1   md:grid-cols-3 gap-4">
+            {/* <div className="mb-4 grid grid-cols-1   md:grid-cols-3 gap-4">
               <div>
                 <label htmlFor="lighttype" className="block text-gray-700 mb-1">
                   Game Light Type<span className='mandatory'>*</span>
@@ -545,7 +545,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 {errors.percentage && <p className="text-red-500 text-xs">{errors.percentage}</p>}
 
               </div>
-            </div>
+            </div> */}
             {/* Video Description */}
             <div className="mb-4">
               <label htmlFor="videoDescription" className="block text-gray-700 mb-1">
@@ -553,7 +553,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               </label>
               <textarea
                 id="videoDescription"
-                placeholder="Describe the key elements of the video..."
+                placeholder="Ex: Describe the key elements of the video..."
                 className={`w-full px-3 py-2 border ${errors.videoDescription ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                 value={videoDescription}
                 onChange={(e) => {

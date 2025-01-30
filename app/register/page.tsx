@@ -223,7 +223,7 @@ export default function Register() {
                 type="text"
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 name="email"
-                placeholder='abcd@gmail.com'
+                
                 onChange={handleChange}
                 value={email || formValues.email}
                 readOnly={!!referenceEmail}
@@ -234,13 +234,13 @@ export default function Register() {
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
                 Create Password<span className='mandatory'>*</span>
-                <p className="text-gray-400 text-xs">(Must contain at least 6 chars, including at least 1 number and 1 special char)</p>
+                <p className="text-gray-400 text-xs">(Must contain at least 6 characters, including at least 1 number and 1 special char)</p>
               </label>
               <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder='xxxxxxxxxx'
+               
                 value={formValues.password}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleChange}
@@ -266,7 +266,7 @@ export default function Register() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="confirm_password"
-                placeholder='xxxxxxxxxx'
+                
                 value={formValues.confirm_password}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleChange}
@@ -337,7 +337,7 @@ export default function Register() {
               <label htmlFor="terms" className="text-gray-700 text-sm">
                 I accept the{' '}
                 <a href="#" className="text-blue-500 hover:underline" onClick={() => setIsModalOpen(true)}>
-                  terms and conditions
+                  terms and conditions.
                 </a>
               </label>
             </div>

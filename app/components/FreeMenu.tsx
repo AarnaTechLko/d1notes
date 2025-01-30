@@ -127,6 +127,15 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   Organization Signup
                 </Link>
               </li>
+              <li className="pt-[8px]">
+                <Link
+                  href="/teampanel/signup"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Team Signup
+                </Link>
+              </li>
             </ul>
           </div>
         )}

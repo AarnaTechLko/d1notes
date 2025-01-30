@@ -67,6 +67,7 @@ import { sendEmail } from '@/lib/helpers';
           
           coach_id: coach_id,
           enterprise_id: enterprise_id,
+          team_id: team_id,
           sport: null,
           team: null,
           position: null,
@@ -83,14 +84,26 @@ import { sendEmail } from '@/lib/helpers';
   
       if (insertData.length > 0) {
       const insertedPlayers = await db.insert(users).values(insertData).returning({ id: users.id });
-  
-      const teamPlayerData = insertedPlayers.map(player => ({
-        teamId: Number(team_id),           // Adjusted to match the schema
-        playerId: player.id,       // Adjusted to match the schema
-        enterprise_id: Number(enterprise_id), // Adjusted to match the schema
-      }));
+  if(enterprise_id)
+  {
+    const teamPlayerData = insertedPlayers.map(player => ({
+      teamId: Number(team_id),           // Adjusted to match the schema
+      playerId: player.id,       // Adjusted to match the schema
+      enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+    }));
+    await db.insert(teamPlayers).values(teamPlayerData);
+  }
+  else{
+    const teamPlayerData = insertedPlayers.map(player => ({
+      teamId: Number(team_id),           // Adjusted to match the schema
+      playerId: player.id,       // Adjusted to match the schema
+      enterprise_id:0, // Adjusted to match the schema
+    }));
+    await db.insert(teamPlayers).values(teamPlayerData);
+  }
       
-      await db.insert(teamPlayers).values(teamPlayerData);
+      
+     
 
 
 

@@ -216,16 +216,16 @@ export default function Register() {
         <div className="flex-1 bg-white p-4 md:p-8">
           <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-0 text-left">Coach Sign Up</h2>
-            <p className="text-sm text-gray-600 leading-relaxed mb-6">
+            {/* <p className="text-sm text-gray-600 leading-relaxed mb-6">
               If you are a Coach! Please signup to get evaluation requests as per your desired fee.
-            </p>
+            </p> */}
             <form onSubmit={handleSubmit}>
-              <div className="mb-4">
+              <div className="mb-4 mt-5">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
                   Email<span className='mandatory'>*</span>
                 </label>
                 <input
-                  placeholder='abcd@gmail.com'
+               
                   type="text"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="email"
@@ -237,13 +237,13 @@ export default function Register() {
               <div className="mb-4">
                 <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
                   Create Password<span className='mandatory'>*</span>
-                  <p className="text-gray-400 text-xs">(Must contain at least 6 chars, including at least 1 number and 1 special char)</p>
+                  <p className="text-gray-400 text-xs">(Must contain at least 6 characters, including at least 1 number and 1 special char)</p>
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder='xxxxxxxxxx'
+                    
                     value={formValues.password}
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onChange={handleChange}
@@ -269,7 +269,7 @@ export default function Register() {
                   <input
                     type={showPassword ? "text" : "password"}
                     name="confirm_password"
-                    placeholder='xxxxxxxxxx'
+               
                     value={formValues.confirm_password}
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onChange={handleChange}
@@ -339,7 +339,7 @@ export default function Register() {
                 <label htmlFor="terms" className="text-gray-700 text-sm">
                   I accept the{' '}
                   <a href="#" onClick={() => setIsModalOpen(true)} className="text-blue-500 hover:underline">
-                    terms and conditions
+                    terms and conditions.
                   </a>
                 </label>
               </div>

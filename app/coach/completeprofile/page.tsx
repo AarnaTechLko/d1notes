@@ -72,7 +72,7 @@ export default function Register() {
     country: '',
     state: '',
     city: '',
-    currency: '',
+    currency: '$',
     countrycode: '+1',
     image: null,
     certificate: null
@@ -366,7 +366,7 @@ export default function Register() {
           <div className="flex-1 bg-white p-1 md:p-8">
             <div className="bg-white rounded-lg p-4  mx-auto">
               <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
-              <p className="text-red-500">( Fields marked with * are mandatory.)</p>
+              {/* <p className="text-red-500">( Fields marked with * are mandatory.)</p> */}
               {error && <p className="text-red-600">{error}</p>}
               {successMessage && <p className="text-green-600">{successMessage}</p>}
 
@@ -375,7 +375,7 @@ export default function Register() {
                 {/* Profile Image */}
 
                 <div className="mb-4">
-                  <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Profile Image</label>
+                  <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Coach Image</label>
                   <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                     <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                       <Image
@@ -414,7 +414,7 @@ export default function Register() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                   <div>
-                    <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">First Name<span className='mandatory'>*</span></label>
+                    <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">Coach First Name<span className='mandatory'>*</span></label>
                     <input
                     placeholder='Ex: Tim'
                       type="text"
@@ -427,7 +427,7 @@ export default function Register() {
                   </div>
 
                   <div>
-                    <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Last Name<span className='mandatory'>*</span></label>
+                    <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Coach Last Name<span className='mandatory'>*</span></label>
                     <input
                     placeholder='Ex: Coock'
                       type="text"
@@ -439,7 +439,7 @@ export default function Register() {
                     {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                   </div>
                   <div >
-                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Rates ( per evaluation )<span className='mandatory'>*</span></label>
+                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Evaluation Rate<span className='mandatory'>*</span></label>
                   <div className="flex">
                       <select
                         name="currency"
@@ -447,7 +447,7 @@ export default function Register() {
                         value={formValues.currency}
                         onChange={handleChange}
                       >
-                        <option value="">Select</option>
+                        {/* <option value="">Select</option> */}
                         {currencies.map((crn) => (
                           <option key={crn.currency} value={crn.unicode}>
                             {crn.unicode} ({crn.currency})
@@ -472,7 +472,7 @@ export default function Register() {
                     <div className="flex">
                       <select
                         name="countrycode"
-                        className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-[115px] p-0 mr-1" // Added mr-4 for margin-right
                         value={formValues.countrycode}
                         onChange={handleChange}
                       >
@@ -522,7 +522,7 @@ export default function Register() {
                   {/* Location */}
 
                   <div>
-                    <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">You coach<span className='mandatory'>*</span></label>
+                    <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
                     <select
                       name="sport"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -536,9 +536,9 @@ export default function Register() {
                     {formErrors.sport && <p className="text-red-600 text-sm">{formErrors.sport}</p>}
                   </div>
                   <div>
-                    <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affilication(s)<span className='mandatory'>*</span></label>
+                    <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
                     <input
-                    placeholder='Club/organization Name'
+                    placeholder='Ex. Director/LA Stars or Trainer/Elite Performance'
                       type="text"
                       name="clubName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -607,7 +607,9 @@ export default function Register() {
                 <div className="mb-4">
                   <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound<span className='mandatory'>*</span></label>
                   <textarea
-                    placeholder='Specify your qualification(s)'
+                    placeholder='Include any
+                    coaching certifications, relevant past and current experience, team(s) and/ or coaching accolades,
+                    relevant soccer affiliations, personal soccer links (eg, training business, current club), etc.'
                     name="qualifications"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.qualifications}
@@ -623,10 +625,8 @@ export default function Register() {
 
 
 
-                <div className="mb-4">
-                  <label htmlFor="image" className="block text-gray-700 text-sm font-semibold mb-2">Include any
-                    coaching certifications, relevant past and current experience, team(s) and/ or coaching accolades,
-                    relevant soccer affiliations, personal soccer links (eg, training business, current club), etc.</label>
+                {/* <div className="mb-4">
+                  <label htmlFor="image" className="block text-gray-700 text-sm font-semibold mb-2"></label>
                   <div className="relative items-center cursor-pointer" onClick={handleCertificateClick}>
                     <div className="w-44 h-24   overflow-hidden border-2 border-gray-300 m-auto">
                       <Image
@@ -654,7 +654,7 @@ export default function Register() {
                       </>
                     )}
                   </div>
-                </div>
+                </div> */}
                 {/* Submit Button */}
                 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                   <button

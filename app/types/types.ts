@@ -33,6 +33,7 @@ export interface Evaluation {
     evaluationposition:number;
     rejectremarks:string;
     slug:string;
+    playerSlug:string;
      
     
   }

@@ -56,16 +56,16 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
 
   const handleReject = async () => {
     Swal.fire({
-      title: 'Add a Remark',
+      title: 'Add a Comment',
       input: 'textarea',
-      inputPlaceholder: 'Write your remark here...',
+      inputPlaceholder: 'Write your Comment here...',
       inputAttributes: {
-        'aria-label': 'Write your remark here',
+        'aria-label': 'Write your Comment here',
       },
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Reject',
+      confirmButtonText: 'Decline',
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -131,7 +131,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
               onClick={handleReject}
               className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 transition duration-200"
             >
-              Reject
+              Decline
             </button>
           </div>
           <div className="flex justify-end space-x-2 pt-6">

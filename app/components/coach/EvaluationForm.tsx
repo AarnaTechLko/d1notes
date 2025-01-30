@@ -7,6 +7,7 @@ import defaultImage from '../../public/default.jpg'
 import { getSession, useSession } from 'next-auth/react';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
+import { FaPhone } from 'react-icons/fa';
 
 
 type EvaluationFormProps = {
@@ -308,11 +309,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                 <div>No Image Available</div>
             )} */}
             <span className="text-gray-700">{evaluationData?.first_name} {evaluationData?.last_name}</span>
-            <span className="ml-2 text-gray-500">{evaluationData?.position}, {evaluationData?.team} #{evaluationData?.number}</span>
+            <span className="flex items-center text-gray-500">
+    <FaPhone className="mr-2 ml-5" />
+  {evaluationData?.number}
+</span>
         </div>
 
         <div className="mb-4">
-            <strong className="mr-2">Cost:</strong> <span>${evaluationData?.expectedCharge}</span>
+            <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
         </div>
 
         <div className="mb-4">
@@ -320,7 +324,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         </div>
 
         <div className="mb-4">
-            <strong className="mr-2">Primary Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a>
+            <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a>
         </div>
         <div className="mb-4">
             <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  
@@ -328,9 +332,9 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         <div className="mb-4">
             <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a>
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
             <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
-        </div>
+        </div> */}
         <div className="mb-4">
             <strong className="mr-2">Video Description:</strong>
             <span className="text-gray-700">{evaluationData?.video_description}</span>

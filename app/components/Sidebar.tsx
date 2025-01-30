@@ -125,13 +125,13 @@ const Sidebar: React.FC = () => {
               <span>Payment History</span>
             </a>
           </li>
-          <li className="hover:bg-gray-700 rounded transition duration-200">
+          {/* <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/banners" className="flex items-center space-x-2 p-2">
             
               <FaImage className='text-xl'/>
               <span>Upload Banners</span>
             </a>
-          </li>
+          </li> */}
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/messages" className="flex items-center space-x-2 p-2">
             
@@ -139,14 +139,14 @@ const Sidebar: React.FC = () => {
               <span>Messages</span>
             </a>
           </li>
-          {!session?.user.club_id && (
+          {/* {!session?.user.club_id && (
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/playeraddon" className="flex items-center space-x-2 p-2">
             <FaChild className="text-xl" />
               <span>Add Player</span>
             </a>
           </li>
-          )}
+          )} */}
        
         </ul>
       </nav>

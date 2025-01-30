@@ -23,7 +23,7 @@ import { sendEmail } from '@/lib/helpers';
         const body = await req.json();
         const payload = body.csvData;
         const { coach_id, enterprise_id, teamId } = body;
-
+let team_id=teamId;
         if (!Array.isArray(payload)) {
             return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
         }
@@ -66,6 +66,7 @@ import { sendEmail } from '@/lib/helpers';
                 country:null,
                
                 enterprise_id,
+                team_id,
                 slug,
                 gender: null,
                 location: null,
@@ -83,14 +84,26 @@ import { sendEmail } from '@/lib/helpers';
         const insertedPlayers = await db.insert(coaches).values(insertData).returning({ id: coaches.id });
 
         
-  
-        const teamCoachData = insertedPlayers.map(player => ({
-          teamId: Number(teamId),           // Adjusted to match the schema
-          coachId: player.id,       // Adjusted to match the schema
-          enterprise_id: Number(enterprise_id), // Adjusted to match the schema
-        }));
+  if(enterprise_id)
+  {
+    const teamCoachData = insertedPlayers.map(player => ({
+        teamId: Number(teamId),           // Adjusted to match the schema
+        coachId: player.id,       // Adjusted to match the schema
+        enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+      }));
+      await db.insert(teamCoaches).values(teamCoachData);
+  }
+  else{
+    const teamCoachData = insertedPlayers.map(player => ({
+        teamId: Number(teamId),           // Adjusted to match the schema
+        coachId: player.id,       // Adjusted to match the schema
+        enterprise_id:0, // Adjusted to match the schema
+      }));
+      await db.insert(teamCoaches).values(teamCoachData);
+  }
+       
         
-        await db.insert(teamCoaches).values(teamCoachData);
+        
 
         for (const player of insertedPlayers) {
             const checkLicense = await db

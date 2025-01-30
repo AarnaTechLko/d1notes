@@ -200,10 +200,10 @@ setEvaluationList(responseData.evaluationlist);
   <div className="md:w-1/3 text-center md:text-left">
   <div>
  
-              <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
+              {/* <div className="mt-2 flex justify-center items-center text-sm text-gray-500">
                 <span>Evaluation Rate:</span>
                 <p className="ml-2">  {coachData.currency}{coachData.expectedCharge} / Evaluation</p>
-              </div>
+              </div> */}
               
 
 {!(session && session.user && session.user.type === 'coach') && (
@@ -220,7 +220,7 @@ setEvaluationList(responseData.evaluationlist);
         onClick={() => setIsevaluationModalOpen(true)} // Open modal on click
         className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
       >
-        Proceed to Evaluation
+       Request Evaluation
       </button>
     )}
   </>
@@ -228,7 +228,7 @@ setEvaluationList(responseData.evaluationlist);
 
 </div>
 
-<div>
+{/* <div>
   {session?.user?.type !== 'coach' && (
     <>
       {!session ? (
@@ -270,7 +270,7 @@ setEvaluationList(responseData.evaluationlist);
       )}
     </>
   )}
-</div>
+</div> */}
 
   </div>
   
@@ -290,9 +290,9 @@ setEvaluationList(responseData.evaluationlist);
     {/* Column 1 */}
     <div className="flex-1 mb-4 md:mb-0">
       <ul className="space-y-4">
-        <li><strong>Rate per evaluation:</strong> ${coachData.expectedCharge} </li>
+        <li><strong>Evaluation Rate:</strong> ${coachData.expectedCharge} </li>
         <li><strong>Sport :</strong> {coachData.sport}</li>
-        <li><strong>Title/ organization(s)/Affilication(s):</strong> {coachData.clubName}</li>
+        <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
         <li><strong>Gender:</strong> {coachData.gender}</li>
         
       </ul>
@@ -301,9 +301,9 @@ setEvaluationList(responseData.evaluationlist);
     {/* Column 2 */}
     <div className="flex-1">
       <ul className="space-y-4">
-      <li><strong>Location:</strong> {coachData.location}</li>
+     
         <li><strong>Country:</strong> {coachData.country}</li>
-        <li><strong>State:</strong> {coachData.state}</li>
+        <li><strong>State/Province:</strong> {coachData.state}</li>
         <li><strong>City:</strong> {coachData.city}</li>
       </ul>
     </div>
@@ -311,7 +311,7 @@ setEvaluationList(responseData.evaluationlist);
 </section>
 
 <h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
-Qualification & Certifications
+Background
   </h2>
 <section className="bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
  
@@ -319,14 +319,14 @@ Qualification & Certifications
     
     {/* First Column: Qualifications */}
     <div>
-      <h3 className="text-lg font-semibold mb-2">Qualifications</h3>
+      {/* <h3 className="text-lg font-semibold mb-2">Background</h3> */}
       <p className="text-gray-700">
         {coachData.qualifications}
       </p>
     </div>
 
     {/* Second Column: Certificate */}
-    <div>
+    {/* <div>
       <h3 className="text-lg font-semibold mb-2">Certificate</h3>
       {coachData.certificate ? (
         <button
@@ -338,7 +338,7 @@ Qualification & Certifications
       ) : (
         <p className="text-gray-500">No certificate available</p>
       )}
-    </div>
+    </div> */}
   </div>
 
   {/* Modal */}
@@ -351,7 +351,7 @@ Qualification & Certifications
   )}
 
 <h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
-Previous Evaluations
+Rating and Testimonials
   </h2>
   <section className="mt-8 bg-gray-50 p-0 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
   {evaluationList.length > 0 ? (
@@ -406,7 +406,7 @@ Previous Evaluations
     })}
     </ul>
   ) : (
-    <p className="text-gray-500">No evaluations available.</p>
+    <p className="text-gray-500">Not  available.</p>
   )}
 </section>
  

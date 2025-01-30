@@ -441,7 +441,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit,teamId }) => {
         <div className="flex flex-col justify-center bg-white p-2 w-full">
           <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
 
-            <p className="text-red-500">( Fields marked with * are mandatory.)</p>
+            {/* <p className="text-red-500">( Fields marked with * are mandatory.)</p> */}
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit} >
@@ -726,7 +726,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit,teamId }) => {
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / (Birth Year or Age Group)<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     placeholder="Team Name/ 2024"
                     type="text"

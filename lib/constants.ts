@@ -10,8 +10,8 @@ const endYear = 2050;
 export const Grades=Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 export const currencies=[
   { unicode:"$", currency:"USD"},
-  { unicode:"€", currency:"EUR"},
-  { unicode:"£", currency:"GBP"}
+  // { unicode:"€", currency:"EUR"},
+  // { unicode:"£", currency:"GBP"}
 ];
 
 export const licensePackages=[
@@ -175,7 +175,7 @@ export const genders=[
   { value:"", label:"Select"},
   { value:"Male", label:"Male"},
   { value:"Female", label:"Female"},
-  // { value:"Non Binary", label:"Non Binary"}
+ { value:"Other", label:"Other"}
 ];
 
 export const playingLevels=[

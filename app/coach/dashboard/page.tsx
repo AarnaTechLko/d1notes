@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
       {
         Header: 'Player Name',
         accessor: 'first_name',
-        Cell: ({ row }: CellProps<Evaluation>) => `${row.original.first_name} ${row.original.last_name}`,
+        Cell: ({ row }: CellProps<Evaluation>) =><a href={`/players/${row.original.playerSlug}`} className='underline text-bold text-blue-700' target="_blank">{row.original.first_name} {row.original.last_name}</a>,
       },
       {
         Header: 'Review Title',
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
             <a href={row.original.primary_video_link} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">
-              Primary
+              Link#1
             </a> 
             <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
              Link#2
@@ -212,7 +212,7 @@ const Dashboard: React.FC = () => {
             if (selectedTab != '3')
               {
                 
-                return <a onClick={() => handleEvaluationDetails(evaluation)}><FaEye /></a>;
+                return <a onClick={() => handleEvaluationDetails(evaluation)} href='#' className='underline text-blue-700'>View</a>;
               }
               else
               {
@@ -303,7 +303,7 @@ const Dashboard: React.FC = () => {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
               >
-                {['Requested', 'Accepted', 'Completed', 'Declined', 'Drafted'][parseInt(selectedTab)]} ▼
+                {['Requested', 'Accepted', 'Completed', 'Declined', 'Draftes'][parseInt(selectedTab)]} ▼
               </button>
               {isDropdownOpen && (
                 <ul className="bg-white shadow-lg rounded mt-2">
@@ -312,7 +312,7 @@ const Dashboard: React.FC = () => {
                     { name: 'Accepted', value: '1' },
                     { name: 'Completed', value: '2' },
                     { name: 'Declined', value: '3' },
-                    { name: 'Drafted', value: '4' },
+                    { name: 'Draftes', value: '4' },
                   ].map((tab) => (
                     <li key={tab.value}>
                       <button
@@ -338,7 +338,7 @@ const Dashboard: React.FC = () => {
                 { name: 'Accepted', value: '1' },
                 { name: 'Completed', value: '2' },
                 { name: 'Declined', value: '3' },
-                { name: 'Drafted', value: '4' },
+                { name: 'Drafts', value: '4' },
               ].map((tab) => (
                 <button
                   key={tab.value}
