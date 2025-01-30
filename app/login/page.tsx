@@ -84,7 +84,7 @@ export default function Login() {
       }
       else if (session.user.type === 'team') {
         
-        window.location.href = '/team/dashboard';
+        window.location.href = '/teampanel/dashboard';
       }
        else if (!session.user.name) {
         window.location.href = '/completeprofile';
@@ -143,7 +143,7 @@ export default function Login() {
                   <span className="ml-2">Organization </span>
                 </label>
                 
-                {/* <label className="inline-flex items-center ">
+              <label className="inline-flex items-center ">
                   <input
                     type="radio"
                     name="loginAs"
@@ -153,8 +153,8 @@ export default function Login() {
                     disabled={loading}
                     className="form-radio"
                   />
-                  <span className="ml-2">Team Manager</span>
-                </label> */}
+                  <span className="ml-2">Team</span>
+                </label>  
               </div>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
