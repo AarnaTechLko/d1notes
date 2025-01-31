@@ -308,11 +308,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             ) : (
                 <div>No Image Available</div>
             )} */}
-            <span className="text-gray-700">{evaluationData?.first_name} {evaluationData?.last_name}</span>
-            <span className="flex items-center text-gray-500">
-    <FaPhone className="mr-2 ml-5" />
-  {evaluationData?.number}
-</span>
+            <span className="text-gray-700"><a href={`/players/${evaluationData?.playerSlug}`} className=" text-blue-700" target="_blank">{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
+             
         </div>
 
         <div className="mb-4">
@@ -324,13 +321,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         </div>
 
         <div className="mb-4">
-            <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a>
+            <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
         </div>
         <div className="mb-4">
-            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  
+            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
         </div>
         <div className="mb-4">
-            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a>
+            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
         </div>
         {/* <div className="mb-4">
             <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %

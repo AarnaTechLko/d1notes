@@ -20,6 +20,8 @@ interface Profile {
   location: string;
   height: string;
   weight: string;
+  graduation: string;
+  birthday: string;
 
 
 }
@@ -129,12 +131,14 @@ const Home = () => {
                     lastName={profile.lastName}
                     image={profile.image ?? '/default.jpg'}
 
+                    birthdate={profile.birthday}
                     slug={profile.slug}
                     position={profile.position}
                     grade_level={profile.grade_level}
                     location={profile.location}
                     height={profile.height}
                     weight={profile.weight}
+                    graduation={profile.graduation}
                   />
 
 

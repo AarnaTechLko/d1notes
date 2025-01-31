@@ -20,10 +20,13 @@ interface ProfileCardProps {
   location: string;
   height: string;
   weight: string;
+  graduation: string;
+  birthdate:string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight }) => {
-  const positions = getInitialsAfterComma(position);
+const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight,graduation,birthdate }) => {
+  //const positions = getInitialsAfterComma(position);
+  const positions = position;
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.location.href = `/players/${slug}`;
@@ -33,6 +36,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
   ));
 
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(date);
+  };
+  
+  const formattedDate = formatDate(birthdate);
   return (
     <>
      <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group">
@@ -71,7 +84,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
 
    {jersey && (
     <div className="absolute top-4 right-4 bg-maroon-500 text-white text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center jersyBlock">
-      {jersey}
+      #{jersey}
     </div>
     )}
   </div>
@@ -85,10 +98,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
       {lastName}
     </h2>
     <hr className="my-2 w-8 border-blue-500" />
-    <p className="text-gray-500 mt-2 teampagefont">{positions}</p>
+    <p className="text-gray-500 mt-2 teampagefont"><b>Position:</b> {positions}</p>
+    <p className="text-gray-500 mt-2 teampagefont"><b>High School Graduation Year:</b> {graduation}</p>
 
     <p className="text-gray-500 teampagefont">
-      {height}/ {weight} Lbs.
+     <b>Height: </b> {height} 
+    </p>
+    <p className="text-gray-500 teampagefont">
+     <b>Weight: </b>  {weight} Lbs.
+    </p>
+    <p className="text-gray-500 teampagefont">
+     <b>Birthdate: </b>  {formattedDate} 
     </p>
     <p className="text-gray-600 teampagefont">{grade_level}</p>
   </div>

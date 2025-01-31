@@ -19,6 +19,7 @@ interface Profile {
   grade_level: string;
   location: string;
   height: number;
+ 
   weight: number;
 
 }
@@ -44,6 +45,7 @@ interface CoachData {
   height: string;
   team: string;
   grade_level: string;
+  graduation: string;
 }
 
 interface CoachProfileProps {
@@ -165,7 +167,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <div className="absolute left-1/2 transform -translate-x-1/2 top-[500px]  w-full shadow-lg rounded-lg p-4 grid grid-cols-[1fr_2fr] gap-4">
           {/* Image Section */}
           <div className="flex justify-end items-right">
-
+ 
           {coachData.image && coachData.image !== 'null' && (
             <img
               src={coachData.image ?? '/default.jpg'}
@@ -174,7 +176,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             />
           )}
 
-{ coachData.image === 'null' || coachData.image === null && (
+{ coachData.image === 'null' && (
             <img
               src='/default.jpg'
               alt="Player Thumbnail"
@@ -182,18 +184,25 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             />
           )}
 
+{ coachData.image === null && (
+            <img
+              src='/default.jpg'
+              alt="Player Thumbnail"
+              className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
+            />
+          )}
           </div>
 
           {/* Text Section */}
           <div className="flex flex-col justify-start items-start">
             <h3 className="text-4xl font-semibold text-white text-stroke mt-8">
-              <span className="bg-blue-500 text-xl p-2 text-white">{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
+              <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
             </h3>
 
             <div className='bg-white p-6 w-full mt-7'>
               <div className="grid grid-cols-2 gap-5">
                 <div><b>Position:</b> {coachData.position}</div>
-                <div><b>Playing Location:</b> {coachData.location}</div>
+                <div><b>High School Graduation:</b> {coachData.graduation}</div>
                 <div><b>Weight:</b> {coachData.weight} Lbs</div>
                 <div><b>Height:</b> {coachData.height}</div>
                 <div><b>Team:</b> {coachData.team}</div>
@@ -215,7 +224,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       key={item.id}
       name={item.coachFirstName}
       organization={item.clubName}
-      image={item.coachImage ?? '/default-image.jpg'}
+      image={item.coachImage ?? '/default.jpg'}
       rating={item.rating}
       slug={item.slug}
     />
@@ -245,7 +254,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           )}
         </div>
 
-        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+        {/* <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Teammates
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -267,6 +276,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             location={toSentenceCase(item.location)}
             height={item.height}
             weight={item.weight}
+            graduation={item.graduation}
             />
           ) )) : (
             <p>No Teammates Found</p>
@@ -276,8 +286,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           
 
  
-        </div>
-      </div>
+        </div>*/}
+      </div> 
     </>
   );
 };

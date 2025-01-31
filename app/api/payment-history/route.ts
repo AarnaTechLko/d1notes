@@ -38,7 +38,8 @@ export async function GET(request: NextRequest) {
        amount:payments.amount,
        status:payments.status,
        created_at:payments.created_at,
-       currency:payments.currency
+       currency:payments.currency,
+       slug:coaches.slug
      
       })
       .from(payments)

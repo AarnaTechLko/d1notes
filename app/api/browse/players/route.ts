@@ -67,6 +67,8 @@ export async function GET(req: NextRequest) {
         height: users.height,
         jersey: users.jersey,
         weight: users.weight,
+        birthday: users.birthday,
+        graduation: users.graduation,
         coachName: sql`coa."firstName"`.as("coachName"),
         coachLastName: sql`coa."lastName"`.as("coachLastName"),
         enterpriseName: sql`ent."organizationName"`.as("enterpriseName"),
@@ -98,6 +100,8 @@ export async function GET(req: NextRequest) {
       location: coach.location,
       height: coach.height,
       weight: coach.weight,
+      graduation: coach.graduation,
+      birthday: coach.birthday,
 
     }));
     // Return the coach list as a JSON response

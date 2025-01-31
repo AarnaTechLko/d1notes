@@ -48,7 +48,9 @@ export const users = pgTable(
     height: text("height"),
     weight: text("weight"),
     parent_id:integer("parent_id"),
+    gpa:integer("gpa"),
     graduation: text("graduation"),
+    school_name: text("school_name"),
     status: varchar("status").default("Inactive"),
     visibility: varchar("visibility").default("on"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -123,6 +125,7 @@ export const playerEvaluation = pgTable(
     turnaroundTime: varchar("turnaroundTime"), // Use enum type here
     payment_status: varchar("payment_status"),
     created_at: timestamp("created_at").defaultNow().notNull(),
+    accepted_at: timestamp("accepted_at"),
     rating: integer("rating"), // New field for rating, nullable by default
     remarks: text("remarks"),
     videoOneTiming:text('videoOneTiming'),

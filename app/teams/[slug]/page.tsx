@@ -80,7 +80,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }
   // Fetch coach data
   useEffect(() => {
-    const payload = { slug: slug,loggeInUser:session?.user.id };
+    const payload = { slug: slug, loggeInUser: session?.user.id };
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/teams/profile/`, {
@@ -161,45 +161,45 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             </div>
 
             <div>
-            {!session ? (
-  <>
-    {isRequested > 0 ? (
-      <button
-        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-        disabled
-      >
-        Requested
-      </button>
-    ) : (
-      <button
-        onClick={() => setIsModalOpen(true)} // Open modal on click
-        className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
-      >
-        Request to Join
-      </button>
-    )}
-  </>
-) : (
-  <>
-    {isRequested > 0 ? (
-      <button
-        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-        disabled
-      >
-        Requested
-      </button>
-    ) : (
-      <button
-        onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
-        className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
-      >
-        Request to Join
-      </button>
-    )}
-  </>
-)}
+              {!session ? (
+                <>
+                  {isRequested > 0 ? (
+                    <button
+                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+                      disabled
+                    >
+                      Requested
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsModalOpen(true)} // Open modal on click
+                      className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                    >
+                      Request to Join
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  {isRequested > 0 ? (
+                    <button
+                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+                      disabled
+                    >
+                      Requested
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+                      className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      Request to Join
+                    </button>
+                  )}
+                </>
+              )}
 
-            </div>  
+            </div>
 
 
           </div>
@@ -269,7 +269,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   key={profile.slug}
                   rating={5}
                   coachName=''
-
+                  graduation=''
+                  birthdate=''
                   firstName={toSentenceCase(profile.firstName)}
                   lastName={toSentenceCase(profile.lastName)}
                   image={profile.image ?? '/default.jpg'}
@@ -293,13 +294,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <LoginModal isOpen={isModalOpen} coachslug={coachData.slug} onClose={() => setIsModalOpen(false)} />
       )}
 
-      {isJoinRequestModalOpen  && playerId && (
-        <JoinRequestModal 
-        isOpen={isJoinRequestModalOpen} 
-        onRequest={()=> setIsRequested(1)}
-        requestToID={coachData?.id.toString()}
-        type="team"
-        onClose={() => setIsJoinRequestModalOpen(false)}
+      {isJoinRequestModalOpen && playerId && (
+        <JoinRequestModal
+          isOpen={isJoinRequestModalOpen}
+          onRequest={() => setIsRequested(1)}
+          requestToID={coachData?.id.toString()}
+          type="team"
+          onClose={() => setIsJoinRequestModalOpen(false)}
         />
       )}
 

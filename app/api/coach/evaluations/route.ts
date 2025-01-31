@@ -37,8 +37,12 @@ export async function POST(req: NextRequest) {
         percentage:playerEvaluation.percentage,
         lighttype:playerEvaluation.lighttype,
         evaluationposition:playerEvaluation.position,
-        id:playerEvaluation.id
-        ,
+        id:playerEvaluation.id,
+        videoOneTiming: playerEvaluation.videoOneTiming,
+        videoTwoTiming: playerEvaluation.videoTwoTiming,
+        videoThreeTiming: playerEvaluation.videoThreeTiming,
+        accepted_at: playerEvaluation.accepted_at,
+        
       })
       .from(playerEvaluation)
       .innerJoin(users, eq(playerEvaluation.player_id, users.id)) // Assuming player_id is the foreign key in playerEvaluation
@@ -67,9 +71,10 @@ export async function PUT(req: NextRequest) {
     const evaluationData=await db.select().from(playerEvaluation).where(eq(playerEvaluation.id,parsedEvaluationId));
     let playerId=evaluationData[0].player_id;
     let requestToID=evaluationData[0].coach_id;
+    const currentDateTime = new Date();
     const result = await db
       .update(playerEvaluation)
-      .set({ status: status || undefined ,rejectremarks: remark || undefined }) // Set the new status value
+      .set({ status: status || undefined ,rejectremarks: remark || undefined, accepted_at:currentDateTime }) // Set the new status value
       .where(eq(playerEvaluation.id, parsedEvaluationId)) // Condition for evaluation ID
       .returning();
 

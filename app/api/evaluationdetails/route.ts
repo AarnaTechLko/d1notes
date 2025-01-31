@@ -51,10 +51,19 @@ export async function GET(request: NextRequest) {
         video_description:playerEvaluation.video_description,
         rating:playerEvaluation.rating,
         evaluationposition:playerEvaluation.position, 
+        videoOneTiming: playerEvaluation.videoOneTiming,
+        videoTwoTiming: playerEvaluation.videoTwoTiming,
+        videoThreeTiming: playerEvaluation.videoThreeTiming,
+        coachFirstName:coaches.firstName,
+        coachLastName:coaches.lastName,
+        coachSlug:coaches.slug,
+        playerSlug:users.slug,
+        updated_at:playerEvaluation.updated_at,
     }) // Explicitly select the fields
     .from(evaluationResults)
     .innerJoin(playerEvaluation, eq(playerEvaluation.id, evaluationResults.evaluationId))
     .innerJoin(users, eq(users.id, evaluationResults.playerId))
+    .innerJoin(coaches, eq(coaches.id, evaluationResults.coachId))
     .where(eq(evaluationResults.evaluationId,evaluationId)) // Spread the conditions array
     .limit(1)
     .execute();

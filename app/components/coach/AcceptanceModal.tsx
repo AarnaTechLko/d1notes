@@ -58,7 +58,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
     Swal.fire({
       title: 'Add a Comment',
       input: 'textarea',
-      inputPlaceholder: 'Write your Comment here...',
+      inputPlaceholder: 'Write your comment here...',
       inputAttributes: {
         'aria-label': 'Write your Comment here',
       },
@@ -116,10 +116,10 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-1/3">
         <div className="bg-blue-600 text-white p-4">
-          <h2 className="text-lg font-bold">Please take an action!</h2>
+          <h2 className="text-[16px] font-bold">You can Accept or Decline the requested evaluation.</h2>
         </div>
         <div className="p-6">
-          <p className="text-gray-700 mb-6">You can accept or reject the requested evaluation.</p>
+          
           <div className="flex justify-center space-x-2">
             <button
               onClick={handleAccept}

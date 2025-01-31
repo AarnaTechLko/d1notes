@@ -11,6 +11,7 @@ interface Item {
     description: string;
     created_at: string;
     currency: string;
+    slug: string;
 }
 
 interface PaymentDatatableProps {
@@ -92,16 +93,16 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
                         data.map(item => (
                             <tr key={item.id}>
                                  <td>{formatDate(item.created_at)}</td>
-                                <td>{item.firstName} {item.lastName}</td>
+                                <td><a href={`/coach/${item.slug}`} target='_blank' className='text-blue-700'>{item.firstName} {item.lastName}</a></td>
                                 <td>{item.review_title}</td>
                                 
                                 <td>{item.currency} {item.amount}</td>
                                 <td> 
                                     {item.status === 'paid' && (
-                                        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Paid</button>
+                                       'Paid'
                                     )}
                                     {item.status != 'paid' && (
-                                        <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Pending</button>
+                                       'Pending'
                                     )}
                                    
                                 </td>

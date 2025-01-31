@@ -34,6 +34,10 @@ export async function POST(req: NextRequest) {
         created_at: playerEvaluation.created_at,
         createdAt: playerEvaluation.created_at,
         updated_at: playerEvaluation.updated_at,
+        videoOneTiming: playerEvaluation.videoOneTiming,
+        videoTwoTiming: playerEvaluation.videoTwoTiming,
+        videoThreeTiming: playerEvaluation.videoThreeTiming,
+        accepted_at: playerEvaluation.accepted_at,
         slug: coaches.slug,
       })
       .from(playerEvaluation)  // This selects from the `playerEvaluation` table
@@ -109,6 +113,9 @@ export async function GET(request: NextRequest) {
         payment_status: playerEvaluation.payment_status,
         created_at: playerEvaluation.created_at,
         updated_at: playerEvaluation.updated_at,
+        videoOneTiming: playerEvaluation.videoOneTiming,
+        videoTwoTiming: playerEvaluation.videoTwoTiming,
+        videoThreeTiming: playerEvaluation.videoThreeTiming,
       })
       .from(playerEvaluation)
       .innerJoin(coaches, eq(playerEvaluation.coach_id, coaches.id))

@@ -36,6 +36,8 @@ interface FormValues {
   height: string;
   weight: string;
   graduation: string;
+  school_name: string;
+  gpa: number;
   image: string | null; // Updated to store Base64 string
 }
 
@@ -63,6 +65,8 @@ export default function Register() {
     height: "",
     weight: "",
     graduation: "",
+    school_name: "",
+    gpa:0,
     image: null,
   });
 
@@ -453,8 +457,58 @@ export default function Register() {
                   </select>
 
                 </div>
+                <div>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">School Name</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: St. Thomas International School"
+                    name="school_name"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.school_name}
+                    onChange={handleChange}
+                  />
 
+                </div>
+                <div>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
+                  <input
+                    type="number"
+                    placeholder="Ex: 4"
+                    name="gpa"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    min="0"
+                    value={formValues.gpa}
+                    onChange={handleChange}
+                  />
 
+                </div>
+
+                <div>
+                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    type="text"
+                    name="jersey"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.jersey}
+                    onChange={handleChange}
+                  />
+
+                </div>
+                <div>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
+                  <select
+                    name="sport"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.sport}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    <option value="Soccer">Soccer</option>
+
+                  </select>
+                  <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
+
+                </div>
 
                 <div>
                   <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="text-xs text-gray-500">(Optional)</span></label>
@@ -470,7 +524,7 @@ export default function Register() {
                 </div>
 
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
                   <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                   <select
@@ -523,7 +577,12 @@ export default function Register() {
                   />
 
                 </div>
-                <div>
+                
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+              
+
+              <div>
                   <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
                   <input
                     type="date"
@@ -535,11 +594,6 @@ export default function Register() {
                   />
 
                 </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
-              
-
-                {/* Grade Level */}
                 <div>
                   <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level<span className='mandatory'>*</span></label>
 
@@ -575,32 +629,7 @@ export default function Register() {
                   </select>
 
                 </div>
-                <div>
-                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="text-xs text-gray-500">(Optional)</span></label>
-                  <input
-                    type="text"
-                    name="jersey"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value={formValues.jersey}
-                    onChange={handleChange}
-                  />
-
-                </div>
-                <div>
-                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
-                  <select
-                    name="sport"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value={formValues.sport}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    <option value="Soccer">Soccer</option>
-
-                  </select>
-                  <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
-
-                </div>
+                
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
              
@@ -672,7 +701,7 @@ export default function Register() {
                   <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
                   <input
                     type="text"
-                    placeholder="Pre ECNL, ECNL and ECRL"
+                    placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."
                     name="league"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.league}
@@ -680,6 +709,7 @@ export default function Register() {
                   />
 
                 </div>
+                
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>

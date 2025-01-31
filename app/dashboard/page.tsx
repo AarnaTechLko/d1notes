@@ -267,27 +267,43 @@ const Dashboard: React.FC = () => {
         
       },
       {
-        Header: 'Time Remaining',
+        Header: selectedTab === '0' ? 'Completion Time' : 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
-          const createdAt = row?.original?.createdAt;
-          const turnaroundTime = row?.original?.turnaroundTime;
+          
       
-          if (createdAt && turnaroundTime !== undefined && turnaroundTime !== null) {
-            const hoursFromNow = calculateHoursFromNow(createdAt);
-            if (hoursFromNow !== null && hoursFromNow !== undefined) {
-              const remainingTime = turnaroundTime - hoursFromNow;
-              const boxClass = remainingTime >= 0 
-                ? 'bg-green-900 text-white px-2 py-1 rounded' 
-                : 'bg-red-600 text-white px-2 py-1 rounded';
-              return (
-                <span className={boxClass}>
-                  {remainingTime.toFixed(2)} Hours
-                </span>
-              );
+         
+            const accepted_at = row?.original?.accepted_at;
+            const turnaroundTime = row?.original?.turnaroundTime;
+           if(selectedTab=='1')
+           {
+            if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
+              const hoursFromNow = calculateHoursFromNow(accepted_at);
+              if (hoursFromNow !== null && hoursFromNow !== undefined) {
+                const remainingTime = turnaroundTime - hoursFromNow;
+                const boxClass = remainingTime >= 0 
+                  ? 'bg-green-900 text-white px-2 py-1 rounded' 
+                  : 'bg-red-600 text-white px-2 py-1 rounded';
+                return (
+                  <span className={boxClass}>
+                     {remainingTime.toFixed(2)} Hours
+                  </span>
+                );
+              }
             }
-          }
-          return 'N/A'; // Fallback value if data is missing
+           }
+           else{
+            const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
+            return (
+  
+              <span className={boxClass}>
+                 {turnaroundTime} Hours
+              </span>
+            );
+            
+        
+             // Fallback value if data is missing
+          } // Fallback value if data is missing
         },
       },
       {
@@ -527,7 +543,7 @@ const Dashboard: React.FC = () => {
                 </div>
               ))}
 
-
+ 
        
         </div>
       </main>

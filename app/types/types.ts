@@ -34,6 +34,14 @@ export interface Evaluation {
     rejectremarks:string;
     slug:string;
     playerSlug:string;
+    videoOneTiming:string;
+    videoTwoTiming:string;
+    videoThreeTiming:string;
+    coachFirstName:string;
+    coachLastName:string;
+    coachSlug:string;
+    updated_at:string;
+    accepted_at:string;
      
     
   }

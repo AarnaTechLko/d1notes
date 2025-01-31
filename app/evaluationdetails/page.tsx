@@ -31,7 +31,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
     const [remarks, setRemarks] = useState<string>('');
     const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
 
-    const formattedDate = evaluationData?.created_at ? format(new Date(evaluationData.created_at), 'MM/dd/yyyy') : '';
+    const formattedDate = evaluationData?.updated_at ? format(new Date(evaluationData.updated_at), 'MM/dd/yyyy') : '';
 
     const handleSubmitRating = async () => {
         try {
@@ -135,25 +135,49 @@ setLoading(false);
     height={30}
   />
 )}
-                            <span className="text-gray-700">{evaluationData?.first_name} {evaluationData?.last_name}</span>
-                            <span className="ml-2 text-gray-500">{evaluationData?.position}, {evaluationData?.team} #{evaluationData?.number}</span>
+                            <span className="text-gray-700">
+                                <a href={`/players/${evaluationData?.playerSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
+                             
                         </div>
 
-
-
-                        <div className="mb-4">
-                            <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>
+                        <div className="flex items-center mb-4">
+                            <strong className="mr-2">Coach:</strong>
+                            {evaluationData?.image && evaluationData?.image !== 'null' && (
+  <Image
+    src={evaluationData?.image}
+    alt="Player Avatar"
+                    className='w-12 h-12 mr-3 rounded-full object-cover'
+                    width={30}
+                    height={30}
+  />
+)}
+{(!evaluationData?.image || evaluationData?.image === 'null') && (
+  <Image
+    src={defaultImage}
+    alt="Player Avatar"
+    className='w-12 h-12 mr-3 rounded-full object-cover'
+    width={30}
+    height={30}
+  />
+)}
+                            <span className="text-gray-700">
+                                <a href={`/coach/${evaluationData?.coachSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.coachFirstName} {evaluationData?.coachLastName}</a></span>
+                             
                         </div>
 
                         <div className="mb-4">
-                            <strong className="mr-2">Primary link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a>
+                            <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span>
+                        </div>
+
+                        <div className="mb-4">
+                            <strong className="mr-2">Video link One:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
                         </div>
                         <div className="mb-4">
-                            <strong className="mr-2">Video link Two:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>
+                            <strong className="mr-2">Video link Two:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
                         </div>
                         <div className="mb-4">
                             <strong className="mr-2">Video  link Three :</strong> <a href={evaluationData?.video_link_three
-                            } className="text-blue-500" target='_blank'>Link to video</a>
+                            } className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min. 
                         </div>
 
                         <div className="mb-4">
@@ -241,7 +265,7 @@ setLoading(false);
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
-                        <h3 className="text-lg font-semibold mb-2">Provide Your Rating and Feedback</h3>
+                        <h3 className="text-lg text-center font-semibold mb-2">Provide Your Rating and Testimonial.</h3>
 
                         {/* Star Rating */}
                         <div className="flex justify-center items-center mb-4">
@@ -270,7 +294,7 @@ setLoading(false);
                         <textarea
                             className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none"
                             rows={4}
-                            placeholder="Enter your remarks..."
+                            placeholder="Provide Your Rating and Testimonial..."
                             value={remarks}
                             onChange={(e) => setRemarks(e.target.value)}
                         />

@@ -298,7 +298,7 @@ const Home: React.FC = () => {
                 onClick={handleReject}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg ml-3"
               >
-                Reject
+                Decline
               </button>
             </div>
           </div>

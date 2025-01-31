@@ -107,16 +107,16 @@ const Dashboard: React.FC = () => {
     },
         
       },
-      {
+      { 
         Header: selectedTab === '0' ? 'Completion Time' : 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
-          const createdAt = row?.original?.createdAt;
+          const accepted_at = row?.original?.accepted_at;
           const turnaroundTime = row?.original?.turnaroundTime;
          if(selectedTab=='1')
          {
-          if (createdAt && turnaroundTime !== undefined && turnaroundTime !== null) {
-            const hoursFromNow = calculateHoursFromNow(createdAt);
+          if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
+            const hoursFromNow = calculateHoursFromNow(accepted_at);
             if (hoursFromNow !== null && hoursFromNow !== undefined) {
               const remainingTime = turnaroundTime - hoursFromNow;
               const boxClass = remainingTime >= 0 
