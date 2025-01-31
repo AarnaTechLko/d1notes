@@ -85,8 +85,8 @@ const Dashboard: React.FC = () => {
           className={`${stat.bgColor} text-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center`}
         >
           <div className="text-4xl mb-2">{stat.icon}</div>
-          <h3 className="text-lg font-semibold">{stat.label}</h3>
-          <p className="text-2xl font-bold">{stat.value}</p>
+          <h3 className="text-[15px] font-semibold">{stat.label}</h3>
+          <p className="text-[18px] font-bold">{stat.value}</p>
         </div>
       ))}
     </div>

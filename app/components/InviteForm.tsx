@@ -8,17 +8,18 @@ import { countryCodesList } from "@/lib/constants";
 interface InviteFormProps {
   usertype: string;
   teamId?:string;
+  registrationType?:string;
 }
 
 
-const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
+const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationType }) => {
   const [emails, setEmails] = useState<string[]>([""]);
   const [mobiles, setMobiles] = useState<{ code: string; number: string }[]>([
     { code: "+1", number: "" },
   ]);
   const [loadingData, setLoadingData] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [registrationType, setRegistrationType] = useState<"coach" | "player">("player");
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [teams, setTeams] = useState<[] | null >([]);
  
@@ -157,9 +158,6 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
   useEffect(() => {
     fetchTeams();
    
-    if (usertype === "Coach") {
-      setRegistrationType("coach");
-    }
    
     if(session?.user.type==='Team')
     {
@@ -177,32 +175,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
     >
       
 
-      {usertype !== "Coach" && usertype !== "Team" && (
-        <div className="mb-6 flex justify-center space-x-10">
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="registrationType"
-              value="coach"
-              checked={registrationType === "coach"}
-              onChange={() => setRegistrationType("coach")}
-              className="text-blue-500 border-2 border-blue-500 rounded-full p-2"
-            />
-            <span className="text-lg font-medium">Coach</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="registrationType"
-              value="player"
-              checked={registrationType === "player"}
-              onChange={() => setRegistrationType("player")}
-              className="text-blue-500 border-2 border-blue-500 rounded-full p-2"
-            />
-            <span className="text-lg font-medium">Player</span>
-          </label>
-        </div>
-      )}
+     
  
       <div className="mb-6">
   <label className="block text-xl font-medium text-gray-700 mb-4">

@@ -18,7 +18,10 @@ export async function GET(req: NextRequest) {
   const year = searchParams.get('year') || '';  
   
   try {
-    const conditions = [isNotNull(teams.team_name)];
+    const conditions = [
+      isNotNull(teams.team_name), 
+      eq(teams.status, 'Active')
+    ];
     
     if (country) {
       conditions.push(eq(teams.country, country));

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
 import { eq, inArray, and } from "drizzle-orm";
-import { users, teamPlayers, licenses, teams } from '../../../../../lib/schema';
+import { users, teamPlayers, licenses, teams, teamCoaches,coaches } from '../../../../../lib/schema';
 import { number } from 'zod';
 import { sendEmail } from '@/lib/helpers';
+ 
 
 const generateRandomPassword = (length = 12) => {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-+=<>?";
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
             let teamId = existingTeamsMap.get(teamNameFormatted); // Check if the team exists
 
             if (!teamId) {
+                
                 // If team does not exist, insert it
                 const teamInsert = await db.insert(teams).values({
                     team_name: item.TeamName,
@@ -106,7 +108,44 @@ export async function POST(req: NextRequest) {
                 });
             }
 
-            return { teamId, playersToInsert };
+
+
+
+            const coachToInsert = [];
+            for (const coach of teamItems) {
+                const password = generateRandomPassword(10);
+                const hashedPassword = await hash(password, 10);
+                const userEmail = coach.CoachEmail;
+
+               
+                let coachId;
+                const existingUser = await db.select()
+                    .from(coaches)
+                    .where(eq(coaches.email, userEmail));
+
+                if (existingUser.length > 0) {
+                    coachId = existingUser[0].id;
+                } else {
+                    const user = await db.insert(coaches).values({
+                        email: userEmail,
+                        password: hashedPassword,
+                       status:'Active',
+                        enterprise_id: enterprise_id
+                    }).returning({ userId: users.id });
+
+                    coachId = user[0].userId;
+                }
+
+                coachToInsert.push({
+                    coachId,
+                    password: hashedPassword,
+                    email: userEmail,
+                });
+            }
+
+
+
+            return { teamId, playersToInsert, coachToInsert };
         }));
 
         // Now insert players for each respective team
@@ -114,16 +153,16 @@ export async function POST(req: NextRequest) {
             const teamId = data.teamId;
 
             // Insert players into teamPlayers
-            const insertedPlayers = await db.insert(teamPlayers).values(
-                data.playersToInsert.map((player) => ({
+            const insertedCoaches = await db.insert(teamCoaches).values(
+                data.coachToInsert.map((player) => ({
                     enterprise_id: Number(enterprise_id),
                     teamId: Number(teamId),
-                    playerId: Number(player.userId),
+                    coachId: Number(player.coachId),
                 }))
-            ).returning({ playerId: teamPlayers.playerId });
+            ).returning({ coachId: teamCoaches.coachId });
 
-            for (const insertedPlayer of insertedPlayers) {
-                const player_id = insertedPlayer.playerId;
+            for (const insertedPlayer of insertedCoaches) {
+                const player_id = insertedPlayer.coachId;
 
                 // Find one free license for the given enterprise
                 const licenseToUse = await db.select()
@@ -150,6 +189,18 @@ export async function POST(req: NextRequest) {
                         .where(eq(users.id, player_id));
                 }
             }
+
+
+
+            const insertedPlayers = await db.insert(teamPlayers).values(
+                data.playersToInsert.map((player) => ({
+                    enterprise_id: Number(enterprise_id),
+                    teamId: Number(teamId),
+                    playerId: Number(player.userId),
+                }))
+            ).returning({ playerId: teamPlayers.playerId });
+
+
         }
 
         return NextResponse.json({ success: true, message: 'Teams and players inserted successfully' });

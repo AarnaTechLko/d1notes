@@ -128,7 +128,7 @@ export default function TeamsPage({ params }: PageProps) {
             <div className="tab-content mt-4">
               {activeTab === 0 && (
                 <div className="tab-panel">
-                  <InviteForm usertype="Coach" teamId={teamId}/>
+                  <InviteForm usertype="Club" teamId={teamId}  registrationType="coach"/>
                 </div>
               )}
               {activeTab === 1 && (

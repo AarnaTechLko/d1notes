@@ -75,8 +75,15 @@ const Home: React.FC = () => {
           csvData,
         }),
       });
-      if (!response.ok) throw new Error("Failed to submit data");
       const data = await response.json();
+      if (!response.ok)
+      {
+        showError(data.duplicates+" "+data.message);
+        
+        setIsSubmit(false); 
+        return
+      }
+      
       if(data.success==false)
       {
         setFailedData(data.duplicates);
@@ -92,7 +99,7 @@ const Home: React.FC = () => {
       setCsvData([]);
     } catch (error) {
       setIsSubmit(false);
-      showError("Error in submission.");
+      
     }
   };
 
@@ -179,6 +186,7 @@ const Home: React.FC = () => {
     <table className="w-full mt-2 border border-gray-300">
       <thead>
         <tr>
+          <th>Coach Email</th>
           <th>Player Email</th>
           <th>Team Name</th>
           <th>Gender</th>
@@ -189,6 +197,7 @@ const Home: React.FC = () => {
       <tbody>
         {failedData.map((row, index) => (
           <tr key={index}  className="bg-red-100">
+            <td>{row.CoachEmail}</td>
             <td>{row.PlayersEmail}</td>
             <td>{row.TeamName}</td>
             <td>{row.Gender}</td>
@@ -240,6 +249,7 @@ const Home: React.FC = () => {
                     <table className="w-full mt-2">
                       <thead>
                         <tr>
+                          <th>Coach Email</th>
                           <th>Player Email</th>
                           <th>Team Name</th>
                           <th>Gender</th>
@@ -253,6 +263,16 @@ const Home: React.FC = () => {
                       <tbody>
                         {csvData.map((row, index) => (
                           <tr key={index}>
+                            <td>
+                              <input
+                                type="text"
+                                value={row.CoachEmail}
+                                onChange={(e) =>
+                                  handleInputChange(index, "CoachEmail", e.target.value)
+                                }
+                                className="w-full"
+                              />
+                            </td>
                             <td>
                               <input
                                 type="text"
