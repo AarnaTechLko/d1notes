@@ -160,7 +160,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </p>
             </div>
 
-            {/* <div>
+            <div>
             {!session ? (
   <>
     {isRequested > 0 ? (
@@ -199,8 +199,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   </>
 )}
 
-            </div> */}
-
+            </div>  
 
 
           </div>

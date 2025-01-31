@@ -42,24 +42,37 @@ export async function POST(req: NextRequest) {
 
         // Fetch existing team names from the database
         const teamNames = Array.from(teamNameMap.keys());
-        const existingTeams = await db.select()
+        const existingTeams = await db
+            .select({ id: teams.id, slug: teams.slug })
             .from(teams)
             .where(inArray(teams.slug, teamNames));
 
-        const existingSlugs = new Set(existingTeams.map(team => team.slug));
+        const existingTeamsMap = new Map(existingTeams.map(team => [team.slug, team.id]));
 
         const insertData = await Promise.all(uniquePayload.map(async (teamItems) => {
             const item = teamItems[0]; // Just pick the first item to determine the team details
             let teamNameFormatted = item.TeamName.trim().toLowerCase().replace(/\s+/g, '-');
-            let slug = teamNameFormatted;
+            let teamId = existingTeamsMap.get(teamNameFormatted); // Check if the team exists
 
-            // Ensure unique slug
-            let counter = 1;
-            while (existingSlugs.has(slug)) {
-                slug = `${teamNameFormatted}-${counter}`;
-                counter++;
+            if (!teamId) {
+                // If team does not exist, insert it
+                const teamInsert = await db.insert(teams).values({
+                    team_name: item.TeamName,
+                    created_by: 'Enterprise',
+                    creator_id: enterprise_id,
+                    slug: teamNameFormatted,
+                    team_type: item.Gender,
+                    team_year: item.Year,
+                    club_id: enterprise_id,
+                    status: 'Active',
+                    logo: '',
+                    cover_image: '',
+                    description: 'Team Created',
+                }).returning({ teamId: teams.id });
+
+                teamId = teamInsert[0].teamId;
+                existingTeamsMap.set(teamNameFormatted, teamId); // Store newly created team ID
             }
-            existingSlugs.add(slug); // Add to set to track used slugs
 
             const playersToInsert = [];
             for (const player of teamItems) {
@@ -74,10 +87,8 @@ export async function POST(req: NextRequest) {
                     .where(eq(users.email, userEmail));
 
                 if (existingUser.length > 0) {
-                    // If the user exists, use their existing userId
                     userId = existingUser[0].id;
                 } else {
-                    // If the user doesn't exist, create a new user
                     const user = await db.insert(users).values({
                         email: userEmail,
                         password: hashedPassword,
@@ -89,89 +100,55 @@ export async function POST(req: NextRequest) {
                 }
 
                 playersToInsert.push({
-                    userId, // associate the correct player with the team
+                    userId,
                     password: hashedPassword,
                     email: userEmail,
                 });
             }
 
-            const teamData = {
-                team_name: item.TeamName,
-                created_by: 'Enterprise',
-                creator_id: enterprise_id,
-                slug: slug,
-                team_type: item.Gender,
-                team_year: item.Year,
-                club_id: enterprise_id,
-                status: 'Active',
-                logo: '',
-                cover_image: '',
-                description: 'Team Created',
-            };
-
-            return { teamData, playersToInsert };
+            return { teamId, playersToInsert };
         }));
 
-        // Insert teams and players for each unique team
-        const insertTeamsData = insertData.map((data) => data.teamData);
+        // Now insert players for each respective team
+        for (const data of insertData) {
+            const teamId = data.teamId;
 
-        if (insertTeamsData.length > 0) {
-            // Insert teams
-            const teamInserted = await db.insert(teams).values(insertTeamsData).returning({ teamId: teams.id });
+            // Insert players into teamPlayers
+            const insertedPlayers = await db.insert(teamPlayers).values(
+                data.playersToInsert.map((player) => ({
+                    enterprise_id: Number(enterprise_id),
+                    teamId: Number(teamId),
+                    playerId: Number(player.userId),
+                }))
+            ).returning({ playerId: teamPlayers.playerId });
 
-            // Now insert players for each respective team
-            for (let i = 0; i < insertData.length; i++) {
-                const teamData = insertData[i];
-                const teamId = teamInserted[i].teamId; // Get the inserted teamId
+            for (const insertedPlayer of insertedPlayers) {
+                const player_id = insertedPlayer.playerId;
 
-                // Insert players into teamPlayers (one player can belong to multiple teams)
-                const insertedPlayers = await db.insert(teamPlayers).values(
-                    teamData.playersToInsert.map((player) => ({
-                        enterprise_id: Number(enterprise_id),
-                        teamId: Number(teamId),
-                        playerId: Number(player.userId),
-                    }))
-                ).returning({playerId:teamPlayers.playerId}); // Adjust based on your database and library support
-                
-                // Process the result if needed
-                for (const insertedPlayer of insertedPlayers) {
-                    const player_id = insertedPlayer.playerId;
-                  
-                    // Find one free license for the given enterprise
-                    const licenseToUse = await db.select()
-                      .from(licenses)
-                      .where(
+                // Find one free license for the given enterprise
+                const licenseToUse = await db.select()
+                    .from(licenses)
+                    .where(
                         and(
-                          eq(licenses.enterprise_id, Number(enterprise_id)),
-                          eq(licenses.status, 'Free')
+                            eq(licenses.enterprise_id, Number(enterprise_id)),
+                            eq(licenses.status, 'Free')
                         )
-                      )
-                      .limit(1);  // Fetch only one license
-                  
-                    if (licenseToUse.length > 0) {
-                      const updateLicenses = await db.update(licenses)
+                    )
+                    .limit(1);
+
+                if (licenseToUse.length > 0) {
+                    await db.update(licenses)
                         .set({
-                          status: 'Consumed',
-                          used_by: player_id.toString(),
-                          used_for: 'Player',
+                            status: 'Consumed',
+                            used_by: player_id.toString(),
+                            used_for: 'Player',
                         })
-                        .where(eq(licenses.id, licenseToUse[0].id));  // Update specific license
-                  
-                      if (updateLicenses) {
-                        await db.update(users)
-                          .set({
-                            status: 'Active'
-                          })
-                          .where(eq(users.id, player_id));
-                      }
-                    }
-                  }
-                  
+                        .where(eq(licenses.id, licenseToUse[0].id));
 
-
-
-                
-
+                    await db.update(users)
+                        .set({ status: 'Active' })
+                        .where(eq(users.id, player_id));
+                }
             }
         }
 
@@ -182,6 +159,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
 
 
 

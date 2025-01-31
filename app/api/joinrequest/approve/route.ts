@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db"; // Adjust the path based on your setup
-import { coaches, users, enterprises, joinRequest, teams, chats, chatfriend, messages } from "@/lib/schema";
+import { coaches, users, enterprises, joinRequest, teams, chats, chatfriend, messages, teamPlayers } from "@/lib/schema";
 import { eq, sql, and } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
         const { playerId,requestToID,sender_type ,type,message,status,clubId} = body;
 
-        await db
+       const updateQuery= await db
             .update(joinRequest)
             .set({ status:status})
             .where(
@@ -18,13 +18,27 @@ export async function POST(req: Request) {
                     eq(joinRequest.requestToID, requestToID),
                     eq(joinRequest.player_id, playerId),
                 )
-            );
+            ).returning({type:joinRequest.type});
 
+           if(updateQuery[0].type=='team')
+           {
+            await db.update(users).set({team_id:requestToID}).where(eq(users.id,playerId));
+
+            await db.insert(teamPlayers).values(
+                {
+                  teamId: requestToID,
+                  playerId:playerId,
+                  enterprise_id:0 ,
+                }
+                
+              ).returning();
+
+           }
 
         if (!playerId) {
             return NextResponse.json(
                 { error: "Invalid payload: teamId is missing or invalid." },
-                { status: 400 }
+                { status: 500 }
             );
         }
 

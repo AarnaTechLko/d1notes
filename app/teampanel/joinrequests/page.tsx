@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
-import Sidebar from '../../components/enterprise/Sidebar';
+import Sidebar from '../../components/teams/Sidebar';
 import { useRouter } from 'next/navigation';
 import { showSuccess } from '@/app/components/Toastr';
 
@@ -30,30 +30,31 @@ const Home: React.FC = () => {
   const { data: session } = useSession();
   
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const fetchOrders = async () => {
+    const session = await getSession();
+    const enterpriseId = session?.user?.id; // Adjust according to your session structure
+
+    if (!enterpriseId) {
+      console.error('Enterprise ID not found in session');
+      return;
+    }
+
+    const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=team`);
+
+    if (!response.ok) {
+      console.error('Failed to fetch orders');
+      return;
+    }
+
+    const data = await response.json();
+    setOrders(data.data);
+    setFilteredOrders(data.data); // Initially show all orders
+  };
   useEffect(() => {
-    const fetchOrders = async () => {
-      const session = await getSession();
-      const enterpriseId = session?.user?.id; // Adjust according to your session structure
-
-      if (!enterpriseId) {
-        console.error('Enterprise ID not found in session');
-        return;
-      }
-
-      const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=club`);
-
-      if (!response.ok) {
-        console.error('Failed to fetch orders');
-        return;
-      }
-
-      const data = await response.json();
-      setOrders(data.data);
-      setFilteredOrders(data.data); // Initially show all orders
-    };
+    
 
     fetchOrders();
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     if (search) {
@@ -93,17 +94,19 @@ const Home: React.FC = () => {
     const requestToID=selectedOrder.requestToID;
     const sender_type='player';
     const type=selectedOrder.type;
+    const status='Approved';
     const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
     try {
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message}),
+        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message,status}),
       });
 
       if (response.ok) {
         showSuccess("Join Request Approved successfully.");
-        router.push('/coach/messages');
+        ///router.push('/coach/messages');
+        fetchOrders();
       } else {
         console.error('Failed to accept request');
       }

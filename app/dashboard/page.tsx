@@ -8,6 +8,7 @@ import { Evaluation, EvaluationsByStatus } from "../types/types"; // Import the 
 import { FaEye } from "react-icons/fa";
 import ProfileCard from "../components/ProfileCard";
 import { calculateHoursFromNow } from "@/lib/clientHelpers";
+import TeamProfileCard from '@/app/components/teams/ProfileCard';
 
 const Dashboard: React.FC = () => {
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
@@ -42,6 +43,7 @@ const Dashboard: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentDescription, setCurrentDescription] = useState<string>("");
   const [coaches, setCoaches] = useState<Profile[]>([]);
+  const [teams, setTeams] = useState<[]>([]);
   const [playerClubId,setPlayerClubid]=useState<string>('')
   const [freeEvaluations,setFreeEvaluations]=useState(0);
   const [allowedFreeRequests,setAllowedFreeRequests]=useState(0);
@@ -192,6 +194,45 @@ const Dashboard: React.FC = () => {
  
     setLoading(false); // Set loading to false after data is fetched
   };
+
+
+
+
+
+  const fetchTeams = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    const session = await getSession();
+    const userId = session?.user.id;
+ 
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const response = await fetch("/api/player/teams", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        
+      }),
+    });
+
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error("Failed to fetch evaluations");
+    }
+
+    const coachData = await response.json();
+    
+    setTeams(coachData);
+ 
+    setLoading(false); // Set loading to false after data is fetched
+  };
+
+
   
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
@@ -209,6 +250,7 @@ const Dashboard: React.FC = () => {
     fetchCoach();
     fetchFreeEvaluations();
     fetchRequests();
+    fetchTeams();
   }, [selectedTab]);
 
   // Define columns for the react-table with proper types
@@ -443,7 +485,7 @@ const Dashboard: React.FC = () => {
 </div>
         </div>
  
-        <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
+        {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Coaches</h3></div>
         
       {coaches.map((profile) => (
@@ -462,6 +504,25 @@ const Dashboard: React.FC = () => {
                     usedIn='playerlogin'
                     playerClubId={Number(playerClubId)}
                     coachClubId={profile.enterprise_id}
+                  />
+                </div>
+              ))}
+
+
+       
+        </div> */}
+        <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
+          <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>
+        
+      {teams.map((item:any) => (
+                <div className="w-full lg:w-auto" key={item.id}>
+                  <TeamProfileCard
+                     key={item?.teamSlug}
+                     creatorname={item.creatorName}
+                     teamName={item.teamName} // Ensure `team_name` is correct
+                     logo={item.logo ?? '/default.jpg'}
+                     rating={5}
+                     slug={item.teamSlug}
                   />
                 </div>
               ))}

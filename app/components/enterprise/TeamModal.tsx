@@ -404,7 +404,7 @@ export default function TeamModal({
         </div> */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Age<span className="mandatory">*</span>
+            Year <span className="mandatory">*</span>
           </label>
           <select
             value={formValues.team_year}

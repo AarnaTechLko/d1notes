@@ -15,7 +15,7 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
-    window.location.href = `/teams/${slug}`;
+    window.open(`/teams/${slug}`, '_blank');
   };
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
