@@ -123,7 +123,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
       registrationType,
       teamId,
     };
-
+ 
     try {
       const response = await fetch("/api/sendInvite", {
         method: "POST",

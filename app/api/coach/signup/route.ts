@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, otps } from '../../../../lib/schema';
+import { coaches, otps, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     
     // Parse the form data
     const body = await req.json();
-    const { email, password, otp,sendedBy, referenceId } = body;
+    const { email, password, otp,sendedBy, referenceId , teamId} = body;
 
     if (!email || !password) 
     {
@@ -53,19 +53,39 @@ export async function POST(req: NextRequest) {
       password: hashedPassword,
       createdAt: new Date(),
       visibility: "off",
+      team_id:teamId
     };
 
     if (sendedBy && referenceId) {
        if (sendedBy === 'Club') {
         userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
       }
+      if (sendedBy === 'Team') {
+        userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
+      }
     }
     const insertedUser = await db.insert(coaches).values(userValues).returning();
     
+    if(teamId)
+    {
+      if (teamId) {
+        await db.insert(teamCoaches).values(
+          {
+            teamId: Number(teamId),
+            coachId: insertedUser[0].id,
+            enterprise_id: Number(referenceId),
+          }
+          
+        ).returning();
+  
+      }
+    }
+
+
     const emailResult = await sendEmail({
       to: email,
       subject: "D1 NOTES Coach Registration",
-      text: "D1 NOTES Coach Registration",
+      text: "D1 NOTES Coach Registration", 
       html: `<p>Dear Coach! Your account creation as a Coach on D1 NOTES has been started. </p><p>Please complete your profile in next step to enjoy the evaluation from best coaches.</p>`,
   });
     // Return the response with the generated token

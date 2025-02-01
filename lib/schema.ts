@@ -317,6 +317,7 @@ export const teams=pgTable('teams', {
   address: text('address'),
   rating: integer('rating'),
   city: text('city'),
+  age_group: text('age_group'),
   leage: text('leage'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
@@ -343,7 +344,10 @@ export const invitations = pgTable("invitations", {
   email: text("email"),
   invitation_for: text("invitation_for"),
   mobile: text("mobile"),
-  invitation_link:text("invitation_link")
+  invitation_link:text("invitation_link"),
+  team_id:text("team_id"),
+  status: text("status"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
 export const playerbanner = pgTable("playerbanner", {
@@ -473,3 +477,4 @@ export const states=pgTable("states",{
   country_id:integer("country_id"),
  
 });
+

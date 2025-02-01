@@ -28,6 +28,7 @@ const formSchema = z
     confirm_password: z.string(),
     loginAs: z.literal('player'),
     referenceId: z.string().optional(),
+    teamId: z.string().optional(),
     sendedBy: z.string().optional(),
   })
   .refine((data) => data.password === data.confirm_password, {
@@ -46,7 +47,8 @@ export default function Register() {
     //otp: '', // Ensure otp is always a string
     loginAs: 'player',
     referenceId: '',
-    sendedBy: ''
+    sendedBy: '',
+    teamId: '',
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -57,6 +59,7 @@ export default function Register() {
   const [email, setEmail] = useState<string | null | undefined>();
   const [team, setTeam] = useState<string | null | undefined>();
   const [sendedBy, setSendedBy] = useState<string | null | undefined>();
+  const [teamId, setTeamId] = useState<string | null | undefined>();
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -79,13 +82,14 @@ export default function Register() {
         const decryptedData = decryptData(encryptedUid, secretKey);
         console.log('Decrypted data:', decryptedData);
         setReferenceId(decryptedData.userId);
+        setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.singleEmail);
-        setTeam(decryptedData.selectedTeam);
+        setTeam(decryptedData.teamId);
        
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
-          team: decryptedData.selectedTeam || '',
+          team: decryptedData.teamId || '',
         }));
         
         
@@ -149,12 +153,13 @@ export default function Register() {
         payload.referenceId = referenceId;
         payload.email = referenceEmail || '';
         payload.sendedBy = sendedBy || '';
+        payload.teamId = teamId || '';
       } else {
         delete payload.referenceId;  
         delete payload.sendedBy; 
          
       }
-   
+  
    const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

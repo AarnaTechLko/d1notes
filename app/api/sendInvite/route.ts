@@ -12,11 +12,11 @@ interface RequestBody {
   registrationType: string;
   userId: string;
   userName: string;
-  selectedTeam: string;
+  teamId: string;
 }
 
 export async function POST(req: NextRequest) {
-  const { emails, mobiles, usertype, registrationType, userId, userName,selectedTeam }: RequestBody = await req.json();
+  const { emails, mobiles, usertype, registrationType, userId, userName,teamId }: RequestBody = await req.json();
   const protocol = req.headers.get('x-forwarded-proto') || 'http';
   const host = req.headers.get('host');
   const baseUrl = `${protocol}://${host}`;
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   for (let index = 0; index < emails.length; index++) {
         const singleEmail = emails[index];
        
-        const payload = JSON.stringify({ userId, singleEmail,selectedTeam });
+        const payload = JSON.stringify({ userId, singleEmail,teamId });
         const encryptedString = encryptData(payload);
        
         if(registrationType==='player')
@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
             invitation_for:registrationType,
             mobile:allMobiles,
             invitation_link:inviteUrl,
-        
+            team_id:teamId,
+            status:'Sent'
         });
 
         const emailResult = await sendEmail({

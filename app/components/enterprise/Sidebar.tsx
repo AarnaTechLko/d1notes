@@ -182,7 +182,20 @@ const Sidebar: React.FC = () => {
             </li>
     )}
 
+<li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/enterprise/licenses" className="flex items-center space-x-2 p-2">
+                <CertificateIcon className='text-xl' />
 
+                <span>Licences</span>
+              </a>
+            </li>
+            <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/enterprise/joinrequests" className="flex items-center space-x-2 p-2">
+                <CertificateIcon className='text-xl' />
+
+                <span>Join Invitations</span>
+              </a>
+            </li>
 {/* {
     (session?.user.added_by === null || (session?.user.added_by && hasPurchaseHistory)) && (
             <li className="hover:bg-gray-700 rounded transition duration-200">

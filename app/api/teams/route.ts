@@ -88,12 +88,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, club_id, status,leage } = await req.json();
+  const { team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, club_id, status,leage,age_group } = await req.json();
   const timestamp = Date.now();
   const rpassword = generateRandomPassword(12);
   const password = await hash(rpassword, 10);
   const slug = `${team_name.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
-  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id, slug, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, password, club_id, status,leage }).returning();
+  const result = await db.insert(teams).values({ team_name, description, logo, created_by, creator_id, slug, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, password, club_id, status,leage,age_group }).returning();
   if (manager_name && manager_email && manager_phone) {
     const emailResult = await sendEmail({
       to: manager_email,
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, status,leage } = await req.json();
+    const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, status,leage,age_group } = await req.json();
 
 
 
@@ -117,7 +117,7 @@ export async function PUT(req: NextRequest) {
 
     const result = await db
       .update(teams)
-      .set({ team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, status,leage })
+      .set({ team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, status,leage,age_group })
       .where(eq(teams.id, id))
       .returning();
 

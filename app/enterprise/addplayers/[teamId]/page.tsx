@@ -76,6 +76,7 @@ export default function TeamsPage({ params }: PageProps) {
 
       const data = await res.json();
       setTeamName(data.team.team_name);
+      setTeamType(data.team.team_type);
     } catch (error) {
       console.error("Error fetching players:", error);
     }

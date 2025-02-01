@@ -8,14 +8,10 @@ import { showSuccess } from '@/app/components/Toastr';
 // Define the type for the data
 interface Order {
   id: number;
-  requestedToName: string;
-  message: string;
+  email: string;
+  invitation_for: string;
   status: string;
-  type: string;
-  first_name?: string;
-  last_name?: string;
-  playerId?: number;
-  requestToID?: number;
+ 
 }
 
 const Home: React.FC = () => {
@@ -58,7 +54,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.requestedToName.toLowerCase().includes(search.toLowerCase()) ||
+        order.email.toLowerCase().includes(search.toLowerCase()) ||
         order.status.toString().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
@@ -86,56 +82,9 @@ const Home: React.FC = () => {
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  const handleAccept = async () => {
-    if (!selectedOrder) return;
-    console.log(selectedOrder);
-    const playerId=selectedOrder.playerId;
-    const requestToID=selectedOrder.requestToID;
-    const sender_type='player';
-    const type=selectedOrder.type;
-    const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
-    try {
-      const response = await fetch(`/api/joinrequest/approve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message}),
-      });
+  
 
-      if (response.ok) {
-        showSuccess("Join Request Approved successfully.");
-        router.push('/coach/messages');
-      } else {
-        console.error('Failed to accept request');
-      }
-    } catch (error) {
-      console.error('Error accepting request:', error);
-    }
-
-    handleConfirmationClose(); // Close modal after accepting
-  };
-
-  const handleReject = async () => {
-    if (!selectedOrder) return;
  
-    try {
-      const response = await fetch(`/api/rejectRequest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id }),
-      });
-
-      if (response.ok) {
-        // Handle successful response (e.g., update UI)
-       
-      } else {
-        console.error('Failed to reject request');
-      }
-    } catch (error) {
-      console.error('Error rejecting request:', error);
-    }
-
-    handleConfirmationClose(); // Close modal after rejecting
-  };
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -153,8 +102,8 @@ const Home: React.FC = () => {
               <thead>
                 <tr>
                   <th>Serial Number</th>
-                  <th>Player Name</th>
-                  <th>Notes</th>
+                  <th>Email</th>
+                  <th>User Type</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -168,11 +117,11 @@ const Home: React.FC = () => {
        
         <td>
   {/* Name on top */}
- {order.first_name} {order.last_name} 
+ {order.email} 
  
 </td>
 
-        <td>{order.message}</td>
+        <td>{order.invitation_for.toUpperCase()	}</td>
         <td>
         <button
                           className={`px-4 py-2 rounded-lg text-white ${
@@ -189,7 +138,7 @@ const Home: React.FC = () => {
                             }
                           }}
                         >
-                          {order.status}
+                          {order.status.toUpperCase()}
                         </button>
         </td>
      
@@ -239,35 +188,7 @@ const Home: React.FC = () => {
         </div>
       </main>
 
-      {showConfirmation && selectedOrder && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
-            {/* Close Button */}
-            <button
-              onClick={handleConfirmationClose}
-              className="absolute top-2 right-2 text-gray-500 text-2xl"
-            >
-              &times;
-            </button>
-
-            <h3 className="text-xl font-semibold mb-4">Are you sure you want to proceed?</h3>
-            <div className="flex justify-center">
-              <button
-                onClick={handleAccept}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg mr-3"
-              >
-                Accept
-              </button>
-              <button
-                onClick={handleReject}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg ml-3"
-              >
-                Decline
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+     
     </div>
   );
 };

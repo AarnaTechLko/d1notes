@@ -34,6 +34,7 @@ type FormValues = {
   manager_name?: string;
   manager_email?: string;
   manager_phone?: string;
+  age_group?: string;
   club_id?: string;
   status?: string;
   leage?: string;
@@ -49,6 +50,9 @@ export default function TeamModal({
   onSubmit: (formValues: FormValues) => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","College","Semi Pro","Pro"];
+  const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
   const coverImageInputRef = useRef<HTMLInputElement | null>(null);
   const [creatorId, setCreatorId] = useState<string | null>(null);
   const [creatorName, setCreatorName] = useState<string | null>(null);
@@ -284,11 +288,26 @@ export default function TeamModal({
       //   showError("Coach is required.");
       //   return;
       // }
-  
-      if (!formValues.team_year) {
-        showError("Team Year is required.");
-        return;
-      }
+     
+  if(!selectedOption)
+  {
+    showError("Select Age Group or Birth Year");
+    return;
+  }
+  if(selectedOption!='ageGroup')
+  {
+    if (!formValues.team_year) {
+      showError("Select Birth Year.");
+      return;
+    }
+  }
+  else{
+    if (!formValues.age_group) {
+      showError("Select Age Group.");
+      return;
+    }
+  }
+      
   
       if (!formValues.team_type) {
         showError("Team Type is required.");
@@ -332,7 +351,7 @@ export default function TeamModal({
       } else {
         formValues.club_id = session?.user.id || '';
       }
-   
+   console.log(formValues);
      onSubmit(formValues);
     };
 
@@ -402,7 +421,7 @@ export default function TeamModal({
             components={{ Option: CustomOption }}
           />
         </div> */}
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700">
             Year <span className="mandatory">*</span>
           </label>
@@ -417,7 +436,7 @@ export default function TeamModal({
             <option value="2025">2025</option>
             <option value="2026">2026</option>
           </select>
-        </div>
+        </div> */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Gender<span className="mandatory">*</span>
@@ -436,6 +455,71 @@ export default function TeamModal({
           </select>
         
         </div>
+
+        <div className="space-x-4 mb-4">
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="ageGroup"
+            checked={selectedOption === "ageGroup"}
+            onChange={() => setSelectedOption("ageGroup")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "ageGroup"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            Age Group
+          </span>
+        </label>
+
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="birthYear"
+            checked={selectedOption === "birthYear"}
+            onChange={() => setSelectedOption("birthYear")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "birthYear"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            Birth Year
+          </span>
+        </label>
+      </div>
+
+      {/* Dropdowns */}
+      {selectedOption === "ageGroup" && (
+        <select className="w-full p-2 border rounded-md" name="age_group" onChange={handleChange} value={formValues.age_group}>
+          <option value="">Select Age Group</option>
+          {ageGroups.map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {selectedOption === "birthYear" && (
+        <select className="w-full p-2 border rounded-md" name="team_year" onChange={handleChange} value={formValues.team_year}>
+          <option value="">Select Birth Year</option>
+          {birthYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      )}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Leage<span className="mandatory">*</span>

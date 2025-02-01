@@ -139,7 +139,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           <div className="flex-1 text-center flex flex-col items-center space-y-4">
             <div className="flex-shrink-0">
               <Image
-                src={coachData.logo}
+                src={coachData.logo ?? '/default.jpg'}
                 alt={coachData.team_name}
                 width={120}
                 height={120}
@@ -160,7 +160,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </p>
             </div>
 
-            <div>
+            {/* <div>
               {!session ? (
                 <> 
                   {isRequested > 0 ? (
@@ -199,7 +199,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 </>
               )}
 
-            </div>
+            </div> */}
 
 
           </div>
@@ -209,19 +209,19 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         </div>
 
+
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-          <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">About Team</h2>
+            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">About Team</h2>
 
-        </div>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+          </div>
+          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
 
-          <p>{coachData.description}</p>
-        </div>
-
+            <p>{coachData.description}</p>
+          </div>
 
         {/* Header Section */}
 
-        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg">
+        <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg   transform transition-all duration-300 hover:shadow-lg">
 
           {/* Profile Image and Coach Info */}
           <div className="flex flex-col md:flex-row  mb-4 md:mb-0 md:mr-4">
@@ -231,7 +231,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
           </div>
 
-
+        
         </div>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
@@ -241,19 +241,21 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
           <div className="flex flex-col md:flex-row md:space-x-8">
-            {coachList?.map((item: any) => {
-
-              return (
+            {Array.isArray(coachList) && coachList.length > 0 ? (
+              coachList.map((item: any) => (
                 <CoachProfileCard
                   key={item?.teamSlug}
                   name={item.firstName}
-                  organization={item.clubName} // Ensure `team_name` is correct
-                  image={item.image ?? '/default.jpg'}
+                  organization={item.clubName} // Ensure this field is correct
+                  image={item.image ?? "/default.jpg"}
                   rating={5}
                   slug={item.slug}
                 />
-              );
-            })}
+              ))
+            ) : (
+              <p>No coaches available.</p>
+            )}
+
 
           </div>
         </section>
@@ -263,29 +265,32 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-            {teamData?.map((profile: any) => (
-              <div className="w-full lg:w-auto" key={profile.slug}>
-                <ProfileCard
-                  key={profile.slug}
-                  rating={5}
-                  coachName=''
-                  graduation=''
-                  birthdate=''
-                  firstName={toSentenceCase(profile.firstName)}
-                  lastName={toSentenceCase(profile.lastName)}
-                  image={profile.image ?? '/default.jpg'}
-                  jersey={profile.jersey}
-                  slug={profile.slug}
-                  position={toSentenceCase(profile.position)}
-                  grade_level={toSentenceCase(profile.grade_level)}
-                  location={toSentenceCase(profile.location)}
-                  height={profile.height}
-                  weight={profile.weight}
-                />
+            {Array.isArray(teamData) && teamData.length > 0 ? (
+              teamData.map((profile: any) => (
+                <div className="w-full lg:w-auto" key={profile.slug}>
+                  <ProfileCard
+                    key={profile.slug}
+                    rating={5}
+                    coachName=""
+                    graduation=""
+                    birthdate={profile.birthdate}
+                    firstName={toSentenceCase(profile.firstName)}
+                    lastName={toSentenceCase(profile.lastName)}
+                    image={profile.image ?? "/default.jpg"}
+                    jersey={profile.jersey}
+                    slug={profile.slug}
+                    position={toSentenceCase(profile.position)}
+                    grade_level={toSentenceCase(profile.grade_level)}
+                    location={toSentenceCase(profile.location)}
+                    height={profile.height}
+                    weight={profile.weight}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No team data available.</p>
+            )}
 
-
-              </div>
-            ))}
 
           </div>
         </section>

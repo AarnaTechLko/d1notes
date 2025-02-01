@@ -37,12 +37,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
   ));
 
   const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
+    if(isoString)
+    {
+      const date = new Date(isoString);
+      return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
+    }
+    else{
+      return '<></>';
+    }
+   
   };
   
   const formattedDate = formatDate(birthdate);

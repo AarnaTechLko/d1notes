@@ -28,6 +28,7 @@ const formSchema = z
     loginAs: z.literal('coach'),
     referenceId: z.string().optional(),
     sendedBy: z.string().optional(),
+    teamId: z.string().optional(),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "Confirm Password must match Password.",
@@ -54,6 +55,7 @@ export default function Register() {
   const [otpLoading, setOtpLoading] = useState<boolean>(false);
   const [referenceId, setReferenceId] = useState<string | null | undefined>();
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
+  const [teamId, setTeamId] = useState<string | null | undefined>();
   const [email, setEmail] = useState<string | null | undefined>();
   const [sendedBy, setSendedBy] = useState<string | null | undefined>();
   const { data: session } = useSession();
@@ -76,6 +78,7 @@ export default function Register() {
         const decryptedData = decryptData(encryptedUid, secretKey);
         console.log('Decrypted data:', decryptedData);
         setReferenceId(decryptedData.userId);
+        setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.singleEmail);
         setEmail(decryptedData.singleEmail);
         setFormValues((prevValues) => ({
@@ -90,7 +93,7 @@ export default function Register() {
     }
 
     if (sendBy) {
-
+      console.log(sendBy);
       setSendedBy(sendBy || undefined);
     }
   }, [isClient]);
@@ -140,6 +143,7 @@ export default function Register() {
         payload.referenceId = referenceId;
         payload.email = referenceEmail || '';
         payload.sendedBy = sendedBy || '';
+        payload.teamId = teamId || '';
       } else {
         delete payload.referenceId;
         delete payload.sendedBy;
@@ -148,7 +152,7 @@ export default function Register() {
       console.log(payload);
       localStorage.setItem('email', payload.email);
       localStorage.setItem('key', payload.password);
-
+ 
       const response = await fetch('/api/coach/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

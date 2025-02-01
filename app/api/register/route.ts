@@ -19,8 +19,9 @@ export async function POST(req: NextRequest) {
 
   const logError = debug('app:error');
   const body = await req.json();
-  const { email, password, otp, sendedBy, referenceId, team } = body;
+  const { email, password, otp, sendedBy, referenceId, team,teamId } = body;
 let enterprise_id;
+let team_id;
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 500 });
   }
@@ -34,6 +35,7 @@ let enterprise_id;
 if(sendedBy=='Club')
 {
   enterprise_id=referenceId;
+  team_id=teamId;
 }
 
   // const existingOtp = await db
@@ -68,6 +70,7 @@ if(sendedBy=='Club')
       state: null,
       city: null,
       enterprise_id: enterprise_id,
+      team_id: team_id,
       jersey: null,
       slug: null,
       visibility: "off",
@@ -79,73 +82,76 @@ if(sendedBy=='Club')
     const insertedUser = await db.insert(users).values(userValues).returning();
     // Conditionally add coach_id or enterprise_id based on sendedBy and referenceId
     if (sendedBy && referenceId) {
-      if (sendedBy === 'coach') {
-        userValues.coach_id = referenceId;
-        const coachQuery = await db.select().from(coaches).where(eq(coaches.id, Number(referenceId)));
-        userValues.enterprise_id = coachQuery[0].enterprise_id;
+      // if (sendedBy === 'coach') {
+      //   userValues.coach_id = referenceId;
+      //   const coachQuery = await db.select().from(coaches).where(eq(coaches.id, Number(referenceId)));
+      //   userValues.enterprise_id = coachQuery[0].enterprise_id;
 
-        const targetLicense = await db.select().from(licenses)
-        .where(
-          and(
-            eq(licenses.assigned_to, Number(referenceId)),
-            eq(licenses.status, 'Assigned')
-          )
-        )
-        .limit(1);
+      //   const targetLicense = await db.select().from(licenses)
+      //   .where(
+      //     and(
+      //       eq(licenses.assigned_to, Number(referenceId)),
+      //       eq(licenses.status, 'Assigned')
+      //     )
+      //   )
+      //   .limit(1);
       
-      if (targetLicense.length > 0) {
-        await db.update(licenses)
-          .set({ used_by: String(insertedUser[0].id), used_for: 'Player', status:'Consumed' })
-          .where(eq(licenses.id, targetLicense[0].id));
-      }
-      }
-      else if (sendedBy === 'Club') {
-        userValues.enterprise_id = referenceId; 
+      // if (targetLicense.length > 0) {
+      //   await db.update(licenses)
+      //     .set({ used_by: String(insertedUser[0].id), used_for: 'Player', status:'Consumed' })
+      //     .where(eq(licenses.id, targetLicense[0].id));
+      // }
+      // }
+      // else if (sendedBy === 'Club') {
+      //   userValues.enterprise_id = referenceId; 
         
       
-          const targetLicense = await db.select().from(licenses)
-          .where(
-            and(
-              eq(licenses.enterprise_id, Number(referenceId)),
-              eq(licenses.status, 'Free')
-            )
-          )
-          .limit(1);
+      //     const targetLicense = await db.select().from(licenses)
+      //     .where(
+      //       and(
+      //         eq(licenses.enterprise_id, Number(referenceId)),
+      //         eq(licenses.status, 'Free')
+      //       )
+      //     )
+      //     .limit(1);
         
-        if (targetLicense.length > 0) {
-          await db.update(licenses)
-            .set({ used_by: String(insertedUser[0].id), used_for: 'Player', status:'Consumed' })
-            .where(eq(licenses.id, targetLicense[0].id));
-        }
+      //   if (targetLicense.length > 0) {
+      //     await db.update(licenses)
+      //       .set({ used_by: String(insertedUser[0].id), used_for: 'Player', status:'Consumed' })
+      //       .where(eq(licenses.id, targetLicense[0].id));
+      //   }
 
 
-      }
-      else if (sendedBy === 'Team') {
-        const TeamQuery = await db.select().from(teams).where(eq(teams.id, referenceId)).execute();
-        userValues.enterprise_id = TeamQuery[0].creator_id; // Insert referenceId into enterprise_id
-      }
+      // }
+      // else if (sendedBy === 'Team') {
+      //   const TeamQuery = await db.select().from(teams).where(eq(teams.id, referenceId)).execute();
+      //   userValues.enterprise_id = TeamQuery[0].creator_id; // Insert referenceId into enterprise_id
+      // }
 
 
       
-        try {
-          await db.insert(teamPlayers).values(
-            {
-              teamId: Number(team),
-              playerId: Number(insertedUser[0].id),
-              enterprise_id: Number(userValues.enterprise_id),
-            }
-  
-          );
-        }
-        catch (error) {
-  
-          const err = error as any;
-  
-          return NextResponse.json({ message: err }, { status: 500 });
-  
-        }
+       
     }
+if(teamId)
+{
+  try {
+    await db.insert(teamPlayers).values(
+      {
+        teamId: Number(teamId),
+        playerId: Number(insertedUser[0].id),
+        enterprise_id: Number(userValues.enterprise_id),
+      }
 
+    );
+  }
+  catch (error) {
+
+    const err = error as any;
+
+    return NextResponse.json({ message: err }, { status: 500 });
+
+  }
+}
     
     const emailResult = await sendEmail({
       to: email,

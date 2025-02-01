@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches, teamCoaches } from '../../../../lib/schema'
 import debug from 'debug';
-import { desc, eq, asc,and } from 'drizzle-orm';
+import { desc, eq, asc,and,ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -81,13 +81,14 @@ let coach;
                 weight: users.weight,
                 player_id: teamPlayers.playerId,
                 jersey: users.jersey,
+                birthdate: users.birthday,
+                graduation: users.graduation,
                 id: users.id,
             })
             .from(teamPlayers)
             .innerJoin(users, eq(users.id, teamPlayers.playerId))
             .orderBy(asc(users.jersey))
-            .where(eq(teamPlayers.teamId, payload[0].id));
-
+            .where(and(eq(teamPlayers.teamId, payload[0].id), ne(users.first_name, '')))
 
 
            
@@ -102,7 +103,7 @@ let coach;
                 .from(teamCoaches)
                 .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))
                 .innerJoin(teams, eq(teamCoaches.teamId, teams.id))
-                .where(eq(teamCoaches.teamId,payload[0].id))
+                .where(and(eq(teamCoaches.teamId,payload[0].id), ne(coaches.firstName,'')))
                 .execute();
           
 

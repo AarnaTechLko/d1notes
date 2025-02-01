@@ -310,8 +310,8 @@ const Home: React.FC = () => {
         <th>Email</th>
         <th>Phone</th>
         <th>Sport</th>
-        <th>Available License</th>
-        <th>Used License</th>
+        {/* <th>Available License</th>
+        <th>Used License</th> */}
         <th>Evaluations Completed</th>
         <th>Status</th>
         <th style={{width:225}}>Action</th>
@@ -330,8 +330,8 @@ const Home: React.FC = () => {
             <td>{coach.email}</td>
             <td>{coach.countrycode}{coach.phoneNumber}</td>
             <td>{coach.sport}</td>
-            <td>{coach.assignedLicenseCount}</td>
-            <td>{coach.consumeLicenseCount}</td>
+            {/* <td>{coach.assignedLicenseCount}</td>
+            <td>{coach.consumeLicenseCount}</td> */}
             <td align='center'><a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
