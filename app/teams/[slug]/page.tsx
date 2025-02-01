@@ -162,7 +162,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
             <div>
               {!session ? (
-                <>
+                <> 
                   {isRequested > 0 ? (
                     <button
                       className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"

@@ -8,6 +8,7 @@ import ProfileCard from '@/app/components/teams/ProfileCard';
 import CoachProfileCard from '@/app/components/ProfileCard';
 import PlayerProfileCard from '../../components/players/ProfileCard'
 import Profile from '@/app/coach/profile/page';
+import JoinRequestModal from '@/app/components/JoinRequestModal';
 
 interface Profile {
   slug: string;
@@ -46,6 +47,7 @@ interface CoachData {
   team: string;
   grade_level: string;
   graduation: string;
+  id: number;
 }
 
 interface CoachProfileProps {
@@ -65,13 +67,19 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [currentBanner, setCurrentBanner] = useState(0); // Track the current banner index
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [coachId, setCoachId] = useState<string | null>(null);
   const { data: session } = useSession();
+  const [isRequested, setIsRequested] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
+  
   function toSentenceCase(str: string): string {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
   useEffect(() => {
     const payload = { slug: slug };
+    setCoachId(session?.user?.id ?? null);
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/player/profile/`, {
@@ -99,7 +107,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     };
 
     fetchCoachData();
-  }, [slug]);
+  }, [slug,session]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -128,7 +136,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     <title>Player Roster - D1 NOTES</title>
     <meta name="description" content="This is the home page of my Next.js application." />
   </head>
-      <div className="container-fluid mx-auto px-4 py-8 animate-fadeIn mb-44">
+      <div className="container-fluid mx-auto px-4 py-8 animate-fadeIn mb-64">
         <div className="grid  gap-5">
   
 
@@ -208,8 +216,48 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>Team:</b> {coachData.team}</div>
                 <div><b>Grade Level:</b> {coachData.grade_level}</div>
               </div>
+              <div>
+              {!session ? (
+                <>
+                  {isRequested > 0 ? (
+                    <button
+                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+                      disabled
+                    >
+                      Invited
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsModalOpen(true)} // Open modal on click
+                      className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                    >
+                      Invite to Join
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  {isRequested > 0 ? (
+                    <button
+                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+                      disabled
+                    >
+                      Invited
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
+                      className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      Invite to Join
+                    </button>
+                  )}
+                </>
+              )}
 
             </div>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -288,6 +336,17 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
  
         </div>*/}
       </div> 
+
+
+      {isJoinRequestModalOpen && coachId && (
+        <JoinRequestModal
+          isOpen={isJoinRequestModalOpen}
+          onRequest={() => setIsRequested(1)}
+          requestToID={coachData?.id.toString()}
+          type="team"
+          onClose={() => setIsJoinRequestModalOpen(false)}
+        />
+      )}
     </>
   );
 };

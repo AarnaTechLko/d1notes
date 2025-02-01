@@ -367,6 +367,16 @@ export const joinRequest=pgTable("joinRequest",{
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+export const teamjoinRequest=pgTable("teamjoinRequest",{
+  id: serial("id").primaryKey(),
+  team_id:integer("team_id"),
+  player_id:integer("player_id"),
+   
+  message:text("message"),
+  status:text("status"),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
+});
+
 
 export const chatfriend=pgTable("chatfriend",{
   id: serial("id").primaryKey(),

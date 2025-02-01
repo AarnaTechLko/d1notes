@@ -11,11 +11,12 @@ interface Order {
   requestedToName: string;
   message: string;
   status: string;
+  image: string;
   type: string;
   first_name?: string;
   last_name?: string;
   playerId?: number;
-  requestToID?: number;
+  slug?: number;
 }
 
 const Home: React.FC = () => {
@@ -23,8 +24,8 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+ 
+  
   const router = useRouter();
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
@@ -39,7 +40,7 @@ const Home: React.FC = () => {
       return;
     }
 
-    const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=team`);
+    const response = await fetch(`/api/teams/joinrequest?team_id=${session.user.id}&type=team`);
 
     if (!response.ok) {
       console.error('Failed to fetch orders');
@@ -80,65 +81,13 @@ const Home: React.FC = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-  const handleConfirmationClose = () => {
-    setShowConfirmation(false);
-    setSelectedOrder(null);
-  };
+
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  const handleAccept = async () => {
-    if (!selectedOrder) return;
-    console.log(selectedOrder);
-    const playerId=selectedOrder.playerId;
-    const requestToID=selectedOrder.requestToID;
-    const sender_type='player';
-    const type=selectedOrder.type;
-    const status='Approved';
-    const message=`<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
-    try {
-      const response = await fetch(`/api/joinrequest/approve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId,requestToID,sender_type ,type, message,status}),
-      });
+  
 
-      if (response.ok) {
-        showSuccess("Join Request Approved successfully.");
-        ///router.push('/coach/messages');
-        fetchOrders();
-      } else {
-        console.error('Failed to accept request');
-      }
-    } catch (error) {
-      console.error('Error accepting request:', error);
-    }
-
-    handleConfirmationClose(); // Close modal after accepting
-  };
-
-  const handleReject = async () => {
-    if (!selectedOrder) return;
- 
-    try {
-      const response = await fetch(`/api/rejectRequest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id }),
-      });
-
-      if (response.ok) {
-        // Handle successful response (e.g., update UI)
-       
-      } else {
-        console.error('Failed to reject request');
-      }
-    } catch (error) {
-      console.error('Error rejecting request:', error);
-    }
-
-    handleConfirmationClose(); // Close modal after rejecting
-  };
+  
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -169,31 +118,27 @@ const Home: React.FC = () => {
         <td>{(currentPage - 1) * limit + index + 1}</td>
        
        
-        <td>
-  {/* Name on top */}
- {order.first_name} {order.last_name} 
- 
+        <td className="flex items-center space-x-3 p-2">
+  <img src={`${order.image}`} alt="{order.first_name}"  className="w-10 h-10 rounded-full object-cover" />
+  <a href={`/players/${order.slug}`} target="_blank"  className="text-blue-600 hover:underline font-medium">
+    {order.first_name} {order.last_name}
+  </a>
 </td>
 
         <td>{order.message}</td>
         <td>
-        <button
-                          className={`px-4 py-2 rounded-lg text-white ${
-                            order.status === 'Accepted'
-                              ? 'bg-green-500'
-                              : order.status === 'Requested'
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
-                          }`}
-                          onClick={() => {
-                            if (order.status === 'Requested') {
-                              setSelectedOrder(order);
-                              setShowConfirmation(true);
-                            }
-                          }}
-                        >
-                          {order.status}
-                        </button>
+        
+  <button
+    onClick={handlePrevPage}
+    disabled={currentPage === 1}
+    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+      currentPage === 1
+        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+        : "bg-blue-500 text-white hover:bg-blue-600"
+    }`}
+  >
+    Previous
+  </button>
         </td>
      
       </tr>
@@ -242,35 +187,7 @@ const Home: React.FC = () => {
         </div>
       </main>
 
-      {showConfirmation && selectedOrder && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
-            {/* Close Button */}
-            <button
-              onClick={handleConfirmationClose}
-              className="absolute top-2 right-2 text-gray-500 text-2xl"
-            >
-              &times;
-            </button>
-
-            <h3 className="text-xl font-semibold mb-4">Are you sure you want to proceed?</h3>
-            <div className="flex justify-center">
-              <button
-                onClick={handleAccept}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg mr-3"
-              >
-                Accept
-              </button>
-              <button
-                onClick={handleReject}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg ml-3"
-              >
-                Decline
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };

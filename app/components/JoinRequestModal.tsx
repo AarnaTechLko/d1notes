@@ -22,16 +22,15 @@ const JoinRequestModal: React.FC<JoinRequestModalProps> = ({ onClose, requestToI
         e.preventDefault();
         setLoading(true);
         let club_id;
-        let coach_id;
         let playerId;
+        let team_id;
         if (session) {
-            club_id = session.user.club_id;
-            coach_id = session.user.coach_id;
-            playerId = session.user.id;
+           playerId=requestToID;
+            team_id = session.user.id;
         }
-        const payload = { club_id, coach_id, message, playerId,type,requestToID };
+        const payload = { message, team_id,playerId};
         try {
-            const response = await fetch('/api/joinrequest', {
+            const response = await fetch('/api/teams/joinrequest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -62,7 +61,7 @@ const JoinRequestModal: React.FC<JoinRequestModalProps> = ({ onClose, requestToI
                     ✖
                 </button>
 
-                <h2 className="text-2xl font-bold mb-6 text-center">Send Join Request</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center">Invite to Join</h2>
 
 
 
