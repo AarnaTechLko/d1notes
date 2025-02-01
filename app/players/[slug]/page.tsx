@@ -217,43 +217,26 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>Grade Level:</b> {coachData.grade_level}</div>
               </div>
               <div>
-              {!session ? (
-                <>
-                  {isRequested > 0 ? (
-                    <button
-                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-                      disabled
-                    >
-                      Invited
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsModalOpen(true)} // Open modal on click
-                      className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
-                    >
-                      Invite to Join
-                    </button>
-                  )}
-                </>
-              ) : (
-                <>
-                  {isRequested > 0 ? (
-                    <button
-                      className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
-                      disabled
-                    >
-                      Invited
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsJoinRequestModalOpen(true)} // Open modal on click
-                      className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      Invite to Join
-                    </button>
-                  )}
-                </>
-              )}
+              {session?.user?.type === "team" && (
+  <>
+    {isRequested > 0 ? (
+      <button
+        className="mt-6 bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed"
+        disabled
+      >
+        Invited
+      </button>
+    ) : (
+      <button
+      onClick={() => setIsJoinRequestModalOpen(true)}// Open modal on click
+        className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+      >
+        Invite to Join
+      </button>
+    )}
+  </>
+)}
+
 
             </div>
             </div>
