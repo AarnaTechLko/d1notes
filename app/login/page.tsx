@@ -117,7 +117,10 @@ export default function Login() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      
+      if(teamId)
+      {
+        
+      }
       // Redirect based on session type
       if (session.user.type === 'coach') {
         window.location.href = '/coach/dashboard';

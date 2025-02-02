@@ -26,6 +26,8 @@ const Home: React.FC = () => {
   const { data: session } = useSession();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
+  const [excludedUsers, setExcludedUsers] = useState([]);
+    const [excludedCoaches, setExcludedCoaches] = useState([]);
  
 
   const handleUpload = async () => {
@@ -78,7 +80,6 @@ const Home: React.FC = () => {
       const data = await response.json();
       if (!response.ok)
       {
-        showError(data.duplicates+" "+data.message);
         
         setIsSubmit(false); 
         return
@@ -90,8 +91,18 @@ const Home: React.FC = () => {
         showWarning("Coaches imported. But we have found some duplicate records.");
       }
       else{
-        router.push("/enterprise/teams");
-        showSuccess("Successfully Imported Teams.");
+        setExcludedUsers(data.excludedUsers || []);
+        setExcludedCoaches(data.excludedCoaches || []);
+        if(data.excludedUsers.length<=0 || data.excludedCoaches<=0)
+        {
+          showSuccess("Successfully Imported Teams.");
+          router.push("/enterprise/teams");
+        }
+        else{
+          showWarning("Successfully Imported Teams with some duplicate records.");
+        }
+       
+       
       }
       setShowUploadControls(true);
      
@@ -177,6 +188,39 @@ const Home: React.FC = () => {
                   </div>
                 </>
               )}
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Excluded Users */}
+                {excludedUsers.length > 0 && (
+                    <div className="p-4 bg-gray-100 rounded-lg shadow">
+                        <h2 className="text-lg font-semibold text-red-600 mb-3">Excluded Players Email Id
+                          <p className="text-sm text-gray-400">Reason: Associated With Other Organization</p>
+                        </h2>
+                        <ul className="space-y-2">
+                            {excludedUsers.map((user: any, index) => (
+                                <li key={index} className="bg-white p-2 rounded shadow-sm text-gray-700">
+                                    {user.email}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
+                {/* Excluded Coaches */}
+                {excludedCoaches.length > 0 && (
+                    <div className="p-4 bg-gray-100 rounded-lg shadow">
+                        <h2 className="text-lg font-semibold text-red-600 mb-3">Excluded Coaches Email Id
+                        <p className="text-sm text-gray-400">Reason: Associated With Other Organization</p>
+                        </h2>
+                        <ul className="space-y-2">
+                            {excludedCoaches.map((coach: any, index) => (
+                                <li key={index} className="bg-white p-2 rounded shadow-sm text-gray-700">
+                                    {coach.email}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
               {failedData.length > 0 && (
   <div className="mt-4">
     <h3 className=" text-2xl text-center font-semibold text-red-600">We have found Duplicate Entries</h3>

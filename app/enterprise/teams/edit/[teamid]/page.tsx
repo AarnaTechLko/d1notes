@@ -542,7 +542,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     {coachList.map((coach: any) => (
                                         <tr className="border-t" key={coach.id}>
                                             <td className="px-4 py-2">
-                                                {coach.image != 'null' ? (
+                                                {coach.image && coach.image !== 'null' ? (
                                                     <img
                                                         src={coach.image}
                                                         alt="Coach"
@@ -589,7 +589,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     {playerList.map((player: any) => (
                                         <tr className="border-t" key={player.id}>
                                             <td className="px-4 py-2">
-                                                {player.image != null ? (
+                                                {player.image && player.image !== 'null' ? (
                                                     <img
                                                         src={player.image}
                                                         alt="Coach"
