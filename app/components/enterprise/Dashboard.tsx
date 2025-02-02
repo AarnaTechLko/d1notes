@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
+import { Prompt } from 'next/font/google';
+import PromptComponent from '../Prompt';
 interface StatsData {
   totalCoaches: number;
   totalPlayers: number;
@@ -78,6 +80,8 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
+    <>
+    <PromptComponent marginleft={2} stepstext="Let’s get started! First, purchase evaluations for your Organization. Next, create teams by clicking on Your Teams in the left side menu. Finally, add Sub Admin(s) if you wish to add additional administrators."/>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2 p-2">
       {statsArray.map((stat, index) => (
         <div
@@ -90,6 +94,7 @@ const Dashboard: React.FC = () => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 

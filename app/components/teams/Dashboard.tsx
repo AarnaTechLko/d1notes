@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
+import Joyride, { CallBackProps, STATUS } from "react-joyride";
 interface StatsData {
   totalCoaches: number;
   totalPlayers: number;
@@ -10,11 +11,25 @@ interface StatsData {
 
 const Dashboard: React.FC = () => {
   const API_ENDPOINT = '/api/teampanel/dashboard'; // Define the API endpoint here
-
+  const [run, setRun] = useState(true); 
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const steps = [
+    {
+      target: ".dashboard-step",
+      content: "Let’s get started! First, purchase evaluations for your Organization. Next, create teams by clicking on Your Teams in the left side menu. Finally, add Sub Admin(s) if you wish to add additional administrators.",
+      placement: "right" as const,
+    }
+  ];
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    if (status === STATUS.FINISHED) {
+      setRun(false); // Keep the tour from running permanently after finish
+    }
+  };
   useEffect(() => {
     const fetchStats = async () => {
         const session = await getSession();

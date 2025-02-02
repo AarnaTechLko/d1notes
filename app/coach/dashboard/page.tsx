@@ -13,6 +13,7 @@ import EvaluationForm from '@/app/components/coach/EvaluationForm';
 import { FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
+import PromptComponent from '@/app/components/Prompt';
   
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
   console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
@@ -278,6 +279,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
+    
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
@@ -303,8 +305,11 @@ const Dashboard: React.FC = () => {
 />
         <Sidebar />
         <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
+          
           <div className="bg-white shadow-md rounded-lg p-6 ">
+          <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your bank account information to receive funds by clicking on Payment Information in the left side menu if you plan to offer evaluations to the public for a fee. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team. Otherwise, be prepared to give Players who seek you out, the edge they have been missing!"/>
           <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
+            
   <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
   <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
 </div>

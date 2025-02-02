@@ -7,6 +7,7 @@ import Packages from "@/app/components/enterprise/Packages";
 import DashboardContent from "@/app/components/teams/Dashboard";
 import InviteForm from "@/app/components/InviteForm";
 import PurchaseLicense from "@/app/components/PurchaseLicense";
+import PromptComponent from "@/app/components/Prompt";
 
 
 const Dashboard: React.FC = () => {
@@ -58,6 +59,7 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
+        <PromptComponent marginleft={2} stepstext="Let’s get started! First, purchase evaluations for your Team. Next, create a team by clicking on Your Team in the left side menu. Finally, add Sub Admin(s) if you wish to add additional administrators."/>
         <DashboardContent/>
           
         </div>
