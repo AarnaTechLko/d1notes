@@ -239,7 +239,7 @@ export default function Register() {
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
                 Create Password<span className='mandatory'>*</span>
-                <p className="text-gray-400 text-xs">(Must contain at least 6 characters, including at least 1 number and 1 special char)</p>
+                <p className="text-gray-400 text-xs">(Password must contain at least 6 characters, including at least 1 number and 1 special character.)</p>
               </label>
               <div className="relative">
               <input

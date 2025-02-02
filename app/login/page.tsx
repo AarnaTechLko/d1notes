@@ -5,18 +5,65 @@ import Brand from '../public/images/brand.jpg';
 import Image from 'next/image';
 import { showSuccess, showError } from '../components/Toastr';
 import ForgotPassword from '../components/ForgotPassword';
-
+import crypto from 'crypto';
 interface FormValues {
   email: string;
   password: string;
   loginAs: 'coach' | 'player' | 'enterprise' | 'team';
 }
-
+ 
 export default function Login() {
   const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
+  const [referenceId, setReferenceId] = useState<string | null | undefined>();
+  const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
+  const [isClient, setIsClient] = useState(false);
+  const [team, setTeam] = useState<string | null | undefined>();
+  const [sendedBy, setSendedBy] = useState<string | null | undefined>();
+  const [teamId, setTeamId] = useState<string | null | undefined>();
+  const decryptData = (encryptedString: string, secretKey: string) => {
+    const [ivHex, encrypted] = encryptedString.split(':');
+    const iv = Buffer.from(ivHex, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
 
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return JSON.parse(decrypted);
+  };
+  useEffect(() => {
+    if (!isClient) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptedUid = urlParams.get('uid');
+    const sendBy = urlParams.get('by'); 
+    if (typeof encryptedUid === 'string') {
+      try {
+        const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
+        const decryptedData = decryptData(encryptedUid, secretKey);
+        console.log('Decrypted data:', decryptedData);
+        setReferenceId(decryptedData.userId);
+        setTeamId(decryptedData.teamId);
+        setReferenceEmail(decryptedData.singleEmail);
+        setTeam(decryptedData.teamId);
+       
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          email: decryptedData.singleEmail || '',
+          team: decryptedData.teamId || '',
+        }));
+        
+        
+      } catch (error) {
+        console.error('Decryption failed:', error);
+      }
+    }
+
+    if (sendBy) {
+
+      setSendedBy(sendBy || undefined);
+    }
+  }, [isClient]);
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);

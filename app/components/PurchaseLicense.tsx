@@ -93,7 +93,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
             <tr className="bg-gradient-to-r from-blue-500 to-purple-500 text-black">
               <th className="border border-gray-300 px-4 py-2 text-left">Number of Licenses</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Rate per Evaluation</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Buy</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +110,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
                     className="bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold py-2 px-4 rounded shadow-md hover:from-green-500 hover:to-green-700"
                     onClick={() => handlePurchase(license)}
                   >
-                    Buy Now
+                   Action
                   </button>
                 </td>
               </tr>

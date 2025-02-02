@@ -1,8 +1,8 @@
-PlayersEmail,TeamName,Gender,Year
-p1@gmail.com,Team One,Male,2021
-p2@gmail.com,Team One,Male,2021
-p3@gmail.com,Team One,Male,2021
-p4@gmail.com,Team Two,Female,2022
-p5@gmail.com,Team Two,Female,2022
-p6@gmail.com,Team Three,Female,2023
-p7@gmail.com,Team Four,Male,2024
+CoachEmail,PlayersEmail,TeamName,Gender,Year
+c1@gmail.com,p1@gmail.com,Team One,Male,2021
+c2@gmail.com,p2@gmail.com,Team One,Male,2021
+c3@gmail.com,p3@gmail.com,Team One,Male,2021
+c4@gmail.com,p4@gmail.com,Team Two,Female,2022
+c5@gmail.com,p5@gmail.com,Team Two,Female,2022
+c6@gmail.com,p6@gmail.com,Team Three,Female,2023
+c7@gmail.com,p7@gmail.com,Team Four,Male,2024

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { licenses, coaches, invitations } from '../../../lib/schema';
+import { licenses, coaches, invitations, users } from '../../../lib/schema';
 import { encryptData, sendEmail } from '@/lib/helpers';
 import { eq, and, gt, desc, count } from 'drizzle-orm';
 
@@ -28,13 +28,30 @@ export async function POST(req: NextRequest) {
        
         const payload = JSON.stringify({ userId, singleEmail,teamId });
         const encryptedString = encryptData(payload);
-       
+       let urltype;
         if(registrationType==='player')
           {
-              inviteUrl=`${baseUrl}/register?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
+              const existanceCheck=await db.select().from(users).where(eq(users.email,singleEmail));
+              if(existanceCheck.length>0)
+              {
+                 urltype='login'
+              }
+              else{
+                 urltype='register'
+              }
+              inviteUrl=`${baseUrl}/${urltype}?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
           }
           else{
-             inviteUrl=`${baseUrl}/coach/signup?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
+            const existanceCheck=await db.select().from(coaches).where(eq(coaches.email,singleEmail));
+              if(existanceCheck.length>0)
+              {
+                 urltype='login'
+              }
+              else{
+                 urltype='coach/signup'
+              }
+
+             inviteUrl=`${baseUrl}/${urltype}?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
           }
 
           await db.insert(invitations).values({ 
