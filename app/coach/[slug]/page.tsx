@@ -61,7 +61,17 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
   const [kids, setKids]=useState<Kids[] | undefined>(undefined);
-  
+  const compareValues = (v1: any, v2: any): string => {
+    const num1 = (v1 === null || v1 === 'null') ? NaN : Number(v1);
+    const num2 = (v2 === null || v2 === 'null') ? NaN : Number(v2);
+    if(num1 === num2)
+    {
+      return "No";
+    }
+    else{
+      return "Yes";
+    }
+  };
 
   useEffect(() => {
     const fetchKids = async () => {
@@ -290,7 +300,13 @@ setEvaluationList(responseData.evaluationlist);
     {/* Column 1 */}
     <div className="flex-1 mb-4 md:mb-0">
       <ul className="space-y-4">
-        <li><strong>Evaluation Rate:</strong> ${coachData.expectedCharge} </li>
+      {compareValues(coachData.enterprise_id, playerClubId)=='Yes' && (
+  <li>
+    <strong>Evaluation Rate:</strong> {coachData.expectedCharge} {compareValues(coachData.enterprise_id, playerClubId)}
+  </li>
+)}
+
+
         <li><strong>Sport :</strong> {coachData.sport}</li>
         <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
         <li><strong>Gender:</strong> {coachData.gender}</li>

@@ -455,7 +455,9 @@ export default function TeamModal({
           </select>
         
         </div>
-
+        <div className="space-x-4 mb-4">
+          Age<span className="mandatory">*</span>:
+          </div>
         <div className="space-x-4 mb-4">
         <label className="inline-flex items-center cursor-pointer">
           <input
