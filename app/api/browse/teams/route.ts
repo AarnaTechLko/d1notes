@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       isNotNull(teams.team_name), 
       isNull(teams.club_id), 
       eq(teams.status, 'Active'),
-      eq(teams.status, 'Active'),
+      eq(teams.visibility, 'on'),
     ];
     
     if (country) {

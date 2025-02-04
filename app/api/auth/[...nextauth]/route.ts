@@ -167,8 +167,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-//secret: process.env.NEXTAUTH_SECRET, 
+///secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     
@@ -238,7 +238,17 @@ secret:SECRET_KEY,
             session.user.visibility = user.visibility;
           }
         }
-      
+        if(session.user.type=='team')
+          {
+            const updatedUser = await db.select().from(teams).where(eq(teams.id, Number(session.user.id))).execute();
+            if (updatedUser.length > 0) {
+              const user = updatedUser[0];
+              session.user.name = user.team_name;
+              session.user.image = user.logo === 'null' ? '/default.jpg' : user.logo;
+             
+              session.user.visibility = user.visibility;
+            }
+          }
 
 
 

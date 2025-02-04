@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
             city,
             logo,
             description,
+            status:'Active',
+        
             password: hashedPassword, 
             slug, // Adding the hashed password
             createdAt: new Date(),
