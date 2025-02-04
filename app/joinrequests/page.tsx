@@ -3,16 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../components/Sidebar';
 import { showSuccess } from '../components/Toastr';
+import { formatDate } from '@/lib/clientHelpers';
 
 // Define the type for the data
 interface Order {
-  id: number;
+  invitationId: number;
   team_name: string;
-  image: string;
-  message: string;
+  club_name: string;
+  teamLogo: string;
+  clubLogo: string;
   status: string;
-  type: string;
-  slug: string;
+  teamSlug: string;
+  clubSlug: string;
+  createdAt: string;
 
 }
 
@@ -32,23 +35,26 @@ const Home: React.FC = () => {
     setSelectedOrder(null);
   };
 
-  const handleAccept = async (status:any) => {
+  
+  const handleAccept = async () => {
     if (!selectedOrder) return;
     console.log(selectedOrder);
-    const request_id = selectedOrder.id;
-    
-    const playerId = session?.user.id;
-    const message = `<p>Hi! Administrator</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
+    const invitationId = selectedOrder.invitationId;
+    const session = await getSession();
+    const userId = session?.user?.id;
+    const userType='player';
+    const status = 'Joined';
+ 
     try {
-      const response = await fetch(`/api/teams/joinrequest/approve`, {
+
+      const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, request_id, message, status }),
+        body: JSON.stringify({ invitationId,status, userId, userType}),
       });
 
       if (response.ok) {
-        showSuccess("Join Request "+status+" successfully.");
-        ///router.push('/coach/messages');
+        showSuccess("Join Request Approved successfully. A welcome message has been sent.");
         fetchOrders();
       } else {
         console.error('Failed to accept request');
@@ -60,28 +66,37 @@ const Home: React.FC = () => {
     handleConfirmationClose(); // Close modal after accepting
   };
 
+ 
   const handleReject = async () => {
     if (!selectedOrder) return;
-
+   
+    const invitationId = selectedOrder.invitationId;
+    const status='Declined'
+    const session = await getSession();
+    const userId = session?.user?.id;
+    const userType='player';
     try {
-      const response = await fetch(`/api/rejectRequest`, {
+
+
+      const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: selectedOrder.id }),
+        body: JSON.stringify({ invitationId, status, userId, userType }),
       });
 
       if (response.ok) {
-        // Handle successful response (e.g., update UI)
-
+        showSuccess("Join Request Declined successfully.");
+        fetchOrders();
       } else {
-        console.error('Failed to reject request');
+        console.error('Failed to accept request');
       }
     } catch (error) {
-      console.error('Error rejecting request:', error);
+      console.error('Error accepting request:', error);
     }
 
-    handleConfirmationClose(); // Close modal after rejecting
+    handleConfirmationClose();// Close modal after rejecting
   };
+
   const fetchOrders = async () => {
     const session = await getSession();
     const enterpriseId = session?.user?.id; // Adjust according to your session structure
@@ -91,8 +106,7 @@ const Home: React.FC = () => {
       return;
     }
 
-    const response = await fetch(`/api/teams/joinrequest?player_id=${session.user.id}&type=team`);
-
+    const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=player`);
     if (!response.ok) {
       console.error('Failed to fetch orders');
       return;
@@ -154,68 +168,81 @@ const Home: React.FC = () => {
               <thead>
                 <tr>
                   <th>Serial Number</th>
-                  <th>Team Name</th>
-                  <th>Notes</th>
+                  <th>Organization</th>
+                  <th>Team</th>
+                  <th>Interest Receievd On</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((order, index) => (
-                    <tr key={order.id}>
-                      {/* Serial Number Column */}
+                    <tr key={order.invitationId}>
                       <td>{(currentPage - 1) * limit + index + 1}</td>
 
-
-                      <td className="flex items-center space-x-4">
-                        <a
-                          href={`/teams/${order.slug}`} // Dynamic URL for the user's profile
-                          className="font-medium text-gray-800 flex items-center space-x-4" target='_blank'
-                        >
-                          <div className="w-12 h-12 rounded-full overflow-hidden">
-                            <img
-                              src={order.image !== 'null' ? order.image : '/default.jpg'}
-                              alt={`${order.team_name}'s profile`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-
-                          {/* Name and Type */}
-                          <div className="flex flex-col">
-                            {/* Name */}
-                            <span className="font-medium text-gray-800">{order.team_name}</span>
-
-
-                          </div>
+                      <td style={{ textAlign: "center" }}>
+                        
+                          <img
+                            src={order.clubLogo}
+                            alt="Club Logo"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              display: "block",
+                              margin: "0 auto",
+                              borderRadius: "50%"
+                            }}
+                          />
+                          <div>{order.club_name}</div>
+                        
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <a href={`/teams/${order.teamSlug}`} target="_blank">
+                          <img
+                            src={order.teamLogo}
+                            alt="Team Logo"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              display: "block",
+                              margin: "0 auto",
+                              borderRadius: "50%"
+                            }}
+                          />
+                          <div>{order.team_name}</div>
                         </a>
                       </td>
 
 
-                      <td>{order.message}</td>
+
+                      <td>{formatDate(order.createdAt)}</td>
                       <td>
+                      <button
+  className={`px-4 py-2 rounded-lg text-white ${
+    order.status === "Joined"
+      ? "bg-green-500"
+      : order.status === "Requested"
+      ? "bg-yellow-500"
+      : "bg-red-500"
+  }`}
+  onClick={() => {
+    // if (order.status === "Sent") {
+     
+      
+    // }
+    setSelectedOrder(order);
+    setShowConfirmation(true);
+  }}
+>
+  {order.status === "Sent" ? "Received" : order.status}
+</button>
 
-                        <button
-                          className={`px-4 py-2 rounded-lg text-white ${order.status === 'Accepted'
-                              ? 'bg-green-500'
-                              : order.status === 'Requested'
-                                ? 'bg-yellow-500'
-                                : 'bg-red-500'
-                            }`}
-                          onClick={() => {
-                            if (order.status === 'Requested') {
-                              setSelectedOrder(order);
-                              setShowConfirmation(true);
-                            }
-                          }}
-                        >
-                          {order.status}
-                        </button></td>
-
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5}>No Requests found</td>
+                    <td colSpan={5}>No Requests Key found</td>
                   </tr>
                 )}
               </tbody>
@@ -269,13 +296,13 @@ const Home: React.FC = () => {
             <h3 className="text-xl font-semibold mb-4">Are you sure you want to proceed?</h3>
             <div className="flex justify-center">
               <button
-               onClick={() => handleAccept('Approved')}
+                onClick={handleAccept}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg mr-3"
               >
                 Accept
               </button>
               <button
-                onClick={() => handleAccept('Declined')}
+                onClick={handleReject}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg ml-3"
               >
                 Decline

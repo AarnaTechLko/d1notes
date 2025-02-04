@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from "next-auth/react";
 import { db } from '../../../lib/db';
-import { users, coaches } from '../../../lib/schema';
+import { users, coaches, teams } from '../../../lib/schema';
 import { eq } from 'drizzle-orm';
 
 export async function PUT(req: NextRequest) {
@@ -23,6 +23,9 @@ export async function PUT(req: NextRequest) {
 
         if (type === 'Coach') {
             await db.update(coaches).set(updateData).where(eq(coaches.id, playerId)).execute();
+        }
+        if (type === 'Team') {
+            await db.update(teams).set(updateData).where(eq(teams.id, playerId));
         }
 
         if (session?.user) {

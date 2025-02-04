@@ -52,7 +52,7 @@ export const users = pgTable(
     graduation: text("graduation"),
     school_name: text("school_name"),
     status: varchar("status").default("Inactive"),
-    visibility: varchar("visibility").default("on"),
+    visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (users) => {
@@ -83,7 +83,7 @@ export const coaches = pgTable(
     qualifications: text("qualifications"),
     expectedCharge: decimal("expectedCharge", { precision: 10, scale: 2 }), // Decimal type with precision and scale
     image: text("image"),
-    visibility: varchar("visibility").default("on"),
+    visibility: varchar("visibility").default("off"),
     slug: text("slug"),
     enterprise_id: text("enterprise_id"),
     team_id: text("team_id"),
@@ -319,6 +319,7 @@ export const teams=pgTable('teams', {
   city: text('city'),
   age_group: text('age_group'),
   leage: text('leage'),
+  visibility: varchar("visibility").default("off"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
@@ -345,7 +346,7 @@ export const invitations = pgTable("invitations", {
   invitation_for: text("invitation_for"),
   mobile: text("mobile"),
   invitation_link:text("invitation_link"),
-  team_id:text("team_id"),
+  team_id:integer("team_id"),
   status: text("status"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });

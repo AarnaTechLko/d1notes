@@ -24,6 +24,7 @@ interface ExtendedUser {
   coachCurrency?: string | null;
   added_by?: string | null;
   visibility?: string | null;
+  teamId?:string | null
 }
   
 const handler = NextAuth({
@@ -34,14 +35,15 @@ const handler = NextAuth({
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'email@example.com' },
         password: { label: 'Password', type: 'password' },
-        loginAs: { label: 'Login As', type: 'text' }, // Either 'player' or 'coach'
+        loginAs: { label: 'Login As', type: 'text' },
+        teamId:{label:'teamId', type:'text'} // Either 'player' or 'coach'
       },
       async authorize(credentials) {
         if (!credentials) {
           return null;
         }
 
-        const { email, password, loginAs } = credentials;
+        const { email, password, loginAs,teamId } = credentials;
         let club:any;
         if (loginAs === 'coach') {
           const coach = await db.select().from(coaches).where(eq(coaches.email, email)).execute();
@@ -63,6 +65,7 @@ const handler = NextAuth({
               club_id:coach[0].enterprise_id ?? '',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by:null,
+              teamId:teamId,
               visibility:coach[0].visibility
             };
           }
@@ -88,6 +91,7 @@ const handler = NextAuth({
               club_id:user[0].enterprise_id,
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by:null,
+              teamId:teamId,
               visibility:user[0].visibility
             };
           }
@@ -183,6 +187,7 @@ secret:SECRET_KEY,
         token.club_name = extendedUser.club_name;
         token.added_by = extendedUser.added_by;
         token.visibility = extendedUser.visibility;
+        token.teamId = extendedUser.teamId;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -204,6 +209,7 @@ secret:SECRET_KEY,
         session.user.club_name = token.club_name as string | null;
         session.user.added_by = token.added_by as string | null;
         session.user.visibility = token.visibility as string | null;
+        session.user.teamId = token.teamId as string | null;
         //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session

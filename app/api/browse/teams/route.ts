@@ -5,7 +5,7 @@ import { teams,enterprises, coaches, otps } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, between, lt,ilike,sql } from 'drizzle-orm';
+import { eq,isNotNull,and, between, lt,ilike,sql,isNull } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
@@ -20,7 +20,9 @@ export async function GET(req: NextRequest) {
   try {
     const conditions = [
       isNotNull(teams.team_name), 
-      eq(teams.status, 'Active')
+      isNull(teams.club_id), 
+      eq(teams.status, 'Active'),
+      eq(teams.status, 'Active'),
     ];
     
     if (country) {

@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   for (let index = 0; index < emails.length; index++) {
         const singleEmail = emails[index];
        
-        const payload = JSON.stringify({ userId, singleEmail,teamId });
+        const payload = JSON.stringify({ userId, singleEmail,teamId,registrationType });
         const encryptedString = encryptData(payload);
        let urltype;
         if(registrationType==='player')
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
             invitation_for:registrationType,
             mobile:allMobiles,
             invitation_link:inviteUrl,
-            team_id:teamId,
+            team_id:Number(teamId),
             status:'Sent'
         });
 

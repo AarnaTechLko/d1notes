@@ -3,10 +3,11 @@ import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, 
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
+import Visibility from '../Visibility';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
-
+  const { data: session } = useSession();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -35,8 +36,27 @@ const Sidebar: React.FC = () => {
           isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col md:z-auto`}
       >
+         {session?.user && (
+          <div className="flex flex-col items-center p-4 border-b border-gray-700">
+            <img
+              src={session.user.image || '/default.jpg'} // Fallback to default avatar
+              alt="Coach Avatar"
+              className="w-16 h-16 rounded-full mb-2"
+            />
+            <h2 className="text-lg font-semibold">{session.user.name || ''}</h2>
+            <h3>(Team)</h3>
+            <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
+          </div>
+        )}
         <nav className="flex-grow mt-10">
         <ul className="space-y-2 p-4">
+        <li>
+            <Visibility  
+          playerId={session?.user.id}
+          type="Team"
+          visibilitystatus={session?.user?.visibility}
+          />
+          </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/teampanel/dashboard" className="flex items-center space-x-2 p-2">
               <MdDashboard className="text-xl" />

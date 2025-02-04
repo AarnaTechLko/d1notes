@@ -15,6 +15,7 @@ export const getInitialsAfterComma = (positions: string | null | undefined): str
       .join(' '); // Join the processed segments with a comma
   };
 
+  
   export const formatDate = (dateString: string) => {
     try {
       const options: Intl.DateTimeFormatOptions = {

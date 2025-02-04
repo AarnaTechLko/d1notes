@@ -10,14 +10,16 @@ interface FormValues {
   email: string;
   password: string;
   loginAs: 'coach' | 'player' | 'enterprise' | 'team';
+  teamId?: string;
 }
  
 export default function Login() {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach' });
+  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach',teamId:'' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
   const [referenceId, setReferenceId] = useState<string | null | undefined>();
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
+  const [registrationType, setRegistrationType] = useState<string | null | undefined>();
   const [isClient, setIsClient] = useState(false);
   const [team, setTeam] = useState<string | null | undefined>();
   const [sendedBy, setSendedBy] = useState<string | null | undefined>();
@@ -33,7 +35,7 @@ export default function Login() {
     return JSON.parse(decrypted);
   };
   useEffect(() => {
-    if (!isClient) return;
+    
     const urlParams = new URLSearchParams(window.location.search);
     const encryptedUid = urlParams.get('uid');
     const sendBy = urlParams.get('by'); 
@@ -43,14 +45,17 @@ export default function Login() {
         const decryptedData = decryptData(encryptedUid, secretKey);
         console.log('Decrypted data:', decryptedData);
         setReferenceId(decryptedData.userId);
+        setRegistrationType(decryptedData.registrationType);
         setTeamId(decryptedData.teamId);
-        setReferenceEmail(decryptedData.singleEmail);
+        setReferenceEmail(decryptedData.referenceEmail);
+        
         setTeam(decryptedData.teamId);
        
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
-          team: decryptedData.teamId || '',
+          teamId: decryptedData.teamId || '',
+          loginAs: decryptedData.registrationType || 'coach', // Auto-set loginAs
         }));
         
         
@@ -87,13 +92,14 @@ export default function Login() {
       setLoading(false);
       return;
     }
-
+ 
     try {
       const response = await signIn('credentials', {
         redirect: false,
         email,
         password,
         loginAs: formValues.loginAs,
+        teamId:formValues?.teamId
       });
 
       if (!response || !response.ok) {
@@ -116,15 +122,25 @@ export default function Login() {
   };
 
   useEffect(() => {
+    
     if (status === "authenticated") {
-      if(teamId)
-      {
-        
-      }
+      
       // Redirect based on session type
-      if (session.user.type === 'coach') {
+      if (session.user.type === 'coach' && !teamId) {
         window.location.href = '/coach/dashboard';
       } 
+     else if (session.user.type === 'coach' && teamId) {
+        window.location.href = '/coach/joinrequests';
+      } 
+
+      if (session.user.type === 'player' && !teamId) {
+        window.location.href = '/dashboard';
+      } 
+     else if (session.user.type === 'player' && teamId) {
+        window.location.href = '/joinrequests';
+      } 
+
+
       else if (session.user.type === 'player') {
         window.location.href = '/dashboard';
       }
@@ -144,16 +160,14 @@ export default function Login() {
 
   return (
     <>
-     <head>
-    <title>Login - D1 NOTES</title>
-    <meta name="description" content="This is the home page of my Next.js application." />
-  </head>
+     
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 bg-white p-4 md:p-8">
        
           <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
-            <h2 className="text-2xl font-bold mb-6 text-left">Sign In</h2>
+            <h2 className="text-2xl font-bold mb-6 text-left">Sign In {!registrationType ? "" : "as " + (registrationType.charAt(0).toUpperCase() + registrationType.slice(1).toLowerCase())}</h2>
             <form onSubmit={handleSubmit}>
+            {!registrationType && (
               <div className="mb-4">
                 <span className="block text-gray-700 text-sm font-semibold mb-2">Login as:</span>
                 <label className="inline-flex items-center mr-2">
@@ -206,6 +220,7 @@ export default function Login() {
                   <span className="ml-2">Team</span>
                 </label>  
               </div>
+              )}
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
                   Email
@@ -216,7 +231,7 @@ export default function Login() {
                   name="email"
                   value={formValues.email}
                   onChange={handleChange}
-                  
+                  readOnly={!registrationType ? false : true}
                   disabled={loading}
                 />
               </div>

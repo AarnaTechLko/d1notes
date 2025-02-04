@@ -4,20 +4,18 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/coach/Sidebar';
 import { useRouter } from 'next/navigation';
 import { showSuccess } from '@/app/components/Toastr';
+import { formatDate } from '@/lib/clientHelpers';
 // Define the type for the data
 interface Order {
-  id: number;
-  requestedToName: string;
-  message: string;
+  invitationId: number;
+  team_name: string;
+  club_name: string;
+  teamLogo: string;
+  clubLogo: string;
   status: string;
-  type: string;
-  first_name?: string;
-  last_name?: string;
-  playerId?: number;
-  requestToID?: number;
-  image?: string;
-  slug?: number;
-  clubId?: number;
+  teamSlug: string;
+  clubSlug: string;
+  createdAt: string;
 }
 
 const Home: React.FC = () => {
@@ -53,7 +51,7 @@ const Home: React.FC = () => {
     setFilteredOrders(data.data); // Initially show all orders
   };
   useEffect(() => {
-   
+
 
     fetchOrders();
   }, []);
@@ -61,7 +59,8 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.requestedToName.toLowerCase().includes(search.toLowerCase()) ||
+        order.team_name.toLowerCase().includes(search.toLowerCase()) ||
+        order.club_name.toLowerCase().includes(search.toLowerCase()) ||
         order.status.toString().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
@@ -91,23 +90,22 @@ const Home: React.FC = () => {
     setShowConfirmation(false);
     setSelectedOrder(null);
   };
-    
+
   const handleAccept = async () => {
     if (!selectedOrder) return;
     console.log(selectedOrder);
-    const playerId = selectedOrder.playerId;
-    const requestToID = selectedOrder.requestToID;
-    const sender_type = 'player';
-    const type = selectedOrder.type;
-    const clubId = selectedOrder.clubId;
-    const status='Approved';
-    const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
-    try {
+    const invitationId = selectedOrder.invitationId;
+    const session = await getSession();
+    const userId = session?.user?.id;
+    const userType='coach';
+    const status = 'Joined';
  
+    try {
+
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status, clubId }),
+        body: JSON.stringify({ invitationId,status, userId, userType}),
       });
 
       if (response.ok) {
@@ -123,26 +121,26 @@ const Home: React.FC = () => {
     handleConfirmationClose(); // Close modal after accepting
   };
 
+ 
   const handleReject = async () => {
     if (!selectedOrder) return;
-    console.log(selectedOrder);
-    const playerId = selectedOrder.playerId;
-    const requestToID = selectedOrder.requestToID;
-    const sender_type = 'player';
-    const type = selectedOrder.type;
-    const status='Rejected';
-    const message = `<p>Hi! ${selectedOrder.first_name}</p><p>${session?.user.name} has accepted your join request! Now both of you can chat with each other!</p>`;
+   
+    const invitationId = selectedOrder.invitationId;
+    const status='Declined'
+    const session = await getSession();
+    const userId = session?.user?.id;
+    const userType='coach';
     try {
 
 
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId, requestToID, sender_type, type, message,status }),
+        body: JSON.stringify({ invitationId, status, userId, userType }),
       });
 
       if (response.ok) {
-        showSuccess("Join Request Declined successfully. A rejection message has been sent.");
+        showSuccess("Join Request Declined successfully.");
         fetchOrders();
       } else {
         console.error('Failed to accept request');
@@ -171,66 +169,75 @@ const Home: React.FC = () => {
               <thead>
                 <tr>
                   <th>Serial Number</th>
-                  <th>Player Name</th>
-                  <th>Notes</th>
+                  <th>Organization</th>
+                  <th>Team</th>
+                  <th>Interest Receievd On</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((order, index) => (
-                    <tr key={order.id}>
+                    <tr key={order.invitationId}>
                       <td>{(currentPage - 1) * limit + index + 1}</td>
-                      <td className="flex items-center space-x-4">
-                        <a
-                          href={`/players/${order.slug}`} // Dynamic URL for the user's profile
-                          className="font-medium text-gray-800 flex items-center space-x-4" target='_blank'
-                        >
-                          <div className="w-12 h-12 rounded-full overflow-hidden">
-                            <img
-                              src={order.image !== 'null' ? order.image : '/default.jpg'}
-                              alt={`${order.first_name}'s profile`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
 
-                          {/* Name and Type */}
-                          <div className="flex flex-col">
-                            {/* Name */}
-                            <span className="font-medium text-gray-800">{order.first_name} {order.last_name}</span>
-
-                            {/* Type as a badge */}
-                            <span
-                              className={`px-4 py-1 w-fit text-center uppercase rounded-full text-white text-sm font-medium ${order.type === "team"
-                                  ? "bg-green-500"
-                                  : order.type === "coach"
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
-                                }`}
-                            >
-                              {order.type}
-                            </span>
-                          </div>
+                      <td style={{ textAlign: "center" }}>
+                        
+                          <img
+                            src={order.clubLogo}
+                            alt="Club Logo"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              display: "block",
+                              margin: "0 auto",
+                              borderRadius: "50%"
+                            }}
+                          />
+                          <div>{order.club_name}</div>
+                        
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <a href={`/teams/${order.teamSlug}`} target="_blank">
+                          <img
+                            src={order.teamLogo}
+                            alt="Team Logo"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              display: "block",
+                              margin: "0 auto",
+                              borderRadius: "50%"
+                            }}
+                          />
+                          <div>{order.team_name}</div>
                         </a>
                       </td>
-                      <td>{order.message}</td>
+
+
+
+                      <td>{formatDate(order.createdAt)}</td>
                       <td>
-                        <button
-                          className={`px-4 py-2 rounded-lg text-white ${order.status === 'Approved'
-                              ? 'bg-green-500'
-                              : order.status === 'Requested'
-                                ? 'bg-yellow-500'
-                                : 'bg-red-500'
-                            }`}
-                          onClick={() => {
-                            if (order.status === 'Requested') {
-                              setSelectedOrder(order);
-                              setShowConfirmation(true);
-                            }
-                          }}
-                        >
-                          {order.status}
-                        </button>
+                      <button
+  className={`px-4 py-2 rounded-lg text-white ${
+    order.status === "Joined"
+      ? "bg-green-500"
+      : order.status === "Requested"
+      ? "bg-yellow-500"
+      : "bg-red-500"
+  }`}
+  onClick={() => {
+    // if (order.status === "Sent") {
+     
+      
+    // }
+    setSelectedOrder(order);
+    setShowConfirmation(true);
+  }}
+>
+  {order.status === "Sent" ? "Received" : order.status}
+</button>
+
                       </td>
                     </tr>
                   ))
@@ -248,8 +255,8 @@ const Home: React.FC = () => {
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 1
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
               >
                 Previous
@@ -263,8 +270,8 @@ const Home: React.FC = () => {
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === totalPages
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
               >
                 Next

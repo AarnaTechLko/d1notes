@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt, FaUserPlus, FaDollarSign, FaUsb } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
-import Visibility from '../Visibility';
+import Visibility from '../Visibility'; 
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
