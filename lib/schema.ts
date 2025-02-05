@@ -115,6 +115,7 @@ export const playerEvaluation = pgTable(
     id: serial("id").primaryKey(),
     player_id: integer("player_id").notNull(),
     coach_id: integer("coach_id").notNull(),
+    club_id:integer("club_id"),
     parent_id: integer("parent_id"),
     review_title: varchar("review_title").notNull(),
     primary_video_link: text("primary_video_link").notNull(),
@@ -204,6 +205,7 @@ export const evaluationResults = pgTable('evaluation_results', {
   id: serial('id').primaryKey(),
   playerId: integer('playerId').notNull(),
   coachId: integer('coachId').notNull(),
+  club_id:integer("club_id"),
   evaluationId: integer('evaluation_id').notNull(),
   finalRemarks: text('finalRemarks'),           // Long text for final remarks
   physicalRemarks: text('physicalRemarks'),     // Long text for physical remarks

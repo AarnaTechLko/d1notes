@@ -1,8 +1,8 @@
 // app/api/evaluation/save/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '../../../../../lib/db'; // Import your Drizzle ORM database instance
-import { coachaccount, coachearnings, evaluationResults, playerEvaluation } from '@/lib/schema';
-import { eq,sum } from 'drizzle-orm';
+import { coachaccount, coachearnings, evaluationResults, licenses, playerEvaluation } from '@/lib/schema';
+import { eq,sum ,and} from 'drizzle-orm';
 import { NextRequest } from 'next/server'; // Import NextRequest
 
 export async function POST(req: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
             document 
         } = data;
 
-    
+    const evaluationQuery=await db.select().from(playerEvaluation).where(eq(playerEvaluation.id,evaluationId));
         const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId,evaluationId)).limit(1)  // Limit to 1 record
         .execute();
         
@@ -43,6 +43,8 @@ export async function POST(req: NextRequest) {
                 physicalRemarks: physicalRemarks,
                 finalRemarks: finalRemarks,
                 document: document,
+                
+                
               }).returning();
         }
         else
@@ -59,6 +61,7 @@ export async function POST(req: NextRequest) {
                 physicalRemarks: physicalRemarks,
                 finalRemarks: finalRemarks,
                 document: document,
+                club_id:evaluationQuery[0].club_id
               }).returning();
         }
         
@@ -74,6 +77,7 @@ export async function POST(req: NextRequest) {
             .where(eq(playerEvaluation.id, evaluationId))  
             .returning();
        
+
 
         }
         else{
@@ -92,6 +96,26 @@ export async function POST(req: NextRequest) {
                 })
                 .where(eq(coachearnings.evaluation_id, evaluationId))
                 .returning();
+               
+                const freelicense=await db.select().from(licenses).where(
+                  and(
+                    eq(licenses.status, 'Free'),
+                    eq(licenses.enterprise_id,Number(evaluationQuery[0].club_id)),
+                  
+                )).limit(1);
+                
+                if(freelicense.length>0)
+                {
+                  const updateLicnes = await db.update(licenses)
+                  .set({
+                    status: 'Consumed',
+                    used_by: coachId,
+                    used_for: 'Coach',
+                  })
+                  .where(eq(licenses.id,freelicense[0].id));
+                }
+               
+               
         }
         
 

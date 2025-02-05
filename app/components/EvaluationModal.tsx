@@ -73,7 +73,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     e.preventDefault();
     setLoading(true);
     setErrors({}); // Reset errors
-
+let enterprise_id;
     const newErrors: { [key: string]: string } = {};
     if (userType == 'Child') {
       if (!child) newErrors.child = 'Player is required.';
@@ -114,6 +114,13 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       status = 'Paid';
     }
 
+    if (playerClubId !== Number(coachClubId))
+    {
+      enterprise_id=null;
+    }
+    else{
+      enterprise_id=playerClubId;
+    }
     try {
       const response = await fetch('/api/evaluation', {
         method: 'POST',
@@ -137,6 +144,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           videoThreeTiming,
           position,
           lighttype,
+          enterprise_id,
           percentage
         }),
       });
@@ -151,7 +159,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         });
       }
  
-      if (playerClubId !== coachClubId && (freeEvaluations ?? 0) <= (allowedFreeRequests ?? 0)) {
+      if (playerClubId !== Number(coachClubId) && (freeEvaluations ?? 0) <= (allowedFreeRequests ?? 0)) {
         const stripe = await stripePromise;
         if (!stripe) {
           throw new Error('Stripe is not loaded');
@@ -250,7 +258,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         >
           ✖
         </button>
-        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation</h2>
+        <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation </h2>
  
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}
         {loading ? (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db'; // Adjust the import based on your file structure
-import { playerEvaluation } from '../../../lib/schema'; // Adjust if necessary
+import { licenses, playerEvaluation } from '../../../lib/schema'; // Adjust if necessary
 import { eq, or } from 'drizzle-orm';
 import { and } from 'drizzle-orm';
 
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
             videoTwoTiming,
             videoThreeTiming,
             position,
-            lighttype, percentage } = body;
+            lighttype, percentage, enterprise_id } = body;
         let player_id;
         let parent_id;
         if (child) {
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
         const result = await db.insert(playerEvaluation).values({
             player_id: player_id,
             parent_id: parent_id,
+            club_id:enterprise_id,
             review_title: reviewTitle,
             primary_video_link: primaryVideoUrl,
             video_link_two: videoUrl2,
@@ -60,6 +61,12 @@ export async function POST(req: NextRequest) {
             created_at: new Date(),
             updated_at: new Date(),
         }).returning();
+
+        // const updateLicnes=await db.update(licenses).set({
+        //     status: 'Consumed',
+        //     used_by: coachId,
+        //     used_for: 'Coach',
+        //   }).where(eq(licenses.status, 'Free'));
 
         return NextResponse.json({ result }, { status: 200 });
     } catch (error) {

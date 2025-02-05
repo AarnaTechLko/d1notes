@@ -44,7 +44,7 @@ const Header: React.FC = () => {
         if (result.url) {
           window.location.replace(result.url); // Redirect to the login page
         }
-      }, 2000);
+      }, 5000);
     } catch (error) {
       console.error("Logout error:", error);
       setIsLoggingOut(false); // Hide the loader in case of an error

@@ -123,7 +123,7 @@ export default function Login() {
 
   useEffect(() => {
     
-    if (status === "authenticated") {
+    if (status === "authenticated" && session) {
       
       // Redirect based on session type
       if (session.user.type === 'coach' && !teamId) {
