@@ -19,6 +19,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     const session = await getSession();
     if(session)
     {
+      console.log(typeof session.user.club_id);
+      console.log(id);
       if(session.user.club_id==id)
       {
         window.location.href = `/enterprise/${slug}`;

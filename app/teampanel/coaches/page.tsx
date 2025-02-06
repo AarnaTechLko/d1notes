@@ -4,8 +4,9 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/teams/Sidebar';
 import CoachForm from '@/app/components/enterprise/CoachForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaEye, FaHistory, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
+import { FaArchive, FaEye, FaHistory, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
 import ResetPassword from '@/app/components/ResetPassword';
+import Swal from 'sweetalert2';
 
 // Define the type for the coach data
 interface Coach {
@@ -87,6 +88,40 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action will archive this player!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, archive it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/api/player/archived`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id,
+              type:'coach'
+            }),
+          });
+          if (response.ok) {
+            fetchCoaches();
+            Swal.fire("Archive!", "Player archived successfully!", "success");
+          } else {
+            Swal.fire("Failed!", "Failed to archive Player", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "An error occurred while archiving the player", "error");
+        }
+      }
+    });
+  };
   const handleLoadLicense = async () => {
         
     try {
@@ -357,7 +392,7 @@ const Home: React.FC = () => {
             </td>
             <td>
               <div className="flex items-center space-x-2">
-              <button
+              {/* <button
                   onClick={() => handleResetPassword(coach)}
                   title='Reset Password'
                   className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
@@ -379,6 +414,13 @@ const Home: React.FC = () => {
                   className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
                 >
                  <FaShare/>
+                </button> */}
+                  <button
+                    onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
+                    className=" text-red-500 hover:text-red-700"
+                    aria-label="Archive Player"
+                >
+                    <FaArchive size={24} />
                 </button>
               </div>
             </td>
@@ -386,7 +428,7 @@ const Home: React.FC = () => {
         ))
       ) : (
         <tr>
-          <td colSpan={8}>No coaches found</td>
+          <td colSpan={10}>No coaches found</td>
         </tr>
       )}
     </tbody>

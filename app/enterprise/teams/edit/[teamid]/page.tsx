@@ -59,6 +59,7 @@ type FormValues = {
     status?: string;
     leage?: string;
     age_group?: string;
+    selectedOption?: string;
 };
 type Player = {
     id: number;
@@ -78,7 +79,7 @@ const EditTeam = ({ params }: TeamProps) => {
     const [coachList, setCoachList] = useState([]);
     const [photoUploading, setPhotoUploading] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","College","Semi Pro","Pro"];
+    const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
     const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
     const [formValues, setFormValues] = useState<FormValues>({
         id: 0,  // Default to empty string
@@ -228,7 +229,7 @@ const EditTeam = ({ params }: TeamProps) => {
         } else {
             formValues.club_id = session?.user.id || '';
         }
- 
+        formValues.selectedOption=selectedOption;
         const response = await fetch("/api/teams", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },

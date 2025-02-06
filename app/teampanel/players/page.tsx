@@ -4,9 +4,10 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/teams/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaKey, FaSpinner, FaTrash } from 'react-icons/fa';
+import { FaArchive, FaKey, FaSpinner, FaTrash } from 'react-icons/fa';
 import defaultImage from '../../public/default.jpg';
 import ResetPassword from '@/app/components/ResetPassword';
+import Swal from 'sweetalert2';
 // Define the type for the coach data
 interface Coach {
   id: number;
@@ -127,7 +128,7 @@ const Home: React.FC = () => {
 
   const handleAddCoachClick = () => {
     setShowModal(true); // Open the modal
-  };
+  }; 
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -160,7 +161,40 @@ const Home: React.FC = () => {
       setShowModal(false);
     }
   };
-
+  const handleDelete = async (id: number) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action will archive this player!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, archive it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/api/player/archived`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id,
+              type:'player'
+            }),
+          });
+          if (response.ok) {
+            fetchCoaches();
+            Swal.fire("Archived!", "Player archived successfully!", "success");
+          } else {
+            Swal.fire("Failed!", "Failed to archive Player", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "An error occurred while archiving the player", "error");
+        }
+      }
+    });
+  };
   const handleLoadLicense = async () => {
         
     try {
@@ -248,7 +282,7 @@ const handleResetPassword=(coach: Coach)=>{
               {loading ? (
                  <tbody>
              <tr>
-                  <th colSpan={9}>Loading....</th>
+                  <th colSpan={10}>Loading....</th>
                   </tr>
                   </tbody>
           ) : (
@@ -298,14 +332,20 @@ const handleResetPassword=(coach: Coach)=>{
   )}</td>
                       <td>
                       <div className="flex items-center space-x-2">
-                      <button
+                      {/* <button
                   onClick={() => handleResetPassword(coach)}
                   title='Reset Password'
                   className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
                 >
                  <FaKey/>
+                </button> */}
+                <button
+                    onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
+                    className=" text-red-500 hover:text-red-700"
+                    aria-label="Archive Player"
+                >
+                    <FaArchive size={24} />
                 </button>
-                      <a href={`/coach/${coach.id}`} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" target='_blank'><FaTrash/></a>
                         </div>
                        
                       </td>

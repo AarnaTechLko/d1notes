@@ -12,7 +12,7 @@ interface Profile {
   country: string;
   logo: string;
   slug: string;
-  id: string;
+  club_id: string;
   
 }
 
@@ -103,7 +103,7 @@ const Home = () => {
                 <div className="w-full lg:w-auto" key={profile.slug}>
                   <ProfileCard
                     key={profile.slug}
-                    id={profile.id}
+                    id={profile.club_id}
                     organization={profile.organizationName}
                     logo={profile.logo ?? '/default.jpg'}
                     country={profile.country}

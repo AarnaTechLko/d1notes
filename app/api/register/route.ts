@@ -199,7 +199,7 @@ export async function PUT(req: NextRequest) {
   const graduation = formData.get('graduation') as string;
   const imageFile = formData.get('image') as string | null;
   const school_name = formData.get('school_name') as string | null;
-  const gpa = formData.get('gpa') as number | null;
+  const gpa = formData.get('gpa') as string | '0.00';
 
   const playerIDAsNumber = parseInt(playerID, 10);
   try {
@@ -233,7 +233,7 @@ export async function PUT(req: NextRequest) {
         weight: weight || null,
         graduation: graduation || null,
         school_name: school_name || null,
-        gpa: gpa || null,
+        gpa: gpa || '0.00',
         status: "Active",
       
 

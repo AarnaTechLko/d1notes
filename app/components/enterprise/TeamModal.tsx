@@ -51,7 +51,7 @@ export default function TeamModal({
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","College","Semi Pro","Pro"];
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
   const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
   const coverImageInputRef = useRef<HTMLInputElement | null>(null);
   const [creatorId, setCreatorId] = useState<string | null>(null);

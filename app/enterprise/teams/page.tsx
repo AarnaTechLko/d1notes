@@ -22,6 +22,7 @@ type Team = {
   slug?: string;
   cover_image?: string;
   firstName?: string;
+  age_group?: string;
   lastName?: string;
   coachSlug?: string;
   totalPlayers?: number;
@@ -235,7 +236,7 @@ export default function TeamsPage() {
                     </th>
 
                     <th onClick={() => handleSort('team_year')} className="text-left px-4 py-2 cursor-pointer">
-                      Year{renderArrow('team_year')}
+                      Age {renderArrow('team_year')}
                     </th>
                     <th onClick={() => handleSort('team_type')} className="text-left px-4 py-2 cursor-pointer">
                       Gender{renderArrow('team_type')}
@@ -263,6 +264,7 @@ export default function TeamsPage() {
                     {sortedTeams.map((team) => (
                       <tr key={team.id} className="border-b">
                         <td className="px-4 py-2">
+                        <a href={`/teams/${team.slug}`}  target="_blank" title="Team Roster">
                           <div className="text-center items-center">
                           <img 
   src={team.logo ? team.logo : '/Team.jpg'} 
@@ -272,9 +274,10 @@ export default function TeamsPage() {
                             <div className="mb-1">{team.team_name}</div>
 
                           </div>
+                          </a>
                         </td>
 
-                        <td className="px-4 py-2">{team.team_year}</td>
+                        <td className="px-4 py-2">{team.age_group ? "Age Group: "+team.age_group : team.team_year}</td>
                         <td className="px-4 py-2">{team.team_type}</td>
                         <td className="px-4 py-2">
                           <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">

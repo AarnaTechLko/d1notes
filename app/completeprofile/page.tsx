@@ -477,6 +477,7 @@ export default function Register() {
                     name="gpa"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     min="0"
+                    step="any"
                     value={formValues.gpa}
                     onChange={handleChange}
                   />

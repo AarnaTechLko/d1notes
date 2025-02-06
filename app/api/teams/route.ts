@@ -35,7 +35,8 @@ export async function GET(req: NextRequest) {
       firstName: coaches.firstName,
       lastName: coaches.lastName,
       coachSlug: coaches.slug,
-      status: teams.status
+      status: teams.status,
+      age_group: teams.age_group
     }
   ).from(teams)
     .leftJoin(coaches, eq(teams.coach_id, coaches.id))
@@ -75,6 +76,7 @@ export async function GET(req: NextRequest) {
         lastName: team.lastName,
         coachSlug: team.coachSlug,
         status: team.status,
+        age_group: team.age_group,
         totalPlayers: totalPlayers,
         totalCoaches: totalCoaches,
       };
@@ -107,19 +109,43 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, status,leage,age_group } = await req.json();
+    const { id, team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, manager_name, manager_email, manager_phone, status,leage,age_group,selectedOption } = await req.json();
 
 
 
     if (!id || !team_name || !created_by || !creator_id) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
-
+    let ageGroup;
+    let teamYear;
+    if(selectedOption=='ageGroup')
+    {
+      ageGroup=age_group;
+      teamYear=null;
+    }
+    else{
+      ageGroup=null;
+      teamYear=team_year;
+    }
+    
     const result = await db
-      .update(teams)
-      .set({ team_name, description, logo, created_by, creator_id, team_type, team_year, cover_image, coach_id, status,leage,age_group })
-      .where(eq(teams.id, id))
-      .returning();
+  .update(teams)
+  .set({
+    team_name,
+    description,
+    logo,
+    created_by,
+    creator_id,
+    team_type,
+    cover_image,
+    coach_id,
+    status,
+    leage,
+    age_group:ageGroup,
+    team_year: teamYear, // Nullify team_year if age_group is set
+  })
+  .where(eq(teams.id, id))
+  .returning();
 
 
     if (result.length === 0) {

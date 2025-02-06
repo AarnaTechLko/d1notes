@@ -48,7 +48,7 @@ export const users = pgTable(
     height: text("height"),
     weight: text("weight"),
     parent_id:integer("parent_id"),
-    gpa:integer("gpa"),
+    gpa:text("gpa"),
     graduation: text("graduation"),
     school_name: text("school_name"),
     status: varchar("status").default("Inactive"),

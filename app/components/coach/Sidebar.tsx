@@ -132,12 +132,12 @@ const Sidebar: React.FC = () => {
                 </li>
             {session?.user.club_id && (
               <>
-                <li className="hover:bg-gray-700 rounded transition duration-200">
+                {/* <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/licenses" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
                     <span>Licenses</span>
                   </a>
-                </li>
+                </li> */}
                 <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/players" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
@@ -159,12 +159,12 @@ const Sidebar: React.FC = () => {
                     <span>Messages</span>
                   </a>
                 </li>
-            <li className="hover:bg-gray-700 rounded transition duration-200">
+            {/* <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/payoutsettings" className="flex items-center space-x-2 p-2">
                 <FaUsb className="text-xl" />
                 <span>Payout Settings</span>
               </a>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </aside>

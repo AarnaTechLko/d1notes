@@ -83,12 +83,12 @@ const Dashboard: React.FC = () => {
     { label: 'Total Coaches', value: stats.totalCoaches, bgColor: 'bg-blue-500', icon:  <img src="/coachIcon.png" alt="Team Icon" className="h-12 w-12 filter brightness-[1000] contrast-[200]" /> },
     { label: 'Total Players', value: stats.totalPlayers, bgColor: 'bg-green-500', icon: <img src="/playerIcon.png" alt="Team Icon" className="h-16 w-16" /> },
     
-    { label: 'Evaluations Available', value: stats.activeLicenses, bgColor: 'bg-yellow-500', icon: '🎫' },
-    { label: 'Evaluations Used', value: stats.consumeLicenses, bgColor: 'bg-red-500', icon: '🔥' },
+    { label: 'Join Requests', value: stats.activeLicenses, bgColor: 'bg-yellow-500', icon: '🎫' },
+    
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
       {statsArray.map((stat, index) => (
         <div
           key={index}
