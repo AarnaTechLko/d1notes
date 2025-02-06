@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { coaches, joinRequest, playerEvaluation, users,countries } from '../../../lib/schema'
+import { coaches, joinRequest, playerEvaluation, users,countries, licenses } from '../../../lib/schema'
 import debug from 'debug';
 import { eq,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -97,9 +97,25 @@ import { SECRET_KEY } from '@/lib/constants';
         )).execute();
       
         const isRequested = requested.length;
-        
-  
-      return NextResponse.json({coachdata:payload[0], evaluationlist:evaluationlist,isRequested:isRequested});
+      let totalLicneses;
+      let availableLicenses;
+      if(coachlist[0].enterprise_id!=null)
+      {
+        availableLicenses=await db.select().from(licenses).where(eq(licenses.enterprise_id, Number(coachlist[0].enterprise_id)));
+        if(availableLicenses.length>0)
+          {
+            totalLicneses="available";
+          }
+          else{
+            totalLicneses="notavailable";
+          }
+      }
+      else{
+        totalLicneses="notavailable1";
+      }
+      
+     
+      return NextResponse.json({coachdata:payload[0], evaluationlist:evaluationlist,isRequested:isRequested, totalLicneses:totalLicneses});
     } catch (error) {
       const err = error as any;
       console.error('Error fetching coaches:', error);

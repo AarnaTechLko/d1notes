@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
 import { turnAroundTime } from '@/lib/constants';
 import { positionOptionsList } from '@/lib/constants';
+import { showError } from './Toastr';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 interface Kids {
@@ -24,9 +25,10 @@ interface EvaluationModalProps {
   freeEvaluations?: number;
   allowedFreeRequests?: number;
   kids?: Kids[];
+  totalLicneses?:string;
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids,freeEvaluations,allowedFreeRequests }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids,freeEvaluations,allowedFreeRequests, totalLicneses }) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -75,6 +77,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     setErrors({}); // Reset errors
 let enterprise_id;
     const newErrors: { [key: string]: string } = {};
+    
+  
     if (userType == 'Child') {
       if (!child) newErrors.child = 'Player is required.';
     }

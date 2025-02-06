@@ -188,6 +188,7 @@ export const playingLevels=[
 ];
 
 export const countries=[
+  { label: "United States", value: "US" },
   { label: "Afghanistan", value: "AF" },
   { label: "Albania", value: "AL" },
   { label: "Algeria", value: "DZ" },
@@ -372,7 +373,7 @@ export const countries=[
   { label: "Ukraine", value: "UA" },
   { label: "United Arab Emirates", value: "AE" },
   { label: "United Kingdom", value: "GB" },
-  { label: "United States", value: "US" },
+  
   { label: "Uruguay", value: "UY" },
   { label: "Uzbekistan", value: "UZ" },
   { label: "Vanuatu", value: "VU" },

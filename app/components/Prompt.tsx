@@ -60,7 +60,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ stepstext, marginleft
              className="bg-red-500 text-white px-4 py-2 rounded w-full sm:w-auto"
              onClick={handleNeverShowAgain}
            >
-             Don Not Show Again
+             Do Not Show Again
            </button>
            <button
              className="bg-teal-500 text-white px-6 py-3 rounded-lg w-full sm:w-auto"

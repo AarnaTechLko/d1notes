@@ -10,6 +10,7 @@ import CertificateModal from '@/app/components/CertificateModal';
 import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
+import Swal from 'sweetalert2';
 interface CoachData {
   firstName: string;
   lastName: string;
@@ -52,6 +53,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isRequested, setIsRequested] = useState<number>(0);
+  const [totalLicneses, setTotalLicneses] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
@@ -123,7 +125,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         const responseData = await response.json();
 setCoachData(responseData.coachdata);
 setIsRequested(responseData.isRequested);
- 
+ setTotalLicneses(responseData.totalLicneses);
 setEvaluationList(responseData.evaluationlist);
       } catch (err) {
         setError("Some error occurred.");
@@ -136,6 +138,26 @@ setEvaluationList(responseData.evaluationlist);
     setPlayerId(session?.user?.id || null);
     setPlayerClubid(session?.user?.club_id || '')
   }, [session, slug]);
+
+
+  const handleLicenseCheck = (totalLicenses: string, setIsevaluationModalOpen: (state: boolean) => void) => {
+    if(session?.user?.club_id)
+    {
+
+  
+    if (totalLicenses === "notavailable" ) {
+      Swal.fire({
+        title: "Error!",
+        text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+  }
+    setIsevaluationModalOpen(true);
+  };
+
 
   if (loading) {
     return <Loading />;
@@ -227,7 +249,7 @@ setEvaluationList(responseData.evaluationlist);
       </button>
     ) : (
       <button
-        onClick={() => setIsevaluationModalOpen(true)} // Open modal on click
+      onClick={() => handleLicenseCheck(totalLicneses || '', setIsevaluationModalOpen)}// Open modal on click
         className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
       >
        Request Evaluation
@@ -441,6 +463,7 @@ Rating and Testimonials
           playerId={playerId}
           onClose={() => setIsevaluationModalOpen(false)}
           kids={kids}
+          totalLicneses={totalLicneses || ''}
           coachClubId={coachData.enterprise_id}
           playerClubId={Number(playerClubId)}
         />
