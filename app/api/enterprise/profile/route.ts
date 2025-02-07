@@ -64,7 +64,13 @@ export async function POST(req: NextRequest) {
               
                 const isRequested = requested.length;
 
-        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches,isRequested:isRequested });
+                const clubPlayers=await db.select().from(users).where(
+                    and(
+                    eq(users.enterprise_id, String(payload[0].id)),
+                    isNotNull(users.first_name)
+                    )
+                ).execute();
+        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches,isRequested:isRequested,clubPlayers:clubPlayers });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching enterprises:', error);

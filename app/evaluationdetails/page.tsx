@@ -172,13 +172,16 @@ setLoading(false);
                         <div className="mb-4">
                             <strong className="mr-2">Video link One:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
                         </div>
-                        <div className="mb-4">
-                            <strong className="mr-2">Video link Two:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
-                        </div>
-                        <div className="mb-4">
-                            <strong className="mr-2">Video  link Three :</strong> <a href={evaluationData?.video_link_three
-                            } className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min. 
-                        </div>
+                        {evaluationData?.video_link_two && (
+            <div className="mb-4">
+            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
+        </div>
+        )}
+         {evaluationData?.video_link_three && (
+        <div className="mb-4">
+            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
+        </div>
+         )}
 
                         <div className="mb-4">
                             <strong className="mr-2">Video description:</strong>

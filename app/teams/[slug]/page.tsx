@@ -24,6 +24,7 @@ interface Profile {
   position: string;
   grade_level: string;
   location: string;
+  leage: string;
   height: number;
   weight: number;
   jersey: number;
@@ -33,6 +34,7 @@ interface Profile {
 interface CoachData {
 
   team_name: string;
+  age_group?: string;
   created_by: string;
   description: string;
   cover_image: string;
@@ -45,6 +47,7 @@ interface CoachData {
   coachimage: string;
   team_type: string;
   team_year: string;
+  leage?: string;
 
   coachSlug: string;
   id: number;
@@ -149,15 +152,25 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
             {/* Team Info */}
             <div>
+               
+              <div>
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
                 {coachData.team_name}
               </h1>
               <p className="text-gray-600 text-lg">
                 <b>Team Gender :</b> {coachData.team_type}
               </p>
-              <p className="text-gray-600 text-lg">
-                <b>Year :</b> {coachData.team_year}
-              </p>
+              {coachData.team_year && (
+ <p className="bg-blue-700 text-white p-2">
+ <span ><b>Birth Year: </b>{coachData.team_year}</span> 
+</p>
+              )}
+                {coachData.age_group && (
+ <p className="bg-blue-700 text-white p-2">
+ <span ><b>Age Group: </b>{coachData.age_group}</span> 
+</p>
+              )}
+            </div>
             </div>
 
             {/* <div>
@@ -211,12 +224,12 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
 
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">About Team</h2>
+            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">Leage</h2>
 
           </div>
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
 
-            <p>{coachData.description}</p>
+            <p>{coachData.leage}</p>
           </div>
 
         {/* Header Section */}
@@ -235,7 +248,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </div>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-          Coach
+          Coaches
         </h2>
 
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
@@ -272,7 +285,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     key={profile.slug}
                     rating={5}
                     coachName=""
-                    graduation=""
+                    graduation={profile.graduation}
                     birthdate={profile.birthdate}
                     firstName={toSentenceCase(profile.firstName)}
                     lastName={toSentenceCase(profile.lastName)}

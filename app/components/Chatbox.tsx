@@ -4,12 +4,14 @@ import { FaEye, FaPaperclip, FaSmile, FaArrowLeft } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/lib/clientHelpers";
 interface ChatMessage {
     senderId: number;
     sender_type: string;
     receiver_id: number;
     receiver_type: string;
     message: string;
+    messageCreatedAt: string;
     createdAt: string;
     club_id?: number;
 }
@@ -141,6 +143,7 @@ const ChatBox: React.FC = () => {
                 club_id: Number(session?.user?.club_id) || 0, 
                 message,
                 createdAt: new Date().toISOString(),
+                messageCreatedAt: new Date().toISOString(),
             };
             
             await fetch("/api/chats", {
@@ -242,6 +245,7 @@ const ChatBox: React.FC = () => {
                                 style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
                             >
                                 {chatData.map((msg, index) => (
+                                    <>
                                     <div
                                         className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
                                                 ? "justify-end"
@@ -260,8 +264,15 @@ const ChatBox: React.FC = () => {
                                                 dangerouslySetInnerHTML={{ __html: msg.message }}
                                                 className="message-content"
                                             ></div>
+                                              <p className={` text-xs mb-51 ${msg.senderId === Number(session?.user?.id)
+                                                ? "text-right"
+                                                : "text-right"
+                                            }`}>{formatDate(msg.messageCreatedAt)}</p>
                                         </div>
+                                      
                                     </div>
+                                     
+                                     </>
                                 ))}
                             </div>
 

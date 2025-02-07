@@ -11,6 +11,7 @@ import { EvaluationData } from '../../types/types';
 import ProfileCard from '@/app/components/teams/ProfileCard';
 import CoachProfileCard from '@/app/components/ProfileCard';
 import LoginModal from '@/app/components/LoginModal';
+import PlayerProfileCard from '@/app/components/players/ProfileCard';
 
 
 
@@ -42,6 +43,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [coachList, setCoachList] = useState<[] | []>([]);
+  const [playerList, setPlayerList] = useState<[] | []>([]);
   const [teamData, setTeamData] = useState<[] | null>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequested, setIsRequested] = useState<number>(0);
@@ -52,7 +54,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [playerId, setPlayerId] = useState<string | null>(null);
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
-
+  function toSentenceCase(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
@@ -77,6 +82,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setTeamData(responseData.clubTeams);
         setCoachList(responseData.coachesList);
         setIsRequested(responseData.isRequested);
+        setPlayerList(responseData.clubPlayers);
 
       } catch (err) {
         setError("Some error occurred.");
@@ -145,13 +151,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 {coachData.organizationName}
               </h1>
               <p className="text-gray-600 text-lg">Club</p>
-              <div className="flex items-center justify-center md:justify-start mt-2">
+              {/* <div className="flex items-center justify-center md:justify-start mt-2">
                 <div className="mt-1">{stars}</div>
               </div>
               <div className="flex items-center justify-center md:justify-start mt-2">
                 <span className="text-yellow-500 text-2xl">5</span>
                 <span className="ml-2 text-gray-500">/ 5.0</span>
-              </div>
+              </div> */}
             </div>
             {/* Right Section */}
             <div className="flex flex-col items-center md:items-end">
@@ -253,6 +259,39 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 rating={5}
                 slug={item.slug}
               />
+            );
+          })}
+
+          </div>
+        </section>
+
+
+        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+          Players
+        </h2>
+        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+
+          <div className="flex flex-col md:flex-row md:space-x-8">
+          {playerList?.map((profile: any) => {
+            
+            return (
+              <PlayerProfileCard
+                    key={profile.slug}
+                    rating={5}
+                    coachName=""
+                    graduation={profile.graduation}
+                    birthdate={profile.birthday}
+                    firstName={toSentenceCase(profile.firstName)}
+                    lastName={toSentenceCase(profile.lastName)}
+                    image={profile.image ?? "/default.jpg"}
+                    jersey={profile.jersey}
+                    slug={profile.slug}
+                    position={toSentenceCase(profile.position)}
+                    grade_level={toSentenceCase(profile.grade_level)}
+                    location={toSentenceCase(profile.location)}
+                    height={profile.height}
+                    weight={profile.weight}
+                  />
             );
           })}
 

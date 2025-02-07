@@ -53,9 +53,9 @@ useEffect(()=>{
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold">{name}</h3>
     
-    <div className="mt-2 flex justify-center">
+    {/* <div className="mt-2 flex justify-center">
       <div className="mt-1">{stars}</div>
-    </div>
+    </div> */}
     {/* Bio Icon Section */}
     <div className="mt-2 flex justify-center">
       <button 
@@ -74,7 +74,7 @@ useEffect(()=>{
   <div className="mt-2 flex justify-center">
   <button 
     onClick={() =>setIsevaluationModalOpen(true)} // Function to redirect to the bio
-    className="flex items-center space-x-2 bg-blue-600 text-white p-2 rounded-sm text-gray-500 mb-5"
+    className="flex items-center space-x-2 bg-blue-600 text-white p-2 rounded-smmb-5"
   >
   Request Evaluation{isevaluationModalopen}
   </button>

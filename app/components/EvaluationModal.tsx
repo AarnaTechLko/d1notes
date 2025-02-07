@@ -261,7 +261,7 @@ let enterprise_id;
           onClick={onClose}
         >
           ✖
-        </button>
+        </button> 
         <h2 className="text-2xl font-bold mb-3 text-center">Request Evaluation </h2>
  
         {errors.general && <p className="text-red-500 text-xs mb-4">{errors.general}</p>}

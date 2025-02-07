@@ -165,13 +165,13 @@ const Home: React.FC = () => {
                                     setAmount("");
                                 }}
                             >
-                                Add Evaluation Charge
+                                Add Time and Rate
                             </button>
                         </div>
                         <table className="w-full text-sm text-left text-gray-700">
                             <thead>
                                 <tr>
-                                    <th>Serial Number</th>
+                                   
                                     <th>Turnaround Time</th>
                                     <th>Evaluation Rate</th>
                                     <th>Action</th>
@@ -181,7 +181,7 @@ const Home: React.FC = () => {
                                 {charges.length > 0 ? (
                                     charges.map((charge: any, index) => (
                                         <tr key={charge.id}>
-                                            <td>{index + 1}</td>
+                                             
                                             <td>{charge.turnaroundtime} Hours</td>
                                             <td>{charge.currency}{charge.amount}</td>
                                             <td className="">
@@ -203,7 +203,7 @@ const Home: React.FC = () => {
                                 ) : (
                                     <tr>
                                         <td colSpan={4} className="text-center">
-                                            No Charge(s) found
+                                            No Rate(s) found
                                         </td>
                                     </tr>
                                 )}
@@ -218,7 +218,7 @@ const Home: React.FC = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg shadow-lg w-1/3 p-6">
                         <h2 className="text-lg font-semibold mb-4">
-                            {isEditMode ? "Edit Evaluation Charge" : "Add Evaluation Charge"}
+                            {isEditMode ? "Edit Evaluation Rate" : "Add Evaluation Rate"}
                         </h2>
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1">Turnaround Time</label>
@@ -228,7 +228,7 @@ const Home: React.FC = () => {
                                 onChange={(e) => setTurnaroundtime(e.target.value)}
                                 className="w-full px-3 py-2 border rounded-md"
                             >
-                                <option value="">Select Turnaround Time</option>
+                                <option value="">Select</option>
                                 {turnAroundTime.map((tat) => (
                                     <option value={tat.value} key={tat.id}>{tat.label}</option>
                                 ))}
@@ -241,7 +241,8 @@ const Home: React.FC = () => {
 
                             {/* Amount Input */}
                             <div className="w-1/2">
-                                <label className="block text-sm font-medium mb-1">Enter Amount in {session?.user.coachCurrency}</label>
+                                <label className="block text-sm font-medium mb-1">Enter Evaluation Rate in Dollar 
+                                    {/* {session?.user.coachCurrency}*/}</label> 
                                 <input
                                     type="number"
                                     className="w-full border rounded px-3 py-2"

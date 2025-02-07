@@ -101,39 +101,79 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                             <tr key={item.id}>
                                 <td>{formatDate(item.created_at)}</td>
                                 <td>
-  <button
-    style={{
-      backgroundColor: getRemainingTime(item.created_at, Number(item.turnaroundTime)) >= 0 ? 'green' : 'red',
-      color: 'white',
-      padding: '5px 3px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontSize: '12px',
-    }}
-  >
-    {getRemainingTime(item.created_at, Number(item.turnaroundTime)).toFixed(2)} Hours
-  </button>
+  {item.turnaroundTime && !isNaN(Number(item.turnaroundTime)) ? (
+    (() => {
+      const remainingTime = getRemainingTime(item.created_at, Number(item.turnaroundTime));
+      return (
+        <button
+          style={{
+            backgroundColor: Number.isFinite(remainingTime) && remainingTime >= 0 ? 'green' : 'red',
+            color: 'white',
+            padding: '5px 3px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '12px',
+          }}
+        >
+          {Number.isFinite(remainingTime) ? remainingTime.toFixed(2) : 'Invalid'} Hours
+        </button>
+      );
+    })()
+  ) : (
+    <>Not Applicable</>
+  )}
 </td>
+
                                 <td>{item.firstName} {item.lastName}</td>
                                 <td>{item.review_title}</td>
                                 <td>
                                     
-                                <a href={item.primary_video_link} 
-   className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors" 
-   target="_blank">
-   Primary
+                                <a
+  href={item.primary_video_link}
+  className="px-1 py-0.5 text-[10px] font-light ml-2 text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Link#1
 </a>
-<a href={item.video_link_two} 
-   className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2" 
-   target="_blank">
-   Link#2
-</a>
-<a href={item.video_link_three} 
-   className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2" 
-   target="_blank">
-   Link#3
-</a>
+
+{item.video_link_two ? (
+  <a
+    href={item.video_link_two}
+    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Link#2
+  </a>
+) : (
+  <button
+    disabled
+    className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+  >
+    Link#2
+  </button>
+)}
+
+{item.video_link_three ? (
+  <a
+    href={item.video_link_three}
+    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Link#3
+  </a>
+) : (
+  <button
+    disabled
+    className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+  >
+    Link#3
+  </button>
+)}
+
 
                                 
                                 </td>

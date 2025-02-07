@@ -276,7 +276,7 @@ const Dashboard: React.FC = () => {
          
             const accepted_at = row?.original?.accepted_at;
             const turnaroundTime = row?.original?.turnaroundTime;
-           if(selectedTab=='1')
+           if(selectedTab=='1' && turnaroundTime)
            {
             if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
               const hoursFromNow = calculateHoursFromNow(accepted_at);
@@ -298,7 +298,7 @@ const Dashboard: React.FC = () => {
             return (
   
               <span className={boxClass}>
-                 {turnaroundTime} Hours
+                 {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
               </span>
             );
             
@@ -324,16 +324,52 @@ const Dashboard: React.FC = () => {
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-            <a href={row.original.primary_video_link} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">
-              Link#1
-            </a>
-            <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
-             Link#2
-            </a>
-            <a href={row.original.video_link_three} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
-              Link#3
-            </a>
-          </div>
+  <a
+    href={row.original.primary_video_link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+  >
+    Link#1
+  </a>
+
+  {row.original.video_link_two ? (
+    <a
+      href={row.original.video_link_two}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    >
+      Link#2
+    </a>
+  ) : (
+    <button
+      disabled
+      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+    >
+      Link#2
+    </button>
+  )}
+
+  {row.original.video_link_three ? (
+    <a
+      href={row.original.video_link_three}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    >
+      Link#3
+    </a>
+  ) : (
+    <button
+      disabled
+      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+    >
+      Link#3
+    </button>
+  )}
+</div>
+
         ),
       },
       {

@@ -77,7 +77,7 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
             <table>
                 <thead>
                     <tr>
-                    <th onClick={() => handleSort('created_at')}>Paid At</th>
+                    <th onClick={() => handleSort('created_at')}>Paid Date</th>
                         <th onClick={() => handleSort('firstName')}>Coach Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
                         <th onClick={() => handleSort('amount')}>Amount</th>

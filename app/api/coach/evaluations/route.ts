@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       .limit(10) // Limit the number of results to 10
       .execute();
 
-    return NextResponse.json(evaluationsData);
+    return NextResponse.json(evaluationsData); 
 
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
@@ -84,10 +84,17 @@ export async function PUT(req: NextRequest) {
         club_id:0        
     };
 
-
+let message;
     const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
-
-    const message="Hi! I have accepted your evaluation request!";
+if(status===1)
+{
+   message="Hi! I have accepted your evaluation request!";
+}
+if(status===3)
+  {
+     message="Sorry! Right now I am unable to accept your evaluation request. Reason :"+remark;
+  }
+   
 
     let userValues: any = {
         senderId: requestToID,

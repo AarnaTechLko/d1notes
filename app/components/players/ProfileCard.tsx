@@ -117,7 +117,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <p className="text-gray-500 teampagefont">
      <b>Birthdate: </b>  {formattedDate} 
     </p>
-    <p className="text-gray-600 teampagefont">{grade_level}</p>
+    <p className="text-gray-500 teampagefont"><b>Level: </b>{grade_level}</p>
   </div>
 </div>
 

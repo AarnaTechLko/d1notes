@@ -106,7 +106,7 @@ const Home: React.FC = () => {
     value={search}
     onChange={(e) => setSearch(e.target.value)}
   />
-  <span className="text-lg font-semibold text-gray-800">Total Earning: USD ${accountBalance}</span>
+  <span className="text-lg font-semibold text-gray-800">Total Earnings: USD ${accountBalance}</span>
 </div>
             <table className="w-full text-sm text-left text-gray-700">
               <thead>

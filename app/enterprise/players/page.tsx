@@ -461,7 +461,7 @@ const handleResetPassword=(coach: Coach)=>{
                       <td>{coach.position}</td>
                       <td>
                       <a
-                  href={`/player/history/${coach.slug}`}
+                  href={`/players/history/${coach.slug}`}
                   title='History'
                   className='underline text-blue-500'
                   target="_blank"

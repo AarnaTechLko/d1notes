@@ -60,8 +60,13 @@ const Home: React.FC = () => {
         return;
       }
 
+      // const response = await fetch(
+      //   `/api/coach/player/signup?enterprise_id=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
+      
+      // );
+
       const response = await fetch(
-        `/api/coach/player/signup?enterprise_id=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
+        `/api/coach/teamplayers?coachId=${enterpriseId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
       
       );
 
@@ -207,7 +212,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
   <input
     type="text"
     placeholder="Search by name, email, or phone"
@@ -230,7 +235,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
       Bulk Upload
     </a>
   </div>
-</div>
+</div> */}
 
 
         
@@ -245,7 +250,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
                   <th>Team</th>
                   <th>Position</th>
                   <th>Status</th>
-                  <th>Action</th>
+                
                 </tr>
               </thead>
               {loading ? (
@@ -290,10 +295,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
       {coach.status}
     </button>
   )}</td>
-                      <td>
-
-                        <a href={`/coach/${coach.id}`} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" target='_blank'>Delete</a>
-                      </td>
+                      
                     </tr>
                   ))
                 ) : (

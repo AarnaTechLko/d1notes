@@ -102,7 +102,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     Dashboard
                 </Link>
             </li>
-            <li className="pt-[8px]">
+            {/* <li className="pt-[8px]">
                 <Link
                     href="/coach/invitation"
                     className={`${isActiveLink("/coach/invitation")} hover:text-blue-300`}
@@ -110,7 +110,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                 >
                     Send Invitation
                 </Link>
-            </li>
+            </li> */}
             <li className="pt-[8px]">
                 <Link
                     href="/coach/dashboard"

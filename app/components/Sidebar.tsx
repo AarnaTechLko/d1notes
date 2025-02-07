@@ -83,11 +83,11 @@ const Sidebar: React.FC = () => {
             </a>
             {isEvaluationListOpen && (
               <ul className="ml-4 mt-1 space-y-1">
-                <li className="hover:bg-gray-600 rounded transition duration-200">
+                {/* <li className="hover:bg-gray-600 rounded transition duration-200">
                   <a href="/evaluations" className="flex items-center space-x-2 p-2">
                     <span>All</span>
                   </a>
-                </li>
+                </li> */}
                 <li className="hover:bg-gray-600 rounded transition duration-200">
                   <a href="/evaluations?status=0" className="flex items-center space-x-2 p-2">
                     <span>Requested</span>

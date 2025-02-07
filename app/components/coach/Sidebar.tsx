@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/charges" className="flex items-center space-x-2 p-2">
                 <FaDollarSign className="text-xl" />
-                <span>Evaluation Rates</span>
+                <span>Time and Rate</span>
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -91,11 +91,11 @@ const Sidebar: React.FC = () => {
               </a>
               {isEvaluationListOpen && (
                 <ul className="ml-4 mt-1 space-y-1">
-                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                  {/* <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a href="/coach/evaluations" className="flex items-center space-x-2 p-2">
                       <span>All</span>
                     </a>
-                  </li>
+                  </li> */}
                   <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a href="/coach/evaluations?status=0" className="flex items-center space-x-2 p-2">
                       <span>Requested</span>

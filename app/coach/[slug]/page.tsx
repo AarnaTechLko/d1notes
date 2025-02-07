@@ -219,12 +219,12 @@ setEvaluationList(responseData.evaluationlist);
       </p>
 
       {/* Rating */}
-      <div className="flex items-center justify-center md:justify-start mt-2">
+      {/* <div className="flex items-center justify-center md:justify-start mt-2">
       <div className="mt-1">{stars}</div>
       
-      </div>
+      </div> 
       <span className="text-yellow-500 text-2xl">{coachData.rating}</span>
-      <span className="ml-2 text-gray-500">/ 5.0</span>
+      <span className="ml-2 text-gray-500">/ 5.0</span>*/}
     </div>
   </div>
 

@@ -27,6 +27,7 @@ let coach;
                 cover_image: teams.cover_image,
                 slug: teams.slug,
                 logo: teams.logo,
+                leage: teams.leage,
                 coach_id: teams.coach_id,
                 firstName: coaches.firstName,
                 lastName: coaches.lastName,
@@ -65,6 +66,7 @@ let coach;
             qualifications: club.qualifications,
             coachimage: club.coachimage,
             coachSlug: club.coachSlug,
+            leage: club.leage,
             logo: club.logo ? `${club.logo}` : null,
         }));
 

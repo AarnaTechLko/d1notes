@@ -35,6 +35,7 @@ const Dashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
+  const [clubId, setClubId]=useState<string | undefined>(undefined);
   const [evaluationId, setEvaluationId] = useState<number | undefined>(undefined);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
@@ -114,7 +115,7 @@ const Dashboard: React.FC = () => {
         Cell: ({ row }: CellProps<Evaluation>) => {
           const accepted_at = row?.original?.accepted_at;
           const turnaroundTime = row?.original?.turnaroundTime;
-         if(selectedTab=='1')
+         if(selectedTab=='1' && turnaroundTime)
          {
           if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
             const hoursFromNow = calculateHoursFromNow(accepted_at);
@@ -136,7 +137,7 @@ const Dashboard: React.FC = () => {
           return (
 
             <span className={boxClass}>
-               {turnaroundTime} Hours
+               {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
             </span>
           );
           
@@ -158,16 +159,52 @@ const Dashboard: React.FC = () => {
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-            <a href={row.original.primary_video_link} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">
-              Link#1
-            </a> 
-            <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
-             Link#2
-            </a>
-            <a href={row.original.video_link_three} target="_blank" rel="noopener noreferrer" className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2">
-              Link#3
-            </a>
-          </div>
+  <a
+    href={row.original.primary_video_link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+  >
+    Link#1
+  </a>
+
+  {row.original.video_link_two ? (
+    <a
+      href={row.original.video_link_two}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    >
+      Link#2
+    </a>
+  ) : (
+    <button
+      disabled
+      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+    >
+      Link#2
+    </button>
+  )}
+
+  {row.original.video_link_three ? (
+    <a
+      href={row.original.video_link_three}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+    >
+      Link#3
+    </a>
+  ) : (
+    <button
+      disabled
+      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+    >
+      Link#3
+    </button>
+  )}
+</div>
+
         ),
       },
         {
@@ -196,12 +233,10 @@ const Dashboard: React.FC = () => {
           const evaluation = row.original;
           if (selectedTab === '0') {
             return (
-              <button
-                onClick={() => handleRequestedAction(evaluation)}
-                className="bg-blue-500 text-white px-4 py-2 rounded text-sm md:text-base"
-              >
-                Action
-              </button>
+              <a style={{ cursor: "pointer" }} onClick={() => handleRequestedAction(evaluation)}>
+                <img src='/actionImage.jpg'></img>
+              </a>
+              
             );
           } else if (selectedTab === '1') {
             return (
@@ -274,8 +309,9 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    setClubId(session?.user?.club_id ?? '');
     fetchEvaluations(selectedTab);
-  }, [selectedTab]);
+  }, [selectedTab, session]);
 
   return (
     <>
@@ -308,11 +344,14 @@ const Dashboard: React.FC = () => {
           
           <div className="bg-white shadow-md rounded-lg p-6 ">
           <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your bank account information to receive funds by clicking on Payment Information in the left side menu if you plan to offer evaluations to the public for a fee. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team. Otherwise, be prepared to give Players who seek you out, the edge they have been missing!"/>
-          <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
+          {!clubId && (
+            <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
             
-  <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
-  <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
-</div>
+            <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
+            <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
+          </div>
+          )}
+          
 
             {/* Dropdown for tabs on small screens */}
             <div className="block md:hidden mb-4 ">

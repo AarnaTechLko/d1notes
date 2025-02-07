@@ -255,9 +255,15 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg shadow-lg w-full max-w-screen-xl mx-6 max-h-[90vh] overflow-y-auto">
                     <form onSubmit={handleSubmit}>
-                        <div className="bg-blue-600 text-white p-4">
-                            <h2 className="text-lg font-bold">Please take an action!</h2>
-                        </div>
+                    <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <h2 className="text-lg font-bold">Please take an action!</h2>
+    <button 
+        onClick={onClose} 
+        className="text-white hover:text-gray-200 text-xl font-bold"
+    >
+        &times;
+    </button>
+</div>
                         <div className="p-6 border border-gray-300 rounded-lg font-sans">
                             {/* Evaluation Form Header - Full Width */}
                             <div className="w-full mb-0">
@@ -323,12 +329,16 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         <div className="mb-4">
             <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
         </div>
-        <div className="mb-4">
+        {evaluationData?.video_link_two && (
+            <div className="mb-4">
             <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
         </div>
+        )}
+         {evaluationData?.video_link_three && (
         <div className="mb-4">
             <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
         </div>
+         )}
         {/* <div className="mb-4">
             <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
         </div> */}

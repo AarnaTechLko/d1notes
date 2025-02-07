@@ -168,7 +168,7 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  <th>Serial Number</th>
+                  
                   <th>Organization</th>
                   <th>Team</th>
                   <th>Interest Receievd On</th>
@@ -179,7 +179,7 @@ const Home: React.FC = () => {
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((order, index) => (
                     <tr key={order.invitationId}>
-                      <td>{(currentPage - 1) * limit + index + 1}</td>
+                     
 
                       <td style={{ textAlign: "center" }}>
                         
