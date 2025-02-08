@@ -122,6 +122,7 @@ const Profile: React.FC = () => {
         }
         
         setIsEditMode(false); // Exit edit mode after saving
+        window.location.reload(); 
       } else {
         console.error("Failed to update profile:", response.statusText);
       }

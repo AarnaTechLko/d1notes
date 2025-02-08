@@ -94,6 +94,7 @@ let ppositons;
           }
           console.log(ppositons);
           setPosition(ppositons);
+           
 
         } else {
           console.error("Error fetching profile data:", response.statusText);
@@ -219,7 +220,8 @@ let ppositons;
           console.error("Failed to fetch updated profile data:", updatedResponse.statusText);
         }
 
-        setIsEditMode(false); // Exit edit mode after saving
+        setIsEditMode(false);
+        window.location.reload(); // Exit edit mode after saving
       } else {
         console.error("Failed to update profile:", response.statusText);
       }

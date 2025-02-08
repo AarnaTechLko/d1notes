@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, otps, teamCoaches } from '../../../../lib/schema';
+import { coaches, invitations, otps, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -78,6 +78,14 @@ export async function POST(req: NextRequest) {
           
         ).returning();
   
+        await db.update(invitations).set({
+          status:'Joined'
+        }).where(and(
+          eq(invitations.team_id, Number(teamId)),
+          eq(invitations.email, email),
+          eq(invitations.sender_id, Number(userValues.enterprise_id))
+        ));
+
       }
     }
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { teams,teamPlayers } from "@/lib/schema";
+import { teams,teamPlayers, teamCoaches } from "@/lib/schema";
 import { eq,and } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
@@ -13,11 +13,21 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-  const data = await db.select().from(teams)
+  const data = await db.select(
+    {
+      team_name:teams.team_name,
+      team_year:teams.team_year,
+      age_group:teams.age_group,
+      logo:teams.logo,
+      team_type:teams.team_type,
+      leage:teams.leage,
+      slug:teams.slug,
+    }
+  ).from(teams)
+  .leftJoin(teamCoaches, eq(teamCoaches.teamId, teams.id))
   .where(
     and(
-        eq(teams.creator_id,parseInt(enterpriseId)),
-        eq(teams.created_by,'Coach'),
+        eq(teamCoaches.coachId,parseInt(enterpriseId))
   ));
 
   const teamplayersList=await db.select().from(teamPlayers).where(eq(teamPlayers.enterprise_id,parseInt(enterpriseId)));

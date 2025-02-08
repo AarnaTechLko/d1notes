@@ -12,18 +12,17 @@ import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 type Team = {
   id?: number;
   team_name?: string;
-  description?: string;
+
   logo?: string;
-  created_by?: string;
-  creator_id?: number;
+  leage: string;
+  age_group: string;
   team_type?: string;
   team_year?: string;
   slug?: string;
-  cover_image?: string;
-  firstName?: string;
-  lastName?: string;
-  coachSlug?: string;
-  playerIds?: number[];
+  
+
+
+
 };
 
 type Player = {
@@ -109,16 +108,7 @@ export default function TeamsPage() {
     }
   };
 
-  const handleEdit = (team: Team) => {
-    if (!team) return;
-    const sanitizedTeam = {
-      ...team,
-      created_by: team.created_by || "",
-      creator_id: team.creator_id,
-    };
-    setEditTeam(sanitizedTeam);
-    setModalOpen(true);
-  };
+ 
 
   const handleDelete = async (id?: number) => {
     const result = await Swal.fire({
@@ -141,14 +131,7 @@ export default function TeamsPage() {
     }
   };
 
-  const handleAddPlayers = (teamId: number) => {
-    const team = teams.find((t) => t.id === teamId);
-    if (team) {
-      setSelectedPlayers(team.playerIds || []);
-    }
-    setCurrentTeamId(teamId);
-    setPlayerModalOpen(true);
-  };
+ 
 
   const handlePlayerSelection = (playerId: number) => {
     setSelectedPlayers((prev) =>
@@ -186,94 +169,60 @@ export default function TeamsPage() {
               <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100 border-b">
-                    <th className="text-left px-4 py-2">Year</th>
-                    <th className="text-left px-4 py-2">Name</th>
+                    <th className="text-left px-4 py-2">Age</th>
+                    <th className="text-left px-4 py-2">Team Name</th>
                     <th className="text-left px-4 py-2">Logo</th>
-                    <th className="text-left px-4 py-2">Description</th>
-                    <th className="text-left px-4 py-2">Players</th>
+                    <th className="text-left px-4 py-2">Gender</th>
+                    <th className="text-left px-4 py-2">Leage</th>
+
                     <th className="text-left px-4 py-2">Roster</th>
-                    <th className="text-left px-4 py-2">Actions</th>
+                    
                   </tr>
                 </thead>
-              {loadingData ? (
-                 <tbody>
-                  <tr>
-                    <td colSpan={7}> <div className="flex justify-center items-center">
-    <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
-  </div></td>
-                  </tr>
-                 </tbody>
-  
-) : (
- 
-                <tbody>
-                  {teams.map((team) => (
-                    <tr key={team.id} className="border-b">
-                      <td className="px-4 py-2">{team.team_year}
+                {loadingData ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan={7}> <div className="flex justify-center items-center">
+                        <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+                      </div></td>
+                    </tr>
+                  </tbody>
+
+                ) : (
+
+                  <tbody>
+                    {teams.map((team) => (
+                      <tr key={team.id} className="border-b">
+                       <td className="px-4 py-2">
+  {team.team_year || 'Age Group: '+team.age_group || ''}
+</td>
+                        <td className="px-4 py-2">{team.team_name}
+
+                        </td>
+                        <td className="px-4 py-2">
+                          <img src={team.logo} className="w-12 h-12 rounded-full" />
+                        </td>
+                        <td className="px-4 py-2">
+                           {team.team_type}
+                        </td>
+                        <td className="px-4 py-2">
+                           {team.leage}
+                        </td>
+
                        
-                      </td>
-                      <td className="px-4 py-2">{team.team_name}
-                        
-                      </td>
-                      <td className="px-4 py-2">
-                      <img src={team.logo} className="w-12 h-12 rounded-full" />
-                      </td>
-                      <td className="px-4 py-2">
-                        <p>
-                          {team.description
-                            ? team.description.length > 100
-                              ? `${team.description.slice(0, 100)}...`
-                              : team.description
-                            : "No description available"}
-                        </p>
-                        {team.description && team.description.length > 100 && (
-                          <button
-                            onClick={() => handleShowFullDescription(team.description || '')}
-                            className="text-blue-500 underline mt-2"
-                          >
-                            Read More
-                          </button>
-                        )}
-                      </td>
-                      
-                      <td className="px-4 py-2">
-                      <Link
-  href={`/coach/addplayers/${team.id}`}
-  className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-  style={{ minWidth: '120px', whiteSpace: 'nowrap' }}
->
-  Add Players
-</Link>
-                      </td>
-                      <td className="px-4 py-2">
-                        <a
+                        <td className="px-4 py-2">
+                          <a
                             href={`/teams/${team.slug}`}
                             className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
                             target="_blank" style={{ minWidth: '50px', whiteSpace: 'nowrap' }}
                           >
                             View
                           </a></td>
-                      <td className="px-4 py-2">
-                        <div className="flex items-center space-x-2">
-                          
-                          <button
-                            className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            onClick={() => handleEdit(team)}
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                            onClick={() => handleDelete(team.id)}
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
+                         
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
               </table>
             </div>
 

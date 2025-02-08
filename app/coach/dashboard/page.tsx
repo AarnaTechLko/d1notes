@@ -14,6 +14,7 @@ import { FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
 import PromptComponent from '@/app/components/Prompt';
+import TeamProfileCard from '@/app/components/teams/ProfileCard';
   
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
   console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
@@ -41,7 +42,7 @@ const Dashboard: React.FC = () => {
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [teams, setTeams] = useState<[]>([]);
   const [evaluationData, setEvaluationData] = useState<Evaluation | undefined>(undefined);
   const [modalContent, setModalContent] = useState<JSX.Element | null>(null);
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
@@ -65,7 +66,29 @@ const Dashboard: React.FC = () => {
     setModalOpen(true); // Open modal with full description
      
   };
+  const fetchTeams = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    const session = await getSession();
+    const userId = session?.user.id;
+ 
 
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const response =await fetch(`/api/coach/teams?enterprise_id=${session.user.id}`);
+
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error("Failed to fetch teams");
+    }
+
+    const coachData = await response.json();
+    
+    setTeams(coachData.data);
+ 
+    setLoading(false); // Set loading to false after data is fetched
+  };
   const handleCloseModal = () => {
     setModalOpen(false); // Close modal
   };
@@ -311,6 +334,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     setClubId(session?.user?.club_id ?? '');
     fetchEvaluations(selectedTab);
+    fetchTeams();
   }, [selectedTab, session]);
 
   return (
@@ -455,6 +479,25 @@ const Dashboard: React.FC = () => {
   </table>
 </div>
           </div>
+          <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
+          <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>
+        
+      {teams.map((item:any) => (
+                <div className="w-full lg:w-auto" key={item.id}>
+                  <TeamProfileCard
+                     key={item?.slug}
+                     creatorname={item.creatorName}
+                     teamName={item.team_name} // Ensure `team_name` is correct
+                     logo={item.logo ?? '/default.jpg'}
+                     rating={5}
+                     slug={item.slug}
+                  />
+                </div>
+              ))}
+
+ 
+       
+        </div>
         </main>
       </div>
     </>
