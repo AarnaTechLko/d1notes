@@ -91,7 +91,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
         <table className="min-w-full border-collapse border border-gray-300 shadow-sm">
           <thead>
             <tr className="bg-gradient-to-r from-blue-500 to-purple-500 text-black">
-              <th className="border border-gray-300 px-4 py-2 text-left">Number of Licenses</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Number of Evaluations</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Rate per Evaluation</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Action</th>
             </tr>

@@ -439,11 +439,11 @@ export default function Register() {
                     {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                   </div>
                   <div >
-                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Evaluation Rate<span className='mandatory'>*</span></label>
+                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Evaluation Rate in $<span className='mandatory'>*</span></label>
                   <div className="flex">
                       <select
-                        name="currency"
-                        className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 mr-1" // Added mr-4 for margin-right
+                        name="currency" 
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 mr-1 hidden" // Added mr-4 for margin-right
                         value={formValues.currency}
                         onChange={handleChange}
                       >
@@ -455,10 +455,10 @@ export default function Register() {
                         ))}
                       </select>
                       <input
-                      placeholder='Amount'
+                      placeholder='Ex: 100'
                       type="text"
                       name="expectedCharge"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-1/2"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.expectedCharge}
                       onChange={handleChange}
                     />
@@ -479,7 +479,7 @@ export default function Register() {
                         <option value="">Select</option>
                         {countryCodesList.map((item) => (
                           <option key={item.id} value={item.code}>
-                            {item.code} ({item.country})
+                            {item.code}-{item.country}
                           </option>
                         ))}
                       </select>
@@ -605,7 +605,7 @@ export default function Register() {
                 </div>
                 {/* Qualifications */}
                 <div className="mb-4">
-                  <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Backgound<span className='mandatory'>*</span></label>
+                  <label htmlFor="qualifications" className="block text-gray-700 text-sm font-semibold mb-2">Background<span className='mandatory'>*</span></label>
                   <textarea
                     placeholder='Include any
                     coaching certifications, relevant past and current experience, team(s) and/ or coaching accolades,

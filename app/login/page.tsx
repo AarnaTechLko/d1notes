@@ -152,8 +152,11 @@ export default function Login() {
         
         window.location.href = '/teampanel/dashboard';
       }
-       else if (!session.user.name) {
+       else if (!session.user.name && session.user.type=='player') {
         window.location.href = '/completeprofile';
+      }
+      else if (!session.user.name && session.user.type=='coach') {
+        window.location.href = '/coach/completeprofile';
       }
     }
   }, [session]);

@@ -269,8 +269,8 @@ export async function PUT(req: NextRequest) {
     });
     return NextResponse.json({ message: "Profile Completed", image: imageFile }, { status: 200 });
   }
-  catch (error) {
-    return NextResponse.json({ message: "Some issue occured" }, { status: 500 });
+  catch (error:any) {
+    return NextResponse.json({ message:error.message }, { status: 500 });
 
   }
 

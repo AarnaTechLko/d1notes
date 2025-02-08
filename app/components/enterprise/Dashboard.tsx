@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
     { label: 'Total Coaches', value: stats.totalCoaches, bgColor: 'bg-blue-500', icon:  <img src="/coachIcon.png" alt="Team Icon" className="h-12 w-12 filter brightness-[1000] contrast-[200]" /> },
     { label: 'Total Players', value: stats.totalPlayers, bgColor: 'bg-green-500', icon: <img src="/playerIcon.png" alt="Team Icon" className="h-16 w-16" /> },
     { 
-      label: 'Total Team', 
+      label: 'Total Teams', 
       value: stats.totalTeams, 
       bgColor: 'bg-pink-500', 
       icon: <img src="/teamIcon.png" alt="Team Icon" className="h-12 w-12 filter invert" />,

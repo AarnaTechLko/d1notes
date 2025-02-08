@@ -281,13 +281,13 @@ export default function TeamsPage() {
                         <td className="px-4 py-2">{team.team_type}</td>
                         <td className="px-4 py-2">
                           <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Coache(s) to Team
+                            Add Coaches to Team
                           </Link>
                           <p className="mt-2"> Total Coaches : {team.totalCoaches}</p>
                         </td>
                         <td className="px-4 py-2">
                           <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Player(s) to Team
+                            Add Players to Team
                           </Link>
                           <p  className="mt-2"> Total Players : {team.totalPlayers}</p>
                         </td>
@@ -295,7 +295,7 @@ export default function TeamsPage() {
                         
                         <td>
                           <button
-                            className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-blue-500' : 'bg-red-500'} text-white`}
+                            className={`px-4 py-2 `}
                           >
                             {team.status}
                           </button>

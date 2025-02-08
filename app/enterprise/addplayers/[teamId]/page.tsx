@@ -93,7 +93,7 @@ export default function TeamsPage({ params }: PageProps) {
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
             <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
-              {teamName} ({teamType})
+              {teamName} 
             </span>
           </p>
 

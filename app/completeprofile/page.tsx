@@ -234,7 +234,7 @@ export default function Register() {
         const email = session?.user?.email;
       }
 
-      router.push("/dashboard");
+      //router.push("/dashboard");
       ///window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);

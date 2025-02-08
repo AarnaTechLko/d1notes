@@ -95,11 +95,11 @@ export default function TeamsPage({ params }: PageProps) {
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
             <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
-              {teamName} ({teamType})
+              {teamName} 
             </span>
           </p>
 
-          <h2 className="text-xl font-bold w-full text-blue-600">Add Coach(s) To this Team</h2>
+          <h2 className="text-xl font-bold w-full text-blue-600">Add Coach(es) To this Team</h2>
 
           <div className="w-full mx-auto px-4 mt-5">
             {/* Tabs Header */}
