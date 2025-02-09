@@ -510,10 +510,16 @@ const Dashboard: React.FC = () => {
       {loading ? (
         <tr>
           <td colSpan={columns.length} className="text-center py-4">
-            Loading...
+            Loading Evaluations...
           </td>
         </tr>
-      ) : (
+      ) : tableInstance.rows.length === 0 ? (
+        <tr>
+          <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+            No Evaluation(s) Found
+          </td>
+        </tr>
+      ) :  (
         tableInstance.rows.map((row) => {
           tableInstance.prepareRow(row);
           return (

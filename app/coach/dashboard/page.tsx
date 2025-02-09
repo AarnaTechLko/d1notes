@@ -371,13 +371,13 @@ const Dashboard: React.FC = () => {
           
           <div className="bg-white shadow-md rounded-lg p-6 ">
           <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your bank account information to receive funds by clicking on Payment Information in the left side menu if you plan to offer evaluations to the public for a fee. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team. Otherwise, be prepared to give Players who seek you out, the edge they have been missing!"/>
-          {!clubId && (
+          {/* {!clubId && (
             <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
             
             <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
             <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
           </div>
-          )}
+          )} */}
           
 
             {/* Dropdown for tabs on small screens */}
@@ -456,7 +456,13 @@ const Dashboard: React.FC = () => {
       {loading ? (
         <tr>
           <td colSpan={columns.length} className="text-center py-4">
-            Loading...
+            Loading Evaluations...
+          </td>
+        </tr>
+      ) : tableInstance.rows.length === 0 ? (
+        <tr>
+          <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+            No Evaluation(s) Found
           </td>
         </tr>
       ) : (
