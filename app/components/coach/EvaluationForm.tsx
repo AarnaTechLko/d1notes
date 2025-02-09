@@ -317,10 +317,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             <span className="text-gray-700"><a href={`/players/${evaluationData?.playerSlug}`} className=" text-blue-700" target="_blank">{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
              
         </div>
-
-        <div className="mb-4">
-            <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
-        </div>
+       {!session?.user.club_id && (
+ <div className="mb-4">
+ <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
+</div>
+       )}
+       
 
         <div className="mb-4">
             <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>

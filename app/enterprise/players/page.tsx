@@ -292,12 +292,12 @@ const handleSubmit = async () => {
 const handleDelete = async (id: number) => {
   Swal.fire({
     title: "Are you sure?",
-    text: "This action will archive this player!",
+    text: "This action will remove player from Orgnization!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#d33",
     cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, archive it!",
+    confirmButtonText: "Yes, Remove!",
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
@@ -440,7 +440,7 @@ const handleResetPassword=(coach: Coach)=>{
                     <tr key={coach.id}>
                       <td className='text-center'> 
                       <a href={`/players/${coach.slug}`} target='_blank'>
-                        {coach.image === null || coach.image === '' ? (
+                        {coach.image === null || coach.image === '' || coach.image === 'null' ? (
                           <img
                             src={defaultImage.src}
                             className="rounded-full w-16 h-16 object-cover m-auto"
@@ -470,14 +470,15 @@ const handleResetPassword=(coach: Coach)=>{
                         </a>
                         </td>
                       <td>{coach.status === 'Inactive' ? (
-    <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
+    <button className='bg-red px-4 py-2  text-red-500' onClick={() => handleEnterLicense(coach)}>
       {coach.status}
     </button>
   ) : (
-    <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+    <button className='bg-red px-4 py-2 rounded text-green-500'>
       {coach.status}
     </button>
-  )}</td>
+  )
+  }</td>
                       <td>
                       <button
                     onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler

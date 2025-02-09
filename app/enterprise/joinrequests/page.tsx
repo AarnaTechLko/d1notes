@@ -101,7 +101,7 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  <th>Serial Number</th>
+                  
                   <th>Email</th>
                   <th>User Type</th>
                   <th>Status</th>
@@ -112,7 +112,6 @@ const Home: React.FC = () => {
     paginatedOrders.map((order, index) => (
       <tr key={order.id}>
         {/* Serial Number Column */}
-        <td>{(currentPage - 1) * limit + index + 1}</td>
        
        
         <td>
@@ -124,12 +123,12 @@ const Home: React.FC = () => {
         <td>{order.invitation_for.toUpperCase()	}</td>
         <td>
         <button
-                          className={`px-4 py-2 rounded-lg text-white ${
-                            order.status === 'Accepted'
-                              ? 'bg-green-500'
-                              : order.status === 'Requested'
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
+                          className={`px-4 py-2 rounded-lg ${
+                            order.status === 'Sent'
+                              ? 'text-blue-500'
+                              : order.status === 'Joined'
+                              ? 'text-green-500'
+                              : 'text-red-500'
                           }`}
                           onClick={() => {
                             if (order.status === 'Requested') {

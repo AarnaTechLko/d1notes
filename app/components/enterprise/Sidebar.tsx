@@ -220,12 +220,12 @@ const Sidebar: React.FC = () => {
                       <span>Add Sub Admin</span>
                     </a>
                   </li>
-                  <li className="hover:bg-gray-700 rounded transition duration-200">
+                  {/* <li className="hover:bg-gray-700 rounded transition duration-200">
                     <a href="/enterprise/roles" className="flex items-center space-x-2 p-2">
                       <FaClipboardList className="text-lg" />
                       <span>Roles</span>
                     </a>
-                  </li>
+                  </li> */}
                   {/* Add more DOC submenu items as needed */}
                 </ul>
               )}

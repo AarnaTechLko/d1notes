@@ -37,6 +37,7 @@ let coach;
                 qualifications: coaches.qualifications,
                 coachimage: coaches.image,
                 coachSlug: coaches.slug,
+                age_group: teams.age_group,
 
             })
             .from(teams)
@@ -65,13 +66,14 @@ let coach;
             team_year: club.team_year,
             qualifications: club.qualifications,
             coachimage: club.coachimage,
+            age_group: club.age_group,
             coachSlug: club.coachSlug,
             leage: club.leage,
             logo: club.logo ? `${club.logo}` : null,
         }));
 
         const teamplayersList = await db
-            .select({
+            .selectDistinct({
                 firstName: users.first_name,
                 lastName: users.last_name,
                 slug: users.slug,
@@ -95,7 +97,7 @@ let coach;
 
            
                 const coachesData = await db
-                .select({
+                .selectDistinct({
                     coachId:coaches.id,
                     firstName:coaches.firstName,
                     lastName:coaches.lastName,

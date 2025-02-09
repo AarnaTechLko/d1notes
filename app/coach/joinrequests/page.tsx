@@ -109,8 +109,8 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess("Join Request Approved successfully. A welcome message has been sent.");
-        fetchOrders();
+        showSuccess("Join Request Accepted successfully. A welcome message has been sent.");
+        router.push("/coach/dashboard");
       } else {
         console.error('Failed to accept request');
       }
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Join Request Declined successfully.");
-        fetchOrders();
+        router.push("/coach/dashboard");
       } else {
         console.error('Failed to accept request');
       }
@@ -171,7 +171,7 @@ const Home: React.FC = () => {
                   
                   <th>Organization</th>
                   <th>Team</th>
-                  <th>Interest Receievd On</th>
+                  <th>Date and Time Received</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -182,7 +182,7 @@ const Home: React.FC = () => {
                      
 
                       <td style={{ textAlign: "center" }}>
-                        
+                      <a href={`/enterprise/${order.clubSlug}`} target="_blank">
                           <img
                             src={order.clubLogo}
                             alt="Club Logo"
@@ -195,7 +195,7 @@ const Home: React.FC = () => {
                             }}
                           />
                           <div>{order.club_name}</div>
-                        
+                        </a>
                       </td>
                       <td style={{ textAlign: "center" }}>
                         <a href={`/teams/${order.teamSlug}`} target="_blank">
@@ -219,20 +219,20 @@ const Home: React.FC = () => {
                       <td>{formatDate(order.createdAt)}</td>
                       <td>
                       <button
-  className={`px-4 py-2 rounded-lg text-white ${
+  className={`px-4 py-2 rounded-lg ${
     order.status === "Joined"
-      ? "bg-green-500"
+      ? " text-green-800"
       : order.status === "Requested"
-      ? "bg-yellow-500"
-      : "bg-red-500"
+      ? "bg-yellow-500  text-black"
+      : "bg-red-500  text-white"
   }`}
   onClick={() => {
-    // if (order.status === "Sent") {
-     
+    if (order.status === "Sent") {
+      setSelectedOrder(order);
+      setShowConfirmation(true);
       
-    // }
-    setSelectedOrder(order);
-    setShowConfirmation(true);
+     }
+    
   }}
 >
   {order.status === "Sent" ? "Received" : order.status}

@@ -111,9 +111,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <p className="text-gray-500 teampagefont">
      <b>Height: </b> {height} 
     </p>
-    <p className="text-gray-500 teampagefont">
+    {/* <p className="text-gray-500 teampagefont">
      <b>Weight: </b>  {weight} Lbs.
-    </p>
+    </p> */}
     <p className="text-gray-500 teampagefont">
      <b>Birthdate: </b>  {formattedDate} 
     </p>

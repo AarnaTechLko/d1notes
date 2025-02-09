@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/askforevaluation" className="flex items-center space-x-2 p-2">
             <FaClipboardList className="text-xl" />
-              <span>Ask For Evaluation</span>
+              <span>Request For Evaluation</span>
             </a>
           </li>
           )}

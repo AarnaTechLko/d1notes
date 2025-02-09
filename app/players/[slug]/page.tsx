@@ -62,6 +62,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [teamData, setTeamData] = useState<Profile[]>([]);
   const [banners, setBanners] = useState<string[]>([]);
   const [coaches, setCoaches] = useState<string[]>([]);
+  const [clubName, setClubName] = useState<string | null>(null);
   const [teams, setTeams] = useState<string[]>([]);
   const [restTeams, setRestTeams] = useState<RestTeam[]>([]);
   const [currentBanner, setCurrentBanner] = useState(0); // Track the current banner index
@@ -99,6 +100,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
         setCoaches(responseData.coachesList || []);
+        setClubName(responseData.clubname.clubname);
       } catch (err) {
         setError('Some error occurred.');
       } finally {
@@ -203,18 +205,19 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
           {/* Text Section */}
           <div className="flex flex-col justify-start items-start">
-            <h3 className="text-4xl font-semibold text-white text-stroke mt-8">
+            <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
               <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
             </h3>
 
             <div className='bg-white p-6 w-full mt-7'>
               <div className="grid grid-cols-2 gap-5">
+                <div><b>Organization Name:</b> {clubName}</div>
                 <div><b>Position:</b> {coachData.position}</div>
-                <div><b>High School Graduation:</b> {coachData.graduation}</div>
-                <div><b>Weight:</b> {coachData.weight} Lbs</div>
+                <div><b>High School Graduation Year:</b> {coachData.graduation}</div>
+                {/* <div><b>Weight:</b> {coachData.weight} Lbs</div> */}
                 <div><b>Height:</b> {coachData.height}</div>
                 <div><b>Team:</b> {coachData.team}</div>
-                <div><b>Grade Level:</b> {coachData.grade_level}</div>
+                <div><b>Level:</b> {coachData.grade_level}</div>
               </div>
               <div>
               {session?.user?.type === "team" && (

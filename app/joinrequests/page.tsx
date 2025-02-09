@@ -4,7 +4,7 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../components/Sidebar';
 import { showSuccess } from '../components/Toastr';
 import { formatDate } from '@/lib/clientHelpers';
-
+import { useRouter } from 'next/navigation';
 // Define the type for the data
 interface Order {
   invitationId: number;
@@ -29,7 +29,7 @@ const Home: React.FC = () => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-
+  const router = useRouter();
   const handleConfirmationClose = () => {
     setShowConfirmation(false);
     setSelectedOrder(null);
@@ -54,8 +54,8 @@ const Home: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess("Join Request Approved successfully. A welcome message has been sent.");
-        fetchOrders();
+        showSuccess("Join Request Accepted successfully. A welcome message has been sent.");
+        router.push("/dashboard");
       } else {
         console.error('Failed to accept request');
       }
@@ -86,7 +86,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Join Request Declined successfully.");
-        fetchOrders();
+        router.push("/dashboard");
       } else {
         console.error('Failed to accept request');
       }

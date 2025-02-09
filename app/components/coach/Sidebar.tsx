@@ -141,13 +141,13 @@ const Sidebar: React.FC = () => {
                 <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/players" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
-                    <span>Players</span>
+                    <span>Your Players</span>
                   </a>
                 </li>
                 <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/teams" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
-                    <span>Teams</span>
+                    <span>Your Teams</span>
                   </a>
                 </li>
                

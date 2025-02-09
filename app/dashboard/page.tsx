@@ -286,7 +286,7 @@ const Dashboard: React.FC = () => {
                   ? 'bg-green-900 text-white px-2 py-1 rounded' 
                   : 'bg-red-600 text-white px-2 py-1 rounded';
                 return (
-                  <span className={boxClass}>
+                  <span >
                      {remainingTime.toFixed(2)} Hours
                   </span>
                 );
@@ -297,7 +297,7 @@ const Dashboard: React.FC = () => {
             const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
             return (
   
-              <span className={boxClass}>
+              <span >
                  {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
               </span>
             );

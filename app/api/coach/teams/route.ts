@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-  const data = await db.select(
+  const data = await db.selectDistinct(
     {
       team_name:teams.team_name,
       team_year:teams.team_year,

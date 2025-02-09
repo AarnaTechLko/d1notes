@@ -297,7 +297,7 @@ setLoading(false);
                         <textarea
                             className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none"
                             rows={4}
-                            placeholder="Provide Your Rating and Testimonial..."
+                            placeholder="Optional"
                             value={remarks}
                             onChange={(e) => setRemarks(e.target.value)}
                         />

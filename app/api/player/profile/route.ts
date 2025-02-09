@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner, enterprises } from '../../../../lib/schema'
 import debug from 'debug';
 import { eq, sql,inArray,and,ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
         // Step 3: Get teams associated with the main player
         const teamsOfPlayer = await db
-            .select({
+            .selectDistinct({
                 teamId: teamPlayers.teamId,
                 teamName: teams.team_name,
                 teamLogo: teams.logo,
@@ -101,9 +101,10 @@ export async function POST(req: NextRequest) {
             ) 
             
             .execute();
-
+const enterprise=await db.select({clubname:enterprises.organizationName}).from(enterprises).where(eq(enterprises.id,Number(user[0].enterprise_id)))
         return NextResponse.json({
             clubdata: user[0],
+            clubname:enterprise[0],
             banners,
             playerOfTheTeam: teamsOfPlayer,
             teamPlayers: allTeamPlayers,

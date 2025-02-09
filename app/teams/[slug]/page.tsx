@@ -158,7 +158,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 {coachData.team_name}
               </h1>
               <p className="text-gray-600 text-lg">
-                <b>Team Gender :</b> {coachData.team_type}
+                <b>Gender :</b> {coachData.team_type}
               </p>
               {coachData.team_year && (
  <p className="bg-blue-700 text-white p-2">
@@ -224,7 +224,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
 
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">Leage</h2>
+            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">League</h2>
 
           </div>
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
@@ -248,30 +248,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </div>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-          Coaches
-        </h2>
+  Coaches
+</h2>
 
-        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+<section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {Array.isArray(coachList) && coachList.length > 0 ? (
+      coachList.map((item: any) => (
+        <CoachProfileCard
+          key={item?.teamSlug}
+          name={item.firstName}
+          organization={item.clubName} // Ensure this field is correct
+          image={item.image ?? "/default.jpg"}
+          rating={5}
+          slug={item.slug}
+        />
+      ))
+    ) : (
+      <p className="col-span-full text-center">No coaches available.</p>
+    )}
+  </div>
+</section>
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
-            {Array.isArray(coachList) && coachList.length > 0 ? (
-              coachList.map((item: any) => (
-                <CoachProfileCard
-                  key={item?.teamSlug}
-                  name={item.firstName}
-                  organization={item.clubName} // Ensure this field is correct
-                  image={item.image ?? "/default.jpg"}
-                  rating={5}
-                  slug={item.slug}
-                />
-              ))
-            ) : (
-              <p>No coaches available.</p>
-            )}
-
-
-          </div>
-        </section>
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Players
         </h2>

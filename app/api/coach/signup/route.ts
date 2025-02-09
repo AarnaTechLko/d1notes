@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       email: email,
       password: hashedPassword,
       createdAt: new Date(),
-      visibility: "off",
+      visibility: "on",
       team_id:teamId
     };
 

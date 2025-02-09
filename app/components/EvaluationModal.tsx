@@ -383,7 +383,7 @@ let enterprise_id;
                 <input
                   type="url"
                   id="primaryVideoUrl"
-                  placeholder="Ex: Do not just submit highlights as the low light and activity without the ball are important."
+                  placeholder="Ex: Do not just submit highlights as the lowlights and activity without the ball are important."
                   className={`w-full px-3 py-2 border ${errors.primaryVideoUrl ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                   value={primaryVideoUrl}
                   onChange={(e) => {
@@ -565,7 +565,7 @@ let enterprise_id;
               </label>
               <textarea
                 id="videoDescription"
-                placeholder="Ex: Describe the key elements of the video..."
+                placeholder="Describe the key elements of the video..."
                 className={`w-full px-3 py-2 border ${errors.videoDescription ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                 value={videoDescription}
                 onChange={(e) => {

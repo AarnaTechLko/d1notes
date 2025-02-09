@@ -267,11 +267,11 @@ const handleInputChange = (index:any, field:any, value:any) => {
                     <tr key={coach.id}>
                       <td className='text-center'> 
                         <a href={`/players/${coach.slug}`} target='_blank'>
-                        {coach.image === null || coach.image === '' ? (
+                        {coach.image === null || coach.image === '' || coach.image === 'null'? (
                           <img
-                            src={defaultImage.src}
+                            src={defaultImage.src || '/default.jpg'}
                             className="rounded-full w-16 h-16 object-cover m-auto"
-                            alt={`${coach.first_name} ${coach.last_name}`}
+                            alt={`${coach.first_name} ${coach.last_name} `}
                           />
                         ) : (
                       <img
@@ -291,7 +291,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
       {coach.status}
     </button>
   ) : (
-    <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+    <button className='bg-red px-4 py-2  text-green-600'>
       {coach.status}
     </button>
   )}</td>

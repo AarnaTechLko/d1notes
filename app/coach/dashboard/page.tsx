@@ -148,7 +148,7 @@ const Dashboard: React.FC = () => {
                 ? 'bg-green-900 text-white px-2 py-1 rounded' 
                 : 'bg-red-600 text-white px-2 py-1 rounded';
               return (
-                <span className={boxClass}>
+                <span >
                    {remainingTime.toFixed(2)} Hours
                 </span>
               );
@@ -159,7 +159,7 @@ const Dashboard: React.FC = () => {
           const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
           return (
 
-            <span className={boxClass}>
+            <span >
                {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
             </span>
           );
@@ -256,9 +256,12 @@ const Dashboard: React.FC = () => {
           const evaluation = row.original;
           if (selectedTab === '0') {
             return (
-              <a style={{ cursor: "pointer" }} onClick={() => handleRequestedAction(evaluation)}>
-                <img src='/actionImage.jpg'></img>
-              </a>
+              <a className="cursor-pointer" onClick={() => handleRequestedAction(evaluation)}>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                Accept/Decline
+              </button>
+            </a>
+            
               
             );
           } else if (selectedTab === '1') {

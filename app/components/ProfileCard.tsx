@@ -73,7 +73,7 @@ useEffect(()=>{
 {usedIn && (
   <div className="mt-2 flex justify-center">
   <button 
-    onClick={() =>setIsevaluationModalOpen(true)} // Function to redirect to the bio
+    onClick={() =>handleRedirect(slug)} // Function to redirect to the bio
     className="flex items-center space-x-2 bg-blue-600 text-white p-2 rounded-smmb-5"
   >
   Request Evaluation{isevaluationModalopen}

@@ -278,7 +278,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                         <button onClick={() => handleAcceptedAction(item.id, item.player_id)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Accepted</button>
                                     )}
                                     {item.status === 2 && (
-                                        <button className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Completed</button>
+                                        <button className=" text-green-600">Completed</button>
                                     )}
                                     {item.status === 3 && (
                                         <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Declined</button>
@@ -291,7 +291,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                 <td>
                                     {item.status === 2 && (
                                         <a href={`/evaluationdetails?evaluationId=${item.id}`} target="_blank">
-                                            <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                                            <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-purple-600">
                                                 <FaEye />
                                             </button>
                                         </a>
