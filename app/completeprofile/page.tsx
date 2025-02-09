@@ -235,7 +235,7 @@ export default function Register() {
       }
 
       //router.push("/dashboard");
-      ///window.location.href = "/dashboard"; // Redirect after successful registration
+      window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
