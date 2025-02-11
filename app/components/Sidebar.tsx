@@ -3,11 +3,15 @@ import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, 
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import Visibility from './Visibility';
+import { useRouter } from 'next/navigation';
+import LogoutLoader from './LoggingOut';
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
   const { data: session } = useSession();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -15,14 +19,28 @@ const Sidebar: React.FC = () => {
     setIsEvaluationListOpen((prev) => !prev);
   };
   const handleLogout = async () => {
-    await signOut(); // Sign out using NextAuth.js
-   
-    window.location.href = '/login';
+    setIsLoggingOut(true);
+  
+    try {
+      const result = await signOut({
+        redirect: false, 
+        callbackUrl: "/login",
+      });
+  
+      setTimeout(() => {
+        if (result.url) {
+          router.push(result.url); // Use Next.js router for redirection
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
   };
 
   return (
     <div>
-      {/* Mobile Menu Toggle Button */}
+      {isLoggingOut && <LogoutLoader />}
       <button
         className="md:hidden text-white bg-gray-800 p-2 mt-1 focus:outline-none absolute top-4 left-4 z-50"
         onClick={toggleSidebar}
@@ -48,7 +66,7 @@ const Sidebar: React.FC = () => {
             <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
           </div>
         )}
-        <nav className="flex-grow mt-10">
+        <nav className="flex-grow">
         <ul className="space-y-2 p-4">
           <li>
             <Visibility  
@@ -72,7 +90,7 @@ const Sidebar: React.FC = () => {
           </li>
           )}
          
-          <li className="hover:bg-gray-700 rounded transition duration-200">
+          {/* <li className="hover:bg-gray-700 rounded transition duration-200">
             <a 
               href="#tab1" 
               className="flex items-center space-x-2 p-2" 
@@ -83,11 +101,11 @@ const Sidebar: React.FC = () => {
             </a>
             {isEvaluationListOpen && (
               <ul className="ml-4 mt-1 space-y-1">
-                {/* <li className="hover:bg-gray-600 rounded transition duration-200">
+                 <li className="hover:bg-gray-600 rounded transition duration-200">
                   <a href="/evaluations" className="flex items-center space-x-2 p-2">
                     <span>All</span>
                   </a>
-                </li> */}
+                </li>  
                 <li className="hover:bg-gray-600 rounded transition duration-200">
                   <a href="/evaluations?status=0" className="flex items-center space-x-2 p-2">
                     <span>Requested</span>
@@ -110,12 +128,19 @@ const Sidebar: React.FC = () => {
                 </li>
               </ul>
             )}
-          </li>
+          </li> */}
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/joinrequests" className="flex items-center space-x-2 p-2">
             
               <FaUserPlus className='text-xl'/>
               <span>Join Requests</span>
+            </a>
+          </li>
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/yourteams" className="flex items-center space-x-2 p-2">
+            
+              <FaUserPlus className='text-xl'/>
+              <span>Your Teams</span>
             </a>
           </li>
           <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -139,6 +164,37 @@ const Sidebar: React.FC = () => {
               <span>Messages</span>
             </a>
           </li>
+
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a
+                href="#tab1"
+                className="flex items-center space-x-2 p-2"
+                onClick={toggleEvaluationList}
+              >
+                <FaClipboardList className="text-xl" />
+                <span>Settings</span>
+              </a>
+              {isEvaluationListOpen && (
+                <ul className="ml-4 mt-1 space-y-1">
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/profile" className="flex items-center space-x-2 p-2">
+                      <span>Profile</span>
+                    </a>
+                  </li> 
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/changepassword" className="flex items-center space-x-2 p-2">
+                      <span>Change Password</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a  onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
+                      <span>Sign Out</span>
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </li>
+
           {/* {!session?.user.club_id && (
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/playeraddon" className="flex items-center space-x-2 p-2">

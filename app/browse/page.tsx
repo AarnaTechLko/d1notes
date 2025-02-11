@@ -22,6 +22,10 @@ interface Profile {
   sport: string;
   phoneNumber: string;
   qualifications: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  xlink?: string;
   expectedCharge: number;
 }
 
@@ -130,6 +134,11 @@ const Home = () => {
                     image={profile.image ?? '/default-image.jpg'}
                     rating={profile.rating}
                     slug={profile.slug}
+                    facebook={profile?.facebook}
+                    instagram={profile?.instagram}
+                    linkedin={profile?.linkedin}
+                    xlink={profile?.xlink}
+
                   />
                 </div>
               ))}

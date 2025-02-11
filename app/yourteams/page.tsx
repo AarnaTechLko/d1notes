@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/coach/TeamModal";
-import Sidebar from "@/app/components/coach/Sidebar";
+import Sidebar from "@/app/components/Sidebar";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 
@@ -19,7 +19,7 @@ type Team = {
   team_type?: string;
   team_year?: string;
   slug?: string;
- 
+  league?: string;
   
 
 
@@ -56,7 +56,7 @@ export default function TeamsPage() {
 
     try {
       setLoadingData(true);
-      const res = await fetch(`/api/coach/teams?enterprise_id=${session.user.id}`);
+      const res = await fetch(`/api/yourteams?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch teams");
       const { data, teamplayersList }: { data: Team[]; teamplayersList: any[] } = await res.json();
       setTeams(data);
@@ -79,14 +79,7 @@ export default function TeamsPage() {
       return;
     }
 
-    try {
-      const res = await fetch(`/api/players?enterprise_id=${session.user.id}`);
-      if (!res.ok) throw new Error("Failed to fetch players");
-      const playerData: Player[] = await res.json();
-      setPlayers(playerData);
-    } catch (error) {
-      console.error("Error fetching players:", error);
-    }
+   
   };
 
   const handleSubmit = async (formValues: Partial<Team>) => {
@@ -96,7 +89,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }),
       };
-      await fetch("/api/teams", {
+      await fetch("/api/yourteams", {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -191,39 +184,40 @@ export default function TeamsPage() {
 
                 ) : (
 
-                  <tbody>
-                  {teams.length > 0 ? (
-                    teams.map((team) => (
-                      <tr key={team.id} className="border-b">
-                        <td className="px-4 py-2">
-                          {team.team_year || `Age Group: ${team.age_group}` || ''}
-                        </td>
-                        <td className="px-4 py-2">{team.team_name}</td>
-                        <td className="px-4 py-2">
-                          <img src={team.logo} className="w-12 h-12 rounded-full" />
-                        </td>
-                        <td className="px-4 py-2">{team.team_type}</td>
-                        <td className="px-4 py-2">{team.leage}</td>
-                        <td className="px-4 py-2">
-                          <a
-                            href={`/teams/${team.slug}`}
-                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                            target="_blank"
-                            style={{ minWidth: '50px', whiteSpace: 'nowrap' }}
-                          >
-                            View
-                          </a>
+                    <tbody>
+                    {teams.length > 0 ? (
+                      teams.map((team) => (
+                        <tr key={team.id} className="border-b">
+                          <td className="px-4 py-2">
+                            {team.team_year || `Age Group: ${team.age_group}` || ''}
+                          </td>
+                          <td className="px-4 py-2">{team.team_name}</td>
+                          <td className="px-4 py-2">
+                            <img src={team.logo} className="w-12 h-12 rounded-full" />
+                          </td>
+                          <td className="px-4 py-2">{team.team_type}</td>
+                          <td className="px-4 py-2">{team.leage}</td>
+                          <td className="px-4 py-2">
+                            <a
+                              href={`/teams/${team.slug}`}
+                              className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                              target="_blank"
+                              style={{ minWidth: '50px', whiteSpace: 'nowrap' }}
+                            >
+                              View
+                            </a>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
+                          You are not in any team
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                        You are not in any team
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                    )}
+                  </tbody>
+                  
                 )}
               </table>
             </div>

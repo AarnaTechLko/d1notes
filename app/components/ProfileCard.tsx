@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaFacebook, FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6";
+
 import EvaluationModal from './EvaluationModal';
 import { useSession } from 'next-auth/react';
  
@@ -19,9 +20,13 @@ interface ProfileCardProps {
   freeEvaluations?:number;
   allowedFreeRequests?:number;
   coachClubId?:number;
+  facebook?:string;
+  instagram?:string;
+  linkedin?:string;
+  xlink?:string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.open(`/coach/${slug}`, '_blank');
@@ -39,7 +44,7 @@ useEffect(()=>{
   return (
     <>
     <div
-  onClick={() => handleRedirect(slug)}
+ 
   className="flex-none w-64 h-150 bg-white rounded-lg shadow-md mt-5 overflow-hidden snap-center cursor-pointer"
   key={slug}
 >
@@ -49,19 +54,36 @@ useEffect(()=>{
     width={200}
     height={200}
     className="rounded-lg object-cover w-full h-[200px]"
+    onClick={() => handleRedirect(slug)}
   />
   <div className="text-center mt-4">
-    <h3 className="text-lg font-semibold">{name}</h3>
+    <h3 className="text-lg font-semibold"  onClick={() => handleRedirect(slug)}>{name}</h3>
     
     {/* <div className="mt-2 flex justify-center">
       <div className="mt-1">{stars}</div>
     </div> */}
     {/* Bio Icon Section */}
+    <div className="flex space-x-4 justify-center mt-3 mb-3">
+    <a href={facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+      <FaFacebook size={20} />
+    </a>
+    <a href={instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+      <FaInstagram size={20} />
+    </a>
+    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+      <FaLinkedin size={20} />
+    </a>
+    <a href={xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+      <FaXTwitter size={20} />
+    </a>
+  </div>
     <div className="mt-2 flex justify-center">
+
       <button 
         onClick={() => handleRedirect(slug)} // Function to redirect to the bio
         className="flex items-center space-x-2 text-gray-500 mb-5"
       >
+        
        <FaUser/>
         <span>View Bio</span>
       </button>

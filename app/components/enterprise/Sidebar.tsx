@@ -3,6 +3,7 @@ import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, 
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
+import { useRouter } from 'next/navigation';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
@@ -19,6 +20,8 @@ const Sidebar: React.FC = () => {
   const [hasPurchaseHistory, setHasPurchaseHistory] = useState<boolean>(false);
   const [hasDoc, setHasDoc] = useState<boolean>(false);
   const [hasRoles, setHasRoles] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -29,9 +32,23 @@ const Sidebar: React.FC = () => {
     setIsDocListOpen((prev) => !prev); // Toggle DOC submenu
   };
   const handleLogout = async () => {
-    await signOut(); // Sign out using NextAuth.js
-
-    window.location.href = '/login';
+    setIsLoggingOut(true);
+  
+    try {
+      const result = await signOut({
+        redirect: false, 
+        callbackUrl: "/login",
+      });
+  
+      setTimeout(() => {
+        if (result.url) {
+          router.push(result.url); // Use Next.js router for redirection
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
   };
 
   const fetchPermissions = async () => {
@@ -231,7 +248,35 @@ const Sidebar: React.FC = () => {
               )}
             </li>
     )}
-
+<li className="hover:bg-gray-700 rounded transition duration-200">
+              <a
+                href="#tab1"
+                className="flex items-center space-x-2 p-2"
+                onClick={toggleEvaluationList}
+              >
+                <FaClipboardList className="text-xl" />
+                <span>Settings</span>
+              </a>
+              {isEvaluationListOpen && (
+                <ul className="ml-4 mt-1 space-y-1">
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/enterprise/profile" className="flex items-center space-x-2 p-2">
+                      <span>Profile</span>
+                    </a>
+                  </li> 
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/enterprise/changepassword" className="flex items-center space-x-2 p-2">
+                      <span>Change Password</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a  onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
+                      <span>Sign Out</span>
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </li>
  
           </ul>
         </nav>

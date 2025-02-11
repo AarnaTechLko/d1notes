@@ -62,6 +62,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const openCertificateModal = () => setIsCertificateModalOpen(true);
   const closeCertificateModal = () => setIsCertificateModalOpen(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
+  const [evaluationRates, setEvaluationRates] = useState<[]>([]);
   const [kids, setKids]=useState<Kids[] | undefined>(undefined);
   const compareValues = (v1: any, v2: any): string => {
     const num1 = (v1 === null || v1 === 'null') ? NaN : Number(v1);
@@ -127,6 +128,7 @@ setCoachData(responseData.coachdata);
 setIsRequested(responseData.isRequested);
  setTotalLicneses(responseData.totalLicneses);
 setEvaluationList(responseData.evaluationlist);
+setEvaluationRates(responseData.evaluationCharges);
       } catch (err) {
         setError("Some error occurred.");
       } finally {
@@ -346,6 +348,47 @@ setEvaluationList(responseData.evaluationlist);
       </ul>
     </div>
   </div>
+</section>
+
+<h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
+Evaluation Rates
+  </h2>
+<section className="bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+ 
+<div className="">
+    
+<table className="w-full text-sm text-left text-gray-700">
+                            <thead>
+                                <tr>
+                                   
+                                    <th>Turnaround Time</th>
+                                    <th>Evaluation Rate</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {evaluationRates.length > 0 ? (
+                                    evaluationRates.map((charge: any, index) => (
+                                        <tr key={charge.id}>
+                                             
+                                            <td>{charge.turnaroundtime} Hours</td>
+                                            <td>{charge.currency}{charge.amount}</td>
+                                            
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={2} className="text-center">
+                                            No Rate(s) found
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+  </div>
+
+  {/* Modal */}
+ 
 </section>
 
 <h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">

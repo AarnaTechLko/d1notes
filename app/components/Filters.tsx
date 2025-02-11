@@ -181,25 +181,25 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
         {/* Rating */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Star Rating</label>
-          <div className="flex flex-col gap-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <label key={star} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  value={star}
-                  checked={rating === star}
-                  onChange={() => handleFilterChange('rating', star)}
-                  className="hidden"
-                />
-                <div className="flex gap-1">
-                  {[...Array(star)].map((_, i) => (
-                    <span key={i} className="text-yellow-500 text-xl">★</span>
-                  ))}
-                </div>
-              </label>
-            ))}
-          </div>
+          
+          <select
+            className="w-full p-2 border rounded-md"
+            value={state}
+            onChange={(e) => handleFilterChange('state', e.target.value)}
+          >
+            
+            <option value="">Select</option>
+                       
+    <option   value="1">1 Star</option>
+    <option   value="2">2 Star</option>
+    <option   value="3">3 Star</option>
+     
+   
+  
+          </select>
+          
+          
+        
         </div>
       </div>
     </div>

@@ -3,11 +3,32 @@ import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt, FaU
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import Visibility from '../Visibility'; 
-
+import { useRouter } from 'next/navigation';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
   const { data: session } = useSession();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+  
+    try {
+      const result = await signOut({
+        redirect: false, 
+        callbackUrl: "/login",
+      });
+  
+      setTimeout(() => {
+        if (result.url) {
+          router.push(result.url); // Use Next.js router for redirection
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -15,12 +36,7 @@ const Sidebar: React.FC = () => {
   const toggleEvaluationList = () => {
     setIsEvaluationListOpen((prev) => !prev);
   };
-  const handleLogout = async () => {
-    await signOut(); // Sign out using NextAuth.js
-    //localStorage.setItem('userImage', '');
-    window.location.href = '/login';
-  };
-
+ 
   useEffect(() => {}, [session]);
 
   return (
@@ -35,10 +51,10 @@ const Sidebar: React.FC = () => {
 
       {/* Sidebar */}
       <aside 
-        className={`mt-0.5 fixed top-0 left-0 h-full bg-gray-800 text-white w-64 transform ${
-          isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
-        } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col md:z-auto`}
-      >
+  className={`mt-0.5 fixed top-0 left-0 h-full bg-gray-800 text-white w-64 transform ${
+    isSidebarOpen ? 'translate-x-0 z-40' : '-translate-x-full'
+  } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col md:z-auto overflow-y-auto`}
+>
         {/* Coach Info Section */}
         {session?.user && (
           <div className="flex flex-col items-center p-4 border-b border-gray-700">
@@ -53,7 +69,7 @@ const Sidebar: React.FC = () => {
           </div>
         )}
 
-        <nav className="flex-grow mt-4">
+        <nav className="flex-grow">
           <ul className="space-y-2 p-4">
           <li>
             <Visibility  
@@ -80,7 +96,7 @@ const Sidebar: React.FC = () => {
                 <span>Time and Rate</span>
               </a>
             </li>
-            <li className="hover:bg-gray-700 rounded transition duration-200">
+            {/*  <li className="hover:bg-gray-700 rounded transition duration-200">
               <a
                 href="#tab1"
                 className="flex items-center space-x-2 p-2"
@@ -91,11 +107,11 @@ const Sidebar: React.FC = () => {
               </a>
               {isEvaluationListOpen && (
                 <ul className="ml-4 mt-1 space-y-1">
-                  {/* <li className="hover:bg-gray-600 rounded transition duration-200">
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a href="/coach/evaluations" className="flex items-center space-x-2 p-2">
                       <span>All</span>
                     </a>
-                  </li> */}
+                  </li> 
                   <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a href="/coach/evaluations?status=0" className="flex items-center space-x-2 p-2">
                       <span>Requested</span>
@@ -123,7 +139,7 @@ const Sidebar: React.FC = () => {
                   </li>
                 </ul>
               )}
-            </li>
+            </li> */}
             <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/joinrequests" className="flex items-center space-x-2 p-2">
                     <FaUserPlus className="text-xl" />
@@ -150,15 +166,44 @@ const Sidebar: React.FC = () => {
                     <span>Your Teams</span>
                   </a>
                 </li>
-               
-              </>
-            )}
-             <li className="hover:bg-gray-700 rounded transition duration-200">
+                <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/messages" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
                     <span>Messages</span>
                   </a>
                 </li>
+               
+              </>
+            )}
+             <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a
+                href="#tab1"
+                className="flex items-center space-x-2 p-2"
+                onClick={toggleEvaluationList}
+              >
+                <FaClipboardList className="text-xl" />
+                <span>Settings</span>
+              </a>
+              {isEvaluationListOpen && (
+                <ul className="ml-4 mt-1 space-y-1">
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/profile" className="flex items-center space-x-2 p-2">
+                      <span>Profile</span>
+                    </a>
+                  </li> 
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/coach/changepassword" className="flex items-center space-x-2 p-2">
+                      <span>Change Password</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a  onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
+                      <span>Sign Out</span>
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </li> 
             {/* <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/payoutsettings" className="flex items-center space-x-2 p-2">
                 <FaUsb className="text-xl" />

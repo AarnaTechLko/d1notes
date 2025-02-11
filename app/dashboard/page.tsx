@@ -48,6 +48,7 @@ const Dashboard: React.FC = () => {
   const [playerClubId,setPlayerClubid]=useState<string>('')
   const [freeEvaluations,setFreeEvaluations]=useState(0);
   const [allowedFreeRequests,setAllowedFreeRequests]=useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
     if (!isOpen) return null;
@@ -424,7 +425,11 @@ const Dashboard: React.FC = () => {
 
   // Create table instance
   const tableInstance = useTable({ columns, data });
-
+  const filteredRows = tableInstance.rows.filter((row) =>
+    row.cells.some((cell) =>
+      String(cell.value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
   return ( 
     <div className="flex h-screen">
       <Modal
@@ -489,6 +494,13 @@ const Dashboard: React.FC = () => {
 
           {/* Table to display evaluations */}
           <div className=" overflow-x-auto max-h-[400px] overflow-y-auto">
+          <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+      />
   <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
     <thead>
       {tableInstance.headerGroups.map((headerGroup) => (
@@ -507,40 +519,37 @@ const Dashboard: React.FC = () => {
       ))}
     </thead>
     <tbody {...tableInstance.getTableBodyProps()}>
-      {loading ? (
-        <tr>
-          <td colSpan={columns.length} className="text-center py-4">
-            Loading Evaluations...
-          </td>
-        </tr>
-      ) : tableInstance.rows.length === 0 ? (
-        <tr>
-          <td colSpan={columns.length} className="text-center py-4 text-gray-500">
-            No Evaluation(s) Found
-          </td>
-        </tr>
-      ) :  (
-        tableInstance.rows.map((row) => {
-          tableInstance.prepareRow(row);
-          return (
-            <tr {...row.getRowProps()} key={row.id}>
-              {row.cells.map((cell) => (
-
-                
-                <td
-                  {...cell.getCellProps()}
-                  key={`${row.id}-${cell.column.id}`}
-                  className="border-b border-gray-200 px-4 py-2"
-                  style={{ whiteSpace: 'nowrap' }} // Ensure cells don’t wrap unless necessary
-                >
-                  <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+            {loading ? (
+              <tr>
+                <td colSpan={columns.length} className="text-center py-4">
+                  Loading Evaluations...
                 </td>
-              ))}
-            </tr>
-          );
-        })
-      )}
-    </tbody>
+              </tr>
+            ) : filteredRows.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+                  No Evaluation(s) Found
+                </td>
+              </tr>
+            ) : (
+              filteredRows.map((row) => {
+                tableInstance.prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} key={row.id}>
+                    {row.cells.map((cell) => (
+                      <td
+                        {...cell.getCellProps()}
+                        key={`${row.id}-${cell.column.id}`}
+                        className="border-b border-gray-200 px-4 py-2"
+                      >
+                        <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
   </table>
 </div>
         </div>
@@ -571,7 +580,7 @@ const Dashboard: React.FC = () => {
 
        
         </div> */}
-        <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
+        {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>
         
       {teams.map((item:any) => (
@@ -589,7 +598,7 @@ const Dashboard: React.FC = () => {
 
  
        
-        </div> 
+        </div>  */}
       </main>
 
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { MdHelpOutline } from "react-icons/md";
+import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
 
 interface PlayerMenuProps {
     session: any; // Adjust to your actual session type
@@ -19,6 +19,10 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLin
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
+  const [createAccountOpen, setCreateAccountOpen] = useState(false);
+  const [enterpriseOpen, setEnterpriseOpen] = useState(false);
+  const createAccountRef = useRef<HTMLLIElement>(null);
+  const enterpriseRef = useRef<HTMLLIElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
         if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
@@ -31,7 +35,9 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLin
         document.removeEventListener("mousedown", handleClickOutside);
     };
 }, []);
-
+const handleEnterpriseToggle = () => {
+  setEnterpriseOpen((prev) => !prev);
+};
 // This function toggles the dropdown
 const handleToggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
@@ -42,7 +48,26 @@ const handleOptionClick = () => {
     setDropdownOpen(false);
     closeMenu(); // Optional: close the menu if you want
 };
-
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      createAccountRef.current &&
+      !createAccountRef.current.contains(event.target as Node)
+    ) {
+      setCreateAccountOpen(false);
+    }
+    if (
+      enterpriseRef.current &&
+      !enterpriseRef.current.contains(event.target as Node)
+    ) {
+      setEnterpriseOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
   return (
     <>
     <li  className="pt-[8px]  border-b-1 md:border-b-0">
@@ -53,26 +78,46 @@ const handleOptionClick = () => {
                     </Link>
                   </li>
                   <li  className="pt-[8px]">
-                    <Link href="/browse/clubs" className={`${isActiveLink(
-                            "/browse/clubs"
-                          )} hover:text-blue-300`} onClick={closeMenu}>
-                       Organizations
-                    </Link>
-                  </li>
-                  <li  className="pt-[8px]">
-                    <Link href="/browse/teams" className={`${isActiveLink(
-                            "/browse/teams"
-                          )} hover:text-blue-300`} onClick={closeMenu}>
-                       Teams
-                    </Link>
-                  </li>
-                  <li  className="pt-[8px]">
                     <Link href="/browse/players" className={`${isActiveLink(
                             "/browse/players"
                           )} hover:text-blue-300`} onClick={closeMenu}>
                        Players
                     </Link>
                   </li>
+                  <li ref={enterpriseRef} className="relative pt-[8px]">
+        <button
+          onClick={handleEnterpriseToggle}
+          className="flex items-center text-black hover:text-blue-300"
+        >
+          Enterprise Solutions
+          <MdKeyboardArrowDown className={`ml-1 transition-transform ${enterpriseOpen ? "rotate-180" : ""}`} />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-1/4 mt-2 w-48 z-10 bg-white shadow-lg rounded-md md:left-1/2 md:transform md:-translate-x-1/2">
+            <ul>
+              <li className="pt-[8px]">
+                <Link
+                  href="/browse/clubs"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Organizations
+                </Link>
+              </li>
+              <li className="pt-[8px]">
+                <Link
+                  href="/browse/teams"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Teams
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
+      </li>
+                
       <li className="pt-[8px]">
         <Link href="/dashboard" className={`${isActiveLink("/dashboard")} hover:text-blue-300`} onClick={closeMenu}>
           Dashboard
@@ -96,27 +141,7 @@ const handleOptionClick = () => {
                         className="rounded-full h-12 w-12 border-gray-900"
                     />
                 </button>
-        {dropdownOpen && (
-          <div className="absolute  left-1/4 md:left-0 mt-2 w-48 z-50  bg-white shadow-lg rounded-md" ref={dropdownMenuRef}>
-            <ul>
-              <li className="pt-[8px]">
-                <Link href="/profile" className={`${isActiveLink("/profile")} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={() => { handleOptionClick(); }}>
-                  Profile
-                </Link>
-              </li>
-              <li className="pt-[8px]">
-                <Link href="/changepassword" className={`${isActiveLink("/changepassword")} hover:text-black-300 block w-full text-left px-4 py-2 text-black hover:bg-blue-300`} onClick={() => { handleOptionClick(); }}>
-                  Change Password
-                </Link>
-              </li>
-              <li>
-                <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-black hover:bg-blue-300">
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        )}
+        
       </li>
     
     </>

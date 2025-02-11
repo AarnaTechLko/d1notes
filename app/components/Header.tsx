@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -30,24 +31,24 @@ const Header: React.FC = () => {
   // Refs to detect outside click
   const dropdownRef = useRef<HTMLLIElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
+  
   const handleLogout = async () => {
-    setIsLoggingOut(true); // Show the loader
-
+    setIsLoggingOut(true);
+  
     try {
       const result = await signOut({
-        redirect: false, // Prevent automatic redirect by NextAuth
-        callbackUrl: "/login", // Specify the callback URL, but handle redirection manually
+        redirect: false, 
+        callbackUrl: "/login",
       });
-
-      // Simulate a delay for UX (optional)
+  
       setTimeout(() => {
         if (result.url) {
-          window.location.replace(result.url); // Redirect to the login page
+          router.push(result.url); // Use Next.js router for redirection
         }
-      }, 5000);
+      }, 2000);
     } catch (error) {
       console.error("Logout error:", error);
-      setIsLoggingOut(false); // Hide the loader in case of an error
+      setIsLoggingOut(false);
     }
   };
 
@@ -97,7 +98,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white shadow-md">
-       {isLoggingOut && <LogoutLoader />}
+      
       <div className="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap justify-between items-center p-4">
         
         {/* Logo section - Adjust for mobile to center logo */}
@@ -127,14 +128,66 @@ const Header: React.FC = () => {
                 ></path>
               </svg>
             </button>
+         
           </div>
+         
         </div>
 
         {/* Menu section - unchanged */}
         <div className={`w-full md:w-3/4 ${menuOpen ? 'block' : 'hidden'} md:block `}>
          <NavBar session={session} closeMenu={closeMenu} isActiveLink={isActiveLink} handleLogout={handleLogout} toggleHelp={toggleHelp} toggleDropdown={toggleDropdown} toggleCreateAccount={toggleCreateAccount} helpRef={helpRef} helpOpen={helpOpen}/>
         </div>
+        {session?.user.type=='coach' && (
+
+      
+        <div className="mt-2 w-full flex justify-between md:hidden">
+          <Link href="/browse/players" className="text-black">Players</Link>
+          <button onClick={toggleHelp} className="ml-4">
+            <MdHelpOutline className="text-black w-8 h-8" />
+          </button>
+          {helpOpen && (
+         <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+         <p>For technical difficulties and other feedback, email us at </p>
+         <a className="font-bold" href="mailto:team@d1notes.com">
+           team@d1notes.com
+         </a>
+         <button onClick={toggleHelp} className="text-blue-500 mt-2">
+           Close
+         </button>
+       </div>
+        
+        
+          
+          )}
+        </div>
+          )}
+
+{session?.user.type=='player' && (
+
+      
+<div className="mt-2 w-full flex justify-between md:hidden">
+  <Link href="/browse/" className="text-black">Coaches</Link>
+  <button onClick={toggleHelp} className="ml-4">
+    <MdHelpOutline className="text-black w-8 h-8" />
+  </button>
+  {helpOpen && (
+ <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+ <p>For technical difficulties and other feedback, email us at </p>
+ <a className="font-bold" href="mailto:team@d1notes.com">
+   team@d1notes.com
+ </a>
+ <button onClick={toggleHelp} className="text-blue-500 mt-2">
+   Close
+ </button>
+</div>
+
+
+  
+  )}
+</div>
+  )}
       </div>
+      
     </header>
   );
 };

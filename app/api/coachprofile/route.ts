@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { coaches, joinRequest, playerEvaluation, users,countries, licenses } from '../../../lib/schema'
+import { coaches, joinRequest, playerEvaluation, users,countries, licenses, evaluation_charges } from '../../../lib/schema'
 import debug from 'debug';
 import { eq,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -114,8 +114,8 @@ import { SECRET_KEY } from '@/lib/constants';
         totalLicneses="notavailable1";
       }
       
-     
-      return NextResponse.json({coachdata:payload[0], evaluationlist:evaluationlist,isRequested:isRequested, totalLicneses:totalLicneses});
+     const evaluationCharges=await db.select().from(evaluation_charges).where(eq(evaluation_charges.coach_id,Number(coachlist[0].id)));
+      return NextResponse.json({coachdata:payload[0], evaluationlist:evaluationlist,isRequested:isRequested, totalLicneses:totalLicneses, evaluationCharges:evaluationCharges});
     } catch (error) {
       const err = error as any;
       console.error('Error fetching coaches:', error);

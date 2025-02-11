@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { MdHelpOutline } from "react-icons/md";
+import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
 
 interface FreeMenuProps {
-  session: any; // Adjust to your actual session type
+  session: any;
   closeMenu: () => void;
   isActiveLink: (path: string) => string;
   handleLogout: () => void;
@@ -26,15 +26,22 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
   toggleCreateAccount,
 }) => {
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
+  const [enterpriseOpen, setEnterpriseOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
+  const enterpriseRef = useRef<HTMLLIElement>(null);
 
   const handleCreateAccountToggle = () => {
     setCreateAccountOpen((prev) => !prev);
   };
 
+  const handleEnterpriseToggle = () => {
+    setEnterpriseOpen((prev) => !prev);
+  };
+
   const handleOptionClick = () => {
     setCreateAccountOpen(false);
-    closeMenu(); // Close the main menu as well if needed
+    setEnterpriseOpen(false);
+    closeMenu();
   };
 
   useEffect(() => {
@@ -44,6 +51,12 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
         !createAccountRef.current.contains(event.target as Node)
       ) {
         setCreateAccountOpen(false);
+      }
+      if (
+        enterpriseRef.current &&
+        !enterpriseRef.current.contains(event.target as Node)
+      ) {
+        setEnterpriseOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -65,37 +78,54 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
       </li>
       <li>
         <Link
-          href="/browse/clubs"
-          className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
-          onClick={closeMenu}
-        >
-          Organizations
-        </Link>
-      </li>
-      <li>
-        <Link
-          href="/browse/teams"
-          className={`${isActiveLink("/browse/teams")} hover:text-blue-300`}
-          onClick={closeMenu}
-        >
-          Teams
-        </Link>
-      </li>
-      <li>
-        <Link
           href="/browse/players"
           className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
           onClick={closeMenu}
         >
           Players
         </Link>
+      </li> 
+      <li ref={enterpriseRef} className="relative">
+        <button
+          onClick={handleEnterpriseToggle}
+          className="flex items-center text-black hover:text-blue-300"
+        >
+          Enterprise Solutions
+          <MdKeyboardArrowDown className={`ml-1 transition-transform ${enterpriseOpen ? "rotate-180" : ""}`} />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-1/4 mt-2 w-48 z-10 bg-white shadow-lg rounded-md md:left-1/2 md:transform md:-translate-x-1/2">
+            <ul>
+              <li className="pt-[8px]">
+                <Link
+                  href="/browse/clubs"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Organizations
+                </Link>
+              </li>
+              <li className="pt-[8px]">
+                <Link
+                  href="/browse/teams"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Teams
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </li>
+    
       <li ref={createAccountRef} className="relative">
         <button
           onClick={handleCreateAccountToggle}
-          className="text-black hover:text-blue-300"
+          className="flex items-center text-black hover:text-blue-300"
         >
           Create Account
+          <MdKeyboardArrowDown className={`ml-1 transition-transform ${createAccountOpen ? "rotate-180" : ""}`} />
         </button>
         {createAccountOpen && (
           <div className="absolute left-1/4 mt-2 w-48 z-10 bg-white shadow-lg rounded-md md:left-1/2 md:transform md:-translate-x-1/2">

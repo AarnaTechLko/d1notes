@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, invitations, otps, teamCoaches } from '../../../../lib/schema';
+import { coaches, evaluation_charges, invitations, otps, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -134,6 +134,10 @@ export async function PUT(req: NextRequest) {
   const currency = formData.get('currency') as string | null;
   const city = formData.get('city') as string | null;
   const countrycode = formData.get('countrycode') as string | null;
+  const facebook = formData.get('facebook') as string | null;
+  const instagram = formData.get('instagram') as string | null;
+  const linkedin = formData.get('linkedin') as string | null;
+  const xlink = formData.get('xlink') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
   const timestamp = Date.now(); 
@@ -143,6 +147,10 @@ export async function PUT(req: NextRequest) {
   .update(coaches)
   .set({
     firstName: firstName || null,
+    facebook: facebook || null,
+    instagram: instagram || null,
+    linkedin: linkedin || null,
+    xlink: xlink || null,
     lastName: lastName || null,
     phoneNumber: phoneNumber || null,
     location: location || null,
@@ -163,6 +171,18 @@ export async function PUT(req: NextRequest) {
   })
   .where(eq(coaches.id, coachIdAsNumber))
   .execute();
+
+  const data = {
+    coach_id: Number(coachIdAsNumber),
+    turnaroundtime:'168',
+    currency:'$',
+    amount: expectedCharge,
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
+  
+  await db.insert(evaluation_charges).values(data);
+
 
   return NextResponse.json({ message:"Profile Completed", image:imageFile }, { status: 200 });
 
@@ -227,6 +247,10 @@ export async function GET(req: NextRequest) {
         gender:coaches.gender,
         sport:coaches.sport,
         qualifications:coaches.qualifications,
+        facebook:coaches.facebook,
+        linkedin:coaches.linkedin,
+        instagram:coaches.instagram,
+        xlink:coaches.xlink,
       })
       .from(coaches)
       .where(and(...conditions))
@@ -245,6 +269,10 @@ export async function GET(req: NextRequest) {
         sport:coach.sport,
         qualifications:coach.qualifications,
         image: coach.image ? `${coach.image}` : null,
+        facebook:coach.facebook,
+        linkedin:coach.linkedin,
+        instagram:coach.instagram,
+        xlink:coach.xlink,
       }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList);
