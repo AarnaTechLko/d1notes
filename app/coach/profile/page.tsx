@@ -5,10 +5,13 @@ import Sidebar from '../../components/coach/Sidebar';
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import { countryCodesList, states } from '@/lib/constants';
+import { upload } from '@vercel/blob/client';
+import FileUploader from '@/app/components/FileUploader';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -23,7 +26,7 @@ const Profile: React.FC = () => {
     image: "",
     certificate: "",
     password: "",
-    countrycode: "",
+    countrycode: "", 
     country: "",
     state: "",
      
@@ -34,7 +37,7 @@ const Profile: React.FC = () => {
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -70,21 +73,29 @@ const Profile: React.FC = () => {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileData((prevData) => ({
-          ...prevData,
-          [name]: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
+  const handleImageChange = async () => {
+    if (!fileInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+    setPhotoUpoading(true);
+    const file = fileInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads',
+      });
+      setPhotoUpoading(false);
+      const imageUrl = newBlob.url;
+      setProfileData({ ...profileData, image: imageUrl });
+
+    } catch (error) {
+      setPhotoUpoading(false);
+      console.error('Error uploading file:', error);
     }
   };
 
+ 
   const handleSubmit = async () => {
     try {
       const session = await getSession();
@@ -151,7 +162,9 @@ const Profile: React.FC = () => {
   };
 
   const triggerImageUpload = () => {
-    imageInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const triggerCertificateUpload = () => {
@@ -187,7 +200,7 @@ const Profile: React.FC = () => {
               <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
               <div
                 onClick={triggerImageUpload}
-                className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
+                className="relative items-center cursor-pointer"
               >
                 {profileData.image ? (
                   <img
@@ -210,13 +223,22 @@ const Profile: React.FC = () => {
                   type="file"
                   name="image"
                   accept="image/*"
-                  ref={imageInputRef}
+                  ref={fileInputRef}
                   onChange={handleImageChange}
                   className="hidden"
                 />
               )}
+             
             </div>
-
+            {photoUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
             {/* Profile Information Form */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
               {/* First Name */}

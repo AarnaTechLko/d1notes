@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import Select from "react-select";
 import { countryCodesList, countries, states,positionOptionsList, Grades } from '@/lib/constants';
+import FileUploader from '../components/FileUploader';
+import { upload } from '@vercel/blob/client';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -13,7 +15,7 @@ const Profile: React.FC = () => {
   const [countriesArray, setCountriesArray] = useState([]);
   const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
-
+  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
 let nationalities;
 let ppositons;
   const [profileData, setProfileData] = useState({
@@ -48,7 +50,7 @@ let ppositons;
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
-
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -152,18 +154,25 @@ let ppositons;
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileData((prevData) => ({
-          ...prevData,
-          [name]: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
+  const handleImageChange = async () => {
+    if (!fileInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+    setPhotoUpoading(true);
+    const file = fileInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads',
+      });
+      setPhotoUpoading(false);
+      const imageUrl = newBlob.url;
+      setProfileData({ ...profileData, image: imageUrl });
+
+    } catch (error) {
+      setPhotoUpoading(false);
+      console.error('Error uploading file:', error);
     }
   };
   const formatPhoneNumber = (value: string) => {
@@ -245,7 +254,9 @@ let ppositons;
   };
 
   const triggerImageUpload = () => {
-    imageInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const triggerCertificateUpload = () => {
@@ -305,13 +316,21 @@ let ppositons;
                   type="file"
                   name="image"
                   accept="image/*"
-                  ref={imageInputRef}
+                  ref={fileInputRef}
                   onChange={handleImageChange}
                   className="hidden"
                 />
               )}
             </div>
-
+            {photoUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
             {/* Profile Information Form */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* First Name */}
