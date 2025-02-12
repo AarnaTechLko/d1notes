@@ -4,6 +4,7 @@ import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
 import { useRouter } from 'next/navigation';
+import LogoutLoader from '../LoggingOut';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
@@ -112,6 +113,7 @@ const Sidebar: React.FC = () => {
   }, [session]);
 
   return (
+    <>{isLoggingOut && <LogoutLoader />}
     <div>
 
       <button
@@ -290,6 +292,7 @@ const Sidebar: React.FC = () => {
         />
       )}
     </div>
+    </>
   );
 };
 

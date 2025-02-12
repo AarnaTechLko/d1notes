@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../../lib/db';
 import { playerEvaluation, users, coaches, messages, chats } from '../../../../lib/schema';
 import { eq, and } from 'drizzle-orm';
+import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -85,14 +86,22 @@ export async function PUT(req: NextRequest) {
     };
 
 let message;
+let mailmessage;
     const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
+
+    const coachData=await db.select().from(coaches).where(eq(coaches.id,requestToID));
+    const playerData=await db.select().from(users).where(eq(users.id,playerId));
+
+
 if(status===1)
 {
    message="Hi! I have accepted your evaluation request!";
+   mailmessage=`Dear ${playerData[0].first_name}, your Evaluation Request has been accepted by ${coachData[0].firstName}. Please login to your player account for more details.`
 }
 if(status===3)
   {
      message="Sorry! Right now I am unable to accept your evaluation request. Reason :"+remark;
+      mailmessage=`Dear ${playerData[0].first_name}, your Evaluation Request has been rejected by ${coachData[0].firstName}. Please login to your player account for more details.`
   }
    
 
@@ -104,7 +113,14 @@ if(status===3)
     };
 
     const insertedUser = await db.insert(messages).values(userValues).returning();
+ 
 
+  const emailResultPlayer = await sendEmail({
+      to: playerData[0].email,
+      subject: "D1 NOTES Evaluation Request Update",
+      text: "D1 NOTES Evaluation Request Update",
+      html: mailmessage || '',
+  });
 
     return NextResponse.json("Success");
 

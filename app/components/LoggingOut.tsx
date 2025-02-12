@@ -4,18 +4,34 @@ import React from "react";
 
 const LogoutLoader = () => {
   return (
-    <div className="logout-loader">
-      <div className="spinner"></div>
-      <p>Logging out, please wait...</p>
+    <div className="logout-overlay">
+      <div className="logout-loader">
+        <div className="spinner"></div>
+        <p>Signing Out From D1NOTES...</p>
+      </div>
       <style jsx>{`
+        .logout-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+        }
+
         .logout-loader {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          height: 100vh;
-          background-color: #f9f9f9;
-          color: #555;
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .spinner {
@@ -37,8 +53,9 @@ const LogoutLoader = () => {
         }
 
         p {
-          margin-top: 20px;
-          font-size: 16px;
+          margin-top: 15px;
+          font-size: 18px;
+          font-weight: bold;
           color: #333;
         }
       `}</style>

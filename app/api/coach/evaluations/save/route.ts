@@ -1,123 +1,149 @@
 // app/api/evaluation/save/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '../../../../../lib/db'; // Import your Drizzle ORM database instance
-import { coachaccount, coachearnings, evaluationResults, licenses, playerEvaluation } from '@/lib/schema';
-import { eq,sum ,and} from 'drizzle-orm';
+import { chats, coachaccount, coachearnings, coaches, evaluationResults, licenses, messages, playerEvaluation, users } from '@/lib/schema';
+import { eq, sum, and } from 'drizzle-orm';
 import { NextRequest } from 'next/server'; // Import NextRequest
+import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
-    try {
-        const url = req.nextUrl;
-  const status = url.searchParams.get('status'); 
-        const data = await req.json();
-        const { 
-            evaluationId, 
-            playerId, 
-            coachId, 
-            technicalScores, 
-            tacticalScores, 
-            physicalScores, 
-            technicalRemarks, 
-            tacticalRemarks, 
-            physicalRemarks, 
-            finalRemarks, 
-            document 
-        } = data;
+  try {
+    const url = req.nextUrl;
+    const status = url.searchParams.get('status');
+    const data = await req.json();
+    const {
+      evaluationId,
+      playerId,
+      coachId,
+      technicalScores,
+      tacticalScores,
+      physicalScores,
+      technicalRemarks,
+      tacticalRemarks,
+      physicalRemarks,
+      finalRemarks,
+      document
+    } = data;
 
-    const evaluationQuery=await db.select().from(playerEvaluation).where(eq(playerEvaluation.id,evaluationId));
-        const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId,evaluationId)).limit(1)  // Limit to 1 record
-        .execute();
-        
-        
-        if(existingData.length > 0)
-        { 
-            const insertedData = await db.update(evaluationResults).set({
-                evaluationId: evaluationId,
-                playerId: playerId,
-                coachId: coachId,
-                technicalScores: technicalScores,
-                tacticalScores: tacticalScores,
-                physicalScores: physicalScores,
-                technicalRemarks: technicalRemarks,
-                tacticalRemarks: tacticalRemarks,
-                physicalRemarks: physicalRemarks,
-                finalRemarks: finalRemarks,
-                document: document,
-                
-                
-              }).returning();
-        }
-        else
-        {
-            const insertedData = await db.insert(evaluationResults).values({
-                evaluationId: evaluationId,
-                playerId: playerId,
-                coachId: coachId,
-                technicalScores: technicalScores,
-                tacticalScores: tacticalScores,
-                physicalScores: physicalScores,
-                technicalRemarks: technicalRemarks,
-                tacticalRemarks: tacticalRemarks,
-                physicalRemarks: physicalRemarks,
-                finalRemarks: finalRemarks,
-                document: document,
-                club_id:evaluationQuery[0].club_id
-              }).returning();
-        }
-        
-       
-       if(status)
-       {
-       
-        const updateEvaluation = await db
-            .update(playerEvaluation)
-            .set({
-                status: 4  
-            })
-            .where(eq(playerEvaluation.id, evaluationId))  
-            .returning();
-       
+    const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId));
+    const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId, evaluationId)).limit(1)  // Limit to 1 record
+      .execute();
 
 
-        }
-        else{
-            const updateEvaluation = await db
-            .update(playerEvaluation)
-            .set({
-                status: 2  
-            })
-            .where(eq(playerEvaluation.id, evaluationId))  
-            .returning();
+    if (existingData.length > 0) {
+      const insertedData = await db.update(evaluationResults).set({
+        evaluationId: evaluationId,
+        playerId: playerId,
+        coachId: coachId,
+        technicalScores: technicalScores,
+        tacticalScores: tacticalScores,
+        physicalScores: physicalScores,
+        technicalRemarks: technicalRemarks,
+        tacticalRemarks: tacticalRemarks,
+        physicalRemarks: physicalRemarks,
+        finalRemarks: finalRemarks,
+        document: document,
 
-            await db
-                .update(coachearnings)
-                .set({
-                    status: 'Completed'
-                })
-                .where(eq(coachearnings.evaluation_id, evaluationId))
-                .returning();
-               
-                const freelicense=await db.select().from(licenses).where(
-                  and(
-                    eq(licenses.status, 'Free'),
-                    eq(licenses.enterprise_id,Number(evaluationQuery[0].club_id)),
-                  
-                )).limit(1);
-                
-                if(freelicense.length>0)
-                {
-                  const updateLicnes = await db.update(licenses)
-                  .set({
-                    status: 'Consumed',
-                    used_by: coachId,
-                    used_for: 'Coach',
-                  })
-                  .where(eq(licenses.id,freelicense[0].id));
-                }
-               
-               
-        }
-        
+
+      }).returning();
+    }
+    else {
+      const insertedData = await db.insert(evaluationResults).values({
+        evaluationId: evaluationId,
+        playerId: playerId,
+        coachId: coachId,
+        technicalScores: technicalScores,
+        tacticalScores: tacticalScores,
+        physicalScores: physicalScores,
+        technicalRemarks: technicalRemarks,
+        tacticalRemarks: tacticalRemarks,
+        physicalRemarks: physicalRemarks,
+        finalRemarks: finalRemarks,
+        document: document,
+        club_id: evaluationQuery[0].club_id
+      }).returning();
+    }
+
+
+    if (status) {
+
+      const updateEvaluation = await db
+        .update(playerEvaluation)
+        .set({
+          status: 4
+        })
+        .where(eq(playerEvaluation.id, evaluationId))
+        .returning();
+
+
+
+    }
+    else {
+      const updateEvaluation = await db
+        .update(playerEvaluation)
+        .set({
+          status: 2
+        })
+        .where(eq(playerEvaluation.id, evaluationId))
+        .returning();
+
+      await db
+        .update(coachearnings)
+        .set({
+          status: 'Completed'
+        })
+        .where(eq(coachearnings.evaluation_id, evaluationId))
+        .returning();
+
+      const freelicense = await db.select().from(licenses).where(
+        and(
+          eq(licenses.status, 'Free'),
+          eq(licenses.enterprise_id, Number(evaluationQuery[0].club_id)),
+
+        )).limit(1);
+
+      if (freelicense.length > 0) {
+        const updateLicnes = await db.update(licenses)
+          .set({
+            status: 'Consumed',
+            used_by: coachId,
+            used_for: 'Coach',
+          })
+          .where(eq(licenses.id, freelicense[0].id));
+      }
+
+      let chatFriend: any = {
+        playerId: playerId,
+        coachId: coachId,
+        club_id: 0
+      };
+      const insertChatfriend = await db.insert(chats).values(chatFriend).returning();
+      const coachData = await db.select().from(coaches).where(eq(coaches.id, coachId));
+      const playerData = await db.select().from(users).where(eq(users.id, playerId));
+      const message = "Your Evaluation has been submitted by me. Please check.";
+      const mailmessage = `Dear ${playerData[0].first_name}, your Evaluation Request has been completed by ${coachData[0].firstName}. Please login to your player account for more details.`
+
+
+
+      let userValues: any = {
+        senderId: coachId,
+        chatId: insertChatfriend[0].id,
+        message: message,
+        club_id: 0
+      };
+
+      const insertedUser = await db.insert(messages).values(userValues).returning();
+
+
+      const emailResultPlayer = await sendEmail({
+        to: playerData[0].email,
+        subject: "D1 NOTES Evaluation Request Completed",
+        text: "D1 NOTES Evaluation Request Completed",
+        html: mailmessage || '',
+      });
+
+    }
+
 
 
 
@@ -150,9 +176,9 @@ export async function POST(req: NextRequest) {
       .returning();
 
 
-        return NextResponse.json({ success: "success"});
-    } catch (error) {
-        console.error('Error saving evaluation results:', error);
-        return NextResponse.json({ success: false, error: "Error in inserting data" }, { status: 500 });
-    }
+    return NextResponse.json({ success: "success" });
+  } catch (error) {
+    console.error('Error saving evaluation results:', error);
+    return NextResponse.json({ success: false, error: "Error in inserting data" }, { status: 500 });
+  }
 }

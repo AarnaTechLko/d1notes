@@ -4,6 +4,7 @@ import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import Visibility from '../Visibility'; 
 import { useRouter } from 'next/navigation';
+import LogoutLoader from '../LoggingOut';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
@@ -40,6 +41,7 @@ const Sidebar: React.FC = () => {
   useEffect(() => {}, [session]);
 
   return (
+    <> {isLoggingOut && <LogoutLoader />}
     <div>
       {/* Mobile Menu Toggle Button */}
       <button
@@ -222,6 +224,7 @@ const Sidebar: React.FC = () => {
         />
       )}
     </div>
+    </>
   );
 };
 

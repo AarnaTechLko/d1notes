@@ -39,8 +39,10 @@ const Sidebar: React.FC = () => {
   };
 
   return (
+    <>
+    {isLoggingOut && <LogoutLoader />}
     <div>
-      {isLoggingOut && <LogoutLoader />}
+    
       <button
         className="md:hidden text-white bg-gray-800 p-2 mt-1 focus:outline-none absolute top-4 left-4 z-50"
         onClick={toggleSidebar}
@@ -216,6 +218,7 @@ const Sidebar: React.FC = () => {
         />
       )}
     </div>
+    </>
   );
 };
 

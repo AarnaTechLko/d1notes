@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db'; // Adjust the import based on your file structure
-import { licenses, playerEvaluation } from '../../../lib/schema'; // Adjust if necessary
+import { licenses, playerEvaluation, users,coaches, chats, messages } from '../../../lib/schema'; // Adjust if necessary
 import { eq, or } from 'drizzle-orm';
 import { and } from 'drizzle-orm';
+import { sendEmail } from '@/lib/helpers';
+ 
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -61,6 +63,41 @@ export async function POST(req: NextRequest) {
             created_at: new Date(),
             updated_at: new Date(),
         }).returning();
+        
+        const coachData=await db.select().from(coaches).where(eq(coaches.id,coachId));
+        const playerData=await db.select().from(users).where(eq(users.id,player_id));
+
+        let chatFriend:any={
+            playerId: playerId,
+            coachId: coachId,
+            club_id:0        
+        };
+    
+        let message=`Dear ${coachData[0].firstName}! You have recieved an Evaluation Request from ${playerData[0].first_name}`;
+        const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
+
+        let userValues: any = {
+            senderId: playerId,
+            chatId:insertChatfriend[0].id,
+            message: message,
+            club_id:0
+        };
+    
+        const insertedUser = await db.insert(messages).values(userValues).returning();
+
+        const emailResult = await sendEmail({
+            to: coachData[0].email || '',
+            subject: "D1 NOTES Evaluation Request",
+            text: "D1 NOTES Evaluation Request",
+            html: `<p>Dear ${coachData[0].firstName}! You have recieved an Evaluation Request from ${playerData[0].first_name}.</p><p>Please login to your coach account to start Evaluation.</p>`,
+        });
+
+        const emailResultPlayer = await sendEmail({
+            to: playerData[0].email,
+            subject: "D1 NOTES Evaluation Request Sent",
+            text: "D1 NOTES Evaluation Request Sent",
+            html: `<p>Dear ${playerData[0].first_name}! You have successfully requested the  Evaluation to ${coachData[0].firstName}.</p><p>Please login to your player account to see the progress.</p>`,
+        });
 
         // const updateLicnes=await db.update(licenses).set({
         //     status: 'Consumed',

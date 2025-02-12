@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
 import { useRouter } from 'next/navigation';
 import Visibility from '../Visibility';
+import LogoutLoader from '../LoggingOut';
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEvaluationListOpen, setIsEvaluationListOpen] = useState(false);
@@ -38,6 +39,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
+    <>{isLoggingOut && <LogoutLoader />}
     <div>
       {/* Mobile Menu Toggle Button */}
       <button
@@ -147,6 +149,7 @@ const Sidebar: React.FC = () => {
         />
       )}
     </div>
+    </>
   );
 };
 
