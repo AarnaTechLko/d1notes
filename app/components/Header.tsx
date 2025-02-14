@@ -12,6 +12,7 @@ import defaultImage from '../public/default.jpg';
 import { MdHelpOutline } from 'react-icons/md';
 import LogoutLoader from './LoggingOut';
 import NavBar from './NavBar';
+import { FaChevronDown } from 'react-icons/fa';
 
 const Header: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const Header: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Refs to detect outside click
-  const dropdownRef = useRef<HTMLLIElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
   
   const handleLogout = async () => {
@@ -52,6 +53,18 @@ const Header: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setEnterpriseOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -69,7 +82,11 @@ const Header: React.FC = () => {
   };
   const toggleCreateAccount = () => setCreateAccountOpen(!createAccountOpen);
 
+ 
+  const [enterpriseOpen, setEnterpriseOpen] = useState(false);
 
+ 
+  const toggleEnterprise = () => setEnterpriseOpen(!enterpriseOpen);
 
 
   useEffect(() => {
@@ -108,7 +125,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Mobile menu button (visible only on small screens) */}
-          <div className="md:hidden mt-2"> {/* Add margin-top to separate menu from logo */}
+          {/* <div className="md:hidden mt-2">  
             <button
               onClick={toggleMenu}
               className="text-gray-500 focus:outline-none focus:text-gray-900"
@@ -129,7 +146,7 @@ const Header: React.FC = () => {
               </svg>
             </button>
          
-          </div>
+          </div> */}
          
         </div>
 
@@ -140,52 +157,169 @@ const Header: React.FC = () => {
         {session?.user.type=='coach' && (
 
       
-        <div className="mt-2 w-full flex justify-between md:hidden">
-          <Link href="/browse/players" className="text-black">Players</Link>
-          <button onClick={toggleHelp} className="ml-4">
-            <MdHelpOutline className="text-black w-8 h-8" />
+<div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
+      <Link href="/browse/" className="text-black">Coaches</Link>
+      <Link href="/browse/players" className="text-black">Players</Link>
+
+      {/* Enterprises Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button onClick={toggleEnterprise} className="flex items-center text-black">
+          Enterprises <FaChevronDown className="ml-1" />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
+            <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
+            
+          </div>
+        )}
+      </div>
+
+      <Link href="/coach/dashboard" className="text-black">Dashboard</Link>
+
+      <button onClick={toggleHelp} className="ml-2">
+        <MdHelpOutline className="text-black w-86 h-6" />
+      </button>
+
+      {helpOpen && (
+        <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+          <p>For technical difficulties and other feedback, email us at</p>
+          <a className="font-bold" href="mailto:team@d1notes.com">
+            team@d1notes.com
+          </a>
+          <button onClick={toggleHelp} className="text-blue-500 mt-2">
+            Close
           </button>
-          {helpOpen && (
-         <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
-         <p>For technical difficulties and other feedback, email us at </p>
-         <a className="font-bold" href="mailto:team@d1notes.com">
-           team@d1notes.com
-         </a>
-         <button onClick={toggleHelp} className="text-blue-500 mt-2">
-           Close
-         </button>
-       </div>
-        
-        
-          
-          )}
         </div>
+      )}
+    </div>
           )}
 
 {session?.user.type=='player' && (
 
       
-<div className="mt-2 w-full flex justify-between md:hidden">
-  <Link href="/browse/" className="text-black">Coaches</Link>
-  <button onClick={toggleHelp} className="ml-4">
-    <MdHelpOutline className="text-black w-8 h-8" />
-  </button>
-  {helpOpen && (
- <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
- <p>For technical difficulties and other feedback, email us at </p>
- <a className="font-bold" href="mailto:team@d1notes.com">
-   team@d1notes.com
- </a>
- <button onClick={toggleHelp} className="text-blue-500 mt-2">
-   Close
- </button>
-</div>
+<div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
+      <Link href="/browse/" className="text-black">Coaches</Link>
+      <Link href="/browse/players" className="text-black">Players</Link>
+
+      {/* Enterprises Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button onClick={toggleEnterprise} className="flex items-center text-black">
+          Enterprises <FaChevronDown className="ml-1" />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
+            <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
+            
+          </div>
+        )}
+      </div>
+
+      <Link href="/dashboard" className="text-black">Dashboard</Link>
+
+      <button onClick={toggleHelp} className="ml-2">
+        <MdHelpOutline className="text-black w-86 h-6" />
+      </button>
+
+      {helpOpen && (
+        <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+          <p>For technical difficulties and other feedback, email us at</p>
+          <a className="font-bold" href="mailto:team@d1notes.com">
+            team@d1notes.com
+          </a>
+          <button onClick={toggleHelp} className="text-blue-500 mt-2">
+            Close
+          </button>
+        </div>
+      )}
+    </div>
+)}
 
 
-  
-  )}
-</div>
-  )}
+
+{session?.user.type=='enterprise' && (
+
+      
+<div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
+      <Link href="/browse/" className="text-black">Coaches</Link>
+      <Link href="/browse/players" className="text-black">Players</Link>
+
+      {/* Enterprises Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button onClick={toggleEnterprise} className="flex items-center text-black">
+          Enterprises <FaChevronDown className="ml-1" />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
+            <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
+            
+          </div>
+        )}
+      </div>
+
+      <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link>
+
+      <button onClick={toggleHelp} className="ml-2">
+        <MdHelpOutline className="text-black w-86 h-6" />
+      </button>
+
+      {helpOpen && (
+        <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+          <p>For technical difficulties and other feedback, email us at</p>
+          <a className="font-bold" href="mailto:team@d1notes.com">
+            team@d1notes.com
+          </a>
+          <button onClick={toggleHelp} className="text-blue-500 mt-2">
+            Close
+          </button>
+        </div>
+      )}
+    </div>
+)}
+
+{session?.user.type=='team' && (
+
+      
+<div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
+      <Link href="/browse/" className="text-black">Coaches</Link>
+      <Link href="/browse/players" className="text-black">Players</Link>
+
+      {/* Enterprises Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button onClick={toggleEnterprise} className="flex items-center text-black">
+          Enterprises <FaChevronDown className="ml-1" />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
+            <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
+            
+          </div>
+        )}
+      </div>
+
+      <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link>
+
+      <button onClick={toggleHelp} className="ml-2">
+        <MdHelpOutline className="text-black w-86 h-6" />
+      </button>
+
+      {helpOpen && (
+        <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+          <p>For technical difficulties and other feedback, email us at</p>
+          <a className="font-bold" href="mailto:team@d1notes.com">
+            team@d1notes.com
+          </a>
+          <button onClick={toggleHelp} className="text-blue-500 mt-2">
+            Close
+          </button>
+        </div>
+      )}
+    </div>
+)}
+
       </div>
       
     </header>

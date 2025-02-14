@@ -38,10 +38,17 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const clubId = searchParams.get('clubId');
-
+let freerequestCount;
     const query=await db.select().from(freerequests).where(eq(freerequests.clubId, Number(clubId))).execute();
+    if(query.length>0)
+    {
+        freerequestCount=Number(query[0].requests);
+    }
+    else{
+        freerequestCount=Number(0);
+    }
     return NextResponse.json(
-        { requests:query[0].requests},
+        { requests:freerequestCount},
         { status: 200 }
     );
     

@@ -81,7 +81,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     onClick={() => setEnterpriseOpen((prev) => !prev)}
                     className="flex pt-[8px] items-center mx-auto hover:text-blue-300"
                 >
-                    Enterprise Solutions <FaChevronDown className="ml-1" />
+                    Enterprises <FaChevronDown className="ml-1" />
                 </button>
                 {enterpriseOpen && (
                     <div className="absolute left-0 mt-2 w-48 z-50 bg-white shadow-lg rounded-md">
@@ -142,6 +142,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                 </button>
                 
             </li> */}
+            
         </>
     );
 };

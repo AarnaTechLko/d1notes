@@ -415,7 +415,7 @@ const Dashboard: React.FC = () => {
                     { name: 'Declined', value: '3' },
                     { name: 'Draftes', value: '4' },
                   ].map((tab) => (
-                    <li key={tab.value}>
+                    <li key={`${tab.name}${tab.value}`}>
                       <button
                         onClick={() => handleTabChange(tab)}
 
@@ -440,7 +440,7 @@ const Dashboard: React.FC = () => {
                 { name: 'Drafts', value: '4' },
               ].map((tab) => (
                 <button
-                  key={tab.value}
+                key={`${tab.name}${tab.value}`}
                   onClick={() => handleTabChange(tab)}
                   className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
                 >
