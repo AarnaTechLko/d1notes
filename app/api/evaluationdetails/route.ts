@@ -27,6 +27,15 @@ export async function GET(request: NextRequest) {
         physicalScores: evaluationResults.physicalScores,
         tacticalScores: evaluationResults.tacticalScores,
         technicalScores: evaluationResults.technicalScores,
+        sport: evaluationResults.sport,
+        position: evaluationResults.position,
+ 
+
+        organizationScores: evaluationResults.organizationScores,
+        distributionScores: evaluationResults.distributionScores,
+        organizationalRemarks: evaluationResults.organizationalRemarks,
+        distributionRemarks: evaluationResults.distributionRemarks,
+       
         evaluationId: playerEvaluation.id,
         playerId: playerEvaluation.player_id,
         reviewTitle: playerEvaluation.review_title,
@@ -42,7 +51,7 @@ export async function GET(request: NextRequest) {
         first_name:users.first_name,
         last_name:users.last_name,
         image:users.image,
-        position:users.position,
+       
         team:users.team,
         number:users.number,
         primary_video_link:playerEvaluation.primary_video_link,

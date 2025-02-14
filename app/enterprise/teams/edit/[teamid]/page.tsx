@@ -503,7 +503,7 @@ const EditTeam = ({ params }: TeamProps) => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
-                                    Leage<span className="mandatory">*</span>
+                                    League<span className="mandatory">*</span>
                                 </label>
                                 <input
                                     placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."

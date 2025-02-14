@@ -26,7 +26,9 @@ interface Profile {
   instagram?: string;
   linkedin?: string;
   xlink?: string;
+  youtube?: string;
   expectedCharge: number;
+  evaluation_rate: number;
 }
 
 const Home = () => {
@@ -138,6 +140,8 @@ const Home = () => {
                     instagram={profile?.instagram}
                     linkedin={profile?.linkedin}
                     xlink={profile?.xlink}
+                    evaluation_rate={profile?.evaluation_rate}
+                    youtube={profile?.youtube}
 
                   />
                 </div>

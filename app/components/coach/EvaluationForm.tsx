@@ -8,6 +8,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { FaPhone } from 'react-icons/fa';
+import { positionOptionsList } from '@/lib/constants';
 
 
 type EvaluationFormProps = {
@@ -20,33 +21,7 @@ type EvaluationFormProps = {
 };
 
 
-const technical = [
-    { id: 1, label: 'Passing', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 2, label: 'Receiving', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 3, label: 'Dribbling', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 4, label: 'Shooting', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 5, label: 'Finishing', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 6, label: 'Heading', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 7, label: 'Tackling', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 8, label: 'Defending', options: ['0', '1', '2', '3', '4', '5'] }
-];
 
-const tactical = [
-    { id: 1, label: 'Reading The Game', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 2, label: 'Decisions w/ Ball', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 3, label: 'Decisions w/o Balls', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 4, label: 'Understanding of team play', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 5, label: 'Understanding of Role & Position', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 6, label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 7, label: 'Scanning', options: ['0', '1', '2', '3', '4', '5'] }
-];
-
-const physical = [
-    { id: 1, label: 'Strength', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 2, label: 'Speed', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 3, label: 'Mobility', options: ['0', '1', '2', '3', '4', '5'] },
-    { id: 4, label: 'Fitness', options: ['0', '1', '2', '3', '4', '5'] },
-];
 
 const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     evaluationData,
@@ -55,22 +30,20 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     isOpen,
     onClose, }) => {
 
-    const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(technical.map((tech) => [tech.label, '0']))
-    );
-    const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(tactical.map((tact) => [tact.label, '0']))
-    );
-    const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(physical.map((phys) => [phys.label, '0']))
-    );
+
     const [technicalRemarks, setTechnicalRemarks] = useState('');
     const [tacticalRemarks, setTacticalRemarks] = useState('');
     const [physicalRemarks, setPhysicalRemarks] = useState('');
+    const [organizationalRemarks, setOrganizationalRemarks] = useState('');
+    const [distributionRemarks, setDistributionRemarks] = useState('');
+    const [position, setPosition] = useState('');
+    const [sport, setSport] = useState('');
+
     const [document, setDocument] = useState('');
     const [finalRemarks, setFinalRemarks] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [fileUploading, setFileUploading] = useState<boolean>(false);
+    const [loadSubmit, setLoadSubmit] = useState<boolean>(false);
     const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
     const [coachID, setCoachID] = useState<number | undefined>(undefined);
     const { data: session } = useSession();
@@ -79,8 +52,107 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         tacticalRemarks: false,
         physicalRemarks: false,
         finalRemarks: false,
-    });
 
+    });
+    let technical: any;
+    let tactical: any;
+    let physical: any;
+    let distribution: any;
+    let organization: any;
+    if (position == 'Goalkeeper') {
+        technical = [
+            { id: 't1', label: 'Handling', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't2', label: 'Footwork', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't3', label: 'Shot Stopping', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't4', label: 'Crosses', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't5', label: '1 v 1', options: ['0', '1', '2', '3', '4', '5'] },
+        ];
+
+        tactical = [
+            { id: 'ta1', label: 'Decision Making', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta2', label: 'Organization with Back four', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta3', label: 'Positioning', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta4', label: 'Role in build up', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta5', label: 'Role in Counter Attack', options: ['0', '1', '2', '3', '4', '5'] },
+
+        ];
+        distribution = [
+            { id: 'd1', label: 'With: Hands', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'd2', label: 'With: Feet', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'd3', label: 'Restarts', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'd4', label: 'Open Play', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'd5', label: 'Timing', options: ['0', '1', '2', '3', '4', '5'] },
+
+        ];
+
+        physical = [
+            { id: 'p1', label: 'Speed', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p2', label: 'Flexibility', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p4', label: 'Agility', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p5', label: 'Strength / Power', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p6', label: 'Stance', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p7', label: 'Bravery', options: ['0', '1', '2', '3', '4', '5'] },
+        ];
+
+        organization = [
+            { id: 'o1', label: 'Starting Position', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'o2', label: 'Communication', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'o3', label: 'Set Plays For', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'o4', label: 'Set Playa Against', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'o5', label: 'Leadership', options: ['0', '1', '2', '3', '4', '5'] }
+        ];
+
+    }
+    else {
+        technical = [
+            { id: 't1', label: 'Passing', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't2', label: 'Receiving', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't3', label: 'Dribbling', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't4', label: 'Shooting', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't5', label: 'Finishing', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't6', label: 'Heading', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't7', label: 'Tackling', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 't8', label: 'Defending', options: ['0', '1', '2', '3', '4', '5'] }
+        ];
+
+        tactical = [
+            { id: 'ta1', label: 'Reading The Game', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta2', label: 'Decisions w/ Ball', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta3', label: 'Decisions w/o Balls', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta4', label: 'Understanding of team play', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta5', label: 'Understanding of Role & Position', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta6', label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'ta7', label: 'Scanning', options: ['0', '1', '2', '3', '4', '5'] }
+        ];
+
+        physical = [
+            { id: 'p1', label: 'Strength', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p2', label: 'Speed', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5'] },
+            { id: 'p4', label: 'Fitness', options: ['0', '1', '2', '3', '4', '5'] },
+        ];
+        distribution = [];
+        organization = [];
+    }
+
+    const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>(() =>
+        Object.fromEntries(technical.map((tech: any) => [tech.label, '0']))
+    );
+    const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>(() =>
+        Object.fromEntries(tactical.map((tact: any) => [tact.label, '0']))
+    );
+    const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>(() =>
+        Object.fromEntries(physical.map((phys: any) => [phys.label, '0']))
+    );
+
+    const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>(() =>
+        Object.fromEntries(distribution.map((dis: any) => [dis.label, '0']))
+    );
+
+    const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>(() =>
+        Object.fromEntries(organization.map((dis: any) => [dis.label, '0']))
+    );
     const formattedDate = evaluationData?.created_at ? format(new Date(evaluationData.created_at), 'MM/dd/yyyy') : '';
     const onSaveAsDraft = () => {
 
@@ -104,6 +176,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             tacticalRemarks,
             physicalRemarks,
             finalRemarks,
+            distributionRemarks,
+            organizationalRemarks,
 
         };
 
@@ -128,6 +202,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     // Handle form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setLoadSubmit(true)
         if (evaluationData) {
             setPlayerID(evaluationData.playerId);
             setCoachID(evaluationData.coachId);
@@ -142,6 +217,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             tacticalRemarks: tacticalRemarks.trim() === '',
             physicalRemarks: physicalRemarks.trim() === '',
             finalRemarks: finalRemarks.trim() === '',
+
         };
 
         setErrors(validationErrors);
@@ -154,14 +230,19 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             playerId,
             technicalScores,
             tacticalScores,
+            distributionScores,
+            organizationScores,
             physicalScores,
             technicalRemarks,
             tacticalRemarks,
             physicalRemarks,
+            organizationalRemarks,
+            distributionRemarks,
             finalRemarks,
             document,
+            position,
+            sport
         };
-
 
 
         // Send the data to an API
@@ -176,9 +257,11 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             .then((data) => {
 
                 onClose();
+               
                 window.location.reload();
             })
             .catch((error) => {
+                setLoadSubmit(false)
                 console.error('Error:', error);
             });
     };
@@ -202,13 +285,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             const datas = data.result;
             console.log(datas.technicalScores);
             setTechnicalScores({
-                ...Object.fromEntries(technical.map((tech) => [tech.label, datas.technicalScores?.[tech.label] || '0'])),
+                ...Object.fromEntries(technical.map((tech: any) => [tech.label, datas.technicalScores?.[tech.label] || '0'])),
             });
             setTacticalScores({
-                ...Object.fromEntries(tactical.map((tact) => [tact.label, datas.tacticalScores?.[tact.label] || '0'])),
+                ...Object.fromEntries(tactical.map((tact: any) => [tact.label, datas.tacticalScores?.[tact.label] || '0'])),
             });
             setPhysicalScores({
-                ...Object.fromEntries(physical.map((phys) => [phys.label, datas.physicalScores?.[phys.label] || '0'])),
+                ...Object.fromEntries(physical.map((phys: any) => [phys.label, datas.physicalScores?.[phys.label] || '0'])),
             });
             setTechnicalRemarks(datas.technicalRemarks || '');
             setTacticalRemarks(datas.tacticalRemarks || '');
@@ -222,26 +305,26 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     };
     const handleDocumentChange = async () => {
         if (!fileInputRef.current?.files) {
-          throw new Error('No file selected');
+            throw new Error('No file selected');
         }
         setFileUploading(true);
         const file = fileInputRef.current.files[0];
-    
+
         try {
-          const newBlob = await upload(file.name, file, {
-            access: 'public',
-            handleUploadUrl: '/api/uploads/documentupload',
-          });
-          setFileUploading(false);
-          const imageUrl = newBlob.url;
-          console.log(imageUrl);
-          setDocument(imageUrl);
-    
+            const newBlob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/uploads/documentupload',
+            });
+            setFileUploading(false);
+            const imageUrl = newBlob.url;
+            console.log(imageUrl);
+            setDocument(imageUrl);
+
         } catch (error) {
             setFileUploading(false);
-          console.error('Error uploading file:', error);
+            console.error('Error uploading file:', error);
         }
-      };
+    };
     useEffect(() => {
         fetchEvaluationResultData();
 
@@ -249,21 +332,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     }, [evaluationData]);
 
     if (!isOpen) return null;
-
+    const handlePositionChange = (event:any) => {
+        setPosition(event.target.value);
+    };
     return (
         <>
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg shadow-lg w-full max-w-screen-xl mx-6 max-h-[90vh] overflow-y-auto">
+                <div className="bg-white rounded-lg shadow-lg w-full  max-h-[90vh] overflow-y-auto">
                     <form onSubmit={handleSubmit}>
-                    <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
-    <h2 className="text-lg font-bold">Please take an action!</h2>
-    <button 
-        onClick={onClose} 
-        className="text-white hover:text-gray-200 text-xl font-bold"
-    >
-        &times;
-    </button>
-</div>
+                        <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+                            <h2 className="text-lg font-bold">Please take an action!</h2>
+                            <button
+                                onClick={onClose}
+                                className="text-white hover:text-gray-200 text-xl font-bold"
+                            >
+                                &times;
+                            </button>
+                        </div>
                         <div className="p-6 border border-gray-300 rounded-lg font-sans">
                             {/* Evaluation Form Header - Full Width */}
                             <div className="w-full mb-0">
@@ -278,32 +363,32 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 </div>
                             </div>
 
-                            {/* Player Information and Key Information - Side by Side */}
+
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-    {/* Player Information */}
-    <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
-        <h3 className="text-lg font-semibold mb-4">Review Title: <span className="font-normal">{evaluationData?.review_title}</span></h3>
-        <div className="flex items-center mb-4">
-            <strong className="mr-2">Player:</strong>
-            {evaluationData?.image && evaluationData?.image !== 'null' && (
-  <Image
-    src={evaluationData?.image}
-    alt="Player Avatar"
-                    className='w-12 h-12 mr-3 rounded-full object-cover'
-                    width={30}
-                    height={30}
-  />
-)}
-{(!evaluationData?.image || evaluationData?.image === 'null') && (
-  <Image
-    src={defaultImage}
-    alt="Player Avatar"
-    className='w-12 h-12 mr-3 rounded-full object-cover'
-    width={30}
-    height={30}
-  />
-)}
-            {/* {evaluationData?.image ? (
+                                {/* Player Information */}
+                                <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
+                                    <h3 className="text-lg font-semibold mb-4">Review Title: <span className="font-normal">{evaluationData?.review_title}</span></h3>
+                                    <div className="flex items-center mb-4">
+                                        <strong className="mr-2">Player:</strong>
+                                        {evaluationData?.image && evaluationData?.image !== 'null' && (
+                                            <Image
+                                                src={evaluationData?.image}
+                                                alt="Player Avatar"
+                                                className='w-12 h-12 mr-3 rounded-full object-cover'
+                                                width={30}
+                                                height={30}
+                                            />
+                                        )}
+                                        {(!evaluationData?.image || evaluationData?.image === 'null') && (
+                                            <Image
+                                                src={defaultImage}
+                                                alt="Player Avatar"
+                                                className='w-12 h-12 mr-3 rounded-full object-cover'
+                                                width={30}
+                                                height={30}
+                                            />
+                                        )}
+                                        {/* {evaluationData?.image ? (
                 <Image
                     src={evaluationData.image}
                     alt="Player Avatar"
@@ -314,165 +399,373 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             ) : (
                 <div>No Image Available</div>
             )} */}
-            <span className="text-gray-700"><a href={`/players/${evaluationData?.playerSlug}`} className=" text-blue-700" target="_blank">{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
-             
-        </div>
-       {!session?.user.club_id && (
- <div className="mb-4">
- <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
-</div>
-       )}
-       
+                                        <span className="text-gray-700"><a href={`/players/${evaluationData?.playerSlug}`} className=" text-blue-700" target="_blank">{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
 
-        <div className="mb-4">
-            <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>
-        </div>
+                                    </div>
+                                    {!session?.user.club_id && (
+                                        <div className="mb-4">
+                                            <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
+                                        </div>
+                                    )}
 
-        <div className="mb-4">
-            <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
-        </div>
-        {evaluationData?.video_link_two && (
-            <div className="mb-4">
-            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
-        </div>
-        )}
-         {evaluationData?.video_link_three && (
-        <div className="mb-4">
-            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
-        </div>
-         )}
-        {/* <div className="mb-4">
+
+                                    <div className="mb-4">
+                                        <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>
+                                    </div>
+
+                                    <div className="mb-4"> 
+                                        <strong className="mr-2">Video Link #1:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min.
+                                    </div>
+                                    {evaluationData?.video_link_two && (
+                                        <div className="mb-4">
+                                            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min.
+                                        </div>
+                                    )}
+                                    {evaluationData?.video_link_three && (
+                                        <div className="mb-4">
+                                            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
+                                        </div>
+                                    )}
+                                    {/* <div className="mb-4">
             <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
         </div> */}
-        <div className="mb-4">
-            <strong className="mr-2">Video Description:</strong>
-            <span className="text-gray-700">{evaluationData?.video_description}</span>
-        </div>
-    </div>
+                                    <div className="mb-4">
+                                        <strong className="mr-2">Video Description:</strong>
+                                        <span className="text-gray-700">{evaluationData?.video_description}</span>
+                                    </div>
+                                </div>
 
-    {/* Key Information */}
-    <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
-        <h4 className="text-lg font-semibold mb-3">Key</h4>
-        <ul className="list-none space-y-2">
-            <li>[1] Needs significant improvement</li>
-            <li>[2] Needs improvement</li>
-            <li>[3] At competition level</li>
-            <li>[4] Above competition level</li>
-            <li>[5] Excellent competition level</li>
-        </ul>
+                                {/* Key Information */}
+                                <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
+                                    <h4 className="text-lg font-semibold mb-3">Key</h4>
+                                    <ul className="list-none space-y-2">
+                                        <li>[1] Needs significant improvement</li>
+                                        <li>[2] Needs improvement</li>
+                                        <li>[3] At competition level</li>
+                                        <li>[4] Above competition level</li>
+                                        <li>[5] Excellent competition level</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div className="p-4">
+    <div className="flex flex-wrap gap-4 items-center">
+        {/* First select with increased width */}
+        <div className="flex flex-col w-1/2 md:w-1/4">
+            <label className="text-sm font-medium mb-1">Select Sport</label>
+            <select className="border p-2 rounded w-full" onChange={(e) => setSport(e.target.value)}
+            >
+                <option value="">Select</option>
+                <option value="Soccer">Soccer</option>
+            </select>
+        </div>
+
+        {/* Second select */}
+        <div className="flex flex-col w-full md:w-1/4">
+            <label className="text-sm font-medium mb-1">Select Position</label>
+            <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
+                <option value="">Select</option>
+                {positionOptionsList.map((item, index) => (
+                    <option key={index} value={item.value}>{item.label}</option>
+                ))}
+            </select>
+        </div>
     </div>
 </div>
 
-                        </div>
-                        <div className="p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                                {/* Technical Section */}
-                                <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                    <h1 className='text-xl mb-4'>Technical</h1>
-                                    <div className="space-y-4 flex-grow">
-                                        {technical.map((tech) => (
-                                            <div key={tech.id} className="flex items-center space-x-2">
-                                                <select id={`dropdown-tech-${tech.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 "  value={technicalScores[tech.label]} onChange={(e) => setTechnicalScores((prev) => ({
-                                                    ...prev,
-                                                    [tech.label]: e.target.value
-                                                }))}>
-                                                    {tech.options.map((option, index) => (
-                                                        <option key={index} value={option}>{option}</option>
-                                                    ))}
-                                                </select>
-                                                <label htmlFor={`dropdown-tech-${tech.id}`} className="text-sm font-medium">{tech.label}</label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:</label>
-                                    <textarea
-                                        id={`remarks-tech`}
-                                        value={technicalRemarks}
-                                        className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                                        rows={3}
-                                        placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => {
-                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
-                                            if (words.length <= 500) {
-                                                setTechnicalRemarks(e.target.value); // Update the value if within limit
-                                            }
-                                        }}
-                                    />
-                                    {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
-                                </div>
 
-                                {/* Tactical Section */}
-                                <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                    <h2 className='text-xl mb-4'>Tactical</h2>
-                                    <div className="space-y-4 flex-grow">
-                                        {tactical.map((tact) => (
-                                            <div key={tact.id} className="flex items-center space-x-2">
-                                                <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
-                                                    ...prev,
-                                                    [tact.label]: e.target.value
-                                                }))}>
-                                                    {tact.options.map((option, index) => (
-                                                        <option key={index} value={option}>{option}</option>
-                                                    ))}
-                                                </select>
-                                                <label htmlFor={`dropdown-tact-${tact.id}`} className="text-sm font-medium">{tact.label}</label>
-                                            </div>
-                                        ))}
+                        <div className="p-4">
+                            {position != 'Goalkeeper' && (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                    {/* Technical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h1 className='text-xl mb-4'>Technical</h1>
+                                        <div className="space-y-4 flex-grow">
+                                            {technical.map((tech: any) => (
+                                                <div key={tech.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-tech-${tech.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 " value={technicalScores[tech.label]} onChange={(e) => setTechnicalScores((prev) => ({
+                                                        ...prev,
+                                                        [tech.label]: e.target.value
+                                                    }))}>
+                                                        {tech.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-tech-${tech.id}`} className="text-sm font-medium">{tech.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-tech`}
+                                            value={technicalRemarks}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setTechnicalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+                                        />
+                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
                                     </div>
-                                    <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:</label>
-                                    <textarea
-                                        id={`remarks-tact`}
-                                        className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                                        rows={3}
-                                        value={tacticalRemarks}
-                                        placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => {
-                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
-                                            if (words.length <= 500) {
-                                                setTacticalRemarks(e.target.value); // Update the value if within limit
-                                            }
-                                        }}
-                                        
-                                    />
-                                    {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
-                                </div>
 
-                                {/* Physical Section */}
-                                <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                    <h3 className='text-xl mb-4'>Physical</h3>
-                                    <div className="space-y-4 flex-grow">
-                                        {physical.map((phys) => (
-                                            <div key={phys.id} className="flex items-center space-x-2">
-                                                <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setPhysicalScores((prev) => ({
-                                                    ...prev,
-                                                    [phys.label]: e.target.value
-                                                }))}>
-                                                    {phys.options.map((option, index) => (
-                                                        <option key={index} value={option}>{option}</option>
-                                                    ))}
-                                                </select>
-                                                <label htmlFor={`dropdown-phys-${phys.id}`} className="text-sm font-medium">{phys.label}</label>
-                                            </div>
-                                        ))}
+                                    {/* Tactical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h2 className='text-xl mb-4'>Tactical</h2>
+                                        <div className="space-y-4 flex-grow">
+                                            {tactical.map((tact: any) => (
+                                                <div key={tact.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                        ...prev,
+                                                        [tact.label]: e.target.value
+                                                    }))}>
+                                                        {tact.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-tact-${tact.id}`} className="text-sm font-medium">{tact.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-tact`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={tacticalRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setTacticalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
                                     </div>
-                                    <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:</label>
-                                    <textarea
-                                        id={`remarks-phys`}
-                                        className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                                        rows={3}
-                                        value={physicalRemarks}
-                                        placeholder="Noting time stamps appropriately is extremely helpful"
-                                        onChange={(e) => {
-                                            const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
-                                            if (words.length <= 500) {
-                                                setPhysicalRemarks(e.target.value); // Update the value if within limit
-                                            }
-                                        }}
-                                         
-                                    />
-                                    {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
+
+                                    {/* Physical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h3 className='text-xl mb-4'>Physical</h3>
+                                        <div className="space-y-4 flex-grow">
+                                            {physical.map((phys: any) => (
+                                                <div key={phys.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setPhysicalScores((prev) => ({
+                                                        ...prev,
+                                                        [phys.label]: e.target.value
+                                                    }))}>
+                                                        {phys.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-phys-${phys.id}`} className="text-sm font-medium">{phys.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-phys`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={physicalRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setPhysicalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+                            {position == 'Goalkeeper' && (
+                                <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
+                                    {/* Technical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h1 className='text-xl mb-4'>Technical</h1>
+                                        <div className="space-y-4 flex-grow">
+                                            {technical.map((tech: any) => (
+                                                <div key={tech.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-tech-${tech.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 " value={technicalScores[tech.label]} onChange={(e) => setTechnicalScores((prev) => ({
+                                                        ...prev,
+                                                        [tech.label]: e.target.value
+                                                    }))}>
+                                                        {tech.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-tech-${tech.id}`} className="text-sm font-medium">{tech.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-tech`}
+                                            value={technicalRemarks}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setTechnicalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+                                        />
+                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
+                                    </div>
+
+                                    {/* Tactical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h2 className='text-xl mb-4'>Tactical</h2>
+                                        <div className="space-y-4 flex-grow">
+                                            {tactical.map((tact: any) => (
+                                                <div key={tact.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                        ...prev,
+                                                        [tact.label]: e.target.value
+                                                    }))}>
+                                                        {tact.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-tact-${tact.id}`} className="text-sm font-medium">{tact.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-tact`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={tacticalRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setTacticalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
+                                    </div>
+
+                                    {/* Physical Section */}
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h3 className='text-xl mb-4'>Distribution</h3>
+                                        <div className="space-y-4 flex-grow">
+                                            {distribution.map((dis: any) => (
+                                                <div key={dis.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-dis-${dis.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setDistributionScores((prev) => ({
+                                                        ...prev,
+                                                        [dis.label]: e.target.value
+                                                    }))}>
+                                                        {dis.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-dis-${dis.id}`} className="text-sm font-medium">{dis.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-dis`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-dis`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={distributionRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setDistributionRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+
+                                    </div>
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h3 className='text-xl mb-4'>Physical</h3>
+                                        <div className="space-y-4 flex-grow">
+                                            {physical.map((phys: any) => (
+                                                <div key={phys.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setPhysicalScores((prev) => ({
+                                                        ...prev,
+                                                        [phys.label]: e.target.value
+                                                    }))}>
+                                                        {phys.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-phys-${phys.id}`} className="text-sm font-medium">{phys.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-phys`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={physicalRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setPhysicalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
+                                    </div>
+                                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                                        <h3 className='text-xl mb-4'>Organization</h3>
+                                        <div className="space-y-4 flex-grow">
+                                            {organization.map((org: any) => (
+                                                <div key={org.id} className="flex items-center space-x-2">
+                                                    <select id={`dropdown-org-${org.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setOrganizationScores((prev) => ({
+                                                        ...prev,
+                                                        [org.label]: e.target.value
+                                                    }))}>
+                                                        {org.options.map((option: any, index: any) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor={`dropdown-org-${org.id}`} className="text-sm font-medium">{org.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <label htmlFor={`remarks-org`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <textarea
+                                            id={`remarks-org`}
+                                            className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                            rows={3}
+                                            value={organizationalRemarks}
+                                            placeholder="Noting time stamps appropriately is extremely helpful"
+                                            onChange={(e) => {
+                                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                                if (words.length <= 500) {
+                                                    setOrganizationalRemarks(e.target.value); // Update the value if within limit
+                                                }
+                                            }}
+
+                                        />
+
+                                    </div>
+                                </div>
+                            )}
+
 
                             {/* Final Remarks Section */}
                             <div className="mt-6">
@@ -484,30 +777,38 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     rows={4}
                                     placeholder="Add overall feedback, encouragement… recommendations 
 for how to improve or social media links that demonstrate your feedback are extremely helpful."
-onChange={(e) => {
-    const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
-    if (words.length <= 1000) {
-        setFinalRemarks(e.target.value); // Update the value if within limit
-    }
-}}
-                                    
+                                    onChange={(e) => {
+                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                        if (words.length <= 1000) {
+                                            setFinalRemarks(e.target.value); // Update the value if within limit
+                                        }
+                                    }}
+
                                 />
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>
                             {session?.user.club_id && (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                            <div className="mt-6">
-                            <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
-                            <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef}/>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                    <div className="mt-6">
+                                        <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
+                                        <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef} />
+                                    </div>
                                 </div>
-                            </div>
                             )}
                             <div className="flex justify-end space-x-2 pt-6">
                                 <button
                                     type="submit"
                                     className="mt-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
                                 >
-                                    Submit
+                                    {loadSubmit ? (
+  <div className="flex items-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+    <span>Submitting...</span>
+  </div>
+) : (
+  <span>Submit</span>
+)}
+ 
                                 </button>
                                 <button
                                     type="button"

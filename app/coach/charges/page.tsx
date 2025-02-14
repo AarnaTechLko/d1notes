@@ -217,9 +217,9 @@ const Home: React.FC = () => {
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg shadow-lg w-1/3 p-6">
-                        <h2 className="text-lg font-semibold mb-4">
+                        {/* <h2 className="text-lg font-semibold mb-4">
                             {isEditMode ? "Edit Evaluation Rate" : "Add Evaluation Rate"}
-                        </h2>
+                        </h2> */}
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1">Turnaround Time</label>
                             <select
@@ -241,7 +241,7 @@ const Home: React.FC = () => {
 
                             {/* Amount Input */}
                             <div className="w-1/2">
-                                <label className="block text-sm font-medium mb-1">Enter Evaluation Rate in Dollar 
+                                <label className="block text-sm font-medium mb-1">Base Evaluation Rate $
                                     {/* {session?.user.coachCurrency}*/}</label> 
                                 <input
                                     type="number"
@@ -264,7 +264,7 @@ const Home: React.FC = () => {
                                 onClick={handleSubmit}
                                 disabled={loading}
                             >
-                                {loading ? "Submitting..." : isEditMode ? "Update" : "Submit"}
+                                {loading ? "Saving..." : isEditMode ? "Update" : "Save"}
                             </button>
                         </div>
                     </div>

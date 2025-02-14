@@ -138,6 +138,7 @@ export async function PUT(req: NextRequest) {
   const instagram = formData.get('instagram') as string | null;
   const linkedin = formData.get('linkedin') as string | null;
   const xlink = formData.get('xlink') as string | null;
+  const youtube = formData.get('youtube') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
   const timestamp = Date.now(); 
@@ -151,6 +152,7 @@ export async function PUT(req: NextRequest) {
     instagram: instagram || null,
     linkedin: linkedin || null,
     xlink: xlink || null,
+    youtube: youtube || null,
     lastName: lastName || null,
     phoneNumber: phoneNumber || null,
     location: location || null,
@@ -174,7 +176,7 @@ export async function PUT(req: NextRequest) {
 
   const data = {
     coach_id: Number(coachIdAsNumber),
-    turnaroundtime:'168',
+    turnaroundtime:'120',
     currency:'$',
     amount: expectedCharge,
     created_at: new Date(),
@@ -251,6 +253,8 @@ export async function GET(req: NextRequest) {
         linkedin:coaches.linkedin,
         instagram:coaches.instagram,
         xlink:coaches.xlink,
+        youtube:coaches.youtube,
+        expectedCharge:coaches.expectedCharge,
       })
       .from(coaches)
       .where(and(...conditions))
@@ -273,6 +277,8 @@ export async function GET(req: NextRequest) {
         linkedin:coach.linkedin,
         instagram:coach.instagram,
         xlink:coach.xlink,
+        youtube:coach.youtube,
+        evaluation_rate:coach.expectedCharge,
       }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList);

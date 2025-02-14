@@ -22,7 +22,13 @@ export async function POST(req: NextRequest) {
       tacticalRemarks,
       physicalRemarks,
       finalRemarks,
-      document
+      document,
+      organizationalRemarks,
+      distributionRemarks,
+      distributionScores,
+      organizationScores,
+      sport,
+      position
     } = data;
 
     const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId));
@@ -43,8 +49,10 @@ export async function POST(req: NextRequest) {
         physicalRemarks: physicalRemarks,
         finalRemarks: finalRemarks,
         document: document,
-
-
+        organizationScores: organizationScores,
+        distributionScores: distributionScores,
+        organizationalRemarks: organizationalRemarks,
+        distributionRemarks: distributionRemarks
       }).returning();
     }
     else {
@@ -60,7 +68,13 @@ export async function POST(req: NextRequest) {
         physicalRemarks: physicalRemarks,
         finalRemarks: finalRemarks,
         document: document,
-        club_id: evaluationQuery[0].club_id
+        club_id: evaluationQuery[0].club_id,
+        organizationScores: organizationScores,
+        distributionScores: distributionScores,
+        organizationalRemarks: organizationalRemarks,
+        distributionRemarks: distributionRemarks,
+        sport:sport,
+        position:position
       }).returning();
     }
 
@@ -149,11 +163,9 @@ export async function POST(req: NextRequest) {
 
     let totalAmount;
     const payment = await db.select().from(coachearnings).where(eq(coachearnings.evaluation_id, evaluationId)).execute();
-    if (payment.length === 0) {
-      return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
-    }
-
-    const totalBalance = await db
+    if (payment.length >=1) {
+      ///return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
+      const totalBalance = await db
       .select({ value: sum(coachaccount.amount) })
       .from(coachaccount)
       .where(eq(coachaccount.coach_id, coachId))
@@ -174,6 +186,9 @@ export async function POST(req: NextRequest) {
       })
       .where(eq(coachearnings.evaluation_id, evaluationId))
       .returning();
+    }
+
+    
 
 
     return NextResponse.json({ success: "success" });

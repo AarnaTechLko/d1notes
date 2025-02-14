@@ -138,7 +138,7 @@ useEffect(() => {
         </Link>
       </li>
 
-      <li className="relative text-center items-center" ref={dropdownRef}>
+      {/* <li className="relative text-center items-center" ref={dropdownRef}>
   <button
     onClick={handleToggleDropdown}
     className="flex mx-auto" // Centering image in the button
@@ -152,7 +152,7 @@ useEffect(() => {
     />
   </button>
   
-</li>
+</li> */}
 
     
     </>

@@ -15,6 +15,34 @@ input[readonly] {
   color: #777; /* Gray text color */
   cursor: not-allowed; /* Change cursor to show it's not editable */
 }
+/* Add this CSS to the global styles */
+@keyframes zigzag {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(30px) translateY(20px);
+  }
+  50% {
+    transform: translateX(0) translateY(40px);
+  }
+  75% {
+    transform: translateX(-30px) translateY(20px);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.animate-zigzag {
+  animation: zigzag 2s ease-in-out infinite;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .chat-container {
   height: 500px; /* Fixed height */

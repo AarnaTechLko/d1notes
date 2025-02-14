@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
           eq(playerEvaluation.status, status)
         )
       )
+      .orderBy(playerEvaluation.updated_at)
       .limit(10) // Limit the number of results to 10
       .execute();
 

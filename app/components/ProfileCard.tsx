@@ -5,6 +5,7 @@ import { FaUser, FaFacebook, FaInstagram, FaLinkedin, FaXTwitter } from "react-i
 
 import EvaluationModal from './EvaluationModal';
 import { useSession } from 'next-auth/react';
+import { FaYoutube } from 'react-icons/fa';
  
 
 interface ProfileCardProps {
@@ -24,9 +25,11 @@ interface ProfileCardProps {
   instagram?:string;
   linkedin?:string;
   xlink?:string;
+  youtube?:string;
+  evaluation_rate?:number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink,evaluation_rate,youtube }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.open(`/coach/${slug}`, '_blank');
@@ -59,25 +62,41 @@ useEffect(()=>{
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold"  onClick={() => handleRedirect(slug)}>{name}</h3>
     
-    {/* <div className="mt-2 flex justify-center">
+     <div className="mt-2 flex justify-center">
+      <div className="mt-1">${evaluation_rate}</div>
+    </div>
+     <div className="mt-2 flex justify-center">
       <div className="mt-1">{stars}</div>
-    </div> */}
+    </div>
     {/* Bio Icon Section */}
-    <div className="flex space-x-4 justify-center mt-3 mb-3">
+    <div className="flex space-x-4 justify-center mt-3 mb-3 h-5">
+      {facebook &&(
     <a href={facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
       <FaFacebook size={20} />
     </a>
+      )}
+       {instagram &&(
     <a href={instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
       <FaInstagram size={20} />
     </a>
+     )}
+     {linkedin &&(
     <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
       <FaLinkedin size={20} />
     </a>
+     )}
+    {xlink &&(
     <a href={xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
       <FaXTwitter size={20} />
     </a>
+     )}
+    {youtube &&(
+    <a href={youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+      <FaYoutube size={20} />
+    </a>
+     )}
   </div>
-    <div className="mt-2 flex justify-center">
+    {/* <div className="mt-2 flex justify-center">
 
       <button 
         onClick={() => handleRedirect(slug)} // Function to redirect to the bio
@@ -87,7 +106,7 @@ useEffect(()=>{
        <FaUser/>
         <span>View Bio</span>
       </button>
-    </div>
+    </div> */}
     
   
   </div>

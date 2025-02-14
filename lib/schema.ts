@@ -99,6 +99,7 @@ export const coaches = pgTable(
     instagram:text("instagram"),
     linkedin:text("linkedin"),
     xlink:text("xlink"),
+    youtube:text("youtube"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -214,11 +215,18 @@ export const evaluationResults = pgTable('evaluation_results', {
   finalRemarks: text('finalRemarks'),           // Long text for final remarks
   physicalRemarks: text('physicalRemarks'),     // Long text for physical remarks
   tacticalRemarks: text('tacticalRemarks'),     // Long text for tactical remarks
-  technicalRemarks: text('technicalRemarks'),     // Long text for tactical remarks
+  technicalRemarks: text('technicalRemarks'), 
+  organizationalRemarks: text('organizationalRemarks'), 
+  distributionRemarks: text('distributionRemarks'), 
+      // Long text for tactical remarks
   physicalScores: text('physicalScores').notNull(), // JSON field for physical scores
   tacticalScores: text('tacticalScores').notNull(), // JSON field for tactical scores
   technicalScores: text('technicalScores').notNull(), 
-  document:text('document')
+  distributionScores: text('distributionScores'), 
+  organizationScores: text('organizationScores'), 
+  document:text('document'),
+  position:text('position'),
+  sport:text('sport'),
 });
 
 export const otps = pgTable('otps', {

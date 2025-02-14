@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { showError } from '../Toastr';
 
 type ModalProps = {
   isOpen: boolean;
@@ -8,6 +9,8 @@ type ModalProps = {
 };
 
 const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }) => {
+  const [loadingAccept, setLoadingAccept] = useState<boolean>(false);
+  const [loadingReject, setLoadingReject] = useState<boolean>(false);
   const handleAccept = async () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -19,6 +22,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
       confirmButtonText: 'Yes, Accept',
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
+      setLoadingAccept(true);
       if (result.isConfirmed) {
         const payload = {
           evaluationId: evaluationId,
@@ -35,6 +39,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
           });
 
           if (!response.ok) {
+            setLoadingAccept(false);
             throw new Error('Failed to accept evaluation');
           }
 
@@ -47,8 +52,9 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
               window.location.href = window.location.href;
             }, 1000);
           });
-        } catch (error) {
-          console.error('Error:', error);
+        } catch (error:any) {
+          setLoadingAccept(false);
+          showError(error?.message);
         }
       }
     });
@@ -69,6 +75,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoadingReject(true);
         const remark = result.value;
         if (!remark) {
           Swal.fire('Error', 'Remark is required to reject the evaluation.', 'error');
@@ -91,6 +98,7 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
           });
 
           if (!response.ok) {
+            setLoadingReject(false);
             throw new Error('Failed to reject evaluation');
           }
 
@@ -125,13 +133,28 @@ const AcceptanceModal: React.FC<ModalProps> = ({ isOpen, onClose, evaluationId }
               onClick={handleAccept}
               className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-600 transition duration-200"
             >
-              Accept
+          {loadingAccept ? (
+  <div className="flex items-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+    <span>Accepting...</span>
+  </div>
+) : (
+  <span>Accept</span>
+)}
+ 
             </button>
             <button
               onClick={handleReject}
               className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 transition duration-200"
             >
-              Decline
+             {loadingReject ? (
+  <div className="flex items-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+    <span>Declining...</span>
+  </div>
+) : (
+  <span>Decline</span>
+)}
             </button>
           </div>
           <div className="flex justify-end space-x-2 pt-6">

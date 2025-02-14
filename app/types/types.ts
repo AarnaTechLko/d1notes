@@ -27,6 +27,7 @@ export interface Evaluation {
     tacticalRemarks:string;
     physicalRemarks:string;
     finalRemarks:string;
+    organizationalRemarks:string;
     rating:number;
     percentage:number;
     lighttype:number;
@@ -42,6 +43,8 @@ export interface Evaluation {
     coachSlug:string;
     updated_at:string;
     accepted_at:string;
+    distributionRemarks:string;
+    
      
     
   }

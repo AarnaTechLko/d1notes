@@ -22,6 +22,8 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
     const [physicalScores, setPhysicalScores] = useState<any[]>([]);
     const [tacticalScores, setTacticalScores] = useState<any[]>([]);
     const [technicalScores, setTechnicalScores] = useState<any[]>([]);
+    const [organizationScores, setOrganizationScores] = useState<any[]>([]);
+    const [distributionScores, setDistributionScores] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [userType, setUserType] = useState<string | null>(null);
     const [playerId, setPlayerId] = useState<number>(0);
@@ -78,6 +80,8 @@ setEvaluationData(data.result as Evaluation); // Type assertion here
 setPhysicalScores(JSON.parse(data.result.physicalScores));
 setTacticalScores(JSON.parse(data.result.tacticalScores));
 setTechnicalScores(JSON.parse(data.result.technicalScores));
+setOrganizationScores(JSON.parse(data.result.organizationScores));
+setDistributionScores(JSON.parse(data.result.distributionScores));
 setLoading(false);
             // Set the fetched evaluation data
         } catch (error) {
@@ -203,12 +207,12 @@ setLoading(false);
                 </div>
             </div>
             <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div className={`grid grid-cols-1 ${evaluationData?.position.toString() === 'Goalkeeper' ? 'md:grid-cols-5' : 'md:grid-cols-3'} gap-4 mt-6`}>
                     {/* Technical Section */}
-                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                    <div className="text-black p-4 border  border-gray-300 rounded-md flex flex-col">
                         <h1 className='text-xl mb-4'>Technical </h1>
                         {technicalScores ? (
-                            <ul className="list-disc ml-5">
+                            <ul className="list-disc ml-5 h-[250px]">
                                 {Object.entries(technicalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -226,7 +230,7 @@ setLoading(false);
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h2 className='text-xl mb-4'>Tactical</h2>
                         {tacticalScores ? (
-                            <ul className="list-disc ml-5">
+                            <ul className="list-disc ml-5  h-[250px]">
                                 {Object.entries(tacticalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -240,11 +244,29 @@ setLoading(false);
                         {evaluationData?.tacticalRemarks}
                     </div>
 
-                    {/* Physical Section */}
+{evaluationData?.position.toString() === 'Goalkeeper' &&(
+                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                        <h3 className='text-xl mb-4'>Distribution</h3>
+                        {distributionScores ? (
+                            <ul className="list-disc ml-5  h-[250px]">
+                                {Object.entries(distributionScores).map(([key, value]) => (
+                                    <li key={key}>
+                                        {key}: {value}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No Distribution scores available.</p>
+                        )}
+                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        {evaluationData?.distributionRemarks
+                        }
+                    </div>
+)}
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h3 className='text-xl mb-4'>Physical</h3>
                         {physicalScores ? (
-                            <ul className="list-disc ml-5">
+                            <ul className="list-disc ml-5  h-[250px]">
                                 {Object.entries(physicalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -257,6 +279,26 @@ setLoading(false);
                         <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
                         {evaluationData?.physicalRemarks}
                     </div>
+
+                   {evaluationData?.position.toString() === 'Goalkeeper' && (
+                    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                        <h3 className='text-xl mb-4'>Organization</h3>
+                        {organizationScores ? (
+                            <ul className="list-disc ml-5  h-[250px]">
+                                {Object.entries(organizationScores).map(([key, value]) => (
+                                    <li key={key}>
+                                        {key}: {value}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No Organization scores available.</p>
+                        )}
+                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        {evaluationData?.organizationalRemarks
+                        }
+                    </div>
+                   )}
                 </div>
 
                 {/* Final Remarks Section */}

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CellProps } from 'react-table';
 import React from 'react';
 import '../../globals.css'; // Import CSS module
@@ -15,9 +15,9 @@ import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
 import PromptComponent from '@/app/components/Prompt';
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
-  
+
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
-  console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
+
   if (!isOpen) return null;
 
   return (
@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
-  const [clubId, setClubId]=useState<string | undefined>(undefined);
+  //const [clubId, setClubId]=useState<string | undefined>(undefined);
   const [evaluationId, setEvaluationId] = useState<number | undefined>(undefined);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
   const [evaluationData, setEvaluationData] = useState<Evaluation | undefined>(undefined);
   const [modalContent, setModalContent] = useState<JSX.Element | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-   
+
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
     Requested: [],
     Accepted: [],
@@ -64,21 +64,21 @@ const Dashboard: React.FC = () => {
 
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
-   
+
     setModalOpen(true); // Open modal with full description
-     
+
   };
   const fetchTeams = async () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const userId = session?.user.id;
- 
+
 
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
-    const response =await fetch(`/api/coach/teams?enterprise_id=${session.user.id}`);
+    const response = await fetch(`/api/coach/teams?enterprise_id=${session.user.id}`);
 
     if (!response.ok) {
       setLoading(false);
@@ -86,9 +86,9 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setTeams(coachData.data);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
   const handleCloseModal = () => {
@@ -105,75 +105,71 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({ status, coachId }),
     });
-  
+
     if (!response.ok) {
       setLoading(false);
       throw new Error('Failed to fetch evaluations');
     }
-  
+
     const evaluationsData = await response.json();
-    setEvaluations((prev) => ({
-      ...prev,
-      [status]: evaluationsData,
-    }));
-  
+    setEvaluations(evaluationsData);
+
     setData(evaluationsData);
     setLoading(false);
   };
-  
+
 
   const columns = React.useMemo<Column<Evaluation>[]>(
     () => [
       {
         Header: 'Date',
-    accessor: 'created_at',
-    Cell: ({ value }: CellProps<Evaluation>) => {
-      // Format the date to 'dd-mm-yyyy'
-      const date = new Date(value);
-      return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
-    },
-        
+        accessor: 'created_at',
+        Cell: ({ value }: CellProps<Evaluation>) => {
+          // Format the date to 'dd-mm-yyyy'
+          const date = new Date(value);
+          return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
+        },
+
       },
-      { 
+      {
         Header: selectedTab === '0' ? 'Completion Time' : 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
           const accepted_at = row?.original?.accepted_at;
           const turnaroundTime = row?.original?.turnaroundTime;
-         if(selectedTab=='1' && turnaroundTime)
-         {
-          if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
-            const hoursFromNow = calculateHoursFromNow(accepted_at);
-            if (hoursFromNow !== null && hoursFromNow !== undefined) {
-              const remainingTime = turnaroundTime - hoursFromNow;
-              const boxClass = remainingTime >= 0 
-                ? 'bg-green-900 text-white px-2 py-1 rounded' 
-                : 'bg-red-600 text-white px-2 py-1 rounded';
-              return (
-                <span >
-                   {remainingTime.toFixed(2)} Hours
-                </span>
-              );
+          if (selectedTab == '1' && turnaroundTime) {
+            if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
+              const hoursFromNow = calculateHoursFromNow(accepted_at);
+              if (hoursFromNow !== null && hoursFromNow !== undefined) {
+                const remainingTime = turnaroundTime - hoursFromNow;
+                const boxClass = remainingTime >= 0
+                  ? 'bg-green-900 text-white px-2 py-1 rounded'
+                  : 'bg-red-600 text-white px-2 py-1 rounded';
+                return (
+                  <span >
+                    {remainingTime.toFixed(2)} Hours
+                  </span>
+                );
+              }
             }
           }
-         }
-         else{
-          const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
-          return (
+          else {
+            const boxClass = 'bg-red-600 text-white px-2 py-1 rounded';
+            return (
 
-            <span >
-               {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
-            </span>
-          );
-          
-         }
-           // Fallback value if data is missing
+              <span >
+                {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
+              </span>
+            );
+
+          }
+          // Fallback value if data is missing
         },
       },
       {
         Header: 'Player Name',
         accessor: 'first_name',
-        Cell: ({ row }: CellProps<Evaluation>) =><a href={`/players/${row.original.playerSlug}`} className='underline text-bold text-blue-700' target="_blank">{row.original.first_name} {row.original.last_name}</a>,
+        Cell: ({ row }: CellProps<Evaluation>) => <a href={`/players/${row.original.playerSlug}`} className='underline text-bold text-blue-700' target="_blank">{row.original.first_name} {row.original.last_name}</a>,
       },
       {
         Header: 'Review Title',
@@ -184,62 +180,62 @@ const Dashboard: React.FC = () => {
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-  <a
-    href={row.original.primary_video_link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
-  >
-    Link#1
-  </a>
+            <a
+              href={row.original.primary_video_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+            >
+              Link#1
+            </a>
 
-  {row.original.video_link_two ? (
-    <a
-      href={row.original.video_link_two}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
-    >
-      Link#2
-    </a>
-  ) : (
-    <button
-      disabled
-      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
-    >
-      Link#2
-    </button>
-  )}
+            {row.original.video_link_two ? (
+              <a
+                href={row.original.video_link_two}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+              >
+                Link#2
+              </a>
+            ) : (
+              <button
+                disabled
+                className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+              >
+                Link#2
+              </button>
+            )}
 
-  {row.original.video_link_three ? (
-    <a
-      href={row.original.video_link_three}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
-    >
-      Link#3
-    </a>
-  ) : (
-    <button
-      disabled
-      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
-    >
-      Link#3
-    </button>
-  )}
-</div>
+            {row.original.video_link_three ? (
+              <a
+                href={row.original.video_link_three}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+              >
+                Link#3
+              </a>
+            ) : (
+              <button
+                disabled
+                className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+              >
+                Link#3
+              </button>
+            )}
+          </div>
 
         ),
       },
-        {
+      {
         Header: "Video Description",
         accessor: "video_description",
         Cell: ({ cell }) => {
           const description = cell.value ?? ""; // Default to an empty string if undefined
-      
+
           const truncatedDescription = description.length > 30 ? description.substring(0, 30) + "..." : description;
-      
+
           return (
             <div>
               <span>{truncatedDescription}</span>
@@ -259,16 +255,16 @@ const Dashboard: React.FC = () => {
           if (selectedTab === '0') {
             return (
               <a className="cursor-pointer" onClick={() => handleRequestedAction(evaluation)}>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                Accept/Decline
-              </button>
-            </a>
-            
-              
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                  Accept/Decline
+                </button>
+              </a>
+
+
             );
           } else if (selectedTab === '1') {
             return (
-              <button 
+              <button
                 onClick={() => handleAcceptedAction(evaluation)}
                 className="bg-green-500 text-white px-4 py-2 rounded text-sm md:text-base"
               >
@@ -285,16 +281,14 @@ const Dashboard: React.FC = () => {
               </button>
             );
           } else {
-            if (selectedTab != '3')
-              {
-                
-                return <a onClick={() => handleEvaluationDetails(evaluation)} href='#' className='underline text-blue-700'>View</a>;
-              }
-              else
-              {
-                return 'Declined';
-              }
-            
+            if (selectedTab != '3') {
+
+              return <a onClick={() => handleEvaluationDetails(evaluation)} href='#' className='underline text-blue-700'>View</a>;
+            }
+            else {
+              return 'Declined';
+            }
+
           }
         },
       },
@@ -302,6 +296,21 @@ const Dashboard: React.FC = () => {
     [selectedTab]
   );
 
+  const handleTabChange = (tab: any) => {
+    setEvaluations({
+      Requested: [],
+      Accepted: [],
+      Completed: [],
+      Declined: [],
+      Drafted: [],
+    })
+    setLoading(true);
+    setSelectedTab(tab.value);
+
+    fetchEvaluations(selectedTab);
+    setIsDropdownOpen(false);
+     
+  }
   const handleRequestedAction = (evaluation: Evaluation) => {
     setEvaluationId(evaluation.evaluationId);
     setCoachId(evaluation.coachId);
@@ -339,16 +348,19 @@ const Dashboard: React.FC = () => {
   const closeEvform = () => {
     setIsEvFormOpen(false);
   };
+  const clubId = useMemo(() => session?.user?.club_id ?? '', [session]);
 
   useEffect(() => {
-    setClubId(session?.user?.club_id ?? '');
+
     fetchEvaluations(selectedTab);
     fetchTeams();
-  }, [selectedTab, session]);
+
+
+  }, [selectedTab]);
 
   return (
     <>
-    
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
@@ -367,24 +379,24 @@ const Dashboard: React.FC = () => {
       />
 
       <div className="flex h-screen">
-      <DetailsModal
-  isOpen={modalOpen}
-  onClose={handleCloseModal}
-  description={currentDescription}
-/>
+        <DetailsModal
+          isOpen={modalOpen}
+          onClose={handleCloseModal}
+          description={currentDescription}
+        />
         <Sidebar />
         <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
-          
+
           <div className="bg-white shadow-md rounded-lg p-6 ">
-          <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your bank account information to receive funds by clicking on Payment Information in the left side menu if you plan to offer evaluations to the public for a fee. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team. Otherwise, be prepared to give Players who seek you out, the edge they have been missing!"/>
-          {/* {!clubId && (
+            <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your bank account information to receive funds by clicking on Payment Information in the left side menu if you plan to offer evaluations to the public for a fee. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team. Otherwise, be prepared to give Players who seek you out, the edge they have been missing!" />
+            {/* {!clubId && (
             <div className="flex items-center space-x-2 bg-blue-100 p-4 rounded-lg shadow-lg">
             
             <span className="text-xl font-semibold text-gray-700">Your Evaluation Rate:</span>
             <span className="text-2xl font-bold text-blue-600"> {session?.user.coachCurrency}{session?.user?.expectedCharge}</span>
           </div>
           )} */}
-          
+
 
             {/* Dropdown for tabs on small screens */}
             <div className="block md:hidden mb-4 ">
@@ -405,10 +417,8 @@ const Dashboard: React.FC = () => {
                   ].map((tab) => (
                     <li key={tab.value}>
                       <button
-                        onClick={() => {
-                          setSelectedTab(tab.value);
-                          setIsDropdownOpen(false);
-                        }}
+                        onClick={() => handleTabChange(tab)}
+
                         className="w-full text-left px-4 py-2 hover:bg-gray-100"
                       >
                         {tab.name}
@@ -431,7 +441,7 @@ const Dashboard: React.FC = () => {
               ].map((tab) => (
                 <button
                   key={tab.value}
-                  onClick={() => setSelectedTab(tab.value)}
+                  onClick={() => handleTabChange(tab)}
                   className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
                 >
                   {tab.name}
@@ -440,65 +450,87 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Responsive Table */}
-            <div className="overflow-x-auto max-h-[400px] overflow-y-auto"> 
-            <input
-        type="text"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-      />
-  <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
-    <thead>
-      {tableInstance.headerGroups.map((headerGroup) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-          {headerGroup.headers.map((column) => (
-            <th
-              {...column.getHeaderProps()}
-              key={column.id}
-              className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
-              style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
-            >
-              {column.render('Header')}
-            </th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-    <tbody {...tableInstance.getTableBodyProps()}>
-            {loading ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-4">
-                  Loading Evaluations...
-                </td>
-              </tr>
-            ) : filteredRows.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-4 text-gray-500">
-                  No Evaluation(s) Found
-                </td>
-              </tr>
-            ) : (
-              filteredRows.map((row) => {
-                tableInstance.prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        key={`${row.id}-${cell.column.id}`}
-                        className="border-b border-gray-200 px-4 py-2"
-                      >
-                        <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+            <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+              />
+              <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
+                <thead>
+                  {tableInstance.headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                      {headerGroup.headers.map((column) => (
+                        <th
+                          {...column.getHeaderProps()}
+                          key={column.id}
+                          className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
+                          style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
+                        >
+                          {column.render('Header')}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody {...tableInstance.getTableBodyProps()}>
+                  {loading ? (
+                    <tr>
+                     <td colSpan={columns.length} className="text-center py-4">
+  <div className="flex justify-center items-center gap-2">
+    <svg
+      className="animate-spin h-5 w-5 text-gray-500"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8H4z"
+      ></path>
+    </svg>
+    <span>Loading Evaluations...</span>
+  </div>
+</td>
+                    </tr>
+                  ) : filteredRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+                        No Evaluation(s) Found
                       </td>
-                    ))}
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-  </table>
-</div>
+                    </tr>
+                  ) : (
+                    filteredRows.map((row) => {
+                      tableInstance.prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()} key={row.id}>
+                          {row.cells.map((cell) => (
+                            <td
+                              {...cell.getCellProps()}
+                              key={`${row.id}-${cell.column.id}`}
+                              className="border-b border-gray-200 px-4 py-2"
+                            >
+                              <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
           {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>

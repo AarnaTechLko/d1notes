@@ -127,7 +127,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     Hello, {session?.user?.name || "Coach"}!
                 </Link>
             </li>
-            <li className="relative" ref={dropdownRef}>
+            {/* <li className="relative" ref={dropdownRef}>
                 <button
                    
                     className="flex items-center mx-auto"
@@ -141,7 +141,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     />
                 </button>
                 
-            </li>
+            </li> */}
         </>
     );
 };

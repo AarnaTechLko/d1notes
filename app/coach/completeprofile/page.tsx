@@ -36,6 +36,7 @@ interface FormValues {
   instagram: string;
   linkedin: string;
   xlink: string;
+  youtube: string;
 }
 
 interface FormErrors {
@@ -84,6 +85,7 @@ export default function Register() {
     instagram: '',
     linkedin: '',
     xlink: '',
+    youtube: '',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -447,7 +449,7 @@ export default function Register() {
                     {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                   </div>
                   <div >
-                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Evaluation Rate in $<span className='mandatory'>*</span></label>
+                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Base Evaluation Rate $<span className='mandatory'>*</span></label>
                   <div className="flex">
                       <select
                         name="currency" 
@@ -663,7 +665,7 @@ export default function Register() {
                     )}
                   </div>
                 </div> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5">
 
                   <div>
                     <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -709,6 +711,18 @@ export default function Register() {
                       name="xlink"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.xlink}
+                      onChange={handleChange}
+                    />
+                    
+                  </div>
+                  <div>
+                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <input
+                    placeholder='Ex: https://youtube.com/username'
+                      type="text"
+                      name="youtube"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      value={formValues.youtube}
                       onChange={handleChange}
                     />
                     

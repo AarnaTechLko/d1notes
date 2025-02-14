@@ -716,7 +716,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
                   <textarea
-                    placeholder="Tell us about your  experience/competition level, any accolades and aspirations."
+                    placeholder="Tell us about your experience/competition level, any accolades and aspirations."
                     name="bio"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.bio}

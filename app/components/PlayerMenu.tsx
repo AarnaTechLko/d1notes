@@ -128,7 +128,7 @@ useEffect(() => {
           Hello, {session?.user?.name || "Player"}!
         </Link>
       </li>
-      <li className="relative" ref={dropdownRef}>
+      {/* <li className="relative" ref={dropdownRef}>
       <button
                     onClick={handleToggleDropdown}
                     className="flex  mx-auto"
@@ -142,7 +142,7 @@ useEffect(() => {
                     />
                 </button>
         
-      </li>
+      </li> */}
     
     </>
   );

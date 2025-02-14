@@ -138,7 +138,7 @@ useEffect(() => {
           Hello, {session?.user?.name || "Team"}!
         </Link>
       </li>
-
+{/* 
       <li className="relative text-center items-center" ref={dropdownRef}>
   <button
     onClick={handleToggleDropdown}
@@ -153,7 +153,7 @@ useEffect(() => {
     />
   </button>
   
-</li>
+</li> */}
 
     
     </>

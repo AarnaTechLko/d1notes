@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 
 interface FiltersProps {
-  onFilterChange: (filters: { country: string; state: string; city: string; amount: number; rating: number | null }) => void;
+  onFilterChange: (filters: { country: string; state: string; city: string; amount: number; rating: number | null; sport:string }) => void;
 }
 
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [country, setCountry] = useState<string>('');
   const [state, setState] = useState<string>('');
   const [city, setCity] = useState<string>('');
+  const [sport, setSport] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [rating, setRating] = useState<number>(0);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -39,6 +42,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
     onFilterChange({
       country: '',
+      sport: '',
       state: '',
       city: '',
       amount: 0,
@@ -57,18 +61,25 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     let newState = state;
     let newCity = city;
     let newRating = rating;
+    let newSport = sport;
 
     if (field === 'country') {
       newCountry = value as string;
       setCountry(newCountry);
       fetchStates(Number(value));
-    } else if (field === 'state') {
-      newState = value as string;
-      setState(newState);
-    } else if (field === 'city') {
-      newCity = value as string;
-      setCity(newCity);
-    } else if (field === 'rating') {
+    } 
+    else if (field === 'sport') {
+      newSport = value as string;
+      setSport(newSport);
+    }
+    //else if (field === 'state') {
+    //   newState = value as string;
+    //   setState(newState);
+    // } else if (field === 'city') {
+    //   newCity = value as string;
+    //   setCity(newCity);
+    // } 
+    else if (field === 'rating') {
       newRating = value as number;
       setRating(newRating);
     }
@@ -77,6 +88,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       country: newCountry,
       state: newState,
       city: newCity,
+      sport: newSport,
       amount,
       rating: newRating,
     });
@@ -89,13 +101,32 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const handleAmountCommit = () => {
     onFilterChange({
       country,
+      sport,
       state,
       city,
       amount,
       rating,
     });
   };
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <FaStar
+        key={i}
+        color={i < rating ? '#ffd700' : '#ccc'}
+        style={{ marginRight: '4px', float:'left' }}
+        />
+      );
+    }
+    return stars;
+  };
 
+  const handleRatingSelect = (rating: number) => {
+    setRating(rating);
+    handleFilterChange('rating', rating); // Send the numeric value
+    setIsDropdownOpen(false); 
+  };
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
@@ -115,53 +146,14 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       <div className={`${isMobileOpen ? 'block' : 'hidden'} md:block`}>
-        {/* Filter Fields */}
-        {/* Country */}
+        
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Country</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            value={country}
-            onChange={(e) => handleFilterChange('country', e.target.value)}
-          >
+          <label className="block text-gray-700 mb-2">Sport</label>
+          <select name='sport' className='w-full p-2 border rounded-md' onChange={(e) => handleFilterChange('city', e.target.value)} value={sport}>
             <option value="">Select</option>
-            {countriesList
-                      .map((country:any) => (
-                        <option key={country.id} value={country.id}>
-                          {country.name}
-                        </option>
-                      ))}
+            <option value="Soccer">Soccer</option>
           </select>
-        </div>
-
-        {/* State */}
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">State</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            value={state}
-            onChange={(e) => handleFilterChange('state', e.target.value)}
-          >
-            
-            <option value="">Select</option>
-                      {statesList.map((state: any, index) => (
-    <option key={index} value={state.name}>
-      {state.name}
-    </option>
-  ))}
-          </select>
-        </div>
-
-        {/* City */}
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">City</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-            value={city}
-            onChange={(e) => handleFilterChange('city', e.target.value)}
-            placeholder="Enter City"
-          />
+         
         </div>
  
         <div className="mb-4">
@@ -181,25 +173,29 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
         {/* Rating */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Star Rating</label>
-          
-          <select
-            className="w-full p-2 border rounded-md"
-            value={state}
-            onChange={(e) => handleFilterChange('state', e.target.value)}
-          >
-            
-            <option value="">Select</option>
-                       
-    <option   value="1">1 Star</option>
-    <option   value="2">2 Star</option>
-    <option   value="3">3 Star</option>
-     
-   
-  
-          </select>
-          
-          
-        
+          <div className="relative">
+            <button
+              className="w-full p-2 border rounded-md flex items-center justify-between"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
+            >
+              <span className="text-gray-700">{renderStars(rating ?? 0)}</span>
+              <span>▼</span>
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute left-0 w-full bg-white border mt-1 rounded-md shadow-md z-10">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => handleRatingSelect(value)}
+                    className="w-full p-2 text-left flex items-center"
+                  >
+                    <span className="text-gray-700">{renderStars(value)}</span>
+                    
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
