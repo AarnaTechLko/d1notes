@@ -19,6 +19,7 @@ const Header: React.FC = () => {
   const [userName, setUserName] = useState<string | null>(null);
   const [profilepic, setProfilepic] = useState<string>(defaultImage.src);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [signupOpen, setSignupOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const { data: session } = useSession(); 
   const router = useRouter();
@@ -31,6 +32,7 @@ const Header: React.FC = () => {
 
   // Refs to detect outside click
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRefSignup = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
   
   const handleLogout = async () => {
@@ -87,6 +89,7 @@ const Header: React.FC = () => {
 
  
   const toggleEnterprise = () => setEnterpriseOpen(!enterpriseOpen);
+  const toggleSignup = () => setSignupOpen(!enterpriseOpen);
 
 
   useEffect(() => {
@@ -100,6 +103,7 @@ const Header: React.FC = () => {
         setDropdownOpen(false);
         setHelpOpen(false);
         setCreateAccountOpen(false);
+       /// setSignupOpen(false);
       }
     };
   
@@ -167,7 +171,7 @@ const Header: React.FC = () => {
           Enterprises <FaChevronDown className="ml-1" />
         </button>
         {enterpriseOpen && (
-          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+          <div className="absolute left-0 mt-2 w-48 z-50 bg-white shadow-lg rounded-md p-2">
             <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
             <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
             
@@ -175,7 +179,7 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      <Link href="/coach/dashboard" className="text-black">Dashboard</Link>
+      {/* <Link href="/coach/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -194,6 +198,69 @@ const Header: React.FC = () => {
       )}
     </div>
           )}
+
+
+{!session && (
+
+   <>   
+<div className="mt-5 w-full flex justify-between md:hidden  space-x-2">
+      <Link href="/browse/" className="text-black">Coaches</Link>
+      <Link href="/browse/players" className="text-black">Players</Link>
+
+      {/* Enterprises Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button onClick={toggleEnterprise} className="flex items-center text-black">
+          Enterprises <FaChevronDown className="ml-1" />
+        </button>
+        {enterpriseOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/browse/clubs" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Organizations</Link>
+            <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
+            
+          </div>
+        )}
+      </div>
+
+      
+
+      {/* <Link href="/dashboard" className="text-black">Dashboard</Link> */}
+
+      <button onClick={toggleHelp} className="ml-2">
+        <MdHelpOutline className="text-black w-86 h-6" />
+      </button>
+
+      {helpOpen && (
+        <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
+          <p>For technical difficulties and other feedback, email us at</p>
+          <a className="font-bold" href="mailto:team@d1notes.com">
+            team@d1notes.com
+          </a>
+          <button onClick={toggleHelp} className="text-blue-500 mt-2">
+            Close
+          </button>
+        </div>
+      )}
+    </div>
+    <div className="mt-5 w-full flex justify-between md:hidden  space-x-2">
+    <div className="relative" ref={dropdownRefSignup}>
+        <button onClick={toggleSignup} className="flex items-center text-black">
+          Create Account <FaChevronDown className="ml-1" />
+        </button>
+        {signupOpen && (
+          <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+            <Link href="/register" className="block px-4 py-2 hover:bg-gray-100">Player</Link>
+            <Link href="/coach/signup" className="block px-4 py-2 hover:bg-gray-100" >Coach</Link>
+            <Link href="/enterprise/signup" className="block px-4 py-2 hover:bg-gray-100" >Organization</Link>
+            <Link href="/teampanel/signup" className="block px-4 py-2 hover:bg-gray-100">Team</Link>
+            
+          </div>
+        )}
+      </div>
+      <Link href="/login" className="text-black">Login</Link>
+      <Link href="/howitworks" className="text-black">How it Works?</Link>
+      </div></>
+)}
+
 
 {session?.user.type=='player' && (
 
@@ -216,7 +283,7 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      <Link href="/dashboard" className="text-black">Dashboard</Link>
+      {/* <Link href="/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -259,7 +326,7 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link>
+      {/* <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -300,7 +367,7 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link>
+      {/* <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
