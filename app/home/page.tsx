@@ -87,10 +87,10 @@ export default function Home(): JSX.Element {
         {/* Header Section */}
         <div className="text-center py-10">
         <h1 className="text-4xl font-bold text-gray-900">
-      Find coaches that specialize in{' '}
-      <div className="inline-block relative" ref={dropdownRef}>
+        Gain access to coaches that specialize in{' '}
+      <div className="inline-block relative border border-gray-500 p-1 rounded-sm" ref={dropdownRef} >
         <button
-          className="text-blue-600 flex items-center"
+          className="text-blue-600 text-[20px] flex items-center"
           onClick={toggleDropdown}
         >
           <span className="text-blue-600">{selectedValue}</span>
@@ -140,6 +140,12 @@ export default function Home(): JSX.Element {
               organization={coach.clubName}
               rating={coach.rating}
               slug={coach.slug}
+              facebook={coach?.facebook}
+                    instagram={coach?.instagram}
+                    linkedin={coach?.linkedin}
+                    xlink={coach?.xlink}
+                    evaluation_rate={coach?.evaluation_rate}
+                    youtube={coach?.youtube}
               
               /> 
               
@@ -163,6 +169,48 @@ export default function Home(): JSX.Element {
         </div>
       </div>
       
+      <div className="container mx-auto p-6">
+      <div className="grid md:grid-cols-3 gap-6">
+        {/* Players Box */}
+        <div className="bg-blue-500 text-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Players</h2>
+          <p className="text-lg">
+            How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? 
+            Would you like access to a curated network of top coaches, trainers, and scouts?
+          </p>
+        </div>
+
+        {/* Coaches Box */}
+        <div className="bg-green-500 text-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Coaches</h2>
+          <p className="text-lg">
+            Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services? 
+            You are worth more than you know to young athletes today.
+          </p>
+        </div>
+
+        {/* Enterprises Box */}
+        <div className="bg-red-500 text-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Enterprises</h2>
+          <p className="text-lg">
+            Are you an organization or team that can benefit from a turnkey solution which has the potential to increase the 
+            value and level of satisfaction delivered to your participants?
+          </p>
+        </div>
+      </div>
+
+
+      <div className="grid md:grid-cols-1 gap-6 mt-5">
+      <div className="bg-yellow-500 text-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">D1 NOTES is here to help!</h2>
+          <p className="text-lg">
+          We provide the most practical online platform for giving, receiving and managing individual game film evaluations by way of seamlessly connecting coaches, trainers, scouts and enterprises with players, anywhere, anytime (and soon to be, any sport). A win-win-win format for all.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
      <div className="bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Side: How it works steps */}
@@ -182,7 +230,7 @@ export default function Home(): JSX.Element {
               <div>
                 <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                 <p className="mt-2 text-base text-gray-500">
-                Create account for player(s) and find a registered coach
+                Create a free public or private account / profile as a player and search through / review our experienced coach profiles from around the world for one you desire individual game film feedback from. 
                 </p>
               </div>
             </div>
@@ -210,9 +258,9 @@ export default function Home(): JSX.Element {
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Submit an evaluation request</h3>
-                <p className="mt-2 text-base text-gray-500">
-                  With some video footage which shows your game.
+                <h3 className="text-lg font-medium text-gray-900">Request Evaluation</h3>
+                <p className="mt-2 text-base text-gray-500 text-justify">
+                Search for a coach to your liking in our global marketplace of coaches, trainers and scouts. Next, request an evaluation which includes sending the coach video links of your games / game highlights. If the coach accepts your request, the submission will be reviewed and a comprehensive evaluation form and follow up options will be returned shortly thereafter in exchange for payment. Evaluations are automatically stored and can be referred to later like a player journal. 
                 </p>
               </div>
             </div>
