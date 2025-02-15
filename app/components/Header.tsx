@@ -103,7 +103,7 @@ const Header: React.FC = () => {
         setDropdownOpen(false);
         setHelpOpen(false);
         setCreateAccountOpen(false);
-       /// setSignupOpen(false);
+        setSignupOpen(false);
       }
     };
   
@@ -248,10 +248,10 @@ const Header: React.FC = () => {
         </button>
         {signupOpen && (
           <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
-            <Link href="/register" className="block px-4 py-2 hover:bg-gray-100">Player</Link>
-            <Link href="/coach/signup" className="block px-4 py-2 hover:bg-gray-100" >Coach</Link>
-            <Link href="/enterprise/signup" className="block px-4 py-2 hover:bg-gray-100" >Organization</Link>
-            <Link href="/teampanel/signup" className="block px-4 py-2 hover:bg-gray-100">Team</Link>
+            <Link href="/register" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setSignupOpen(false)}>Player</Link>
+            <Link href="/coach/signup" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setSignupOpen(false)}>Coach</Link>
+            <Link href="/enterprise/signup" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setSignupOpen(false)}>Organization</Link>
+            <Link href="/teampanel/signup" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setSignupOpen(false)}>Team</Link>
             
           </div>
         )}
