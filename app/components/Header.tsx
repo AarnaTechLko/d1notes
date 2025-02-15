@@ -60,6 +60,9 @@ const Header: React.FC = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setEnterpriseOpen(false);
       }
+      if (dropdownRefSignup.current && !dropdownRefSignup.current.contains(event.target as Node)) {
+        setSignupOpen(false);
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
