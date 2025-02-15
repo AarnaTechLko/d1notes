@@ -89,7 +89,7 @@ useEffect(() => {
           onClick={handleEnterpriseToggle}
           className="flex items-center text-black hover:text-blue-300 m-auto"
         >
-          Enterprise Solutions
+         Enterprises
           <MdKeyboardArrowDown className={`ml-1 transition-transform ${enterpriseOpen ? "rotate-180" : ""}`} />
         </button>
         {enterpriseOpen && (

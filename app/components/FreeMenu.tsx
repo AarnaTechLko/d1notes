@@ -90,7 +90,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           onClick={handleEnterpriseToggle}
           className="flex items-center text-black hover:text-blue-300"
         >
-          Enterprise Solutions
+         Enterprises
           <MdKeyboardArrowDown className={`ml-1 transition-transform ${enterpriseOpen ? "rotate-180" : ""}`} />
         </button>
         {enterpriseOpen && (
@@ -136,7 +136,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   className="block px-4 py-2 text-black hover:bg-blue-300"
                   onClick={handleOptionClick}
                 >
-                  Player Signup
+                  Player  
                 </Link>
               </li>
               <li className="pt-[8px]">
@@ -145,7 +145,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   className="block px-4 py-2 text-black hover:bg-blue-300"
                   onClick={handleOptionClick}
                 >
-                  Coach Signup
+                  Coach  
                 </Link>
               </li>
               <li className="pt-[8px]">
@@ -154,7 +154,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   className="block px-4 py-2 text-black hover:bg-blue-300"
                   onClick={handleOptionClick}
                 >
-                  Organization Signup
+                  Organization  
                 </Link>
               </li>
               <li className="pt-[8px]">
@@ -163,7 +163,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   className="block px-4 py-2 text-black hover:bg-blue-300"
                   onClick={handleOptionClick}
                 >
-                  Team Signup
+                  Team  
                 </Link>
               </li>
             </ul>

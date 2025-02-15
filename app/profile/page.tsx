@@ -8,6 +8,7 @@ import Select from "react-select";
 import { countryCodesList, countries, states,positionOptionsList, Grades } from '@/lib/constants';
 import FileUploader from '../components/FileUploader';
 import { upload } from '@vercel/blob/client';
+import { profile } from 'console';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -299,15 +300,20 @@ let ppositons;
                 onClick={triggerImageUpload}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
               >
-                {profileData.image ? (
+                {profileData.image!='null' && profileData.image!=null ? (
                   <img
                     src={profileData.image}
                     alt="Profile"
                     className="h-32 w-32 object-cover rounded-full"
                   />
                 ) : (
-                  <div className="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-full">
-                    <span className="text-gray-500">Upload Image</span>
+                  <div className="h-32 w-32 flex items-center justify-center rounded-full">
+                    <img
+                    src='/default.jpg'
+                    alt="Profile"
+                    className="h-32 w-32 object-cover rounded-full"
+                  />
+                    
                   </div>
                 )}
               </div>
