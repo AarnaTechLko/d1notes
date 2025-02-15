@@ -97,7 +97,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const dropdowns = [dropdownRef.current, helpRef.current, createAccountRef.current];
+      const dropdowns = [dropdownRef.current, helpRef.current, createAccountRef.current, dropdownRefSignup.current];
       const clickedInsideDropdown = dropdowns.some(
         (ref) => ref && ref.contains(event.target as Node)
       );
