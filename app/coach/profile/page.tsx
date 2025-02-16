@@ -12,6 +12,7 @@ const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [loadingProfile,setLoadingprofile]=useState<boolean>(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -29,7 +30,12 @@ const Profile: React.FC = () => {
     countrycode: "", 
     country: "",
     state: "",
-     
+     countryName:"",
+     facebook:"",
+     instagram:"",
+     linkedin:"",
+     xlink:"",
+     youtube:"",
     city: "",
   });
 
@@ -38,9 +44,19 @@ const Profile: React.FC = () => {
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [countriesList, setCountriesList] = useState([]);
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
+
+
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
+        setLoadingprofile(true)
         const session = await getSession();
         const coachId = session?.user.id;
         const response = await fetch('/api/coach/profile', {
@@ -54,7 +70,9 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
+          setLoadingprofile(false)
         } else {
+          setLoadingprofile(false)
           console.error("Error fetching profile data:", response.statusText);
         }
       } catch (error) {
@@ -197,6 +215,33 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
+{loadingProfile &&(
+  <div className="flex justify-center items-center gap-2">
+  <svg
+    className="animate-spin h-5 w-5 text-gray-500"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      className="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="4"
+    ></circle>
+    <path
+      className="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8v8H4z"
+    ></path>
+  </svg>
+  <span>Loading Profile...</span>
+</div>
+)}
+              </div>
+            <div className="flex flex-col items-center mb-8">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
               <div
                 onClick={triggerImageUpload}
@@ -253,7 +298,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.firstName}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.firstName}</p>
                 )}
               </div>
 
@@ -269,13 +314,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.lastName}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.lastName}</p>
                 )}
               </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2"> USD $ Rate (per Evaluation)<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Base Evaluation Rate $<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -285,7 +330,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.expectedCharge}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.expectedCharge}</p>
                 )}
               </div>
 
@@ -319,7 +364,7 @@ const Profile: React.FC = () => {
       maxLength={14} // (123) 456-7890 is 14 characters long
     /></>
                 ):(
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.countrycode} {profileData.phoneNumber}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countrycode} {profileData.phoneNumber}</p>
                 )}
   </div>
 
@@ -339,7 +384,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.email}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.email}</p>
                 )}
               </div>
  
@@ -360,7 +405,7 @@ const Profile: React.FC = () => {
                     <option value="Other">Other</option>
                   </select>
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.gender}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.gender}</p>
                 )}
               </div>
 
@@ -368,7 +413,7 @@ const Profile: React.FC = () => {
 
               
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">You Coach<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -381,7 +426,7 @@ const Profile: React.FC = () => {
                     {/* Add other sports as options */}
                   </select>
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.sport}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.sport}</p>
                 )}
               </div>
 
@@ -397,7 +442,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800">{profileData.clubName}</p>
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.clubName}</p>
                 )}
               </div>
 
@@ -412,11 +457,16 @@ const Profile: React.FC = () => {
             onChange={handleChange}
           >
             <option value="">Select</option>
-            <option value="USA">USA</option>
+            {countriesList
+                      .map((country:any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
            
           </select>
            ) : (
-            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.country}</p>
+            <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countryName}</p>
           )}
         </div>
 
@@ -439,7 +489,7 @@ const Profile: React.FC = () => {
         ))}
       </select>
           ):(
-<p className="mt-2 text-sm font-medium text-gray-800">{profileData.state}</p>
+<p className="mt-2 text-sm font-medium  text-gray-500">{profileData.state}</p>
           )}
           
         </div>
@@ -454,7 +504,7 @@ const Profile: React.FC = () => {
             onChange={handleChange}
           />
           ):(
-            <p className="mt-2 text-sm font-medium text-gray-800">{profileData.city}</p>
+            <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.city}</p>
           )}
           
         </div>
@@ -470,17 +520,107 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
+                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
                     {profileData.qualifications}
                   </p>
                 )}
               </div>
 
             
-             
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5 mt-5">
+
+<div>
+  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+  {isEditMode ? (
+  <input
+  placeholder='Ex: https://www.facebook.com/username'
+    type="text"
+    name="facebook"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={profileData.facebook}
+    onChange={handleChange}
+  />
+) : (
+  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+    {profileData.facebook}
+  </p>
+)}
+</div>
+<div >
+  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  {isEditMode ? (
+  <input
+  placeholder='Ex: https://www.instagram.com/username'
+    type="text"
+    name="instagram"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={profileData.instagram}
+    onChange={handleChange}
+  />
+) : (
+  <p className="mt-2 text-sm font-medium text-gray-500 whitespace-pre-wrap">
+    {profileData.instagram}
+  </p>
+)}
+</div>
+<div>
+  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  {isEditMode ? (
+  <input
+  placeholder='Ex: https://www.linkedin.com/in/john-doe'
+    type="text"
+    name="linkedin"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={profileData.linkedin}
+    onChange={handleChange}
+  />
+) : (
+  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+    {profileData.linkedin}
+  </p>
+)}
+</div>
+<div>
+  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  {isEditMode ? (
+  <input
+  placeholder='Ex: https://x.com/username'
+    type="text"
+    name="xlink"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={profileData.xlink}
+    onChange={handleChange}
+  />
+) : (
+  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+    {profileData.xlink}
+  </p>
+)}
+</div>
+<div>
+  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  {isEditMode ? (
+  <input
+  placeholder='Ex: https://youtube.com/username'
+    type="text"
+    name="youtube"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={profileData.youtube}
+    onChange={handleChange}
+  />
+) : (
+  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+    {profileData.youtube}
+  </p>
+)}
+</div>
+
+
+
+</div>
 
             {/* Certificate Image Thumbnail */}
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <div className="flex flex-col items-center">
                 <label className="block text-sm font-medium text-gray-700">Certificate Image</label>
                 <div onClick={triggerCertificateUpload} className="mt-4 cursor-pointer">
@@ -511,7 +651,7 @@ const Profile: React.FC = () => {
                   />
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         </main>
       </div>

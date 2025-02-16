@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 
-import { coaches } from '../../../../lib/schema'
+import { coaches, countries } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq } from 'drizzle-orm';
+import { eq,sql } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -35,10 +35,20 @@ import { SECRET_KEY } from '@/lib/constants';
           country:coaches.country,
           countrycode:coaches.countrycode,
           state:coaches.state,
-          city:coaches.city
+          city:coaches.city,
+          facebook:coaches.facebook,
+          linkedin:coaches.linkedin,
+          instagram:coaches.instagram,
+          xlink:coaches.xlink,
+          youtube:coaches.youtube,
+          countryName:countries.name
 
         })
         .from(coaches)
+        .leftJoin(
+          countries, 
+          eq(countries.id, sql<number>`CAST(${coaches.country} AS INTEGER)`) // ✅ Explicit cast using sql
+        )
         .where(
           eq(coaches.id,coachId)
         )
@@ -62,6 +72,12 @@ import { SECRET_KEY } from '@/lib/constants';
           countrycode:coach.countrycode,
           image: coach.image ? `${coach.image}` : null,
           certificate: coach.certificate ? `${coach.certificate}` : null,
+          countryName:coach.countryName,
+          facebook:coach.facebook,
+          linkedin:coach.linkedin,
+          instagram:coach.instagram,
+          xlink:coach.xlink,
+          youtube:coach.youtube,
         }));
 
        
@@ -97,6 +113,11 @@ import { SECRET_KEY } from '@/lib/constants';
         country,
         countrycode,
         state,
+        facebook,
+        linkedin,
+        instagram,
+        xlink,
+        youtube
         
       } = finalBody;
       let updateData: any = {
@@ -116,6 +137,11 @@ import { SECRET_KEY } from '@/lib/constants';
         country: country || null,
         countrycode: countrycode || null,
         state: state || null,
+        facebook: facebook || null,
+        linkedin: linkedin || null,
+        instagram: instagram || null,
+        xlink: xlink || null,
+        youtube: youtube || null
       };
 
       if (password) {
@@ -148,6 +174,12 @@ import { SECRET_KEY } from '@/lib/constants';
             country: coaches.country,
             countrycode: coaches.countrycode,
             state: coaches.state,
+            facebook: coaches.facebook,
+            linkedin: coaches.linkedin,
+            instagram: coaches.instagram,
+            xlink: coaches.xlink,
+            youtube: coaches.youtube,
+            
   
           }).from(coaches)
         .where(eq(coaches.id, coachId))

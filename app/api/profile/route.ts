@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { users } from '../../../lib/schema'
+import { users,countries } from '../../../lib/schema'
 import debug from 'debug';
-import { eq } from 'drizzle-orm';
+import { eq,sql } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
 import next from 'next';
-import { SECRET_KEY } from '@/lib/constants';
+import {  SECRET_KEY } from '@/lib/constants';
 
 
 export async function POST(req: NextRequest) {
@@ -41,10 +41,16 @@ export async function POST(req: NextRequest) {
         playingcountries: users.playingcountries,
         league: users.league,
         graduation: users.graduation,
-       
+        school_name: users.school_name,
+        gpa: users.gpa,
+       countryName:countries.name
 
       })
       .from(users)
+      .leftJoin(
+        countries, 
+        eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`) // ✅ Explicit cast using sql
+      )
       .where(
         eq(users.id, playerId)
       )
@@ -73,6 +79,9 @@ export async function POST(req: NextRequest) {
       league: user.league,
       weight: user.weight,
       graduation: user.graduation,
+      school_name: user.school_name,
+      gpa: user.gpa,
+      countryName:user.countryName,
       image: user.image ? `${user.image}` : null,
 
     }));

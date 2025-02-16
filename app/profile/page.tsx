@@ -39,11 +39,14 @@ let ppositons;
     jersey: "",
     password: "",
     countrycode: "",
+    countryName: "",
     height: "",
     weight: "",
     playingcountries: "",
     league: "",
     graduation: "",
+    school_name: "",
+    gpa: "",
   });
 
 
@@ -402,7 +405,7 @@ let ppositons;
                 )}
               </div>
               <div>
-                <label htmlFor="graduation" className="block text-gray-700 text-sm font-semibold mb-2">College Graduation</label>
+                <label htmlFor="graduation" className="block text-gray-700 text-sm font-semibold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                   name="graduation"
@@ -423,6 +426,40 @@ let ppositons;
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.graduation}</p>
                 )}
               </div>
+
+
+              <div>
+                <label htmlFor="school_name" className="block text-gray-700 text-sm font-semibold mb-2">School Name</label>
+                {isEditMode ? (
+                 <input
+                 type="text"
+                 name="school_name"
+                 value={profileData.school_name}
+                 onChange={handleChange}
+                 className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+               />
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.school_name}</p>
+                )}
+              </div>
+
+
+              <div>
+                <label htmlFor="gpa" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
+                {isEditMode ? (
+                   <input
+                   type="text"
+                   name="gpa"
+                   value={profileData.gpa}
+                   onChange={handleChange}
+                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                 />
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.gpa}</p>
+                )}
+              </div>
+
+              
               <div>
                 <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(s)</label>
                 {isEditMode ? (<Select
@@ -456,7 +493,7 @@ let ppositons;
 
                   </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.country}</p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryName}</p>
                 )}
               </div>
 
