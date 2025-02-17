@@ -164,7 +164,7 @@ const Header: React.FC = () => {
         {session?.user.type=='coach' && (
 
       
-<div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
+<div className="mt-5 w-full flex justify-between md:hidden relative">
       <Link href="/browse/" className="text-black">Coaches</Link>
       <Link href="/browse/players" className="text-black">Players</Link>
 
@@ -180,8 +180,9 @@ const Header: React.FC = () => {
             
           </div>
         )}
+         
       </div>
-
+      <a onClick={handleLogout} className="text-black">Signout</a>
       {/* <Link href="/coach/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
@@ -200,6 +201,7 @@ const Header: React.FC = () => {
         </div>
       )}
     </div>
+    
           )}
 
 
@@ -287,7 +289,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* <Link href="/dashboard" className="text-black">Dashboard</Link> */}
-
+      <a onClick={handleLogout} className="text-black">Signout</a>
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>
@@ -303,6 +305,7 @@ const Header: React.FC = () => {
           </button>
         </div>
       )}
+ 
     </div>
 )}
 
@@ -330,7 +333,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link> */}
-
+      <a onClick={handleLogout} className="text-black">Signout</a>
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>
@@ -346,6 +349,7 @@ const Header: React.FC = () => {
           </button>
         </div>
       )}
+       <Link href="/browse/players" className="text-black">Players</Link>
     </div>
 )}
 
@@ -369,7 +373,7 @@ const Header: React.FC = () => {
           </div>
         )}
       </div>
-
+      <a onClick={handleLogout} className="text-black">Signout</a>
       {/* <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link> */}
 
       <button onClick={toggleHelp} className="ml-2">
