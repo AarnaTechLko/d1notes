@@ -11,10 +11,18 @@ export async function POST(req: NextRequest) {
     console.log('Request body:', body); // Log the incoming request body
 
     try {
-        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription, coachId, playerId, turnaroundTime, status, child, videoOneTiming,
+        const { reviewTitle, primaryVideoUrl, videoUrl2, videoUrl3, videoDescription,videoDescriptionTwo,videoDescriptionThree, coachId, playerId, turnaroundTime, status, child, videoOneTiming,
             videoTwoTiming,
             videoThreeTiming,
-            position,
+            positionOne,
+            positionTwo,
+            positionThree,
+            jerseyColorOne,
+            jerseyColorTwo,
+            jerseyColorThree,
+            jerseyNumberOne,
+            jerseyNumberTwo,
+            jerseyNumberThree,
             lighttype, percentage, enterprise_id } = body;
         let player_id;
         let parent_id;
@@ -50,6 +58,8 @@ export async function POST(req: NextRequest) {
             video_link_two: videoUrl2,
             video_link_three: videoUrl3,
             video_description: videoDescription, 
+            video_descriptionTwo: videoDescriptionTwo, 
+            video_descriptionThree: videoDescriptionThree, 
             turnaroundTime: turnaroundTime,
             coach_id: coachId,
             percentage: percentage,
@@ -58,7 +68,15 @@ export async function POST(req: NextRequest) {
             videoOneTiming:videoOneTiming,
             videoTwoTiming:videoTwoTiming,
             videoThreeTiming:videoThreeTiming,
-            position:position,
+            positionOne:positionOne,
+            positionTwo:positionTwo,
+            positionThree:positionThree,
+            jerseyNumber:jerseyNumberOne,
+            jerseyNumberTwo:jerseyNumberTwo,
+            jerseyNumberThree:jerseyNumberThree,
+            jerseyColorOne:jerseyColorOne,
+            jerseyColorTwo:jerseyColorTwo,
+            jerseyColorThree:jerseyColorThree,
             lighttype:lighttype,
             created_at: new Date(),
             updated_at: new Date(),

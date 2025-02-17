@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       .select({
         first_name: users.first_name,
         last_name: users.last_name,
-        position: users.position,
+        
         number: users.number,
         image: users.image,
         team: users.team,
@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
         turnaroundTime: playerEvaluation.turnaroundTime, 
         evaluationStatus: playerEvaluation.status,
         video_description:playerEvaluation.video_description,
+        video_descriptionTwo:playerEvaluation.video_descriptionTwo,
+        video_descriptionThree:playerEvaluation.video_descriptionThree,
         createdAt: playerEvaluation.created_at,
         updatedAt: playerEvaluation.updated_at,
         primary_video_link:playerEvaluation.primary_video_link,
@@ -43,6 +45,17 @@ export async function POST(req: NextRequest) {
         videoTwoTiming: playerEvaluation.videoTwoTiming,
         videoThreeTiming: playerEvaluation.videoThreeTiming,
         accepted_at: playerEvaluation.accepted_at,
+        positionOne: playerEvaluation.positionOne,
+        positionTwo: playerEvaluation.positionTwo,
+        positionThree: playerEvaluation.positionThree,
+        jerseyNumber: playerEvaluation.jerseyNumber,
+        jerseyNumberTwo: playerEvaluation.jerseyNumberTwo,
+        jerseyNumberThree: playerEvaluation.jerseyNumberThree,
+        jerseyColorOne: playerEvaluation.jerseyColorOne,
+        jerseyColorTwo: playerEvaluation.jerseyColorTwo,
+        jerseyColorThree: playerEvaluation.jerseyColorThree,
+        
+       
         
       })
       .from(playerEvaluation)

@@ -58,6 +58,8 @@ export async function GET(request: NextRequest) {
         video_link_two:playerEvaluation.video_link_two,
         video_link_three:playerEvaluation.video_link_three,
         video_description:playerEvaluation.video_description,
+        video_descriptionTwo:playerEvaluation.video_descriptionTwo,
+        video_descriptionThree:playerEvaluation.video_descriptionThree,
         rating:playerEvaluation.rating,
         evaluationposition:playerEvaluation.position, 
         videoOneTiming: playerEvaluation.videoOneTiming,
@@ -68,6 +70,15 @@ export async function GET(request: NextRequest) {
         coachSlug:coaches.slug,
         playerSlug:users.slug,
         updated_at:playerEvaluation.updated_at,
+        positionOne: playerEvaluation.positionOne,
+        positionTwo: playerEvaluation.positionTwo,
+        positionThree: playerEvaluation.positionThree,
+        jerseyNumber: playerEvaluation.jerseyNumber,
+        jerseyNumberTwo: playerEvaluation.jerseyNumberTwo,
+        jerseyNumberThree: playerEvaluation.jerseyNumberThree,
+        jerseyColorOne: playerEvaluation.jerseyColorOne,
+        jerseyColorTwo: playerEvaluation.jerseyColorTwo,
+        jerseyColorThree: playerEvaluation.jerseyColorThree,
     }) // Explicitly select the fields
     .from(evaluationResults)
     .innerJoin(playerEvaluation, eq(playerEvaluation.id, evaluationResults.evaluationId))

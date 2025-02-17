@@ -115,9 +115,9 @@ setLoading(false);
                 </div>
 
                 {/* Player Information and Key Information - Side by Side */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                     {/* Player Information */}
-                    <div className="bg-white p-6 border border-gray-300 rounded-lg">
+                    <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
                         <h3 className="text-lg font-semibold mb-4">{evaluationData?.review_title}</h3>
                         <div className="flex items-center mb-4">
                             <strong className="mr-2">Player:</strong>
@@ -173,28 +173,63 @@ setLoading(false);
                             <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span>
                         </div>
 
-                        <div className="mb-4">
-                            <strong className="mr-2">Video link One:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min. 
-                        </div>
-                        {evaluationData?.video_link_two && (
-            <div className="mb-4">
-            <strong className="mr-2">Video Link #2:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a>  <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min. 
-        </div>
-        )}
-         {evaluationData?.video_link_three && (
-        <div className="mb-4">
-            <strong className="mr-2">Video Link #3:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
-        </div>
-         )}
-
-                        <div className="mb-4">
-                            <strong className="mr-2">Video description:</strong>
-                            <span className="text-gray-700">{evaluationData?.video_description}</span>
-                        </div>
+                        <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
+  <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
+                                    <div className="mb-4"> 
+                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
+                                        <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min.
+                                        <span className="mx-2">|</span>
+                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne} 
+                                         <span className="mx-2">|</span>
+                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
+                                         <strong>Position:</strong> {evaluationData?.positionOne}
+                                    </div>
+                                    <div className="mb-4">
+<strong>Description: </strong>{evaluationData?.video_description}
+                                        </div>
+                                    </fieldset>
+                                    
+                                    {evaluationData?.video_link_two && (
+                                        <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
+  <legend className="text-lg font-semibold text-gray-700">Video 2</legend>
+                                   
+  <div className="mb-4"> 
+                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
+                                        <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min.
+                                        <span className="mx-2">|</span>
+                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo} 
+                                         <span className="mx-2">|</span>
+                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberTwo} <span className="mx-2">|</span>
+                                         <strong>Position:</strong> {evaluationData?.positionTwo}
+                                    </div>
+                                    
+                                    <div className="mb-4">
+<strong>Description: </strong>{evaluationData?.video_descriptionTwo}
+                                        </div>
+                                    </fieldset>
+                                     )}
+                                    {evaluationData?.video_link_three && (
+                                        <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
+  <legend className="text-lg font-semibold text-gray-700">Video 3</legend>
+                                   
+  <div className="mb-4"> 
+                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
+                                        <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
+                                        <span className="mx-2">|</span>
+                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree} 
+                                         <span className="mx-2">|</span>
+                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberThree} <span className="mx-2">|</span>
+                                         <strong>Position:</strong> {evaluationData?.positionThree}
+                                    </div>
+                                    <div className="mb-4">
+<strong>Description: </strong>{evaluationData?.video_descriptionThree}
+                                        </div>
+                                    </fieldset>
+                                     )}
                     </div>
 
                     {/* Key Information */}
-                    <div className="bg-white p-6 border border-gray-300 rounded-lg">
+                    <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
                         <h4 className="text-lg font-semibold mb-3">Key</h4>
                         <ul className="list-none space-y-2">
                             <li>[1] Needs significant improvement</li>

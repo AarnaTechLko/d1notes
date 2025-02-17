@@ -127,6 +127,22 @@ export const playerEvaluation = pgTable(
     video_link_two: text("video_link_two"),
     video_link_three: text("video_link_three"),
     video_description: text("video_description").notNull(),
+    video_descriptionTwo: text("video_descriptionTwo"),
+    video_descriptionThree: text("video_descriptionThree"),
+
+    jerseyNumber:text("jerseyNumber"),
+    jerseyNumberTwo:text("jerseyNumberTwo"),
+    jerseyNumberThree:text("jerseyNumberThree"),
+
+    jerseyColorOne:text("jerseyColorOne"),
+    jerseyColorTwo:text("jerseyColorTwo"),
+    jerseyColorThree:text("jerseyColorThree"),
+
+    positionOne:text("positionOne"),
+    positionTwo:text("positionTwo"),
+    positionThree:text("positionThree"),
+
+
     status: integer("status").notNull(), // Use enum type here
     turnaroundTime: varchar("turnaroundTime"), // Use enum type here
     payment_status: varchar("payment_status"),
