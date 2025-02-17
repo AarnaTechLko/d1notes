@@ -45,14 +45,14 @@ const Dashboard: React.FC = () => {
   const [currentDescription, setCurrentDescription] = useState<string>("");
   const [coaches, setCoaches] = useState<Profile[]>([]);
   const [teams, setTeams] = useState<[]>([]);
-  const [playerClubId,setPlayerClubid]=useState<string>('')
-  const [freeEvaluations,setFreeEvaluations]=useState(0);
-  const [allowedFreeRequests,setAllowedFreeRequests]=useState(0);
+  const [playerClubId, setPlayerClubid] = useState<string>('')
+  const [freeEvaluations, setFreeEvaluations] = useState(0);
+  const [allowedFreeRequests, setAllowedFreeRequests] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
     if (!isOpen) return null;
-  
+
     return (
       <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
@@ -68,24 +68,24 @@ const Dashboard: React.FC = () => {
 
   const fetchRequests = async () => {
     const session = await getSession();
-    const clubId =session?.user.club_id;
+    const clubId = session?.user.club_id;
     if (!clubId) {
       console.error("Club ID is not available.");
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/freerequests?clubId=${clubId}`);
-      
+
       if (!response.ok) {
         throw new Error(`Error fetching data: ${response.statusText} (Status: ${response.status})`);
       }
-  
+
       const textResponse = await response.text(); // Read response as text
       if (!textResponse) {
         throw new Error("Empty response body received.");
       }
-  
+
       const body = JSON.parse(textResponse); // Parse text as JSON
       if (body && body.requests) {
         setAllowedFreeRequests(body.requests);
@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const player_id = session?.user.id;
-    
+
 
     const response = await fetch("/api/freeevaluations", {
       method: "POST",
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({
         player_id,
-        
+
       }),
     });
 
@@ -120,9 +120,9 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setFreeEvaluations(coachData.countRecords);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
 
@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const userId = session?.user.id;
-     
+
 
     if (!userId) {
       throw new Error("User not authenticated");
@@ -181,7 +181,7 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({
         clubId,
-        
+
       }),
     });
 
@@ -191,9 +191,9 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setCoaches(coachData);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
 
@@ -205,7 +205,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const userId = session?.user.id;
- 
+
 
     if (!userId) {
       throw new Error("User not authenticated");
@@ -218,7 +218,7 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({
         userId,
-        
+
       }),
     });
 
@@ -228,19 +228,19 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setTeams(coachData);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
 
 
-  
+
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
-   
+
     setModalOpen(true); // Open modal with full description
-     
+
   };
 
   const handleCloseModal = () => {
@@ -260,51 +260,50 @@ const Dashboard: React.FC = () => {
     () => [
       {
         Header: 'Date',
-    accessor: 'created_at',
-    Cell: ({ value }: CellProps<Evaluation>) => {
-      // Format the date to 'dd-mm-yyyy'
-      const date = new Date(value);
-      return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
-    },
-        
+        accessor: 'created_at',
+        Cell: ({ value }: CellProps<Evaluation>) => {
+          // Format the date to 'dd-mm-yyyy'
+          const date = new Date(value);
+          return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
+        },
+
       },
       {
         Header: selectedTab === '0' ? 'Completion Time' : 'Time Remaining',
         accessor: 'createdAt',
         Cell: ({ row }: CellProps<Evaluation>) => {
-          
-      
-         
-            const accepted_at = row?.original?.accepted_at;
-            const turnaroundTime = row?.original?.turnaroundTime;
-           if(selectedTab=='1' && turnaroundTime)
-           {
+
+
+
+          const accepted_at = row?.original?.accepted_at;
+          const turnaroundTime = row?.original?.turnaroundTime;
+          if (selectedTab == '1' && turnaroundTime) {
             if (accepted_at && turnaroundTime !== undefined && turnaroundTime !== null) {
               const hoursFromNow = calculateHoursFromNow(accepted_at);
               if (hoursFromNow !== null && hoursFromNow !== undefined) {
                 const remainingTime = turnaroundTime - hoursFromNow;
-                const boxClass = remainingTime >= 0 
-                  ? 'bg-green-900 text-white px-2 py-1 rounded' 
+                const boxClass = remainingTime >= 0
+                  ? 'bg-green-900 text-white px-2 py-1 rounded'
                   : 'bg-red-600 text-white px-2 py-1 rounded';
                 return (
                   <span >
-                     {remainingTime.toFixed(2)} Hours
+                    {remainingTime.toFixed(2)} Hours
                   </span>
                 );
               }
             }
-           }
-           else{
-            const boxClass =  'bg-red-600 text-white px-2 py-1 rounded';
+          }
+          else {
+            const boxClass = 'bg-red-600 text-white px-2 py-1 rounded';
             return (
-  
+
               <span >
-                 {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
+                {turnaroundTime ? `${turnaroundTime} Hours` : "Not Applicable"}
               </span>
             );
-            
-        
-             // Fallback value if data is missing
+
+
+            // Fallback value if data is missing
           } // Fallback value if data is missing
         },
       },
@@ -313,10 +312,10 @@ const Dashboard: React.FC = () => {
         accessor: "first_name",
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-          <a href={`coach/${row.original.slug}`} className='underline text-bold text-blue-700' target="_blank" rel="noopener noreferrer">
-   {row.original.first_name} {row.original.last_name}
-</a>
-         </div>
+            <a href={`coach/${row.original.slug}`} className='underline text-bold text-blue-700' target="_blank" rel="noopener noreferrer">
+              {row.original.first_name} {row.original.last_name}
+            </a>
+          </div>
         ),
       },
       { Header: "Review Title", accessor: "review_title" }, // Use the correct accessor
@@ -325,51 +324,51 @@ const Dashboard: React.FC = () => {
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-  <a
-    href={row.original.primary_video_link}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
-  >
-    Link#1
-  </a>
+            <a
+              href={row.original.primary_video_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+            >
+              Link#1
+            </a>
 
-  {row.original.video_link_two ? (
-    <a
-      href={row.original.video_link_two}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
-    >
-      Link#2
-    </a>
-  ) : (
-    <button
-      disabled
-      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
-    >
-      Link#2
-    </button>
-  )}
+            {row.original.video_link_two ? (
+              <a
+                href={row.original.video_link_two}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+              >
+                Link#2
+              </a>
+            ) : (
+              <button
+                disabled
+                className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+              >
+                Link#2
+              </button>
+            )}
 
-  {row.original.video_link_three ? (
-    <a
-      href={row.original.video_link_three}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
-    >
-      Link#3
-    </a>
-  ) : (
-    <button
-      disabled
-      className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
-    >
-      Link#3
-    </button>
-  )}
-</div>
+            {row.original.video_link_three ? (
+              <a
+                href={row.original.video_link_three}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-1 py-0.5 text-[10px] font-light text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors ml-2"
+              >
+                Link#3
+              </a>
+            ) : (
+              <button
+                disabled
+                className="px-1 py-0.5 text-[10px] font-light text-gray-400 bg-gray-300 rounded ml-2 cursor-not-allowed"
+              >
+                Link#3
+              </button>
+            )}
+          </div>
 
         ),
       },
@@ -378,9 +377,9 @@ const Dashboard: React.FC = () => {
         accessor: "video_description",
         Cell: ({ cell }) => {
           const description = cell.value ?? ""; // Default to an empty string if undefined
-      
+
           const truncatedDescription = description.length > 30 ? description.substring(0, 30) + "..." : description;
-      
+
           return (
             <div>
               <span>{truncatedDescription}</span>
@@ -396,18 +395,18 @@ const Dashboard: React.FC = () => {
       { Header: "Payment Status", accessor: "payment_status" },
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
-            {
-              Header: "Evaluation",
-              Cell: ({ row }: CellProps<Evaluation>) => (
-                <button
-                  onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
-                  className="text-blue-500 underline"
-                >
-                  View
-                </button>
-              ),
-            },
-          ]
+          {
+            Header: "Evaluation",
+            Cell: ({ row }: CellProps<Evaluation>) => (
+              <button
+                onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
+                className="text-blue-500 underline"
+              >
+                View
+              </button>
+            ),
+          },
+        ]
         : []),
     ],
     [selectedTab]
@@ -430,131 +429,148 @@ const Dashboard: React.FC = () => {
       String(cell.value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-  return ( 
+  return (
     <div className="flex h-screen">
       <Modal
-  isOpen={modalOpen}
-  onClose={handleCloseModal}
-  description={currentDescription}
-/>
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        description={currentDescription}
+      />
       <Sidebar />
-      
+
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6 ">
-        <h3 className='font-bold text-lg'>Evaluation History</h3>
-        <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your payment information to send funds by clicking on Payment Information in the left side menu if you plan to purchase evaluations from D1’s public marketplace of Coaches. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team offering free evaluations. Otherwise, start your journey to greatness by finding a Coach who will give you that edge you have been missing!"/>
-          
+          <h3 className='font-bold text-lg'>Evaluation History</h3>
+          <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your payment information to send funds by clicking on Payment Information in the left side menu if you plan to purchase evaluations from D1’s public marketplace of Coaches. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team offering free evaluations. Otherwise, start your journey to greatness by finding a Coach who will give you that edge you have been missing!" />
+
           <div className="block md:hidden mb-4">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
+            >
+              {['Requested', 'Accepted', 'Completed', 'Declined', 'Drafted'][parseInt(selectedTab)]} ▼
+            </button>
+            {isDropdownOpen && (
+              <ul className="bg-white shadow-lg rounded mt-2">
+                {[
+                  { name: 'Requested', value: '0' },
+                  { name: 'Accepted', value: '1' },
+                  { name: 'Completed', value: '2' },
+                  { name: 'Declined', value: '3' },
+
+                ].map((tab) => (
+                  <li key={tab.value}>
+                    <button
+                      onClick={() => {
+                        setSelectedTab(tab.value);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      {tab.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="hidden md:flex space-x-4 mb-4">
+            {[
+              { name: 'Requested', value: '0' },
+              { name: 'Accepted', value: '1' },
+              { name: 'Completed', value: '2' },
+              { name: 'Declined', value: '3' },
+
+            ].map((tab) => (
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
+                key={tab.value}
+                onClick={() => setSelectedTab(tab.value)}
+                className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
               >
-                {['Requested', 'Accepted', 'Completed', 'Declined', 'Drafted'][parseInt(selectedTab)]} ▼
+                {tab.name}
               </button>
-              {isDropdownOpen && (
-                <ul className="bg-white shadow-lg rounded mt-2">
-                  {[
-                    { name: 'Requested', value: '0' },
-                    { name: 'Accepted', value: '1' },
-                    { name: 'Completed', value: '2' },
-                    { name: 'Declined', value: '3' },
-                    
-                  ].map((tab) => (
-                    <li key={tab.value}>
-                      <button
-                        onClick={() => {
-                          setSelectedTab(tab.value);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                      >
-                        {tab.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="hidden md:flex space-x-4 mb-4">
-              {[
-                { name: 'Requested', value: '0' },
-                { name: 'Accepted', value: '1' },
-                { name: 'Completed', value: '2' },
-                { name: 'Declined', value: '3' },
-               
-              ].map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => setSelectedTab(tab.value)}
-                  className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
-                >
-                  {tab.name}
-                </button>
-              ))}
-            </div>
+            ))}
+          </div>
 
           {/* Table to display evaluations */}
           <div className=" overflow-x-auto max-h-[400px] overflow-y-auto">
-          <input
-        type="text"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-      />
-  <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
-    <thead>
-      {tableInstance.headerGroups.map((headerGroup) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-          {headerGroup.headers.map((column) => (
-            <th
-              {...column.getHeaderProps()}
-              key={column.id}
-              className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
-              style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
-            >
-              {column.render('Header')}
-            </th>
-          ))}
-        </tr>
-      ))}
-    </thead>
-    <tbody {...tableInstance.getTableBodyProps()}>
-            {loading ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-4">
-                  Loading Evaluations...
-                </td>
-              </tr>
-            ) : filteredRows.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-4 text-gray-500">
-                  No Evaluation(s) Found
-                </td>
-              </tr>
-            ) : (
-              filteredRows.map((row) => {
-                tableInstance.prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} key={row.id}>
-                    {row.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        key={`${row.id}-${cell.column.id}`}
-                        className="border-b border-gray-200 px-4 py-2"
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+            />
+            <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
+              <thead>
+                {tableInstance.headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        {...column.getHeaderProps()}
+                        key={column.id}
+                        className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
+                        style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
                       >
-                        <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
-                      </td>
+                        {column.render('Header')}
+                      </th>
                     ))}
                   </tr>
-                );
-              })
-            )}
-          </tbody>
-  </table>
-</div>
+                ))}
+              </thead>
+              <tbody {...tableInstance.getTableBodyProps()}>
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length} className="text-center py-4">
+                      Loading Evaluations...
+                    </td>
+                  </tr>
+                ) : filteredRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+                      No Evaluation(s) Found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRows.map((row) => {
+                    tableInstance.prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()} key={row.id}>
+                        {row.cells.map((cell) => (
+                          <td
+                            {...cell.getCellProps()}
+                            key={`${row.id}-${cell.column.id}`}
+                            className="border-b border-gray-200 px-4 py-2"
+                          >
+                            <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
- 
+
+
+        <div className="grid grid-cols-1 bg-white  mt-4 p-6">
+          <h3 className='font-bold text-lg'>Quick Tips</h3>
+
+          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 underline" target="_blank">here</a> or on Coaches in
+            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 underline" target="_blank">this</a>. </p>
+
+          <p className="mt-2">If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
+            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 underline" target="_blank">here</a> or on Join Requests in the menu. In order to request an
+            individual game film evaluation from a coach from the organization or single team that added you, find
+            the coach by clicking here or on Your Teams and click on the coach’s profile.
+          </p>
+          <p className="mt-2">The Messages function in the menu allows you to further communicate with any coach that has
+            completed an evaluation for you.</p>
+
+
+        </div>
         {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Coaches</h3></div>
         
@@ -603,7 +619,7 @@ const Dashboard: React.FC = () => {
       </main>
 
 
-      
+
     </div>
   );
 };

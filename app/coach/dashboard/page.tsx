@@ -533,6 +533,31 @@ const Dashboard: React.FC = () => {
               </table>
             </div>
           </div>
+
+          <div className="grid grid-cols-1 bg-white  mt-4 p-6">
+          <h3 className='font-bold text-lg'>Quick Tips</h3>
+
+          <p className="mt-2">Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations
+can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes
+verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:team@d1notes.com" className="text-blue-700 underline" target="_blank">here</a> Upon receiving an evaluation request,
+you can either accept or politely decline it with a comment. A completed evaluation will look like <a href="#" className="text-blue-700 underline" target="_blank">this</a>. </p>
+
+          <p className="mt-2">In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation
+turnaround times, click <a href="/coach/charges" className="text-blue-700 underline" target="_blank">here</a> or on Time and Rate in the menu. The default rate is your base evaluation
+rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your
+oﬀering is optional. If you would like to modify your base evaluation rate, click <a href="/coach/profile" className="text-blue-700 underline" target="_blank">here</a> or on Settings in the
+menu and edit your profile.
+          </p>
+          <p className="mt-2">
+          If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
+you can view a summary by clicking <a href="/coach/joinrequests" className="text-blue-700 underline" target="_blank">here</a> or on Join Requests in the menu. Another way to access any
+organization or single team that has added you to their team is to click <a href="/coach/teams" className="text-blue-700 underline" target="_blank">here</a> or on Your Teams in the
+menu where you can view rosters.
+          </p>
+
+
+        </div>
+
           {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>
         
