@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/earnings" className="flex items-center space-x-2 p-2">
                 <FaDollarSign className="text-xl" />
-                <span>Earnings</span>
+                <span>Earning History</span>
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -156,12 +156,12 @@ const Sidebar: React.FC = () => {
                     <span>Licenses</span>
                   </a>
                 </li> */}
-                <li className="hover:bg-gray-700 rounded transition duration-200">
+                {/* <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/players" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
                     <span>Your Players</span>
                   </a>
-                </li>
+                </li> */}
                 <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/teams" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />

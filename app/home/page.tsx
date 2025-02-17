@@ -178,6 +178,7 @@ export default function Home(): JSX.Element {
             How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? 
             Would you like access to a curated network of top coaches, trainers, and scouts?
           </p>
+          <a href='/howitworks' className='text-lg font-bold underline'>How it Works for Players</a>
         </div>
 
         {/* Coaches Box */}
@@ -187,6 +188,7 @@ export default function Home(): JSX.Element {
             Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services? 
             You are worth more than you know to young athletes today.
           </p>
+          <a href='/howitworks#coach' className='text-lg font-bold underline'>How it Works for Coaches</a>
         </div>
 
         {/* Enterprises Box */}
@@ -196,6 +198,8 @@ export default function Home(): JSX.Element {
             Are you an organization or team that can benefit from a turnkey solution which has the potential to increase the 
             value and level of satisfaction delivered to your participants?
           </p>
+          
+          <a href='/howitworks#enterprises' className='text-lg font-bold underline'>How it Works for Enterprises</a>
         </div>
       </div>
 
@@ -211,121 +215,7 @@ export default function Home(): JSX.Element {
       </div>
     </div>
 
-     <div className="bg-white py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Side: How it works steps */}
-        <div className="space-y-12">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            How It Works for Players
-          </h2>
-          <div className="space-y-8">
-            {/* Step 1 */}
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  {/* Icon for Find a coach */}
-                <FaUserPlus/>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
-                <p className="mt-2 text-base text-gray-500">
-                Create a free public or private account / profile as a player and search through / review our experienced coach profiles from around the world for one you desire individual game film feedback from. 
-                </p>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                 <FaSearch/>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Search and choose one of our experienced coaches </h3>
-                <p className="mt-2 text-base text-gray-500">
-                that we’ve vetted to review your game film remotely and send you summarized written feedback to store.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  <FaPaperPlane/>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Request Evaluation</h3>
-                <p className="mt-2 text-base text-gray-500 text-justify">
-                Search for a coach to your liking in our global marketplace of coaches, trainers and scouts. Next, request an evaluation which includes sending the coach video links of your games / game highlights. If the coach accepts your request, the submission will be reviewed and a comprehensive evaluation form and follow up options will be returned shortly thereafter in exchange for payment. Evaluations are automatically stored and can be referred to later like a player journal. 
-                </p>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  <FaCreditCard/>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Make Payment</h3>
-                <p className="mt-2 text-base text-gray-500">
-                Confirm payment and send a request to the coach for an evaluation. The coach has 48 hours to accept, and we won’t charge you until the coach accepts.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                  <FaCheckCircle/>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Coach accepts your request</h3>
-                <p className="mt-2 text-base text-gray-500">
-                You’ll get a notification when the coach accepts. The coach has 5 days to return your evaluation.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <span className="inline-block p-3 bg-gray-100 rounded-full">
-                 <FaArrowLeft/>
-                
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">Coach returns an evaluation</h3>
-                <p className="mt-2 text-base text-gray-500">
-                Receive the evaluation and feedback to improve your game!
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-4"><a href="/howitworks" className="inline-block px-2 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md  font-medium text-sm">Read More...</a></div>
-          </div>
-        </div>
-
-        {/* Right Side: Image */}
-        <div className="flex justify-center lg:justify-end">
-          <div className="relative w-full h-96 lg:h-auto lg:w-[90%]">
-            <Image
-              src={Player}
-              alt="Soccer ball on the field"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
-          </div>
-        </div>
-      </div>
-
      
-    </div>
 
     <div className="flex items-center justify-center  bg-white-900 mb-10">
       <div className="bg-black text-center rounded-lg p-10 w-full max-w-full">

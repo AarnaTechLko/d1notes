@@ -37,6 +37,11 @@ import { SECRET_KEY } from '@/lib/constants';
           city:coaches.city,
           enterprise_id:coaches.enterprise_id,
           image:coaches.image,
+          facebook:coaches.facebook,
+          linkedin:coaches.linkedin,
+          instagram:coaches.instagram,
+          xlink:coaches.xlink,
+          youtube:coaches.youtube,
         })
         .from(coaches)
        .leftJoin(
@@ -67,6 +72,11 @@ import { SECRET_KEY } from '@/lib/constants';
           state:coach.state,
           city:coach.city,
           enterprise_id:coach.enterprise_id,
+          facebook:coach.facebook,
+          linkedin:coach.linkedin,
+          instagram:coach.instagram,
+          xlink:coach.xlink,
+          youtube:coach.youtube,
           
           image: coach.image ? `${coach.image}` : null,
         }));

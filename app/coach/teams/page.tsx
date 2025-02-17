@@ -196,7 +196,7 @@ export default function TeamsPage() {
                     teams.map((team) => (
                       <tr key={team.id} className="border-b">
                         <td className="px-4 py-2">
-                          {team.team_year || `Age Group: ${team.age_group}` || ''}
+                          {team.team_year || `${team.age_group}` || ''}
                         </td>
                         <td className="px-4 py-2">{team.team_name}</td>
                         <td className="px-4 py-2">

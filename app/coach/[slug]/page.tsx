@@ -11,6 +11,8 @@ import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
 import Swal from 'sweetalert2';
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 interface CoachData {
   firstName: string;
   lastName: string;
@@ -31,6 +33,11 @@ interface CoachData {
   image:string;
   currency:string;
   enterprise_id:number;
+  facebook:string;
+  instagram:string;
+  linkedin:string;
+  xlink:string;
+  youtube:string;
 }
 
 interface CoachProfileProps {
@@ -212,14 +219,40 @@ setEvaluationRates(responseData.evaluationCharges);
     </div>
 
     {/* Coach Info */}
-    <div className="text-center md:text-left">
+    <div className="text-left md:text-left">
       <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
         {coachData.firstName} {coachData.lastName}
       </h1>
       <p className="text-gray-600 text-lg">
         {coachData.sport} Coach at {coachData.clubName}
       </p>
-
+      <div className="flex space-x-4  mt-3 mb-3 h-5">
+      {coachData.facebook &&(
+    <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+      <FaFacebook size={40} />
+    </a>
+      )}
+       {coachData.instagram &&(
+    <a href={coachData.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+      <FaInstagram size={40} />
+    </a>
+     )}
+     {coachData.linkedin &&(
+    <a href={coachData.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+      <FaLinkedin size={40} />
+    </a>
+     )}
+    {coachData.xlink &&(
+    <a href={coachData.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+      <FaXTwitter size={40} />
+    </a>
+     )}
+    {coachData.youtube &&(
+    <a href={coachData.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+      <FaYoutube size={40} />
+    </a>
+     )}
+  </div>
       {/* Rating */}
       {/* <div className="flex items-center justify-center md:justify-start mt-2">
       <div className="mt-1">{stars}</div>

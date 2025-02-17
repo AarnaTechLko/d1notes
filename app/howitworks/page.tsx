@@ -15,11 +15,11 @@ const About: React.FC = () => {
         <title>About Us - D1Notes</title>
       </Head>
 
-      <div className="container-fluid mx-auto px-4 md:px-8 lg:px-12 py-12">
-        <div className="bg-white py-8 px-4 sm:px-6 lg:px-8">
+      <div className="container-fluid mx-auto px-4 md:px-8 lg:px-12 py-12 " id="player">
+        <div className="bg-white py-8 px-4 sm:px-6 lg:px-8 ">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Side: How it works steps */}
-            <div className="space-y-12">
+            <div className="space-y-12 mb-14">
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                 How It Works for Players
               </h2>
@@ -34,25 +34,14 @@ const About: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                     <p className="mt-2 text-base text-gray-500">
-                      Create account for player(s) and find a registered coach
+                    Create a free public or private account / profile as a player and search through / review our experienced
+                    coach profiles from around the world for one you desire individual game film feedback from.
                     </p>
                   </div>
                 </div>
 
                 {/* Step 2 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaSearch />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Search and choose one of our experienced coaches</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                      that we’ve vetted to review your game film remotely and send you summarized written feedback to store.
-                    </p>
-                  </div>
-                </div>
+                
 
                 {/* Step 3 */}
                 <div className="flex items-start space-x-4">
@@ -62,63 +51,25 @@ const About: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">Submit an evaluation request</h3>
+                    <h3 className="text-lg font-medium text-gray-900">Request Evaluation</h3>
                     <p className="mt-2 text-base text-gray-500">
-                      With some video footage which shows your game.
+                    Search for a coach to your liking in our global marketplace of coaches, trainers and scouts. Next, request
+an evaluation which includes sending the coach video links of your games / game highlights. If the coach
+accepts your request, the submission will be reviewed and a comprehensive evaluation form and follow
+up options will be returned shortly thereafter in exchange for payment. Evaluations are automatically
+stored and can be referred to later like a player journal.
                     </p>
                   </div>
                 </div>
 
                 {/* Step 4 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaCreditCard />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Make Payment</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                      Confirm payment and send a request to the coach for an evaluation. The coach has 48 hours to accept, and we won’t charge you until the coach accepts.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 5 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaCheckCircle />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Coach accepts your request</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                      You’ll get a notification when the coach accepts. The coach has 5 days to return your evaluation.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 6 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaArrowLeft />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Coach returns an evaluation</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                      Receive the evaluation and feedback to improve your game!
-                    </p>
-                  </div>
-                </div>
+                
  
               </div>
             </div>
 
             {/* Right Side: Image */}
-            <div className="flex justify-center lg:justify-end">
+            <div className="flex justify-center lg:justify-end mb-14">
               <div className="relative w-full h-96 lg:h-auto lg:w-[90%]">
                 <Image
                   src={Player}
@@ -132,10 +83,10 @@ const About: React.FC = () => {
           </div>
 
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16" id="coach">
            
           <div className="flex justify-center lg:justify-end">
-              <div className="relative w-full h-96 lg:h-auto lg:w-[90%]">
+              <div className="relative w-full h-96 lg:h-auto lg:w-[90%] mb-14">
                 <Image
                   src={CoachImage}
                   alt="Soccer ball on the field"
@@ -146,9 +97,9 @@ const About: React.FC = () => {
               </div>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-12 mb-14">
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                How It Works for Coaches and Trainers
+                How It Works for Coaches
               </h2>
               <div className="space-y-8">
                 {/* Step 1 */}
@@ -161,25 +112,14 @@ const About: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Create account for a coach and become searchable by players
+                    Create a free public account / profile as a coach and join the marketplace of coaches, trainers and scouts
+searchable by players from around the world seeking individual game film evaluations. If you would like
+to enhance your profile, request an “D1 Verified” badge from D1 Notes.
                     </p>
                   </div>
                 </div>
 
-                {/* Step 2 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaSearch />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900"> Upload your profile</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                    to the coaching marketplace and set your parameters including pricing. As a coach you are in control of requests you choose to accept or decline.
-                    </p>
-                  </div>
-                </div>
+               
 
                 {/* Step 3 */}
                 <div className="flex items-start space-x-4">
@@ -189,28 +129,20 @@ const About: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">Receive an evaluation request</h3>
+                    <h3 className="text-lg font-medium text-gray-900">Complete Evaluation</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    You have 48 hours to accept or decline a request and 5 days to return a remote evaluation. 
+                    Wait to receive an evaluation request from a player which includes video links of their games / game
+highlights. Based on the submission, you may choose to accept or decline the request. If you choose to
+accept, payment is initiated for you to watch the video and complete a standard D1 Notes evaluation
+form customized to the sport / position(s) of the player. Completed evaluations are automatically stored
+and can be referred to later.
                     </p>
                   </div>
                 </div>
   
 
                 {/* Step 6 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <span className="inline-block p-3 bg-gray-100 rounded-full">
-                      <FaArrowLeft />
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Return an evaluation</h3>
-                    <p className="mt-2 text-base text-gray-500">
-                    Payment will be received before a player receives an evaluation. Players have the ability to rate your review. Do a great job and build your reputation!
-                    </p>
-                  </div>
-                </div>
+                
  
               </div>
             </div>
@@ -225,13 +157,13 @@ const About: React.FC = () => {
 
 
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16" id="enterprises">
            
      
 
-            <div className="space-y-12">
+            <div className="space-y-12" >
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                How It Works for Organizations and Teams
+              How it Works for Enterprises
               </h2>
               <div className="space-y-8">
                 {/* Step 1 */}
@@ -244,7 +176,13 @@ const About: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    for an organization with multiple teams or a single team, both only accessible by your organization or team.
+                    Enterprises is a white label version of D1 Notes meant only for private use within an organization or a
+single team. If you are an organization signing up which consists of a number of teams with their
+respective coaches and players who will all be utilizing D1 Notes, create an enterprise account as an
+Organization. If your need is just for a single team with coaches and players, create an enterprise account
+as a Team. The purpose of the white label is to give enterprises a turnkey way of oﬀering additional value
+to their participants by way of their own coaches providing individual game film evaluations to their own
+players on their respective teams during the year, season or events.
                     </p>
                   </div>
                 </div>
@@ -257,9 +195,11 @@ const About: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900"> Upload Organization profile</h3>
+                    <h3 className="text-lg font-medium text-gray-900"> B2B</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Organization or team administrator will upload and manage their searchable organization or team account populated with its own coach(es), team(s) and players. For organizations with multiple teams, each team will have its own accessible dashboard under the organization umbrella.
+                    Within an enterprise account, an Organization or Team will choose from various per player evaluation
+pricing options / packages to purchase up front for the entire Organization or Team to use. Players are
+not expected to pay for evaluations in the white label.
                     </p>
                   </div>
                 </div>
@@ -272,9 +212,29 @@ const About: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">Payment Options</h3>
+                    <h3 className="text-lg font-medium text-gray-900">Turnkey</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    An organization or team will pay a single subscription fee and offer individual game film evaluations remotely to its players without any further transaction costs to the players. It is up to the organization or team how many evaluations to offer.
+                    D1 Notes provides an easy onboarding process for an account administrator by utilizing a simple, mass
+upload function that is automatically organized into turnkey white label site use. Organizations, Teams,
+players and coaches will quickly be able to reference and manage the comprehensive information in
+their respective profiles upon logins.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <span className="inline-block p-3 bg-gray-100 rounded-full">
+                      <FaCreditCard />
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Evaluations</h3>
+                    <p className="mt-2 text-base text-gray-500">
+                    Each player will be able to request an individual game film evaluation from their respective coaches of
+their teams during the year, season or events. D1 Notes’ automated system seamlessly manages the
+distribution and consumption processes of evaluations, which keeps administration to a minimum. 
+See <a href="#player" className='text-blue-700 underline font-bold'>How it Works for Players</a> and <a href="#coach" className='text-blue-700 underline font-bold'>How it Works for Coaches</a> to reference the general player coach evaluation
+process.
                     </p>
                   </div>
                 </div>
