@@ -173,12 +173,12 @@ const ChatBox: React.FC = () => {
     return (
         <div className="flex flex-col h-screen">
             <header className="bg-gray-900 text-white text-right">
-            <button 
+            {/* <button 
       onClick={handleGoBack} 
       className="bg-blue-500 text-white px-4 mx-auto py-2 rounded hover:bg-blue-600"
     >
       Go Back
-    </button>
+    </button> */}
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-12 flex-1 mb-10 overflow-hidden">
