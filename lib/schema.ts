@@ -271,6 +271,11 @@ export const enterprises=pgTable('enterprises', {
   role_id: integer('role_id'),
   password: text('password').notNull(),
   description: text('description'),
+  facebook: text('facebook'),
+  instagram: text('instagram'),
+  linkedin: text('linkedin'),
+  xlink: text('xlink'),
+  youtube: text('youtube'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
@@ -350,6 +355,11 @@ export const teams=pgTable('teams', {
   age_group: text('age_group'),
   leage: text('leage'),
   visibility: varchar("visibility").default("off"),
+  facebook: text('facebook'),
+  instagram: text('instagram'),
+  linkedin: text('linkedin'),
+  xlink: text('xlink'),
+  youtube: text('youtube'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

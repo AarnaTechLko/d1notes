@@ -55,8 +55,7 @@ export interface Evaluation {
   jerseyNumberThree: string;
   positionThree: string;
   video_descriptionThree: string;
-
-
+document:string;
 
 }
 
