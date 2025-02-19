@@ -496,7 +496,7 @@ const Dashboard: React.FC = () => {
           <div className=" overflow-x-auto max-h-[400px] overflow-y-auto">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search by Keywords..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
@@ -528,7 +528,7 @@ const Dashboard: React.FC = () => {
                 ) : filteredRows.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="text-center py-4 text-gray-500">
-                      No Evaluation(s) Found
+                      No Entries...
                     </td>
                   </tr>
                 ) : (

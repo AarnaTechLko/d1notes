@@ -374,7 +374,7 @@ export default function Register() {
                    Player First Name<span className='mandatory'>*</span>
                   </label>
                   <input
-                  placeholder="Ex: Sam"
+                  
                     type="text"
                     name="first_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -388,7 +388,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                   <input
-                  placeholder="Ex: Thomas"
+                  
                     type="text"
                     name="last_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -473,7 +473,7 @@ export default function Register() {
                   <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
                   <input
                     type="number"
-                    placeholder="Ex: 4"
+                    placeholder=""
                     name="gpa"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     min="0"
@@ -519,7 +519,7 @@ export default function Register() {
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={handleCountryChange}
-                    placeholder="Select Nationality(s)"
+                    placeholder="Select"
                   />
 
                 </div>
@@ -658,7 +658,7 @@ export default function Register() {
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={handlePositionChange}
-                    placeholder="Select Position(s)"
+                    placeholder="Select"
                   />
 
                 </div>

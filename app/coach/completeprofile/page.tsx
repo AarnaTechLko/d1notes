@@ -426,7 +426,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">Coach First Name<span className='mandatory'>*</span></label>
                     <input
-                    placeholder='Ex: Tim'
+                    
                       type="text"
                       name="firstName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -439,7 +439,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Coach Last Name<span className='mandatory'>*</span></label>
                     <input
-                    placeholder='Ex: Coock'
+                   
                       type="text"
                       name="lastName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -602,7 +602,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                     <input
-                    placeholder='Ex: Austin'
+                    placeholder=''
                       type="text"
                       name="city"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -716,7 +716,7 @@ export default function Register() {
                     
                   </div>
                   <div>
-                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
                     placeholder='Ex: https://youtube.com/username'
                       type="text"

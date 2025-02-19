@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
             <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/coach/earnings" className="flex items-center space-x-2 p-2">
                 <FaDollarSign className="text-xl" />
-                <span>Earning History</span>
+                <span>Earnings History</span>
               </a>
             </li>
             <li className="hover:bg-gray-700 rounded transition duration-200">
@@ -142,10 +142,22 @@ const Sidebar: React.FC = () => {
                 </ul>
               )}
             </li> */}
-            <li className="hover:bg-gray-700 rounded transition duration-200">
+            {/* <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/joinrequests" className="flex items-center space-x-2 p-2">
                     <FaUserPlus className="text-xl" />
                     <span>Join Requests</span>
+                  </a>
+                </li> */}
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/teams" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Your Teams</span>
+                  </a>
+                </li>
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/messages" className="flex items-center space-x-2 p-2">
+                    <FaCompressAlt className="text-xl" />
+                    <span>Messages</span>
                   </a>
                 </li>
             {session?.user.club_id && (
@@ -162,7 +174,7 @@ const Sidebar: React.FC = () => {
                     <span>Your Players</span>
                   </a>
                 </li> */}
-                <li className="hover:bg-gray-700 rounded transition duration-200">
+                {/* <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/teams" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />
                     <span>Your Teams</span>
@@ -173,7 +185,7 @@ const Sidebar: React.FC = () => {
                     <FaCompressAlt className="text-xl" />
                     <span>Messages</span>
                   </a>
-                </li>
+                </li> */}
                
               </>
             )}

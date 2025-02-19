@@ -359,7 +359,7 @@ setEvaluationRates(responseData.evaluationCharges);
       <ul className="space-y-4">
       {compareValues(coachData.enterprise_id, playerClubId)=='Yes' && (
   <li>
-    <strong>Evaluation Rate:</strong> {coachData.expectedCharge} {compareValues(coachData.enterprise_id, playerClubId)}
+    <strong>Evaluation Rate:</strong> {coachData.expectedCharge} 
   </li>
 )}
 

@@ -598,7 +598,7 @@ const Profile: React.FC = () => {
 )}
 </div>
 <div>
-  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
   {isEditMode ? (
   <input
   placeholder='Ex: https://youtube.com/username'

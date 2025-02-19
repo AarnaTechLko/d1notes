@@ -190,7 +190,7 @@ const ChatBox: React.FC = () => {
                         <input
                             className="w-full p-2 rounded bg-gray-200 border focus:outline-none"
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search by Name..."
                         />
                     </div>
                     <div className="flex-1 overflow-y-auto">
@@ -243,7 +243,7 @@ const ChatBox: React.FC = () => {
                             <div
                                 className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
                                 style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
-                            >
+                            >test
                                 {chatData.map((msg, index) => (
                                     <>
                                     <div

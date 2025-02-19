@@ -182,8 +182,8 @@ const Header: React.FC = () => {
         )}
          
       </div>
-      <a onClick={handleLogout} className="text-black">Signout</a>
-      {/* <Link href="/coach/dashboard" className="text-black">Dashboard</Link> */}
+      {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
+       <Link href="/coach/dashboard" className="text-black">Dashboard</Link> 
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -262,7 +262,7 @@ const Header: React.FC = () => {
         )}
       </div>
       <Link href="/login" className="text-black">Login</Link>
-      <Link href="/howitworks" className="text-black">How it Works?</Link>
+      <Link href="/howitworks" className="text-black">How It Works?</Link>
       </div></>
 )}
 
@@ -288,8 +288,8 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      {/* <Link href="/dashboard" className="text-black">Dashboard</Link> */}
-      <a onClick={handleLogout} className="text-black">Signout</a>
+      <Link href="/dashboard" className="text-black">Dashboard</Link>
+      {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>
@@ -332,8 +332,8 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      {/* <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link> */}
-      <a onClick={handleLogout} className="text-black">Signout</a>
+       <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link> 
+      {/* <a onClick={handleLogout} className="text-black">Signout</a>  */}
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>
@@ -373,8 +373,8 @@ const Header: React.FC = () => {
           </div>
         )}
       </div>
-      <a onClick={handleLogout} className="text-black">Signout</a>
-      {/* <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link> */}
+      {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
+      <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link> 
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />

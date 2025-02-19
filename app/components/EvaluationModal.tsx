@@ -367,7 +367,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               {playerClubId === 0 && (
                 <div className="mb-4 w-1/4 ml-1">
                   <label htmlFor="reviewTitle" className="block text-gray-700 mb-1 ">
-                    Turnaround Time<span className='mandatory'>*</span>
+                    Turnaround Time/Rate<span className='mandatory'>*</span>
                   </label>
                   <select name='turnaroundtime' value={turnaroundTime}
                     onChange={(e) => {
@@ -466,12 +466,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 {/* Turnaround Time */}
                 <div className="mb-4">
                   <label htmlFor="videoTiming" className="block text-gray-700 mb-1">
-                    Video Length (Mins)<span className="mandatory">*</span>
+                  Player Game Entry Time (Minute)<span className="mandatory">*</span>
                   </label>
                   <input
                     type="text"
                     id="videoTiming"
-                    placeholder="(Ex: 5:30 - 10:00)"
+                    placeholder="Ex. :30"
                     className={`w-full px-3 py-2 border ${errors.videoOneTiming ? "border-red-500" : "border-gray-300"
                       } rounded-md`}
                     value={videoOneTiming}
@@ -591,7 +591,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <label htmlFor="videoTwoTiming" className="block text-gray-700 mb-1">
-                    Video Length (Mins)
+                  Player Game Entry Time (Minute)
                   </label>
                   <input
                     type="text"
@@ -773,7 +773,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <label htmlFor="videoThreeTiming" className="block text-gray-700 mb-1">
-                    Video Length (Mins)
+                  Player Game Entry Time (Minute)
                   </label>
                   <input
                     type="text"

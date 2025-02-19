@@ -131,13 +131,13 @@ const Sidebar: React.FC = () => {
               </ul>
             )}
           </li> */}
-          <li className="hover:bg-gray-700 rounded transition duration-200">
+          {/* <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/joinrequests" className="flex items-center space-x-2 p-2">
             
               <FaUserPlus className='text-xl'/>
               <span>Join Requests</span>
             </a>
-          </li>
+          </li> */}
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/yourteams" className="flex items-center space-x-2 p-2">
             
