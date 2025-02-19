@@ -28,6 +28,11 @@ export async function POST(req: NextRequest) {
     const affiliationDocs = formData.get('affiliationDocs') as string;
     const password = formData.get('password') as string;
     const description = formData.get('description') as string;
+    const facebook = formData.get('facebook') as string;
+    const instagram = formData.get('instagram') as string;
+    const linkedin = formData.get('linkedin') as string;
+    const xlink = formData.get('xlink') as string;
+    const youtube = formData.get('youtube') as string;
 
     const emailCkeck=await db.select().from(teams).where(eq(teams.manager_email,manager_email));
     if(emailCkeck.length>0){
@@ -55,7 +60,11 @@ export async function POST(req: NextRequest) {
             logo,
             description,
             status:'Active',
-        
+            facebook,
+            instagram,
+            linkedin,
+            xlink,
+            youtube,
             password: hashedPassword, 
             slug, // Adding the hashed password
             createdAt: new Date(),

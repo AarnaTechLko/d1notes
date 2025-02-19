@@ -84,13 +84,17 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
     e.preventDefault();
     setIsSubmit(true);
     try {
-      const response = await fetch("/api/uploads/csvupload/insert", {
+      const response = await fetch("/api/sendmassinvite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           enterprise_id: session?.user.id,
-          team_id: selectedTeam,
+          teamId: selectedTeam,
           csvData,
+          registrationType:'player',
+          usertype:'Club',
+          username:session?.user.name,
+          userId:session?.user.id
         }),
       });
       if (!response.ok) throw new Error("Failed to submit data");
@@ -157,7 +161,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                       ref={fileInputRef}
                     />
                     <p className="text-sm text-blue-400">
-                      <a href="/playercsvsample.csv" download>
+                      <a href="/MassInviteSample.csv" download>
                         Click Here to Download Sample CSV
                       </a>
                     </p>
@@ -193,16 +197,14 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                   <table className="w-full mt-2 border border-gray-300">
                     <thead>
                       <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                       
                         <th>Email</th>
                       </tr>
                     </thead>
                     <tbody>
                       {failedData.map((row, index) => (
                         <tr key={index} className="bg-red-100">
-                          <td>{row.FirstName}</td>
-                          <td>{row.LastName}</td>
+                        
                           <td>{row.Email}</td>
                         </tr>
                       ))}
@@ -246,8 +248,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                     <table className="w-full mt-2">
                       <thead>
                         <tr>
-                          <th>First Name</th>
-                          <th>Last Name</th>
+                         
                           <th>Email</th>
                           <th>Remove</th>
                         </tr>
@@ -255,22 +256,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                       <tbody>
                         {csvData.map((row, index) => (
                           <tr key={index}>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.FirstName}
-                                onChange={(e) => handleInputChange(index, "FirstName", e.target.value)}
-                                className="w-full"
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={row.LastName}
-                                onChange={(e) => handleInputChange(index, "LastName", e.target.value)}
-                                className="w-full"
-                              />
-                            </td>
+                            
                             <td>
                               <input
                                 type="text"

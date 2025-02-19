@@ -336,12 +336,16 @@ setLoading(false);
                    )}
                 </div>
 
+               
                 {/* Final Remarks Section */}
                 <div className="mt-6 text-black p-4 border border-gray-300 rounded-md flex flex-col">
                     <label htmlFor="final-remarks" className="text-sm font-medium">Final Remarks:</label>
                     {evaluationData?.finalRemarks}{evaluationData?.rating}
                 </div>
-
+                <div >
+                    <label className="text-sm font-medium">Document: </label>
+                   <a className='text-[15px] text-blue-700 underline' href={evaluationData?.document}>Download</a>
+                    </div>
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
