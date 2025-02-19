@@ -29,6 +29,7 @@ const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
+  const [selectedRole, setSelectedRole] = useState<number>(0);
 
   const limit = 10; // Items per page
   const { data: session } = useSession();
@@ -66,10 +67,10 @@ const Home: React.FC = () => {
       isValid = false;
     }
 
-    if (!role.trim()) {
-      if (!firstError) firstError = "Role is required.";
-      isValid = false;
-    }
+    // if (!role.trim()) {
+    //   if (!firstError) firstError = "Role is required.";
+    //   isValid = false;
+    // }
 
     if (firstError) {
       showError(firstError); // Show only the first error
@@ -96,7 +97,7 @@ const Home: React.FC = () => {
       name,
       phone,
       countryCodes,
-      role_id: role,
+      role_id: selectedRole,
       ...(selectedRecord ? { id: selectedRecord.id } : {})
     };
 
@@ -391,24 +392,31 @@ const Home: React.FC = () => {
 
 
 
-                  <div className="mb-4">
-                    <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                      Role<span className='mandatory'>*</span>
-                    </label>
-                    <select
-                      name="role"
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                    >
-                      <option value="">Select</option>
-                      {roleList.map((roleItem, index) => (
-                        <option key={index} value={roleItem.id}>
-                          {roleItem.role_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+<div className="flex items-center space-x-4">
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="option"
+          value={1}
+          checked={selectedRole ===1}
+          onChange={(e) => setSelectedRole(Number(e.target.value))}
+          className="accent-blue-500"
+        />
+        <span>Buy Licenses</span>
+      </label>
+
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="option"
+          value={2}
+          checked={selectedRole === 2}
+          onChange={(e) => setSelectedRole(Number(e.target.value))}
+          className="accent-blue-500"
+        />
+        <span>Accept Evaluvations</span>
+      </label>
+    </div>
 
                   <div className="flex justify-end gap-4">
                     <button
@@ -433,7 +441,7 @@ const Home: React.FC = () => {
           <table className="w-full text-sm text-left text-gray-700">
             <thead>
               <tr>
-                <th>Serial Number</th>
+                
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
@@ -445,11 +453,13 @@ const Home: React.FC = () => {
               {paginatedOrders.length > 0 ? (
                 paginatedOrders.map((order, index) => (
                   <tr key={order.id}>
-                    <td>{(currentPage - 1) * limit + index + 1}</td>
+                    
                     <td>{order.name}</td>
                     <td>{order.email}</td>
                     <td>{order.countryCodes} {order.phone}</td>
-                    <td>{order.role_name}</td>
+                    <td>
+                    {order.role_id === '1' ? "A" : "B"}
+                    </td>
                     <td>
                     <button
                         onClick={() => handleResetpassword(order)}

@@ -24,16 +24,15 @@ export async function GET(req: NextRequest) {
     const club_id = url.searchParams.get('club_id') || '';
     const result = await db.select(
         {
-            role_name:roles.role_name,
             name:enterprises.contactPerson,
             email:enterprises.email,
             phone:enterprises.mobileNumber,
             id:enterprises.id,
-            role_id:roles.id,
+            role_id:enterprises.role_id,
             countryCodes:enterprises.countryCodes,
             
         }
-    ).from(enterprises).rightJoin(roles, eq(enterprises.role_id, roles.id)).where(eq(enterprises.parent_id,Number(club_id)));
+    ).from(enterprises).where(eq(enterprises.parent_id,Number(club_id)));
 
     const rolesList=await db.select().from(roles).where(eq(roles.club_id, Number(club_id)));
 return NextResponse.json({result,rolesList}, { status: 200 });
