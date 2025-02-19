@@ -15,6 +15,8 @@ import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
 import PromptComponent from '@/app/components/Prompt';
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
+import Swal from 'sweetalert2';
+import { showError } from '@/app/components/Toastr';
 
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
 
@@ -46,7 +48,8 @@ const Dashboard: React.FC = () => {
   const [evaluationData, setEvaluationData] = useState<Evaluation | undefined>(undefined);
   const [modalContent, setModalContent] = useState<JSX.Element | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [loadingAccept, setLoadingAccept] = useState<boolean>(false);
+  const [loadingReject, setLoadingReject] = useState<boolean>(false);
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
     Requested: [],
     Accepted: [],
@@ -254,12 +257,37 @@ const Dashboard: React.FC = () => {
           const evaluation = row.original;
           if (selectedTab === '0') {
             return (
-              <a className="cursor-pointer" onClick={() => handleRequestedAction(evaluation)}>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                  Accept/Decline
-                </button>
-              </a>
-
+              // <a className="cursor-pointer" onClick={() => handleRequestedAction(evaluation)}>
+               <>   <button
+               onClick={() => handleAccept(evaluation)}  
+              className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+            >
+          {loadingAccept ? (
+  <div className="flex items-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+    <span>Accepting...</span>
+  </div>
+) : (
+  <span>Accept</span>
+)}
+ 
+            </button>
+            <button
+             onClick={() => handleReject(evaluation)}  
+             
+              className="bg-red-500 ml-2 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+            >
+             {loadingReject ? (
+  <div className="flex items-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+    <span>Declining...</span>
+  </div>
+) : (
+  <span>Decline</span>
+)}
+            </button>
+            
+                </>
 
             );
           } else if (selectedTab === '1') {
@@ -358,17 +386,128 @@ const Dashboard: React.FC = () => {
 
   }, [selectedTab]);
 
+
+  const handleAccept = async (evaluation:any) => {
+    setLoadingAccept(true);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to accept this evaluation request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Accept',
+      cancelButtonText: 'Cancel',
+    }).then(async (result) => {
+     
+      if (result.isConfirmed) {
+        const payload = {
+          evaluationId: evaluation.evaluationId,
+          status: 1,
+        };
+
+        try {
+          const response = await fetch('/api/coach/evaluations', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            setLoadingAccept(false);
+            throw new Error('Failed to accept evaluation');
+          }
+
+          Swal.fire({
+            title: 'Accepted!',
+            text: 'You have accepted the evaluation request.',
+            icon: 'success',
+          }).then(() => {
+            setTimeout(() => {
+              window.location.href = window.location.href;
+            }, 1000);
+          });
+        } catch (error:any) {
+          setLoadingAccept(false);
+          showError(error?.message);
+        }
+      }
+    });
+  };
+
+  const handleReject = async (evaluation:any) => {
+    setLoadingReject(true);
+    Swal.fire({
+      title: 'Add a Comment',
+      input: 'textarea',
+      inputPlaceholder: 'Write your comment here...',
+      inputAttributes: {
+        'aria-label': 'Write your Comment here',
+      },
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Decline',
+      cancelButtonText: 'Cancel',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+       
+        const remark = result.value;
+        if (!remark) {
+          Swal.fire('Error', 'Remark is required to reject the evaluation.', 'error');
+          return;
+        }
+
+        const payload = {
+          evaluationId: evaluation.evaluationId,
+          status: 3,
+          remark: remark, // Include the remark in the payload
+        };
+        
+        try {
+          const response = await fetch('/api/coach/evaluations', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            setLoadingReject(false);
+            throw new Error('Failed to reject evaluation');
+          }
+
+          Swal.fire({
+            title: 'Declined!',
+            text: 'You have Declined the evaluation request.',
+            icon: 'error',
+          }).then(() => {
+            setTimeout(() => {
+              window.location.href = window.location.href;
+            }, 1000);
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    });
+  };
+
+
   return (
     <>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
-      <AcceptanceModal
+      {/* <AcceptanceModal
         evaluationId={evaluationId}
         isOpen={isAcceptOpen}
         onClose={closeAcceptanceModal}
-      />
+      /> */}
       <EvaluationForm
         evaluationId={evaluationId ?? null}
         evaluationData={evaluationData ?? null}

@@ -9,6 +9,7 @@ import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { FaPhone } from 'react-icons/fa';
 import { positionOptionsList } from '@/lib/constants';
+import FileUploader from '../FileUploader';
 
 
 type EvaluationFormProps = {
@@ -824,14 +825,24 @@ for how to improve or social media links that demonstrate your feedback are extr
                                 />
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>
-                            {session?.user.club_id && (
+                            {/* {session?.user.club_id && ( */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                                     <div className="mt-6">
                                         <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
                                         <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef} />
                                     </div>
                                 </div>
-                            )}
+                                {fileUploading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
+
+                            {/* )} */}
                             <div className="flex justify-end space-x-2 pt-6">
                                 <button
                                     type="submit"

@@ -100,6 +100,8 @@ export const coaches = pgTable(
     linkedin:text("linkedin"),
     xlink:text("xlink"),
     youtube:text("youtube"),
+    cv:text("cv"),
+    license:text("license"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },

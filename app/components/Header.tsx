@@ -13,6 +13,10 @@ import { MdHelpOutline } from 'react-icons/md';
 import LogoutLoader from './LoggingOut';
 import NavBar from './NavBar';
 import { FaChevronDown } from 'react-icons/fa';
+import Sidebar from './Sidebar';
+import CoachSidebar from './coach/Sidebar';
+import OrgSidebar from './enterprise/Sidebar';
+import TeamSidebar from './teams/Sidebar';
 
 const Header: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -162,8 +166,10 @@ const Header: React.FC = () => {
          <NavBar session={session} closeMenu={closeMenu} isActiveLink={isActiveLink} handleLogout={handleLogout} toggleHelp={toggleHelp} toggleDropdown={toggleDropdown} toggleCreateAccount={toggleCreateAccount} helpRef={helpRef} helpOpen={helpOpen}/>
         </div>
         {session?.user.type=='coach' && (
-
-      
+<>
+<div className='md:hidden'>
+<CoachSidebar/>    
+</div> 
 <div className="mt-5 w-full flex justify-between md:hidden relative">
       <Link href="/browse/" className="text-black">Coaches</Link>
       <Link href="/browse/players" className="text-black">Players</Link>
@@ -201,7 +207,7 @@ const Header: React.FC = () => {
         </div>
       )}
     </div>
-    
+    </>
           )}
 
 
@@ -268,8 +274,10 @@ const Header: React.FC = () => {
 
 
 {session?.user.type=='player' && (
-
-      
+<>
+<div className='md:hidden'>
+  <Sidebar/>    
+  </div>
 <div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
       <Link href="/browse/" className="text-black">Coaches</Link>
       <Link href="/browse/players" className="text-black">Players</Link>
@@ -307,13 +315,16 @@ const Header: React.FC = () => {
       )}
  
     </div>
+    </>
 )}
 
 
 
 {session?.user.type=='enterprise' && (
-
-      
+<>
+<div className='md:hidden'>
+<OrgSidebar/>    
+</div>     
 <div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
       <Link href="/browse/" className="text-black">Coaches</Link>
       <Link href="/browse/players" className="text-black">Players</Link>
@@ -351,11 +362,14 @@ const Header: React.FC = () => {
       )}
        <Link href="/browse/players" className="text-black">Players</Link>
     </div>
+    </>
 )}
 
 {session?.user.type=='team' && (
 
-      
+      <><div className='md:hidden'>
+      <TeamSidebar/>    
+      </div>     
 <div className="mt-5 w-full flex justify-between md:hidden relative space-x-2">
       <Link href="/browse/" className="text-black">Coaches</Link>
       <Link href="/browse/players" className="text-black">Players</Link>
@@ -392,6 +406,7 @@ const Header: React.FC = () => {
         </div>
       )}
     </div>
+    </>
 )}
 
       </div>

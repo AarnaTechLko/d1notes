@@ -37,6 +37,8 @@ interface FormValues {
   linkedin: string;
   xlink: string;
   youtube: string;
+  license: string;
+  cv: string;
 }
 
 interface FormErrors {
@@ -57,6 +59,8 @@ interface FormErrors {
   image: string | null;
   countrycode: string | null;
   currency: string | null;
+  license: string | null;
+  cv: string | null;
 
 }
 
@@ -86,6 +90,8 @@ export default function Register() {
     linkedin: '',
     xlink: '',
     youtube: '',
+    license: '',
+    cv: '',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -106,16 +112,22 @@ export default function Register() {
     city: undefined,
     countrycode: null,
     image: null,
+    license: null,
+    cv: null,
 
   });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const LisenseInputRef = useRef<HTMLInputElement | null>(null);
+  const CvInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const { data: session } = useSession();
   const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
+  const [cvUpoading, setCvUpoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
@@ -149,6 +161,8 @@ export default function Register() {
       expectedCharge: undefined,
       countrycode: null,
       currency: null,
+      license: null,
+      cv: null,
 
       image: null, // Ensure this property is included
     };
@@ -227,6 +241,7 @@ export default function Register() {
       setError("User is not authenticated");
       return;
     }
+ 
     try {
  
 
@@ -281,10 +296,60 @@ export default function Register() {
       fetchStates(Number(value));
     }
   };
+
+  const handleCVChange = async () => {
+
+    if (!CvInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+ 
+    setCvUpoading(true);
+    const file = CvInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads/documentupload',
+      });
+      setCvUpoading(false);
+      const imageUrl = newBlob.url;
+      setFormValues({ ...formValues, cv: imageUrl });
+
+    } catch (error:any) {
+      setCvUpoading(false);
+      showError('Only JPG and PNG Images Allowed.');
+    }
+  }
+ 
+  const handleLicenseChange = async () => {
+
+    if (!LisenseInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+ 
+    setLicenseUpoading(true);
+    const file = LisenseInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads',
+      });
+      setLicenseUpoading(false);
+      const imageUrl = newBlob.url;
+      setFormValues({ ...formValues, license: imageUrl });
+
+    } catch (error:any) {
+      setLicenseUpoading(false);
+      showError('Only JPG and PNG Images Allowed.');
+    }
+  }
+ 
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error('No file selected');
     }
+ 
     setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
 
@@ -325,6 +390,12 @@ export default function Register() {
   const handleImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
+    }
+  };
+
+  const handleLicenseClick = () => {
+    if (LisenseInputRef.current) {
+      LisenseInputRef.current.click();
     }
   };
 
@@ -731,6 +802,66 @@ export default function Register() {
                  
                  
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+                <div>
+                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <input
+                    placeholder='Ex: https://youtube.com/username'
+                      type="file"
+                      name="youtube"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      onChange={handleCVChange}
+                     
+                      ref={CvInputRef}
+                    />
+                         {cvUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
+                  </div>
+                  <div className="mb-4">
+                  <label htmlFor="license" className="block text-gray-700 text-sm text-center font-semibold mb-2">License</label>
+                  <div className="relative items-center cursor-pointer" onClick={handleLicenseClick}>
+                    <div className="relative w-64 h-24  overflow-hidden border-2 border-gray-300 m-auto">
+                      <Image
+                        src={formValues.license ? formValues.license : DefaultPic}
+                        alt="Profile Image"
+                        width={100}
+                        height={100}
+                        className="object-cover w-full h-full"
+                      />
+                      {!formValues.license && (
+                        <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
+                          <p className="text-white text-xs font-medium">Click to Upload</p>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLicenseChange}
+                      className="hidden"
+                      ref={LisenseInputRef}
+                    />
+                    {licenseUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
+                    {formErrors.license && <p className="text-red-600 text-sm text-center">{formErrors.license}</p>}
+                  </div>
+
+                </div>
+</div>
                 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                   <button
                     type="submit"

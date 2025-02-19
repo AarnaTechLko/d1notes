@@ -128,6 +128,8 @@ export async function PUT(req: NextRequest) {
   const expectedCharge = formData.get('expectedCharge') as string;
   const coachId = formData.get('coachId') as string;
   const imageFile = formData.get('image') as string | null;
+  const license = formData.get('license') as string | null;
+  const cv = formData.get('cv') as string | null;
   const certificate = formData.get('certificate') as string | null;
   const country = formData.get('country') as string | null;
   const state = formData.get('state') as string | null;
@@ -168,6 +170,8 @@ export async function PUT(req: NextRequest) {
     city: city || null,
     slug: slug || null, 
     countrycode: countrycode || null,  
+    license: license || null,  
+    cv: cv || null,  
     image:imageFile,
     status:"Active",
   })
