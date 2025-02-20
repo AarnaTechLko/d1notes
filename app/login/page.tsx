@@ -12,9 +12,9 @@ interface FormValues {
   loginAs: 'coach' | 'player' | 'enterprise' | 'team';
   teamId?: string;
 }
- 
+
 export default function Login() {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach',teamId:'' });
+  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach', teamId: '' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
   const [referenceId, setReferenceId] = useState<string | null | undefined>();
@@ -35,10 +35,10 @@ export default function Login() {
     return JSON.parse(decrypted);
   };
   useEffect(() => {
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const encryptedUid = urlParams.get('uid');
-    const sendBy = urlParams.get('by'); 
+    const sendBy = urlParams.get('by');
     if (typeof encryptedUid === 'string') {
       try {
         const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
@@ -48,17 +48,17 @@ export default function Login() {
         setRegistrationType(decryptedData.registrationType);
         setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.referenceEmail);
-        
+
         setTeam(decryptedData.teamId);
-       
+
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
           teamId: decryptedData.teamId || '',
           loginAs: decryptedData.registrationType || 'coach', // Auto-set loginAs
         }));
-        
-        
+
+
       } catch (error) {
         console.error('Decryption failed:', error);
       }
@@ -92,20 +92,35 @@ export default function Login() {
       setLoading(false);
       return;
     }
- 
+
     try {
       const response = await signIn('credentials', {
         redirect: false,
         email,
         password,
         loginAs: formValues.loginAs,
-        teamId:formValues?.teamId
+        teamId: formValues?.teamId
       });
 
       if (!response || !response.ok) {
         showError('Email or Password Incorrect.');
       } else {
-        
+        if (teamId) {
+          const apiResponse = await fetch('/api/player/assignteam', {
+            method: 'POST',
+            body: JSON.stringify({ teamId:teamId, playerId:session?.user.id, enterpriseId:session?.user.club_id, type:session?.user.type, email:formValues.email }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (!apiResponse.ok) {
+            showError('Error occurred while processing team data.');
+            return;  
+          }
+
+          const apiData = await apiResponse.json();
+          
+          console.log(apiData);
+        }
         showSuccess('Logged In Successfully.');
       }
 
@@ -122,40 +137,40 @@ export default function Login() {
   };
 
   useEffect(() => {
-    
+
     if (status === "authenticated" && session) {
-      
+
       // Redirect based on session type
       if (session.user.type === 'coach' && !teamId) {
         window.location.href = '/coach/dashboard';
-      } 
-     else if (session.user.type === 'coach' && teamId) {
+      }
+      else if (session.user.type === 'coach' && teamId) {
         window.location.href = '/coach/joinrequests';
-      } 
+      }
 
       if (session.user.type === 'player' && !teamId) {
         window.location.href = '/dashboard';
-      } 
-     else if (session.user.type === 'player' && teamId) {
+      }
+      else if (session.user.type === 'player' && teamId) {
         window.location.href = '/joinrequests';
-      } 
+      }
 
 
       else if (session.user.type === 'player') {
         window.location.href = '/dashboard';
       }
       else if (session.user.type === 'enterprise') {
-        
+
         window.location.href = '/enterprise/dashboard';
       }
       else if (session.user.type === 'team') {
-        
+
         window.location.href = '/teampanel/dashboard';
       }
-       else if (!session.user.name && session.user.type=='player') {
+      else if (!session.user.name && session.user.type == 'player') {
         window.location.href = '/completeprofile';
       }
-      else if (!session.user.name && session.user.type=='coach') {
+      else if (!session.user.name && session.user.type == 'coach') {
         window.location.href = '/coach/completeprofile';
       }
     }
@@ -163,66 +178,66 @@ export default function Login() {
 
   return (
     <>
-     
+
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 bg-white p-4 md:p-8">
-       
+
           <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-6 text-left">Sign In {!registrationType ? "" : "as " + (registrationType.charAt(0).toUpperCase() + registrationType.slice(1).toLowerCase())}</h2>
             <form onSubmit={handleSubmit}>
-            {!registrationType && (
-              <div className="mb-4">
-                <span className="block text-gray-700 text-sm font-semibold mb-2">Login as:</span>
-                <label className="inline-flex items-center mr-2">
-                  <input
-                    type="radio"
-                    name="loginAs"
-                    value="coach"
-                    checked={formValues.loginAs === 'coach'}
-                    onChange={handleChange}
-                    disabled={loading}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Coach</span>
-                </label>
-                <label className="inline-flex items-center mr-2">
-                  <input
-                    type="radio"
-                    name="loginAs"
-                    value="player"
-                    checked={formValues.loginAs === 'player'}
-                    onChange={handleChange}
-                    disabled={loading}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Player</span>
-                </label>
-                <label className="inline-flex items-center mr-2">
-                  <input
-                    type="radio"
-                    name="loginAs"
-                    value="enterprise"
-                    checked={formValues.loginAs === 'enterprise'}
-                    onChange={handleChange}
-                    disabled={loading}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Organization </span>
-                </label>
-                
-              <label className="inline-flex items-center ">
-                  <input
-                    type="radio"
-                    name="loginAs"
-                    value="team"
-                    checked={formValues.loginAs === 'team'}
-                    onChange={handleChange}
-                    disabled={loading}
-                    className="form-radio"
-                  />
-                  <span className="ml-2">Team</span>
-                </label>  
-              </div>
+              {!registrationType && (
+                <div className="mb-4">
+                  <span className="block text-gray-700 text-sm font-semibold mb-2">Login as:</span>
+                  <label className="inline-flex items-center mr-2">
+                    <input
+                      type="radio"
+                      name="loginAs"
+                      value="coach"
+                      checked={formValues.loginAs === 'coach'}
+                      onChange={handleChange}
+                      disabled={loading}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Coach</span>
+                  </label>
+                  <label className="inline-flex items-center mr-2">
+                    <input
+                      type="radio"
+                      name="loginAs"
+                      value="player"
+                      checked={formValues.loginAs === 'player'}
+                      onChange={handleChange}
+                      disabled={loading}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Player</span>
+                  </label>
+                  <label className="inline-flex items-center mr-2">
+                    <input
+                      type="radio"
+                      name="loginAs"
+                      value="enterprise"
+                      checked={formValues.loginAs === 'enterprise'}
+                      onChange={handleChange}
+                      disabled={loading}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Organization </span>
+                  </label>
+
+                  <label className="inline-flex items-center ">
+                    <input
+                      type="radio"
+                      name="loginAs"
+                      value="team"
+                      checked={formValues.loginAs === 'team'}
+                      onChange={handleChange}
+                      disabled={loading}
+                      className="form-radio"
+                    />
+                    <span className="ml-2">Team</span>
+                  </label>
+                </div>
               )}
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
@@ -249,7 +264,7 @@ export default function Login() {
                   value={formValues.password}
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onChange={handleChange}
-                  
+
                   disabled={loading}
                 />
               </div>
@@ -271,29 +286,29 @@ export default function Login() {
 
             <p className="text-center text-gray-600 text-sm mt-4">
               Do not have an account?{' '}
-              <a 
-  href={
-    formValues.loginAs === 'coach' ? '/coach/signup' :
-    formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
-    '/register'
-  } 
-  className="text-blue-500 underline"
->
-  Register
-</a>
+              <a
+                href={
+                  formValues.loginAs === 'coach' ? '/coach/signup' :
+                    formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
+                      '/register'
+                }
+                className="text-blue-500 underline"
+              >
+                Register
+              </a>
             </p>
             <p className="text-center text-gray-600 text-sm mt-4">
-             Forgot password?<ForgotPassword type={formValues.loginAs}/>
+              Forgot password?<ForgotPassword type={formValues.loginAs} />
             </p>
           </div>
         </div>
-      
+
         <div className="flex-1 bg-white">
           <Image src={Brand} alt="brand" layout="responsive" width={500} height={500} className="object-cover" />
         </div>
       </div>
 
-      
+
     </>
   );
 }
