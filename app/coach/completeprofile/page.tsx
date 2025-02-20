@@ -320,7 +320,9 @@ export default function Register() {
       showError('Only JPG and PNG Images Allowed.');
     }
   }
- 
+  
+  
+  
   const handleLicenseChange = async () => {
 
     if (!LisenseInputRef.current?.files) {
@@ -333,7 +335,7 @@ export default function Register() {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
-        handleUploadUrl: '/api/uploads',
+        handleUploadUrl: '/api/uploads/documentupload',
       });
       setLicenseUpoading(false);
       const imageUrl = newBlob.url;
@@ -341,9 +343,11 @@ export default function Register() {
 
     } catch (error:any) {
       setLicenseUpoading(false);
-      showError('Only JPG and PNG Images Allowed.');
+      showError('Error While Uplading File.');
     }
   }
+ 
+
  
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
@@ -824,31 +828,18 @@ export default function Register() {
                       </>
                     )}
                   </div>
-                  <div className="mb-4">
-                  <label htmlFor="license" className="block text-gray-700 text-sm text-center font-semibold mb-2">License</label>
-                  <div className="relative items-center cursor-pointer" onClick={handleLicenseClick}>
-                    <div className="relative w-64 h-24  overflow-hidden border-2 border-gray-300 m-auto">
-                      <Image
-                        src={formValues.license ? formValues.license : DefaultPic}
-                        alt="Profile Image"
-                        width={100}
-                        height={100}
-                        className="object-cover w-full h-full"
-                      />
-                      {!formValues.license && (
-                        <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
-                          <p className="text-white text-xs font-medium">Click to Upload</p>
-                        </div>
-                      )}
-                    </div>
+                <div>
+                    <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload License <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
+                    placeholder='Ex: https://youtube.com/username'
                       type="file"
-                      accept="image/*"
+                      name="license"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleLicenseChange}
-                      className="hidden"
+                     
                       ref={LisenseInputRef}
                     />
-                    {licenseUpoading ? (
+                         {licenseUpoading ? (
                       <>
                         <FileUploader />
                       </>
@@ -857,10 +848,8 @@ export default function Register() {
                         {/* Optional: Placeholder for additional content */}
                       </>
                     )}
-                    {formErrors.license && <p className="text-red-600 text-sm text-center">{formErrors.license}</p>}
                   </div>
-
-                </div>
+             
 </div>
                 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                   <button
