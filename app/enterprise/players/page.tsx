@@ -292,7 +292,7 @@ const handleSubmit = async () => {
 const handleDelete = async (id: number) => {
   Swal.fire({
     title: "Are you sure?",
-    text: "This action will remove player from Orgnization!",
+    text: "This action will remove player from Organization!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#d33",
@@ -301,16 +301,29 @@ const handleDelete = async (id: number) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
+        let clubId; // Declare clubId outside the if block
+
+        if (session) {
+          clubId = session.user.id;
+        }
+
+        if (!clubId) {
+          Swal.fire("Error!", "Club ID is missing!", "error");
+          return;
+        }
+
         const response = await fetch(`/api/player/archived`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             id,
-            type:'player'
+            type: "player",
+            club_id: clubId, // Now clubId is properly assigned
           }),
         });
+
         if (response.ok) {
           fetchCoaches();
           Swal.fire("Archived!", "Player archived successfully!", "success");
@@ -323,6 +336,7 @@ const handleDelete = async (id: number) => {
     }
   });
 };
+
 
 const handleResetPassword=(coach: Coach)=>{
   console.log(coach);

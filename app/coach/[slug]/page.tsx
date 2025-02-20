@@ -539,6 +539,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           totalLicneses={totalLicneses || ''}
           coachClubId={coachData.enterprise_id}
           playerClubId={Number(playerClubId)}
+          evaluationRates={evaluationRates}
         />
       )}
 

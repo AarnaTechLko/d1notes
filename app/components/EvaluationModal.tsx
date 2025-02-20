@@ -26,9 +26,10 @@ interface EvaluationModalProps {
   allowedFreeRequests?: number;
   kids?: Kids[];
   totalLicneses?: string;
+  evaluationRates?:[]
 }
 
-const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids, freeEvaluations, allowedFreeRequests, totalLicneses }) => {
+const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coachId, playerId, amount, coachClubId, playerClubId, kids, freeEvaluations, allowedFreeRequests, totalLicneses,evaluationRates }) => {
   const [reviewTitle, setReviewTitle] = useState<string>('');
   const [primaryVideoUrl, setPrimaryVideoUrl] = useState<string>('');
   const [videoUrl2, setVideoUrl2] = useState<string>('');
@@ -384,8 +385,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                     }}
                     className={`w-full px-3 py-2 border ${errors.turnaroundTime ? 'border-red-500' : 'border-gray-300'} rounded-md`}>
                     <option value=''>Select</option>
-                    {turnAroundTime.map((tat) => (
-                      <option value={tat.value} key={tat.id}>{tat.label}</option>
+                    {evaluationRates?.map((tat:any) => (
+                      <option value={tat.turnaroundtime} key={tat.id}>{tat.turnaroundtime} Hours / {tat.currency} {tat.amount}</option>
                     ))}
 
                   </select>
@@ -394,7 +395,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               )}
             </div>
             {evaluationCharges && evaluationCharges > 0 ? (
-              <div className="mb-4 text-red-500">
+              <div className="mb-4 text-red-500 hidden">
                 Evaluation rates for this Turnaround time is <b>{currency} {evaluationCharges}</b>
               </div>
             ) : (
