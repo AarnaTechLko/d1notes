@@ -151,7 +151,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={graduation}
             onChange={(e) => handleFilterChange('graduation', e.target.value)}
           >
-            <option value="">Select Grad Year</option>
+            <option value="">Select</option>
             {Grades.map((grad) => (
                         <option key={grad} value={grad}>
                           {grad}
@@ -166,7 +166,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={birthyear}
             onChange={(e) => handleFilterChange('birthyear', e.target.value)}
           >
-            <option value="">Select Birth Year</option>
+            <option value="">Select</option>
             {Grades.map((grad) => (
                         <option key={grad} value={grad}>
                           {grad}
@@ -181,7 +181,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={position}
             onChange={(e) => handleFilterChange('position', e.target.value)}
           >
-            <option value="">Select Position</option>
+            <option value="">Select</option>
             {positionOptionsList.map((grad) => (
                         <option key={grad.value} value={grad.label}>
                           {grad.label}
@@ -214,7 +214,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
             value={state}
             onChange={(e) => handleFilterChange('state', e.target.value)}
           >
-            <option value="">Select State</option>
+            <option value="">Select</option>
             {statesList.map((state: any, index) => (
     <option key={index} value={state.name}>
       {state.name}

@@ -216,7 +216,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       {/* Dropdowns */}
       {selectedOption === "ageGroup" && (
         <select className="w-full p-2 border rounded-md" name="age_group" onChange={(e) => handleFilterChange('ageGroup', e.target.value)} value={ageGroup}>
-          <option value="">Select Age Group</option>
+          <option value="">Select</option>
           {ageGroups.map((group) => (
             <option key={group} value={group}>
               {group}
@@ -227,7 +227,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
       {selectedOption === "birthYear" && (
         <select className="w-full p-2 border rounded-md" name="team_year" value={year} onChange={(e) => handleFilterChange('team_year', e.target.value)}>
-          <option value="">Select Birth Year</option>
+          <option value="">Select</option>
           {birthYears.map((year) => (
             <option key={year} value={year}>
               {year}

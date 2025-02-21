@@ -39,6 +39,7 @@ interface FormValues {
   youtube: string;
   license: string;
   cv: string;
+  license_type: string;
 }
 
 interface FormErrors {
@@ -61,6 +62,7 @@ interface FormErrors {
   currency: string | null;
   license: string | null;
   cv: string | null;
+  license_type: string | null;
 
 }
 
@@ -92,6 +94,7 @@ export default function Register() {
     youtube: '',
     license: '',
     cv: '',
+    license_type: '',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -114,6 +117,7 @@ export default function Register() {
     image: null,
     license: null,
     cv: null,
+    license_type: null,
 
   });
   const [error, setError] = useState<string | null>(null);
@@ -163,6 +167,7 @@ export default function Register() {
       currency: null,
       license: null,
       cv: null,
+      license_type: null,
 
       image: null, // Ensure this property is included
     };
@@ -585,7 +590,7 @@ export default function Register() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
 
                   {/* Gender */}
                   <div>
@@ -631,6 +636,26 @@ export default function Register() {
                       onChange={handleChange}
                     />
                     {formErrors.clubName && <p className="text-red-600 text-sm">{formErrors.clubName}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="license_type" className="block text-gray-700 text-sm font-semibold mb-2">License Type<span className='mandatory'>*</span></label>
+                    <select
+                      name="license_type"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      value={formValues.license_type}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                      <option value="E">E</option>
+                      <option value="F">F</option>
+
+                    </select>
+                    {formErrors.license_type && <p className="text-red-600 text-sm">{formErrors.license_type}</p>}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">

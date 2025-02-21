@@ -37,7 +37,7 @@ interface FormValues {
   weight: string;
   graduation: string;
   school_name: string;
-  gpa: number;
+  gpa?: number;
   image: string | null; // Updated to store Base64 string
 }
 
@@ -66,7 +66,7 @@ export default function Register() {
     weight: "",
     graduation: "",
     school_name: "",
-    gpa:0,
+    gpa:undefined,
     image: null,
   });
 

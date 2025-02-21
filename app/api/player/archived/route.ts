@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const { id, type, club_id } = await req.json();
    if(type=='player')
    {
-    await db.update(users).set({status:'Active', enterprise_id:null}).where(eq(users.id, id));
+    
     await db.delete(teamPlayers).where(
       and(
         eq(teamPlayers.playerId,id),

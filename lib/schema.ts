@@ -101,6 +101,7 @@ export const coaches = pgTable(
     xlink:text("xlink"),
     youtube:text("youtube"),
     cv:text("cv"),
+    license_type:text("license_type"),
     license:text("license"),
     status: varchar("status").default("Inactive"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),

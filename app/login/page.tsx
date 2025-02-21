@@ -9,12 +9,12 @@ import crypto from 'crypto';
 interface FormValues {
   email: string;
   password: string;
-  loginAs: 'coach' | 'player' | 'enterprise' | 'team';
+  loginAs: string;
   teamId?: string;
 }
 
 export default function Login() {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: 'coach', teamId: '' });
+  const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: '', teamId: '' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
   const [referenceId, setReferenceId] = useState<string | null | undefined>();
@@ -76,10 +76,13 @@ export default function Login() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setLoading(true);
+  
 
-    const { email, password } = formValues;
-
+    const { email, password,loginAs } = formValues;
+    if (!loginAs) {
+      showError("Please select a login type.");
+      return;
+    }
     // Validate email and password
     if (!validateEmail(email)) {
       showError('Invalid email format.');
@@ -92,7 +95,7 @@ export default function Login() {
       setLoading(false);
       return;
     }
-
+    setLoading(true);
     try {
       const response = await signIn('credentials', {
         redirect: false,
@@ -193,7 +196,7 @@ export default function Login() {
                       type="radio"
                       name="loginAs"
                       value="coach"
-                      checked={formValues.loginAs === 'coach'}
+                     
                       onChange={handleChange}
                       disabled={loading}
                       className="form-radio"
@@ -241,7 +244,7 @@ export default function Login() {
               )}
               <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Email
+                  Email<span className='mandatory'>*</span>
                 </label>
                 <input
                   type="email"
@@ -256,7 +259,7 @@ export default function Login() {
 
               <div className="mb-4">
                 <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Password
+                  Password<span className='mandatory'>*</span>
                 </label>
                 <input
                   type="password"

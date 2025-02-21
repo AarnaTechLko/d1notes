@@ -224,6 +224,10 @@ setLoading(false);
                                     <div className="mb-4">
 <strong>Description: </strong>{evaluationData?.video_descriptionThree}
                                         </div>
+                                    <div className="mb-4">
+<strong>View /Download Additional Document: </strong> <a className='text-[15px] text-blue-700 underline' href={evaluationData?.document}>Download</a>
+                                        </div>
+
                                     </fieldset>
                                      )}
                     </div>
@@ -342,10 +346,7 @@ setLoading(false);
                     <label htmlFor="final-remarks" className="text-sm font-medium">Final Remarks:</label>
                     {evaluationData?.finalRemarks}{evaluationData?.rating}
                 </div>
-                <div >
-                    <label className="text-sm font-medium">Document: </label>
-                   <a className='text-[15px] text-blue-700 underline' href={evaluationData?.document}>Download</a>
-                    </div>
+               
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">

@@ -141,6 +141,7 @@ export async function PUT(req: NextRequest) {
   const linkedin = formData.get('linkedin') as string | null;
   const xlink = formData.get('xlink') as string | null;
   const youtube = formData.get('youtube') as string | null;
+  const license_type = formData.get('license_type') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
   const timestamp = Date.now(); 
@@ -170,6 +171,7 @@ export async function PUT(req: NextRequest) {
     city: city || null,
     slug: slug || null, 
     countrycode: countrycode || null,  
+    license_type: license_type || null,  
     license: license || null,  
     cv: cv || null,  
     image:imageFile,

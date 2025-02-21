@@ -558,11 +558,11 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 underline" target="_blank">here</a> or on Coaches in
-            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 underline" target="_blank">this</a>. </p>
+          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 underline" >here</a> or on Coaches in
+            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 underline" >this</a>. </p>
 
           <p className="mt-2">If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
-            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 underline" target="_blank">here</a> or on Join Requests in the menu. In order to request an
+            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 underline" >here</a> or on Join Requests in the menu. In order to request an
             individual game film evaluation from a coach from the organization or single team that added you, find
             the coach by clicking here or on Your Teams and click on the coach’s profile.
           </p>
