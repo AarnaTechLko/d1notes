@@ -14,8 +14,20 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
   const [year, setYear] = useState<string>('');
   const [gender, setGender] = useState<string>('');
+  const [ageGroup, setAgeGroup] = useState<string>('');
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
+    const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      const { name, value } = event.target;
+      // setFormValues((prevValues) => ({
+      //     ...prevValues,
+      //     [name]: value,
+      // }));
+  };
+
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -79,6 +91,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     let newRating = rating;
     let newYear = year;
     let newGender = gender;
+    let newAgeGroup = ageGroup;
 
     if (field === 'country') {
       newCountry = value as string;
@@ -99,9 +112,13 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       newGender = gender as string;
       setGender(newGender);
     }
-    else if (field === 'year') {
+    else if (field === 'team_year') {
       newYear = value as string;
       setYear(newYear);
+    }
+    else if (field === 'ageGroup') {
+      newYear = value as string;
+      setAgeGroup(newYear);
     }
 
     onFilterChange({
@@ -150,23 +167,75 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       <div className={`${isMobileOpen ? 'block' : 'hidden'} md:block`}>
-      <div className="mb-4">
-          <label className="block text-gray-700 mb-2 font-bold">Team Year</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            value={year}
-            onChange={(e) => handleFilterChange('year', e.target.value)}
+      
+        <div className="space-x-4 mb-4">
+          Age<span className="mandatory">*</span>:
+          </div>
+                            <div className="space-x-4 mb-4">
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="ageGroup"
+            checked={selectedOption === "ageGroup"}
+            onChange={() => setSelectedOption("ageGroup")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "ageGroup"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
           >
-            <option value="">Select Year</option>
-            {Grades.map((grad) => (
-                        <option key={grad} value={grad}>
-                          {grad}
-                        </option>
-                      ))}
-          </select>
-        </div>
+            Age Group
+          </span>
+        </label>
 
-        <div className="mb-4">
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="birthYear"
+            checked={selectedOption === "birthYear"}
+            onChange={() => setSelectedOption("birthYear")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "birthYear"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            Birth Year
+          </span>
+        </label>
+      </div>
+
+      {/* Dropdowns */}
+      {selectedOption === "ageGroup" && (
+        <select className="w-full p-2 border rounded-md" name="age_group" onChange={(e) => handleFilterChange('ageGroup', e.target.value)} value={ageGroup}>
+          <option value="">Select Age Group</option>
+          {ageGroups.map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {selectedOption === "birthYear" && (
+        <select className="w-full p-2 border rounded-md" name="team_year" value={year} onChange={(e) => handleFilterChange('team_year', e.target.value)}>
+          <option value="">Select Birth Year</option>
+          {birthYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      )}
+        <div className="mb-4 mt-4">
         <div className="flex items-center space-x-4">
   <label className="flex items-center">
     <input

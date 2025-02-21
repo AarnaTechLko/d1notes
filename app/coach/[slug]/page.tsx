@@ -11,7 +11,7 @@ import defaultImage from '../../public/default.jpg'
 import { EvaluationData } from '../../types/types';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
 import Swal from 'sweetalert2';
-import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 interface CoachData {
   firstName: string;
@@ -38,6 +38,8 @@ interface CoachData {
   linkedin: string;
   xlink: string;
   youtube: string;
+  cv: string;
+  license: string;
 }
 
 interface CoachProfileProps {
@@ -163,7 +165,26 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     }
     setIsevaluationModalOpen(true);
   };
-
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      // Revoke object URL to free memory
+      setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+  
 
   if (loading) {
     return <Loading />;
@@ -434,6 +455,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <p className="text-gray-700">
                 {coachData.qualifications}
               </p>
+            </div>
+            <div>
+              {/* <h3 className="text-lg font-semibold mb-2">Background</h3> */}
+              <p className="text-gray-700">
+        <button
+          onClick={() => handleDownload(coachData.cv, "cv.pdf")}
+          className="flex items-center space-x-2"
+        >
+          <FaFileAlt className="text-blue-500" />
+          <span>Download CSV</span>
+        </button>
+      </p>
+
+      <p className="text-gray-700">
+        <button
+          onClick={() => handleDownload(coachData.license, "license.pdf")}
+          className="flex items-center space-x-2"
+        >
+          <FaFileAlt className="text-blue-500" />
+          <span>Download License</span>
+        </button>
+      </p>
             </div>
 
             {/* Second Column: Certificate */}

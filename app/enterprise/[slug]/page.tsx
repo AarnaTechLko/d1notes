@@ -231,7 +231,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <ProfileCard
                 key={item?.teamSlug}
                 creatorname={item.creatorName}
-                teamName={item.teamName} // Ensure `team_name` is correct
+                teamName={item.team_name} // Ensure `team_name` is correct
                 logo={item.logo ?? '/default.jpg'}
                 rating={5}
                 slug={item.slug}

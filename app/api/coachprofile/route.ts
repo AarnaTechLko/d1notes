@@ -42,6 +42,8 @@ import { SECRET_KEY } from '@/lib/constants';
           instagram:coaches.instagram,
           xlink:coaches.xlink,
           youtube:coaches.youtube,
+          license:coaches.license,
+          cv:coaches.cv,
         })
         .from(coaches)
        .leftJoin(
@@ -77,7 +79,8 @@ import { SECRET_KEY } from '@/lib/constants';
           instagram:coach.instagram,
           xlink:coach.xlink,
           youtube:coach.youtube,
-          
+          license:coach.license,
+          cv:coach.cv,
           image: coach.image ? `${coach.image}` : null,
         }));
  
