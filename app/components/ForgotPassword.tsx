@@ -44,7 +44,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
   };
 
   useEffect(() => {
-    setRole(type.toUpperCase()); // Update role when the type prop changes
+    setRole(type); // Update role when the type prop changes
   }, [type]);
 
   return (
@@ -108,6 +108,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
                 <FormControlLabel value="Coach" control={<Radio checked={type === 'coach'} />} label="Coach" />
                 <FormControlLabel value="Player" control={<Radio checked={type === 'player'} />} label="Player" />
                 <FormControlLabel value="Enterprise" control={<Radio checked={type === 'enterprise'} />} label="Organization" />
+                <FormControlLabel value="Team" control={<Radio checked={type === 'team'} />} label="Team" />
               </RadioGroup>
             </FormControl>
 

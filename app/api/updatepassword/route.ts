@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import crypto from 'crypto';
 import { db } from '../../../lib/db';
-import { coaches, users, enterprises, forgetPassword } from '../../../lib/schema';
+import { coaches, users, enterprises, forgetPassword, teams } from '../../../lib/schema';
 import debug from 'debug';
 import { eq, and, gt } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -38,6 +38,12 @@ export async function POST(req: NextRequest) {
             const user = await db.update(enterprises).set({
                 password: hashedPassword,
             }).where(eq(enterprises.email, tokens[0].email));
+        }
+        if (tokens[0].role == 'team') {
+            
+            const user = await db.update(teams).set({
+                password: hashedPassword,
+            }).where(eq(teams.manager_email, tokens[0].email));
         }
         await db.delete(forgetPassword).where(eq(forgetPassword.token, token));
         const emailResult = await sendEmail({

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import crypto from 'crypto';
 import { db } from '../../../lib/db';
-import { coaches, users, enterprises, forgetPassword } from '../../../lib/schema';
+import { coaches, users, enterprises, forgetPassword, teams } from '../../../lib/schema';
 import debug from 'debug';
 import { eq, and, gt } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -40,6 +40,15 @@ export async function POST(req: NextRequest) {
             .select()
             .from(enterprises)
             .where(eq(enterprises.email, email))
+            .limit(1);
+        userExists = enterprise.length > 0;
+    }
+    else if (role === 'team') {
+        // Check if email exists in enterprises ORM
+        const enterprise = await db
+            .select()
+            .from(teams)
+            .where(eq(teams.manager_email, email))
             .limit(1);
         userExists = enterprise.length > 0;
     }
