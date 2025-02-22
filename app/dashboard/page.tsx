@@ -308,16 +308,27 @@ const Dashboard: React.FC = () => {
         },
       },
       {
-        Header: "Coach Name",
-        accessor: "first_name",
+        Header: 'Player Name',
+        accessor: 'first_name',
         Cell: ({ row }: CellProps<Evaluation>) => (
-          <div className="space-y-2"> {/* Stack links vertically with spacing */}
-            <a href={`coach/${row.original.slug}`} className='underline text-bold text-blue-700' target="_blank" rel="noopener noreferrer">
+          <div className="flex items-center space-x-2">
+            <img
+              src={row.original.image} // Assuming the image URL is stored in `playerImage`
+              alt={row.original.first_name}
+              className="w-8 h-8 rounded-full"
+            />
+            <a
+              href={`/players/${row.original.playerSlug}`}
+              className="underline font-bold text-blue-700"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {row.original.first_name} {row.original.last_name}
             </a>
           </div>
         ),
-      },
+      }
+    ,
       { Header: "Review Title", accessor: "review_title" }, // Use the correct accessor
       {
         Header: "Video Links",  // Combine all video links under this column

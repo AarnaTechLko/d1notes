@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
         evaluationId:playerEvaluation.id,
         first_name: coaches.firstName,
         last_name: coaches.lastName,
+        image: coaches.image,
         review_title: playerEvaluation.review_title,
         primary_video_link: playerEvaluation.primary_video_link,
         video_link_two: playerEvaluation.video_link_two,
