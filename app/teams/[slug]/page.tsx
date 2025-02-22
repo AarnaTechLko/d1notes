@@ -297,6 +297,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     location={toSentenceCase(profile.location)}
                     height={profile.height}
                     weight={profile.weight}
+                    facebook={profile.facebook}
+                    instagram={profile.instagram}
+                    linkedin={profile.linkedin}
+                    youtube={profile.youtube}
+                    xlink={profile.xlink}
                   />
                 </div>
               ))

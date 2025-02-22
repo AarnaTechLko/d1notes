@@ -2,24 +2,27 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import { showError, showSuccess } from '../components/Toastr';
+import { countryCodesList } from '@/lib/constants';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     mobile: '',
-    message: ''
+    message: '',
+    countrycode: '+1'
   });
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     mobile: '',
+    countrycode: '',
     message: ''
   });
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null); // Track submission status
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -27,8 +30,27 @@ const Contact = () => {
     }));
   };
 
+  const formatPhoneNumber = (value: string) => {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, ""); // Remove all non-numeric characters
+
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+  const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedNumber = formatPhoneNumber(event.target.value);
+    setFormData({ ...formData, mobile: formattedNumber });
+  };
   const validateForm = () => {
-    const newErrors = { name: '', email: '', mobile: '', message: '' };
+    const newErrors = { name: '', email: '', mobile: '', message: '' , countrycode:''};
     let isValid = true;
 
     // Validate name
@@ -47,13 +69,25 @@ const Contact = () => {
     }
 
     // Validate mobile
-    if (!formData.mobile) {
-      newErrors.mobile = 'Mobile number is required.';
+    if (!formData.countrycode) {
+      newErrors.countrycode = 'Country Code is required.';
       isValid = false;
-    } else if (!/^\d+$/.test(formData.mobile)) {
-      newErrors.mobile = 'Mobile number should only contain digits.';
-      isValid = false;
-    }
+    } 
+    
+    if (!formData.mobile)
+      {
+        newErrors.mobile = 'Phone Number is required';
+      }
+    if (formData.mobile.length < 14)
+      {
+        newErrors.mobile = 'Phone Number Must be of 10 Digits Minimum';
+      } 
+
+    if (formData.mobile.length > 14)
+      {
+        newErrors.mobile = 'Phone Number Must be of 10 Digits Maximum';
+      } 
+ 
 
     // Validate message
     if (!formData.message) {
@@ -81,7 +115,7 @@ const Contact = () => {
 
         if (response.ok) {
           showSuccess("Your message has been sent successfully!");
-          setFormData({ name: '', email: '', mobile: '', message: '' }); // Clear form on success
+          setFormData({ name: '', email: '', mobile: '', message: '', countrycode:'' }); // Clear form on success
         } else {
           showError("There was an error sending your message. Please try again.");
         }
@@ -136,21 +170,40 @@ const Contact = () => {
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
-
                 <div>
-                  <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="text"
-                    id="mobile"
-                    value={formData.mobile}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your Mobile Number"
-                  />
-                  {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>}
-                </div>
+                    <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Phone Number<span className='mandatory'>*</span></label>
+
+                    <div className="flex">
+                      <select
+                        name="countrycode"
+                        id="countrycode"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-[115px] p-0 mr-1" // Added mr-4 for margin-right
+                        value={formData.countrycode}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Select</option>
+                        {countryCodesList.map((item) => (
+                          <option key={item.id} value={item.code}>
+                            {item.code}-{item.country}
+                          </option>
+                        ))}
+                      </select>
+
+                      <input
+                        placeholder="(XXX) XXX-XXXX"
+                        type="text"
+                        name="number"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-4/5"
+                        value={formData.mobile}
+                        onChange={handlePhoneNumberChange}
+                        maxLength={14} // (123) 456-7890 is 14 characters long
+                      />
+                    </div>
+
+
+                    {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>}
+                  </div>
+                
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700">

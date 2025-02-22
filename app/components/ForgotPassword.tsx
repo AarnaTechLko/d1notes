@@ -85,11 +85,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <h2 id="forgot-password-modal">Enter Registered Email ID</h2>
+          <h2 id="forgot-password-modal">Enter Registered Email</h2>
           <form onSubmit={handleSubmit}>
             <div>
               <TextField
-                label="Email"
+                
                 type="email"
                 fullWidth
                 value={email}

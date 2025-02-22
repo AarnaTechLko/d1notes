@@ -120,8 +120,7 @@ export default function Home(): JSX.Element {
       </div>
     </h1>
           <p className="mt-4 text-lg text-gray-500">
-            D1 NOTES is setting the standard for game film evaluation that offers
-            young athletes the edge they have been missing.
+          D1 NOTES is setting the standard for the individual game film evaluation that offers young athletes the edge they have been missing.
           </p>
         </div>
 
@@ -178,7 +177,7 @@ export default function Home(): JSX.Element {
             How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? 
             Would you like access to a curated network of top coaches, trainers, and scouts?
           </p>
-          <a href='/howitworks' className='text-lg font-bold underline'>How it Works for Players</a>
+          <a href='/howitworks' className='text-lg font-bold underline'>How It Works for Players</a>
         </div>
 
         {/* Coaches Box */}
@@ -188,7 +187,7 @@ export default function Home(): JSX.Element {
             Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services? 
             You are worth more than you know to young athletes today.
           </p>
-          <a href='/howitworks#coach' className='text-lg font-bold underline'>How it Works for Coaches</a>
+          <a href='/howitworks#coach' className='text-lg font-bold underline'>How It Works for Coaches</a>
         </div>
 
         {/* Enterprises Box */}
@@ -199,7 +198,7 @@ export default function Home(): JSX.Element {
             value and level of satisfaction delivered to your participants?
           </p>
           
-          <a href='/howitworks#enterprises' className='text-lg font-bold underline'>How it Works for Enterprises</a>
+          <a href='/howitworks#enterprises' className='text-lg font-bold underline'>How It Works for Enterprises</a>
         </div>
       </div>
 
@@ -227,7 +226,7 @@ export default function Home(): JSX.Element {
         </p>
         <a href="/browse">
           <a className="inline-block px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-lg font-medium">
-            Find a coach
+            Find a Coach
           </a>
         </a>
       </div>

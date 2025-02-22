@@ -5,7 +5,7 @@ import { teams, enterprises, coaches, otps, users } from '../../../../lib/schema
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and, not, between, lt, ilike, sql, ne, isNull, or } from 'drizzle-orm';
+import { eq, isNotNull, and, not, between, lt, ilike, sql, ne, isNull, or,desc } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
@@ -69,6 +69,11 @@ export async function GET(req: NextRequest) {
         weight: users.weight,
         birthday: users.birthday,
         graduation: users.graduation,
+        facebook: users.facebook,
+        instagram: users.instagram,
+        linkedin: users.linkedin,
+        xlink: users.xlink,
+        youtube: users.youtube,
         coachName: sql`coa."firstName"`.as("coachName"),
         coachLastName: sql`coa."lastName"`.as("coachLastName"),
         enterpriseName: sql`ent."organizationName"`.as("enterpriseName"),
@@ -82,7 +87,7 @@ export async function GET(req: NextRequest) {
         sql`coaches AS coa`, // Alias defined here
         sql`${users.coach_id}::integer = coa.id`
       )
-      .where(and(...conditions));
+      .where(and(...conditions)).orderBy(desc(users.id));
 
     const result = await query.execute();
 
@@ -102,6 +107,11 @@ export async function GET(req: NextRequest) {
       weight: coach.weight,
       graduation: coach.graduation,
       birthday: coach.birthday,
+      facebook: coach.facebook,
+      instagram: coach.instagram,
+      linkedin: coach.linkedin,
+      xlink: coach.xlink,
+      youtube: coach.youtube,
 
     }));
     // Return the coach list as a JSON response

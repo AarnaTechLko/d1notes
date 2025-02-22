@@ -474,7 +474,7 @@ export default function Register() {
 
                 </div>
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">School Name</label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">School Name<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     placeholder="Ex: St. Thomas International School"
@@ -486,7 +486,7 @@ export default function Register() {
 
                 </div>
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">GPA<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="number"
                     placeholder=""
@@ -747,7 +747,7 @@ export default function Register() {
 <div>
   <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
   <input
-  placeholder='Ex: https://www.facebook.com/username'
+  placeholder=''
     type="text"
     name="facebook"
     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -759,7 +759,7 @@ export default function Register() {
 <div>
   <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
   <input
-  placeholder='Ex: https://www.instagram.com/username'
+  placeholder=''
     type="text"
     name="instagram"
     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -771,7 +771,7 @@ export default function Register() {
 <div>
   <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
   <input
-  placeholder='Ex: https://www.linkedin.com/in/john-doe'
+  placeholder=''
     type="text"
     name="linkedin"
     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -791,7 +791,7 @@ export default function Register() {
 <div>
   <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
   <input
-  placeholder='Ex: https://x.com/username'
+  placeholder=''
     type="text"
     name="xlink"
     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -801,9 +801,9 @@ export default function Register() {
   
 </div>
 <div>
-  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
   <input
-  placeholder='Ex: https://youtube.com/username'
+  placeholder=''
     type="text"
     name="youtube"
     className="border border-gray-300 rounded-lg py-2 px-4 w-full"

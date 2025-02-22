@@ -9,7 +9,8 @@ import CoachProfileCard from '@/app/components/ProfileCard';
 import PlayerProfileCard from '../../components/players/ProfileCard'
 import Profile from '@/app/coach/profile/page';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
-
+import { FaFacebook, FaInstagram, FaLinkedin, FaUser, FaYoutube } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 interface Profile {
   slug: string;
   enterpriseName: string;
@@ -47,6 +48,11 @@ interface CoachData {
   team: string;
   grade_level: string;
   graduation: string;
+  facebook: string;
+  instagram: string;
+  linkedin: string;
+  xlink: string;
+  youtube: string;
   id: number;
 }
 
@@ -186,7 +192,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <img
               src={coachData.image ?? '/default.jpg'}
               alt="Player Thumbnail"
-              className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
+              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
             />
           )}
 
@@ -194,7 +200,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <img
               src='/default.jpg'
               alt="Player Thumbnail"
-              className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
+              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
             />
           )}
 
@@ -202,7 +208,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <img
               src='/default.jpg'
               alt="Player Thumbnail"
-              className="w-[180px] h-[220px] object-cover border-2 border-gray-300"
+              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
             />
           )}
           </div>
@@ -212,8 +218,34 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
               <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
             </h3>
-
-            <div className='bg-white p-6 w-full mt-7'>
+            <div className="flex space-x-4  mt-3  h-5 pl-10 mb-1">
+                {coachData.facebook && (
+                  <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+                    <FaFacebook size={40} />
+                  </a>
+                )}
+                {coachData.instagram && (
+                  <a href={coachData.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+                    <FaInstagram size={40} />
+                  </a>
+                )}
+                {coachData.linkedin && (
+                  <a href={coachData.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+                    <FaLinkedin size={40} />
+                  </a>
+                )}
+                {coachData.xlink && (
+                  <a href={coachData.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+                    <FaXTwitter size={40} />
+                  </a>
+                )}
+                {coachData.youtube && (
+                  <a href={coachData.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                    <FaYoutube size={40} />
+                  </a>
+                )}
+              </div>
+            <div className='bg-white p-6 w-full mt-4'>
               <div className="grid grid-cols-2 gap-5">
                 <div><b>Organization Name:</b> {clubName}</div>
                 <div><b>Position:</b> {coachData.position}</div>

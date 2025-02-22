@@ -185,7 +185,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           className={`${isActiveLink("/howitworks")} hover:text-blue-300`}
           onClick={closeMenu}
         >
-          How it Works?
+          How It Works?
         </Link>
       </li>
     </>

@@ -429,8 +429,8 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                   If you want feedback on a Trace video, download the file from Trace, upload to Google Drive,
                   and share that link here for the coach. For Veo, ensure the match is set to public in order to share the
                   link. If you continue to have technical difficulties, email us at{" "}
-                  <a href="mailto:team@d1notes.com" className="text-xs text-gray-900">
-                    team@d1notes.com
+                  <a href="mailto:support@d1notes.com" className="text-xs text-gray-900">
+                    support@d1notes.com
                   </a>.
                 </p>
                 {errors.primaryVideoUrl && <p className="text-red-500 text-xs">{errors.primaryVideoUrl}</p>}

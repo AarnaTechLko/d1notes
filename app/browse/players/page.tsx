@@ -9,7 +9,7 @@ import Filters from '../../components/players/Filters';
 // Define a type for the profile
 interface Profile {
   coachName: string;
-  jersey:number;
+  jersey: number;
   firstName: string;
   lastName: string;
   image: string;
@@ -22,6 +22,11 @@ interface Profile {
   weight: string;
   graduation: string;
   birthday: string;
+  facebook: string;
+  instagram: string;
+  linkedin: string;
+  youtube: string;
+  xlink: string;
 
 
 }
@@ -55,7 +60,7 @@ const Home = () => {
           amount: filters.amount.toString(),
           rating: filters.rating?.toString() || '',
           graduation: filters.graduation?.toString() || '',
-         
+
           birthyear: filters.birthyear?.toString() || '',
           position: filters.position?.toString() || '',
         }).toString();
@@ -92,7 +97,7 @@ const Home = () => {
     );
   }, [searchQuery, profiles]); // Filter profiles based on search query
 
-  const handleFilterChange = (newFilters: { country: string;graduation:string; state: string;birthyear:string; city: string; amount: number; rating: number | null, position:string }) => {
+  const handleFilterChange = (newFilters: { country: string; graduation: string; state: string; birthyear: string; city: string; amount: number; rating: number | null, position: string }) => {
     setFilters(newFilters);
     console.log(newFilters);
   };
@@ -103,10 +108,10 @@ const Home = () => {
 
   return (
     <>
-        
-        <title>Profile Directory Players - D1 NOTES</title>
-        <meta name="description" content="This is the home page of my Next.js application." />
-      
+
+      <title>Profile Directory Players - D1 NOTES</title>
+      <meta name="description" content="This is the home page of my Next.js application." />
+
 
 
       <div className="container-fluid">
@@ -139,6 +144,11 @@ const Home = () => {
                     height={profile.height}
                     weight={profile.weight}
                     graduation={profile.graduation}
+                    facebook={profile.facebook}
+                    instagram={profile.instagram}
+                    linkedin={profile.linkedin}
+                    youtube={profile.youtube}
+                    xlink={profile.xlink}
                   />
 
 

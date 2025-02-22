@@ -163,7 +163,7 @@ and can be referred to later.
 
             <div className="space-y-12" >
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-              How it Works for Enterprises
+              How It Works for Enterprises
               </h2>
               <div className="space-y-8">
                 {/* Step 1 */}
@@ -233,7 +233,7 @@ their respective profiles upon logins.
                     Each player will be able to request an individual game film evaluation from their respective coaches of
 their teams during the year, season or events. D1 Notes’ automated system seamlessly manages the
 distribution and consumption processes of evaluations, which keeps administration to a minimum. 
-See <a href="#player" className='text-blue-700 underline font-bold'>How it Works for Players</a> and <a href="#coach" className='text-blue-700 underline font-bold'>How it Works for Coaches</a> to reference the general player coach evaluation
+See <a href="#player" className='text-blue-700 underline font-bold'>How It Works for Players</a> and <a href="#coach" className='text-blue-700 underline font-bold'>How It Works for Coaches</a> to reference the general player coach evaluation
 process.
                     </p>
                   </div>

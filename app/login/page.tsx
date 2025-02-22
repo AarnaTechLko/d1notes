@@ -190,7 +190,7 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               {!registrationType && (
                 <div className="mb-4">
-                  <span className="block text-gray-700 text-sm font-semibold mb-2">Login as:</span>
+                  <span className="block text-gray-700 text-sm font-semibold mb-2">Login as<span className="mandatory">*</span></span>
                   <label className="inline-flex items-center mr-2">
                     <input
                       type="radio"

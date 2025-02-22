@@ -23,14 +23,14 @@ const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus 
     const newState = !isOn;
 
     const result = await Swal.fire({
-      title: `Turn visibility ${newState ? 'on' : 'off'}?`,
+      title: ``,
       text: newState 
-        ? 'Do you want to make your profile public?' 
-        : 'Do you want to make your profile private?',
+        ? 'Do you want to make your profile public in the marketplace?' 
+        : 'Do you want to make your profile private in the marketplace?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: newState ? 'Yes, turn on' : 'Yes, turn off',
-      cancelButtonText: 'No, keep it as is',
+      confirmButtonText: newState ? 'Yes' : 'Yes',
+      cancelButtonText: 'No',
     });
     
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FaUser } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaLinkedin, FaUser, FaYoutube } from 'react-icons/fa';
 
 import DefaultImage from '../../public/default.jpg';
 import { getInitialsAfterComma } from '@/lib/clientHelpers';
+import { FaXTwitter } from 'react-icons/fa6';
 
 
 interface ProfileCardProps {
@@ -22,9 +23,19 @@ interface ProfileCardProps {
   weight: string;
   graduation: string;
   birthdate:string;
+  facebook?:string;
+  instagram?:string;
+  linkedin?:string;
+  youtube?:string;
+  xlink?:string;
+  
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight,graduation,birthdate }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight,graduation,birthdate,facebook,
+  instagram,
+  linkedin,
+  youtube,
+  xlink }) => {
   //const positions = getInitialsAfterComma(position);
   const positions = position;
   const handleRedirect = (slug: string) => {
@@ -118,6 +129,33 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
      <b>Birthdate: </b>  {formattedDate} 
     </p>
     <p className="text-gray-500 teampagefont"><b>Level: </b>{grade_level}</p>
+  </div>
+  <div className="flex space-x-4 justify-center mt-3 mb-3 h-5">
+      {facebook &&(
+    <a href={facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+      <FaFacebook size={20} />
+    </a>
+      )}
+       {instagram &&(
+    <a href={instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+      <FaInstagram size={20} />
+    </a>
+     )}
+     {linkedin &&(
+    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+      <FaLinkedin size={20} />
+    </a>
+     )}
+    {xlink &&(
+    <a href={xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+      <FaXTwitter size={20} />
+    </a>
+     )}
+    {youtube &&(
+    <a href={youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+      <FaYoutube size={20} />
+    </a>
+     )}
   </div>
 </div>
 

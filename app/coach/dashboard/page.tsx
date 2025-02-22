@@ -694,7 +694,7 @@ const Dashboard: React.FC = () => {
 
           <p className="mt-2">Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations
 can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes
-verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:team@d1notes.com" className="text-blue-700 underline">here</a> Upon receiving an evaluation request,
+verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:support@d1notes.com" className="text-blue-700 underline">here</a> Upon receiving an evaluation request,
 you can either accept or politely decline it with a comment. A completed evaluation will look like <a href="#" className="text-blue-700 underline">this</a>. </p>
 
           <p className="mt-2">In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation

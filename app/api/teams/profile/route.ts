@@ -87,6 +87,11 @@ let coach;
                 jersey: users.jersey,
                 birthdate: users.birthday,
                 graduation: users.graduation,
+                facebook: users.facebook,
+                instagram: users.instagram,
+                linkedin: users.linkedin,
+                youtube: users.youtube,
+                xlink: users.xlink,
                 id: users.id,
             })
             .from(teamPlayers)

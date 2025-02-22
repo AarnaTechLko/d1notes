@@ -281,8 +281,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     coachName=""
                     graduation={profile.graduation}
                     birthdate={profile.birthday}
-                    firstName={toSentenceCase(profile.firstName)}
-                    lastName={toSentenceCase(profile.lastName)}
+                    firstName={toSentenceCase(profile.first_name)}
+                    lastName={toSentenceCase(profile.last_name)}
                     image={profile.image ?? "/default.jpg"}
                     jersey={profile.jersey}
                     slug={profile.slug}
@@ -291,6 +291,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     location={toSentenceCase(profile.location)}
                     height={profile.height}
                     weight={profile.weight}
+                    facebook={profile.facebook}
+                    instagram={profile.instagram}
+                    linkedin={profile.linkedin}
+                    youtube={profile.youtube}
+                    xlink={profile.xlink}
                   />
             );
           })}

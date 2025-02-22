@@ -172,15 +172,15 @@ export default function Register() {
       image: null, // Ensure this property is included
     };
 
-    //   if (!formValues.image) {
-    //     errors.image = "Profile image is required";
-    // } else {
-    //     // Calculate the approximate size of the base64 string
-    //     const imageSizeInBytes = (formValues.image.length * 3) / 4;
-    //     if (imageSizeInBytes > 5 * 1024 * 1024) {
-    //       errors.image = "Image size must be less than 5MB";
-    //     }
-    // }
+      if (!formValues.image) {
+        errors.image = "Profile image is required";
+    } else {
+        // Calculate the approximate size of the base64 string
+        const imageSizeInBytes = (formValues.image.length * 3) / 4;
+        if (imageSizeInBytes > 5 * 1024 * 1024) {
+          errors.image = "Image size must be less than 5MB";
+        }
+    }
     if (!formValues.firstName) errors.firstName = 'First Name is required';
     if (!formValues.lastName) errors.lastName = 'Last Name is required';
 
@@ -465,7 +465,7 @@ export default function Register() {
                 {/* Profile Image */}
 
                 <div className="mb-4">
-                  <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Coach Image</label>
+                  <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Coach Image<span className='mandatory'>*</span></label>
                   <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                     <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                       <Image
@@ -647,6 +647,8 @@ export default function Register() {
                       onChange={handleChange}
                     >
                       <option value="">Select</option>
+                      <option value="PRO">PRO</option>
+                      <option value="Elite-A">Elite-A</option>
                       <option value="A">A</option>
                       <option value="B">B</option>
                       <option value="C">C</option>
@@ -770,7 +772,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                     <input
-                    placeholder='Ex: https://www.facebook.com/username'
+                    placeholder=''
                       type="text"
                       name="facebook"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -782,7 +784,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://www.instagram.com/username'
+                    placeholder=''
                       type="text"
                       name="instagram"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -794,7 +796,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://www.linkedin.com/in/john-doe'
+                    placeholder=''
                       type="text"
                       name="linkedin"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -806,7 +808,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://x.com/username'
+                    placeholder=''
                       type="text"
                       name="xlink"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -818,7 +820,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://youtube.com/username'
+                    placeholder=''
                       type="text"
                       name="youtube"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -835,7 +837,7 @@ export default function Register() {
                 <div>
                     <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://youtube.com/username'
+                    placeholder=' '
                       type="file"
                       name="youtube"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"

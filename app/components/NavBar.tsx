@@ -53,8 +53,8 @@ const NavBar: React.FC<NavBarProps> = ({ session, closeMenu, isActiveLink, handl
           {helpOpen && (
          <div className="absolute left-1/2 transform -translate-x-1/2 md:left-0 md:right-2 md:top-5 mt-2 w-56 bg-white shadow-lg rounded-md p-4">
          <p>For technical difficulties and other feedback, email us at </p>
-         <a className="font-bold" href="mailto:team@d1notes.com">
-           team@d1notes.com
+         <a className="font-bold" href="mailto:support@d1notes.com">
+           support@d1notes.com
          </a>
          <button onClick={toggleHelp} className="text-blue-500 mt-2">
            Close
