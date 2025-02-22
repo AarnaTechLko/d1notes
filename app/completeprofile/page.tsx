@@ -14,6 +14,8 @@ import { FaCheck, FaSpinner } from "react-icons/fa";
 import FileUploader from "../components/FileUploader";
 import { countryCodesList, states, positionOptionsList, genders, playingLevels, Grades,countries } from "@/lib/constants";
 import { showError } from "../components/Toastr";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 interface FormValues {
   first_name: string;
   last_name: string;
@@ -307,6 +309,10 @@ export default function Register() {
     }
   };
 
+  const handleDateChange = (date: Date | null) => {
+    setFormValues({ ...formValues, birthday: date ? date.toISOString().split("T")[0] : "" });
+  };
+
   const handlePositionChange = (selectedOptions: any) => {
     // Convert selected options into a comma-separated string
     const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
@@ -585,14 +591,14 @@ export default function Register() {
 
               <div>
                   <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
-                  <input
-                    type="date"
-                    name="birthday"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-
-                    value={formValues.birthday}
-                    onChange={handleChange}
-                  />
+                  
+                  <DatePicker
+  selected={formValues.birthday ? new Date(formValues.birthday) : null}
+  onChange={handleDateChange}
+  dateFormat="dd-MM-yyyy" // Correct format
+  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+  placeholderText="Select a date"
+/>
 
                 </div>
                 <div>

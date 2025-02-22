@@ -33,7 +33,9 @@ input[readonly] {
     transform: translateX(0) translateY(0);
   }
 }
-
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
 .animate-zigzag {
   animation: zigzag 2s ease-in-out infinite;
 }

@@ -219,107 +219,103 @@ const ChatBox: React.FC = () => {
                     className={`col-span-1 md:col-span-6 flex flex-col ${showUserList && "hidden md:flex"
                         }`}
                 >
-                    {selectedUser && (
-                        <>
-                            <div className="flex items-center p-4 border-b bg-white">
-                                <button
-                                    className="text-gray-500 hover:text-gray-800 md:hidden mr-4"
-                                    onClick={handleBackClick}
-                                >
-                                    <FaArrowLeft />
-                                </button>
-                                <div className="flex items-center">
-                                    <img
-                                        src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-                                        alt="User Avatar"
-                                        className="rounded-full h-[32px]"
-                                    />
-                                    <div className="ml-4">
-                                        <h2 className="font-semibold">{selectedUser.first_name} {selectedUser.last_name}</h2>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
-                                style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
-                            >test
-                                {chatData.map((msg, index) => (
-                                    <>
-                                    <div
-                                        className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
-                                                ? "justify-end"
-                                                : "justify-start"
-                                            }`}
-                                        key={index}
-                                    >
-                                        <div
-                                            className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
-                                                    ? "bg-blue-100"
-                                                    : "bg-gray-200"
-                                                }`}
-                                            ref={index === chatData.length - 1 ? lastMessageRef : null}
-                                        >
-                                            <div
-                                                dangerouslySetInnerHTML={{ __html: msg.message }}
-                                                className="message-content"
-                                            ></div>
-                                              <p className={` text-xs mb-51 ${msg.senderId === Number(session?.user?.id)
-                                                ? "text-right"
-                                                : "text-right"
-                                            }`}>{formatDate(msg.messageCreatedAt)}</p>
-                                        </div>
-                                      
-                                    </div>
-                                     
-                                     </>
-                                ))}
-                            </div>
-
-
-                            <div className="p-2 border-t bg-white relative">
-    <div className="flex items-center space-x-2">
-        {/* Emoji Button */}
-        <button
-            onClick={handleEmojiClick}
-            className="text-gray-500 hover:text-gray-800 flex-shrink-0"
-        >
-            <FaSmile />
-        </button>
-
-        {/* Textarea/Input */}
-        <textarea
-    className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
-    placeholder="Send a message"
-    value={message}
-    onChange={(e) => setMessage(e.target.value)}
-    onKeyDown={(e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); // Prevent adding a new line
-            handleSendMessage(); // Call the send message function
-        }
-    }}
-/>
-
-        {/* Send Button */}
-        <button
-            onClick={handleSendMessage}
-            className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
-        >
-            Send
-        </button>
-    </div>
-
-    {/* Emoji Picker */}
-    {showEmojiPicker && (
-        <div className="absolute bottom-16">
-            <EmojiPicker onEmojiClick={onEmojiClick} />
+                   {selectedUser ? (
+    <>
+        <div className="flex items-center p-4 border-b bg-white">
+            <button
+                className="text-gray-500 hover:text-gray-800 md:hidden mr-4"
+                onClick={handleBackClick}
+            >
+                <FaArrowLeft />
+            </button>
+            <div className="flex items-center">
+                <img
+                    src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+                    alt="User Avatar"
+                    className="rounded-full h-[32px]"
+                />
+                <div className="ml-4">
+                    <h2 className="font-semibold">{selectedUser.first_name} {selectedUser.last_name}</h2>
+                </div>
+            </div>
         </div>
-    )}
-</div>
 
-                        </>
-                    )}
+        <div
+            className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
+            style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
+        > 
+            {chatData.length > 0 ? (
+                chatData.map((msg, index) => (
+                    <div
+                        className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                        key={index}
+                    >
+                        <div
+                            className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
+                                ? "bg-blue-100"
+                                : "bg-gray-200"
+                            }`}
+                            ref={index === chatData.length - 1 ? lastMessageRef : null}
+                        >
+                            <div
+                                dangerouslySetInnerHTML={{ __html: msg.message }}
+                                className="message-content"
+                            ></div>
+                            <p className={`text-xs ${msg.senderId === Number(session?.user?.id) ? "text-right" : "text-left"}`}>
+                                {formatDate(msg.messageCreatedAt)}
+                            </p>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="text-center text-gray-500 mt-4">No Message Found</div>
+            )}
+        </div>
+
+        <div className="p-2 border-t bg-white relative">
+            <div className="flex items-center space-x-2">
+                <button
+                    onClick={handleEmojiClick}
+                    className="text-gray-500 hover:text-gray-800 flex-shrink-0"
+                >
+                    <FaSmile />
+                </button>
+
+                <textarea
+                    className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
+                    placeholder="Send a message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSendMessage();
+                        }
+                    }}
+                />
+
+                <button
+                    onClick={handleSendMessage}
+                    className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
+                >
+                    Send
+                </button>
+            </div>
+
+            {showEmojiPicker && (
+                <div className="absolute bottom-16">
+                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+            )}
+        </div>
+    </>
+) : (
+    <div className="text-center text-gray-500 p-6 mt-10">No Message Found</div>
+)}
+
                 </div>
 
 
