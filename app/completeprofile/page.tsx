@@ -40,6 +40,11 @@ interface FormValues {
   graduation: string;
   school_name: string;
   gpa?: number;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  youtube?: string;
+  xlink?: string;
   image: string | null; // Updated to store Base64 string
 }
 
@@ -68,6 +73,11 @@ export default function Register() {
     weight: "",
     graduation: "",
     school_name: "",
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    youtube: "",
+    xlink: "",
     gpa:undefined,
     image: null,
   });
@@ -732,7 +742,80 @@ export default function Register() {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
 
+<div>
+  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+  <input
+  placeholder='Ex: https://www.facebook.com/username'
+    type="text"
+    name="facebook"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.facebook}
+    onChange={handleChange}
+  />
+
+</div>
+<div>
+  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <input
+  placeholder='Ex: https://www.instagram.com/username'
+    type="text"
+    name="instagram"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.instagram}
+    onChange={handleChange}
+  />
+  
+</div>
+<div>
+  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <input
+  placeholder='Ex: https://www.linkedin.com/in/john-doe'
+    type="text"
+    name="linkedin"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.linkedin}
+    onChange={handleChange}
+  />
+   
+</div>
+
+
+
+
+</div>
+
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+
+<div>
+  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <input
+  placeholder='Ex: https://x.com/username'
+    type="text"
+    name="xlink"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.xlink}
+    onChange={handleChange}
+  />
+  
+</div>
+<div>
+  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Youtube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <input
+  placeholder='Ex: https://youtube.com/username'
+    type="text"
+    name="youtube"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.youtube}
+    onChange={handleChange}
+  />
+  
+</div>
+
+
+
+</div>
               <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                 <button
                   type="submit"

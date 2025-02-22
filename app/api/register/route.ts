@@ -208,7 +208,11 @@ export async function PUT(req: NextRequest) {
   const imageFile = formData.get('image') as string | null;
   const school_name = formData.get('school_name') as string | null;
   const gpa = formData.get('gpa') as string | '0.00';
-
+  const facebook = formData.get('facebook') as string | null;
+  const instagram = formData.get('instagram') as string | null;
+  const linkedin = formData.get('linkedin') as string | null;
+  const youtube = formData.get('youtube') as string | null;
+  const xlink = formData.get('xlink') as string | null;
   const playerIDAsNumber = parseInt(playerID, 10);
   try {
     const timestamp = Date.now();
@@ -241,6 +245,11 @@ export async function PUT(req: NextRequest) {
         weight: weight || null,
         graduation: graduation || null,
         school_name: school_name || null,
+        facebook: facebook || null,
+        instagram: instagram || null,
+        linkedin: linkedin || null,
+        youtube: youtube || null,
+        xlink: xlink || null,
         gpa: gpa || '0.00',
         status: "Active",
       
