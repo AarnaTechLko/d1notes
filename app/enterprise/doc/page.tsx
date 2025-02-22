@@ -390,33 +390,21 @@ const Home: React.FC = () => {
   </div>
 </div>
 
-
-
 <div className="flex items-center space-x-4">
-      <label className="flex items-center space-x-2">
-        <input
-          type="radio"
-          name="option"
-          value={1}
-          checked={selectedRole ===1}
-          onChange={(e) => setSelectedRole(Number(e.target.value))}
-          className="accent-blue-500"
-        />
-        <span>Buy Licenses</span>
-      </label>
+  <span>Buy Licenses</span>
+  <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={selectedRole === 2}
+      onChange={() => setSelectedRole(selectedRole === 1 ? 2 : 1)}
+    />
+    <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+  </label>
+  <span>Accept Evaluations</span>
+</div>
 
-      <label className="flex items-center space-x-2">
-        <input
-          type="radio"
-          name="option"
-          value={2}
-          checked={selectedRole === 2}
-          onChange={(e) => setSelectedRole(Number(e.target.value))}
-          className="accent-blue-500"
-        />
-        <span>Accept Evaluvations</span>
-      </label>
-    </div>
+
 
                   <div className="flex justify-end gap-4">
                     <button

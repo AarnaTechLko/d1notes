@@ -100,9 +100,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
         setCoaches(responseData.coachesList || []);
-        setClubName(responseData.clubname.clubname);
+        if(responseData.clubname)
+        {
+          setClubName(responseData.clubname.clubname);
+        }
+        
       } catch (err) {
-        setError('Some error occurred.');
+        setError('Some error occurred.:'+err);
       } finally {
         setLoading(false);
       }

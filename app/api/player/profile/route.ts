@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
             .leftJoin(teams, eq(teamPlayers.teamId, teams.id))
             .where(eq(teamPlayers.playerId, user[0].id))
             .execute();
-
+            const enterprise=await db.select({clubname:enterprises.organizationName}).from(enterprises).where(eq(enterprises.id,Number(user[0].enterprise_id)))
         // Extract team IDs
         const teamIds = teamsOfPlayer.map((team) => team.teamId);
 
@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({
                 clubdata: user[0],
                 banners,
+                clubname:enterprise[0],
                 playerOfTheTeam: [],
                 teamPlayers: [],
             });
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
             ) 
             
             .execute();
-const enterprise=await db.select({clubname:enterprises.organizationName}).from(enterprises).where(eq(enterprises.id,Number(user[0].enterprise_id)))
+ 
         return NextResponse.json({
             clubdata: user[0],
             clubname:enterprise[0],

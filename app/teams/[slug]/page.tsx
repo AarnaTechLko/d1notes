@@ -29,6 +29,7 @@ interface Profile {
   weight: number;
   jersey: number;
   id: number;
+  
 }
 
 interface CoachData {
@@ -48,7 +49,7 @@ interface CoachData {
   team_type: string;
   team_year: string;
   leage?: string;
-
+  expectedCharge:string;
   coachSlug: string;
   id: number;
 }
@@ -262,6 +263,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           image={item.image ?? "/default.jpg"}
           rating={5}
           slug={item.slug}
+          evaluation_rate={item.expectedCharge}
         />
       ))
     ) : (

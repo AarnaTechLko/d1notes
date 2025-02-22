@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 import { getSession } from 'next-auth/react';
 import StarRating from '../components/StarRating';
 import defaultImage from '../../public/default.jpg'
-
+import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 type EvaluationPageProps = {
     searchParams: {
         evaluationId: string; // Assuming evaluationId is a string
@@ -170,8 +170,16 @@ setLoading(false);
                         </div>
 
                         <div className="mb-4">
-                            <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span>
+                            <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span> 
                         </div>
+                        <div className="mb-4 flex items-center space-x-2">
+  <strong>View / Download Additional Document:</strong> 
+  <a className="text-[15px] text-blue-700 underline flex items-center space-x-1" href={evaluationData?.document}>
+    <FaFileAlt />
+    <span>Download</span>
+  </a>
+</div>
+
 
                         <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
   <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
@@ -224,9 +232,7 @@ setLoading(false);
                                     <div className="mb-4">
 <strong>Description: </strong>{evaluationData?.video_descriptionThree}
                                         </div>
-                                    <div className="mb-4">
-<strong>View /Download Additional Document: </strong> <a className='text-[15px] text-blue-700 underline' href={evaluationData?.document}>Download</a>
-                                        </div>
+                                  
 
                                     </fieldset>
                                      )}
@@ -251,7 +257,7 @@ setLoading(false);
                     <div className="text-black p-4 border  border-gray-300 rounded-md flex flex-col">
                         <h1 className='text-xl mb-4'>Technical </h1>
                         {technicalScores ? (
-                            <ul className="list-disc ml-5 h-[250px]">
+                            <ul className="list-disc ml-5 h-[350px]">
                                 {Object.entries(technicalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -269,7 +275,7 @@ setLoading(false);
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h2 className='text-xl mb-4'>Tactical</h2>
                         {tacticalScores ? (
-                            <ul className="list-disc ml-5  h-[250px]">
+                            <ul className="list-disc ml-5  h-[350px]">
                                 {Object.entries(tacticalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -287,7 +293,7 @@ setLoading(false);
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h3 className='text-xl mb-4'>Distribution</h3>
                         {distributionScores ? (
-                            <ul className="list-disc ml-5  h-[250px]">
+                            <ul className="list-disc ml-5  h-[350px]">
                                 {Object.entries(distributionScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -305,7 +311,7 @@ setLoading(false);
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h3 className='text-xl mb-4'>Physical</h3>
                         {physicalScores ? (
-                            <ul className="list-disc ml-5  h-[250px]">
+                            <ul className="list-disc ml-5  h-[350px]">
                                 {Object.entries(physicalScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}
@@ -323,7 +329,7 @@ setLoading(false);
                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                         <h3 className='text-xl mb-4'>Organization</h3>
                         {organizationScores ? (
-                            <ul className="list-disc ml-5  h-[250px]">
+                            <ul className="list-disc ml-5  h-[350px]">
                                 {Object.entries(organizationScores).map(([key, value]) => (
                                     <li key={key}>
                                         {key}: {value}

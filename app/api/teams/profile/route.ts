@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches, teamCoaches } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches, teamCoaches, evaluation_charges } from '../../../../lib/schema'
 import debug from 'debug';
 import { desc, eq, asc,and,ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -103,6 +103,7 @@ let coach;
                     lastName:coaches.lastName,
                     image:coaches.image,
                     slug:coaches.slug,
+                    expectedCharge:coaches.expectedCharge
                 })
                 .from(teamCoaches)
                 .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))
