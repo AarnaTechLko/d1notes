@@ -151,7 +151,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your Name"
+                    
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
@@ -166,7 +166,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your Email"
+                    
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
@@ -215,7 +215,7 @@ const Contact = () => {
                     onChange={handleInputChange}
                     rows={4}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    placeholder="Your Message"
+                    
                   />
                   {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
                 </div>

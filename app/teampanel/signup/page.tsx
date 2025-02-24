@@ -37,7 +37,7 @@ const formSchema = z.object({
           /^(?=.*\d)(?=.*[!@#$%^&*()_\-+=|:;<>,.?]).{6,}$/.test(value),
         {
           message:
-            "Password must contain at least 6 characters, including at least 1 number and 1 special character.",
+            "Password must contain at least 6 characters, including at least 1 number and 1 special character",
         }
       ),
     confirm_password: z.string(),
@@ -391,7 +391,7 @@ const [showPassword, setShowPassword] = useState(false);
               </div>
               <div className="flex-1">
                 <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">
-                Team State or Other<span className="mandatory">*</span>
+                Team State/Province<span className="mandatory">*</span>
                 </label>
                 <select
                     name="state"
@@ -561,7 +561,7 @@ const [showPassword, setShowPassword] = useState(false);
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Create Password<span className='mandatory'>*</span></label>
-              <p className="text-gray-400 text-xs">(Password must contain at least 6 characters, including at least 1 number and 1 special character.)</p>
+              <p className="text-gray-400 text-xs">(Password must contain at least 6 characters, including at least 1 number and 1 special character)</p>
               <div className="relative">
               <input type={showPassword ? "text" : "password"} name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf"  value={formValues.password}
                 onChange={handleChange} />

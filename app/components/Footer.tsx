@@ -24,9 +24,9 @@ export default function Footer() {
           {/* Social Media Icons */}
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" aria-label="Facebook">
-              <FaFacebook className="h-6 w-6 hover:text-blue-600" />
+              <FaFacebook className="h-6 w-6 " />
             </a>
-            <a href="" target='_blank' aria-label="Twitter" className='text-2xl pb-5 font-bold h-6 w-6 mb-2 text-white hover:text-blue-600'>
+            <a href="" target='_blank' aria-label="Twitter" className='text-2xl pb-5 font-bold h-6 w-6 mb-2 text-white h'>
             <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"

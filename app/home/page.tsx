@@ -120,7 +120,7 @@ export default function Home(): JSX.Element {
       </div>
     </h1>
           <p className="mt-4 text-lg text-gray-500">
-          D1 NOTES is setting the standard for the individual game film evaluation that offers young athletes the edge they have been missing.
+          D1 NOTES is setting the standard for individual game film evaluation that offers young athletes the edge they have been missing.
           </p>
         </div>
 

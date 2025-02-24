@@ -130,6 +130,17 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
         {createAccountOpen && (
           <div className="absolute left-1/4 mt-2 w-48 z-10 bg-white shadow-lg rounded-md md:left-1/2 md:transform md:-translate-x-1/2">
             <ul>
+
+            <li className="pt-[8px]">
+                <Link
+                  href="/coach/signup"
+                  className="block px-4 py-2 text-black hover:bg-blue-300"
+                  onClick={handleOptionClick}
+                >
+                  Coach  
+                </Link>
+              </li>
+              
               <li className="pt-[8px]">
                 <Link
                   href="/register"
@@ -139,15 +150,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   Player  
                 </Link>
               </li>
-              <li className="pt-[8px]">
-                <Link
-                  href="/coach/signup"
-                  className="block px-4 py-2 text-black hover:bg-blue-300"
-                  onClick={handleOptionClick}
-                >
-                  Coach  
-                </Link>
-              </li>
+              
               <li className="pt-[8px]">
                 <Link
                   href="/enterprise/signup"

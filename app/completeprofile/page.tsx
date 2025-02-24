@@ -523,7 +523,7 @@ export default function Register() {
                     <option value="Soccer">Soccer</option>
 
                   </select>
-                  <p className="text-xs text-gray-500">( Right now, D1 Notes is only available for soccer coaching )</p>
+                  
 
                 </div>
 
@@ -605,7 +605,7 @@ export default function Register() {
                   <DatePicker
   selected={formValues.birthday ? new Date(formValues.birthday) : null}
   onChange={handleDateChange}
-  dateFormat="dd-MM-yyyy" // Correct format
+  dateFormat="MM-dd-yyyy" // Correct format
   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
   placeholderText="Select a date"
 />

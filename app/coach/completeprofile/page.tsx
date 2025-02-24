@@ -639,7 +639,7 @@ export default function Register() {
                   </div>
 
                   <div>
-                    <label htmlFor="license_type" className="block text-gray-700 text-sm font-semibold mb-2">License Type<span className='mandatory'>*</span></label>
+                    <label htmlFor="license_type" className="block text-gray-700 text-sm font-semibold mb-2">License Type (Optional)</label>
                     <select
                       name="license_type"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -654,7 +654,7 @@ export default function Register() {
                       <option value="C">C</option>
                       <option value="D">D</option>
                       <option value="E">E</option>
-                      <option value="F">F</option>
+                      
 
                     </select>
                     {formErrors.license_type && <p className="text-red-600 text-sm">{formErrors.license_type}</p>}

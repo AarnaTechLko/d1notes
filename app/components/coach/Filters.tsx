@@ -89,7 +89,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold">Filter Coach</h3>
+        <h3 className="text-xl font-semibold">Filter Coaches</h3>
         <button
           className="px-4 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 focus:outline-none"
           onClick={resetFilters}
