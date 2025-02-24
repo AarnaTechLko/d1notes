@@ -251,6 +251,7 @@ export const evaluationResults = pgTable('evaluation_results', {
   document:text('document'),
   position:text('position'),
   sport:text('sport'),
+  thingsToWork:text('thingsToWork'),
 });
 
 export const otps = pgTable('otps', {

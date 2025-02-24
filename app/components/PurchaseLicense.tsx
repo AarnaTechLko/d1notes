@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-import { licensePackages } from "@/lib/constants";
+import { licensePackages, teamlicensePackages } from "@/lib/constants";
 import { formatCurrency } from "@/lib/clientHelpers";
+import { useSession } from "next-auth/react";
 interface License {
   id: number;
   minimum_license: number;
@@ -49,7 +50,19 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
       });
     }
   };
-
+  let licensePackagesList;
+  const { data: sessions } = useSession();
+  if(sessions)
+  {
+    if(sessions.user.type=='team')
+    {
+      licensePackagesList=teamlicensePackages;
+    }
+    else{
+      licensePackagesList=licensePackages
+    }
+  }
+ 
   const totalAmount = selectedLicense ? licenseCount * selectedLicense.amount : 0;
 
   const handleBuyNow = async (amount: number) => {
@@ -86,7 +99,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-6 text-blue-800">Player Evaluation Pricing Options</h1>
+      <h1 className="text-2xl font-bold mb-6 text-blue-800">Player Evaluation Pricing</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-300 shadow-sm">
           <thead>
@@ -97,7 +110,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
             </tr>
           </thead>
           <tbody>
-            {licensePackages.map((license, index) => (
+            {licensePackagesList?.map((license, index) => (
               <tr key={index} className="hover:bg-blue-100">
                 <td className="border border-gray-300 px-4 py-2">
                   {license.minimum_license} - {license.maximum_license}

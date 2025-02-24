@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
       distributionScores,
       organizationScores,
       sport,
-      position
+      position,
+      thingsToWork
     } = data;
 
     const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId));
@@ -52,7 +53,8 @@ export async function POST(req: NextRequest) {
         organizationScores: organizationScores,
         distributionScores: distributionScores,
         organizationalRemarks: organizationalRemarks,
-        distributionRemarks: distributionRemarks
+        distributionRemarks: distributionRemarks,
+        thingsToWork: thingsToWork
       }).returning();
     }
     else {
@@ -74,7 +76,8 @@ export async function POST(req: NextRequest) {
         organizationalRemarks: organizationalRemarks,
         distributionRemarks: distributionRemarks,
         sport:sport,
-        position:position
+        position:position,
+        thingsToWork: thingsToWork
       }).returning();
     }
 

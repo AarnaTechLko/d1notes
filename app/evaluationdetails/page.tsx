@@ -350,7 +350,12 @@ setLoading(false);
                 {/* Final Remarks Section */}
                 <div className="mt-6 text-black p-4 border border-gray-300 rounded-md flex flex-col">
                     <label htmlFor="final-remarks" className="text-sm font-medium">Final Remarks:</label>
-                    {evaluationData?.finalRemarks}{evaluationData?.rating}
+                    {evaluationData?.finalRemarks} 
+                </div>
+
+                <div className="mt-6 text-black p-4 border border-gray-300 rounded-md flex flex-col">
+                    <label htmlFor="final-remarks" className="text-sm font-medium">Things to work on:</label>
+                    {evaluationData?.thingsToWork} 
                 </div>
                
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  

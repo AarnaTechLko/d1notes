@@ -30,7 +30,7 @@ interface ProfileCardProps {
   xlink?:string;
   
 }
-
+ 
 const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight,graduation,birthdate,facebook,
   instagram,
   linkedin,

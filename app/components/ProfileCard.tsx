@@ -46,11 +46,10 @@ useEffect(()=>{
 
   return (
     <>
-    <div
- 
-  className="flex-none w-64 h-150 bg-white rounded-lg shadow-md mt-5 overflow-hidden snap-center cursor-pointer"
+    <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group"
   key={slug}
 >
+<div className="relative w-full h-64">
   <Image
     src={image === 'null' || !image ? '/default.jpg' : image}
     alt={name}
@@ -59,6 +58,16 @@ useEffect(()=>{
     className="rounded-lg object-cover w-full h-[200px]"
     onClick={() => handleRedirect(slug)}
   />
+  <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
+      {/* Link in the middle of the overlay */}
+      <a 
+        href={`/coach/${slug}`}
+        className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold"
+      >
+        View Full Bio
+      </a>
+    </div>
+    </div>
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold"  onClick={() => handleRedirect(slug)}>{name}</h3>
     

@@ -148,100 +148,63 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     <title>Player Roster - D1 NOTES</title>
     <meta name="description" content="This is the home page of my Next.js application." />
   </head>
-      <div className="container-fluid mx-auto px-4 py-8 animate-fadeIn mb-64">
-        <div className="grid  gap-5">
-  
+      <div className="container mx-auto px-4 py-8 animate-fadeIn ">
+      <div className="flex flex-col md:flex-row items-start bg-white p-6 rounded-lg  transition-all duration-300 hover:shadow-lg  z-1">
+          {/* Profile Image and Coach Info */}
+          <div className="flex flex-col md:flex-row  mb-4 md:mb-0 md:mr-4">
+            {/* Profile Image */}
+            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
+              {coachData.image && coachData.image !== 'null' && (
+                <Image
+                  src={coachData.image ?? '/default.jpg'}
+                  alt={`${coachData.first_name} ${coachData.last_name}`}
+                  width={200}
+                  height={200}
+                  className="rounded-full object-cover"
+                />
+              )}
+              {coachData.image && coachData.image == 'null' && (
+                <Image
+                  src={'/default.jpg'}
+                  alt={`${coachData.first_name} ${coachData.last_name}`}
+                  width={200}
+                  height={200}
+                  className="rounded-full object-cover"
+                />
+              )}
 
-          <div>
-          <div className="relative overflow-hidden w-full h-[500px]">
-  {banners.length > 0 ? (
-    banners.map((banner, index) => (
-      <div
-        key={index}
-        className={`absolute top-0 left-0 w-full h-full transition-transform duration-500 ease-in-out ${
-          index === currentBanner ? 'transform translate-x-0' : 'transform -translate-x-full'
-        }`}
-      >
-        <img
-          src={banner}
-          alt={`Banner ${index + 1}`}
-          className="w-full h-full object-cover"
-        />
-      </div>
-    ))
-  ) : (
-    <div className="absolute top-0 left-0 w-full h-full">
-      <img
-        src="/footbal.jpg"
-        alt="Default Banner"
-        className="w-full h-full object-cover"
-      />
-    </div>
-  )}
-</div>
 
-          </div>
-        </div>
+            </div>
 
-      
-        <div className="absolute left-1/2 transform -translate-x-1/2 top-[500px]  w-full shadow-lg rounded-lg p-4 grid grid-cols-[1fr_2fr] gap-4">
-          {/* Image Section */}
-          <div className="flex justify-end items-right">
- 
-          {coachData.image && coachData.image !== 'null' && (
-            <img
-              src={coachData.image ?? '/default.jpg'}
-              alt="Player Thumbnail"
-              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
-            />
-          )}
-
-{ coachData.image === 'null' && (
-            <img
-              src='/default.jpg'
-              alt="Player Thumbnail"
-              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
-            />
-          )}
-
-{ coachData.image === null && (
-            <img
-              src='/default.jpg'
-              alt="Player Thumbnail"
-              className="w-[200px] h-[250px] object-cover border-2 border-gray-300"
-            />
-          )}
-          </div>
-
-          {/* Text Section */}
-          <div className="flex flex-col justify-start items-start">
+            {/* Coach Info */}
+            <div className="text-left md:text-left">
             <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
               <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
             </h3>
-            <div className="flex space-x-4  mt-3  h-5 pl-10 mb-1">
+            <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
                 {coachData.facebook && (
                   <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
-                    <FaFacebook size={40} />
+                    <FaFacebook size={25} />
                   </a>
                 )}
                 {coachData.instagram && (
                   <a href={coachData.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
-                    <FaInstagram size={40} />
+                    <FaInstagram size={25} />
                   </a>
                 )}
                 {coachData.linkedin && (
                   <a href={coachData.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
-                    <FaLinkedin size={40} />
+                    <FaLinkedin size={25} />
                   </a>
                 )}
                 {coachData.xlink && (
                   <a href={coachData.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
-                    <FaXTwitter size={40} />
+                    <FaXTwitter size={25} />
                   </a>
                 )}
                 {coachData.youtube && (
                   <a href={coachData.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
-                    <FaYoutube size={40} />
+                    <FaYoutube size={25} />
                   </a>
                 )}
               </div>
@@ -279,9 +242,16 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
             </div>
             </div>
-            
+              
+              
+            </div>
           </div>
+ 
+
         </div>
+
+      
+    
       </div>
       <div className="container mx-auto mt-4 mb-20">
       <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">

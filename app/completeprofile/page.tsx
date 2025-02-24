@@ -175,7 +175,9 @@ export default function Register() {
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
    /// if (!formValues.gender) newErrors.gender = "Gender is required.";
-    if (!formValues.sport) newErrors.sport = "Sport is required.";
+    if (!formValues.sport) newErrors.sport = "Sports is required.";
+    if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
+    if (!formValues.playingcountries) newErrors.playingcountries = "Nationaly is required.";
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
     if (!formValues.countrycode.trim()) newErrors.countrycode = "Country code is required.";
@@ -501,7 +503,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="mandatory">*</span></label>
                   <input
                     type="text"
                     name="jersey"
@@ -512,7 +514,7 @@ export default function Register() {
 
                 </div>
                 <div>
-                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sports<span className='mandatory'>*</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -528,7 +530,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="mandatory">*</span></label>
                   <Select
                     isMulti
                     options={countries}
@@ -715,7 +717,7 @@ export default function Register() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Leagues<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."

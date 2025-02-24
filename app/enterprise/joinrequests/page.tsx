@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import { useRouter } from 'next/navigation';
-import { showSuccess } from '@/app/components/Toastr';
+import { showError, showSuccess } from '@/app/components/Toastr';
+import { FaRedo } from 'react-icons/fa';
+import Processing from '@/app/components/Processing';
 
 // Define the type for the data
 interface Order {
-  id: number;
+  invitationId: number;
   email: string;
   invitation_for: string;
   status: string;
@@ -19,13 +21,34 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [processing, setProcessing] = useState<boolean>(false);
   const router = useRouter();
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
   
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const resendInvitation=async(id:any)=>{
+    setProcessing(true);
+    const response = await fetch(`/api/joinrequest/resend/?invitationId=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      setProcessing(false);
+      showError('Failed to rresend Invitation.');
+      return;
+    }
+    const data = await response.json();
+    setProcessing(false);
+    showSuccess(data.message);
+    
+  
+
+  }
   useEffect(() => {
     const fetchOrders = async () => {
       const session = await getSession();
@@ -89,6 +112,9 @@ const Home: React.FC = () => {
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
+        { processing && (
+          <Processing/>
+        )}
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
           <div>
             <input
@@ -110,7 +136,7 @@ const Home: React.FC = () => {
               <tbody>
   {paginatedOrders.length > 0 ? (
     paginatedOrders.map((order, index) => (
-      <tr key={order.id}>
+      <tr key={order.invitationId}>
         {/* Serial Number Column */}
        
        
@@ -139,6 +165,16 @@ const Home: React.FC = () => {
                         >
                           {order.status.toUpperCase()}
                         </button>
+
+                        {order.status=='Sent' &&(
+                         <button
+                         className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+                         title="Resend"
+                         onClick={() => resendInvitation(order.invitationId)}
+                       >
+                         <FaRedo />
+                       </button>
+                        )}
         </td>
      
       </tr>

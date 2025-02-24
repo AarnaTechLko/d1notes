@@ -282,7 +282,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
 
         {/* State */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2 font-bold">State</label>
+          <label className="block text-gray-700 mb-2 font-bold">State/Province</label>
           <select
             className="w-full p-2 border rounded-md"
             value={state}

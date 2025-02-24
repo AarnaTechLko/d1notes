@@ -56,6 +56,7 @@ export interface Evaluation {
   positionThree: string;
   video_descriptionThree: string;
 document:string;
+thingsToWork:string;
 
 }
 

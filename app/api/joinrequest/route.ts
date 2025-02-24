@@ -115,6 +115,7 @@ export async function GET(req: Request) {
 
     const queryResult = await db
       .select({
+        id: invitations.id,
         email: invitations.email,
         invitation_for: invitations.invitation_for,
         status: invitations.status,
@@ -126,6 +127,7 @@ export async function GET(req: Request) {
 
     // Convert result to plain JavaScript objects
     const plainResult = queryResult.map(row => ({
+      invitationId: row.id,
       email: row.email,
       invitation_for: row.invitation_for,
       status: row.status,

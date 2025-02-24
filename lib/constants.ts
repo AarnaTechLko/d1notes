@@ -22,6 +22,13 @@ export const licensePackages=[
   
 ];
 
+export const teamlicensePackages=[
+  {id:1, minimum_license:1,maximum_license:200, amount:15},
+  
+  
+];
+
+
 
 export const turnAroundTime=[
   { id:1, value:"24", label:"24 Hours"},

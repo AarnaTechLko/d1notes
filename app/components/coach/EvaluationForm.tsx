@@ -42,6 +42,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
     const [document, setDocument] = useState('');
     const [finalRemarks, setFinalRemarks] = useState('');
+    const [thingsToWork, setThingsToWork] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [fileUploading, setFileUploading] = useState<boolean>(false);
     const [loadSubmit, setLoadSubmit] = useState<boolean>(false);
@@ -62,98 +63,98 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     let organization: any;
     if (position == 'Goalkeeper') {
         technical = [
-            { id: 't1', label: 'Handling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Footwork', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Shot Stopping', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Crosses', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: '1 v 1', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't1', label: 'Handling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Footwork', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Shot Stopping', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Crosses', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: '1 v 1', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Decision Making', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Organization with Back four', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Positioning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Role in build up', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Role in Counter Attack', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta1', label: 'Decision Making', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Organization with Back four', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Positioning', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Role in build up', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Role in Counter Attack', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
         distribution = [
-            { id: 'd1', label: 'With: Hands', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd2', label: 'With: Feet', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd3', label: 'Restarts', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd4', label: 'Open Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd5', label: 'Timing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd1', label: 'With: Hands', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd2', label: 'With: Feet', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd3', label: 'Restarts', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd4', label: 'Open Play', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd5', label: 'Timing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
 
         physical = [
-            { id: 'p1', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Flexibility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Agility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Strength / Power', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p6', label: 'Stance', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p7', label: 'Bravery', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Speed', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Flexibility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Agility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Strength / Power', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p6', label: 'Stance', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p7', label: 'Bravery', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         organization = [
-            { id: 'o1', label: 'Starting Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o2', label: 'Communication', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o3', label: 'Set Plays For', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o4', label: 'Set Playa Against', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o5', label: 'Leadership', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'o1', label: 'Starting Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o2', label: 'Communication', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o3', label: 'Set Plays For', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o4', label: 'Set Playa Against', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o5', label: 'Leadership', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
     }
     else {
         technical = [
-            { id: 't1', label: 'Passing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Receiving', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Dribbling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Shooting', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: 'Finishing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't6', label: 'Heading', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't7', label: 'Tackling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't8', label: 'Defending', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 't1', label: 'Passing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Receiving', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Dribbling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Shooting', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: 'Finishing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't6', label: 'Heading', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't7', label: 'Tackling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't8', label: 'Defending', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Reading the Game', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Decisions w/ Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Decisions w/o Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Understanding of Team Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Understanding of Role & Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta6', label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta7', label: 'Scanning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'ta1', label: 'Reading the Game', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Decisions w/ Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Decisions w/o Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Understanding of Team Play', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Understanding of Role & Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta6', label: 'Timing of Runs', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta7', label: 'Scanning', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         physical = [
-            { id: 'p1', label: 'Strength', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Stamina', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Aggressiveness', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Strength', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Speed', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Stamina', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Aggressiveness', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
         distribution = [];
         organization = [];
     }
 
     const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(technical.map((tech: any) => [tech.label, '0']))
+        Object.fromEntries(technical.map((tech: any) => [tech.label, 'N/A']))
     );
     const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(tactical.map((tact: any) => [tact.label, '0']))
+        Object.fromEntries(tactical.map((tact: any) => [tact.label, 'N/A']))
     );
     const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(physical.map((phys: any) => [phys.label, '0']))
+        Object.fromEntries(physical.map((phys: any) => [phys.label, 'N/A']))
     );
 
     const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(distribution.map((dis: any) => [dis.label, '0']))
+        Object.fromEntries(distribution.map((dis: any) => [dis.label, 'N/A']))
     );
 
     const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>(() =>
-        Object.fromEntries(organization.map((dis: any) => [dis.label, '0']))
+        Object.fromEntries(organization.map((dis: any) => [dis.label, 'N/A']))
     );
     const formattedDate = evaluationData?.created_at ? format(new Date(evaluationData.created_at), 'MM/dd/yyyy') : '';
     const onSaveAsDraft = () => {
@@ -180,6 +181,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             finalRemarks,
             distributionRemarks,
             organizationalRemarks,
+            thingsToWork,
 
         };
 
@@ -243,7 +245,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             finalRemarks,
             document,
             position,
-            sport
+            sport,
+            thingsToWork
         };
 
 
@@ -820,6 +823,25 @@ for how to improve or social media links that demonstrate your feedback are extr
                                         const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
                                         if (words.length <= 1000) {
                                             setFinalRemarks(e.target.value); // Update the value if within limit
+                                        }
+                                    }}
+
+                                />
+                                {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
+                            </div>
+                            <div className="mt-6">
+                                <label htmlFor="final-remarks" className="text-sm font-medium">Things to work on:</label>
+                                <textarea
+                                    value={thingsToWork}
+                                    id="final-remarks"
+                                    className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
+                                    rows={4}
+                                    placeholder="Add overall feedback, encouragement… recommendations 
+for how to improve or social media links that demonstrate your feedback are extremely helpful."
+                                    onChange={(e) => {
+                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
+                                        if (words.length <= 1000) {
+                                            setThingsToWork(e.target.value); // Update the value if within limit
                                         }
                                     }}
 

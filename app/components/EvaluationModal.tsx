@@ -190,8 +190,12 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
           confirmButtonText: 'OK'
         });
       }
-
-      if (playerClubId !== Number(coachClubId) && (freeEvaluations ?? 0) <= (allowedFreeRequests ?? 0)) {
+ 
+      if (
+        (playerClubId !== Number(coachClubId) || (playerClubId === 0 &&  Number(coachClubId) === 0)) &&
+        (freeEvaluations ?? 0) <= (allowedFreeRequests ?? 0)
+      )
+       {
         const stripe = await stripePromise;
         if (!stripe) {
           throw new Error('Stripe is not loaded');

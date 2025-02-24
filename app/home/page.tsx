@@ -86,39 +86,47 @@ export default function Home(): JSX.Element {
       <div className="max-w-7xl mx-auto px-4 mt-24 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center py-10">
-        <h1 className="text-4xl font-bold text-gray-900">
-        Gain access to coaches that specialize in{' '}
-      <div className="inline-block relative border border-gray-500 p-1 rounded-sm" ref={dropdownRef} >
-        <button
-          className="text-blue-600 text-[20px] flex items-center"
-          onClick={toggleDropdown}
-        >
-          <span className="text-blue-600">{selectedValue}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="ml-2 h-4 w-4 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <h1 className="text-4xl font-bold text-gray-900  items-center m-auto">
+  Gain access to coaches that specialize in{' '}
+  <div
+    className="inline-flex items-center relative border border-gray-500 px-2 py-1 rounded-sm ml-2"
+    ref={dropdownRef}
+  >
+    <button
+      className="text-blue-600 text-xl flex items-center focus:outline-none"
+      onClick={toggleDropdown}
+    >
+      <span className="text-blue-600">{selectedValue}</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="ml-1 h-5 w-5 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+    {isDropdownOpen && (
+      <div className="absolute left-0 top-full bg-white shadow-md mt-1 rounded-md w-max z-50 border border-gray-300">
+        <ul>
+          <li
+            className="px-4 py-2 text-xl hover:text-blue-600 cursor-pointer"
+            onClick={() => selectValue('Soccer')}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-        {isDropdownOpen && (
-          <div className="absolute bg-white shadow-md mt-1 rounded-md w-40 z-50">
-            <ul>
-              <li className="px-4 py-2 text-xl hover:text-blue-600" onClick={() => selectValue('Soccer')}>Soccer</li>
-               
-            </ul>
-          </div>
-        )}
+            Soccer
+          </li>
+        </ul>
       </div>
-    </h1>
+    )}
+  </div>
+</h1>
+
           <p className="mt-4 text-lg text-gray-500">
           D1 NOTES is setting the standard for individual game film evaluation that offers young athletes the edge they have been missing.
           </p>
@@ -126,46 +134,45 @@ export default function Home(): JSX.Element {
 
         {/* Scrollable Thumbnails Section */}
         <div className="relative">
-          {/* Horizontal scrolling container */}
-          <div
-            className="flex overflow-x-auto space-x-4 scrollbar-hide scroll-smooth snap-x snap-mandatory"
-            ref={scrollRef}
-          >
-            {profiles.map((coach, index) => (
-              <ProfileCard
-              key={coach.id || index}
-              name={coach.firstName}
-              image={coach.image}
-              organization={coach.clubName}
-              rating={coach.rating}
-              slug={coach.slug}
-              facebook={coach?.facebook}
-                    instagram={coach?.instagram}
-                    linkedin={coach?.linkedin}
-                    xlink={coach?.xlink}
-                    evaluation_rate={coach?.evaluation_rate}
-                    youtube={coach?.youtube}
-              
-              /> 
-              
-               
-            ))}
-          </div>
+  {/* Horizontal scrolling container */}
+  <div
+    className="flex overflow-x-auto space-x-4 scrollbar-hide scroll-smooth snap-x snap-mandatory px-4"
+    ref={scrollRef}
+  >
+    {profiles.map((coach, index) => (
+      <div key={coach.id || index} className="snap-center flex-shrink-0 w-[250px]">
+        <ProfileCard
+          name={coach.firstName}
+          image={coach.image}
+          organization={coach.clubName}
+          rating={coach.rating}
+          slug={coach.slug}
+          facebook={coach?.facebook}
+          instagram={coach?.instagram}
+          linkedin={coach?.linkedin}
+          xlink={coach?.xlink}
+          evaluation_rate={coach?.evaluation_rate}
+          youtube={coach?.youtube}
+        />
+      </div>
+    ))}
+  </div>
 
-          {/* Scroll Buttons */}
-          <button
-            onClick={handleScrollLeft}
-            className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10"
-          >
-            ←
-          </button>
-          <button
-            onClick={handleScrollRight}
-            className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10"
-          >
-            →
-          </button>
-        </div>
+  {/* Scroll Buttons */}
+  <button
+    onClick={handleScrollLeft}
+    className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 shadow-md"
+  >
+    ←
+  </button>
+  <button
+    onClick={handleScrollRight}
+    className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 shadow-md"
+  >
+    →
+  </button>
+</div>
+
       </div>
       
       <div className="container mx-auto p-6">

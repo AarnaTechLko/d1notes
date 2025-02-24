@@ -308,17 +308,17 @@ const Dashboard: React.FC = () => {
         },
       },
       {
-        Header: 'Player Name',
+        Header: 'Coach Name',
         accessor: 'first_name',
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="flex items-center space-x-2">
             <img
-              src={row.original.image} // Assuming the image URL is stored in `playerImage`
-              alt={row.original.first_name}
-              className="w-8 h-8 rounded-full"
-            />
+  src={(!row.original.image || row.original.image === 'null') ? '/default.jpg' : row.original.image}
+  alt={row.original.first_name}
+  className="w-8 h-8 rounded-full"
+/>
             <a
-              href={`/players/${row.original.playerSlug}`}
+              href={`/coach/${row.original.slug}`}
               className="underline font-bold text-blue-700"
               target="_blank"
               rel="noopener noreferrer"

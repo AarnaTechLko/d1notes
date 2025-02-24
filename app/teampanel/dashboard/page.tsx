@@ -63,10 +63,13 @@ const Dashboard: React.FC = () => {
         <DashboardContent/>
           
         </div>
-        <div className="bg-white shadow-md rounded-lg p-6 ">
-        {/*<InviteForm usertype="Club"/>*/}
-        {/* <PurchaseLicense organizationId={sessions?.user.id || ''}/> */}
-        </div>
+        {!sessions?.user.club_id && (
+ <div className="bg-white shadow-md rounded-lg p-6 ">
+ {/*<InviteForm usertype="Club"/>*/}
+<PurchaseLicense organizationId={sessions?.user.id || ''}/> 
+ </div>
+        )}
+       
       </main>
     </div>
   );

@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
         organizationalRemarks: evaluationResults.organizationalRemarks,
         distributionRemarks: evaluationResults.distributionRemarks,
         document: evaluationResults.document,
+        thingsToWork: evaluationResults.thingsToWork,
        
         evaluationId: playerEvaluation.id,
         playerId: playerEvaluation.player_id,
