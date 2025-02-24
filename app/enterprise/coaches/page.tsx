@@ -474,7 +474,7 @@ const Home: React.FC = () => {
                   className='underline text-blue-500'
                   target="_blank"
                 >
-                  {coach.totalEvaluations}
+                 View {/* {coach.totalEvaluations} */}
                 </a></td>
             <td>
               {coach.status === 'Inactive' ? (

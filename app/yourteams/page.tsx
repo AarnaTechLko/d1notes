@@ -212,7 +212,7 @@ export default function TeamsPage() {
                     ) : (
                       <tr>
                         <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                          You are not in any team
+                          You have not been to any Team yet...
                         </td>
                       </tr>
                     )}

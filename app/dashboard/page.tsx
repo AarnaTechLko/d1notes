@@ -451,7 +451,7 @@ const Dashboard: React.FC = () => {
 
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6 ">
-          <h3 className='font-bold text-lg'>Evaluation History</h3>
+          <h3 className='font-bold text-lg'>Evaluation Tracker</h3>
           <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your payment information to send funds by clicking on Payment Information in the left side menu if you plan to purchase evaluations from D1’s public marketplace of Coaches. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team offering free evaluations. Otherwise, start your journey to greatness by finding a Coach who will give you that edge you have been missing!" />
 
           <div className="block md:hidden mb-4">
