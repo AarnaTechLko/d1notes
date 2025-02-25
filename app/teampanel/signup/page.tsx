@@ -20,7 +20,7 @@ const formSchema = z.object({
   owner_name: z.string().min(1, 'Administrator Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
-  //address: z.string().min(1, 'Address is required.'),
+  address: z.string().min(1, 'Address is required.'),
   country: z.string().min(1, 'Country is required.'),
   countryCodes: z.string().min(1, 'Country Code is required.'),
   state: z.string().min(1, 'State is required.'),
