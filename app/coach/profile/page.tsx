@@ -471,7 +471,7 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State<span className='mandatory'>*</span></label>
+          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
           
           {isEditMode ? (
           <select

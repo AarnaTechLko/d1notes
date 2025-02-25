@@ -123,7 +123,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
                     className="bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold py-2 px-4 rounded shadow-md hover:from-green-500 hover:to-green-700"
                     onClick={() => handlePurchase(license)}
                   >
-                   Action
+                   Purchase
                   </button>
                 </td>
               </tr>
@@ -187,7 +187,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
                     <span className="ml-2">Processing...</span>
                   </div>
                 ) : (
-                  'Buy Now'
+                  'Purchase Now'
                 )}
               </button>
             </div>

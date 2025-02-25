@@ -639,7 +639,7 @@ export default function Register() {
                   </div>
 
                   <div>
-                    <label htmlFor="license_type" className="block text-gray-700 text-sm font-semibold mb-2">License Type (Optional)</label>
+                    <label htmlFor="license_type" className="block text-gray-700 text-sm font-semibold mb-2">Coaching License Type (Optional)</label>
                     <select
                       name="license_type"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -856,7 +856,7 @@ export default function Register() {
                     )}
                   </div>
                 <div>
-                    <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload License <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
                     placeholder='Ex: https://youtube.com/username'
                       type="file"

@@ -96,7 +96,7 @@ export default function Home(): JSX.Element {
       className="text-blue-600 text-xl flex items-center focus:outline-none"
       onClick={toggleDropdown}
     >
-      <span className="text-blue-600">{selectedValue}</span>
+      <span className="text-blue-600" style="font-weight:36px;">{selectedValue}</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="ml-1 h-5 w-5 text-blue-600"

@@ -167,7 +167,7 @@ export default function TeamsPage() {
                     <th className="text-left px-4 py-2">Team Name</th>
                     <th className="text-left px-4 py-2">Logo</th>
                     <th className="text-left px-4 py-2">Gender</th>
-                    <th className="text-left px-4 py-2">Leage</th>
+                    <th className="text-left px-4 py-2">League</th>
 
                     <th className="text-left px-4 py-2">Roster</th>
                     
@@ -212,7 +212,7 @@ export default function TeamsPage() {
                     ) : (
                       <tr>
                         <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                          You have not been to any Team yet...
+                          You have not been added to any Team yet...
                         </td>
                       </tr>
                     )}

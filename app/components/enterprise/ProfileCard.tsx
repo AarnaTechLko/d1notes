@@ -30,7 +30,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
       else{
         Swal.fire({
           title: 'Unauthorized!',
-          text: 'Only Associated  Members and Administrators of this Organization / Team may view.',
+          text: 'Only members of this Organization may access.',
           icon: 'error', // 'success' displays a green checkmark icon
           confirmButtonText: 'OK',
         });

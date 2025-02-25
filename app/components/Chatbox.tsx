@@ -271,7 +271,7 @@ const ChatBox: React.FC = () => {
                     </div>
                 ))
             ) : (
-                <div className="text-center text-gray-500 mt-4">No Message Found</div>
+                <div className="text-center text-gray-500 mt-4">No Messages...</div>
             )}
         </div>
 
@@ -313,7 +313,7 @@ const ChatBox: React.FC = () => {
         </div>
     </>
 ) : (
-    <div className="text-center text-gray-500 p-6 mt-10">No Message Found</div>
+    <div className="text-center text-gray-500 p-6 mt-10">No Messages...</div>
 )}
 
                 </div>

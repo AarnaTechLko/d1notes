@@ -44,7 +44,7 @@ export default function Footer() {
               
             </a>
             <a href="https://www.instagram.com/d1.notes/" target='_blank' aria-label="Instagram">
-              <FaInstagram className="h-6 w-6 hover:text-pink-500" />
+              <FaInstagram className="h-6 w-6 text-pink-500" />
             </a>
           </div>
         </div>

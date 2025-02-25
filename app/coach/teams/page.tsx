@@ -174,7 +174,7 @@ export default function TeamsPage() {
                     <th className="text-left px-4 py-2">Team Name</th>
                     <th className="text-left px-4 py-2">Logo</th>
                     <th className="text-left px-4 py-2">Gender</th>
-                    <th className="text-left px-4 py-2">Leage</th>
+                    <th className="text-left px-4 py-2">League</th>
 
                     <th className="text-left px-4 py-2">Roster</th>
                     

@@ -514,7 +514,7 @@ export default function Register() {
 
                 </div>
                 <div>
-                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sports<span className='mandatory'>*</span></label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -530,7 +530,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="mandatory">*</span></label>
+                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationalities <span className="mandatory">*</span></label>
                   <Select
                     isMulti
                     options={countries}

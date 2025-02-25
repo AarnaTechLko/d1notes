@@ -120,10 +120,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
         tactical = [
             { id: 'ta1', label: 'Reading the Game', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Decisions w/ Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Decisions w/o Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Decisions with Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Decisions without Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'ta4', label: 'Understanding of Team Play', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Understanding of Role & Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Understanding of Role and Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'ta6', label: 'Timing of Runs', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'ta7', label: 'Scanning', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
@@ -817,8 +817,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     id="final-remarks"
                                     className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                                     rows={4}
-                                    placeholder="Add overall feedback, encouragement… recommendations 
-for how to improve or social media links that demonstrate your feedback are extremely helpful."
+                                    
                                     onChange={(e) => {
                                         const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
                                         if (words.length <= 1000) {
@@ -830,14 +829,13 @@ for how to improve or social media links that demonstrate your feedback are extr
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
                             </div>
                             <div className="mt-6">
-                                <label htmlFor="final-remarks" className="text-sm font-medium">Things to work on:</label>
+                                <label htmlFor="final-remarks" className="text-sm font-medium">Things to Work On:</label>
                                 <textarea
                                     value={thingsToWork}
                                     id="final-remarks"
                                     className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                                     rows={4}
-                                    placeholder="Add overall feedback, encouragement… recommendations 
-for how to improve or social media links that demonstrate your feedback are extremely helpful."
+                                    
                                     onChange={(e) => {
                                         const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
                                         if (words.length <= 1000) {

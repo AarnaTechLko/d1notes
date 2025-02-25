@@ -109,7 +109,7 @@ const Packages: React.FC = () => {
                   <span className="ml-2">Processing...</span>
                 </div>
               ) : (
-                'Buy Now'
+                'Purchase Now'
               )}
             </button>
           </div>

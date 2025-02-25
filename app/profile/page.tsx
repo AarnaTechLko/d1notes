@@ -591,7 +591,7 @@ let ppositons;
                     />
                   </div>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countrycode} {profileData.number}</p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800"> {profileData.number}</p>
                 )}
               </div>
               </div>

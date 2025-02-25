@@ -20,7 +20,7 @@ const formSchema = z.object({
   owner_name: z.string().min(1, 'Administrator Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
-  address: z.string().min(1, 'Address is required.'),
+  //address: z.string().min(1, 'Address is required.'),
   country: z.string().min(1, 'Country is required.'),
   countryCodes: z.string().min(1, 'Country Code is required.'),
   state: z.string().min(1, 'State is required.'),
@@ -353,7 +353,7 @@ const [showPassword, setShowPassword] = useState(false);
             {/* Address */}
             <div className="mb-4">
               <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-              Team Address<span className="mandatory">*</span>
+              Team Address
               </label>
               <input
               placeholder='Ex. 12 Fireside Road Suite 200'

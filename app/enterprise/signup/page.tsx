@@ -20,7 +20,7 @@ const formSchema = z.object({
   owner_name: z.string().min(1, 'Administrator Name is required.'),
   email: z.string().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
-  address: z.string().min(1, 'Address is required.'),
+  //address: z.string().min(1, 'Address is required.'),
   country: z.string().min(1, 'Country is required.'),
   countryCodes: z.string().min(1, 'Country Code is required.'),
   state: z.string().min(1, 'State is required.'),
@@ -37,7 +37,7 @@ const formSchema = z.object({
         /^(?=.*\d)(?=.*[!@#$%^&*()_\-+=|:;<>,.?]).{6,}$/.test(value),
       {
         message:
-          "Password must contain at least 6 characters, including at least 1 number and 1 special character.",
+          "Password must contain at least 6 characters, including at least 1 number and 1 special character",
       }
     ),
   confirm_password: z.string(),
@@ -358,7 +358,7 @@ export default function Signup() {
               {/* Address */}
               <div className="mb-4">
                 <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Organization Address<span className="mandatory">*</span>
+                  Organization Address
                 </label>
                 <input
                   placeholder='Ex. 12 Fireside Road Suite 200'
@@ -567,7 +567,7 @@ export default function Signup() {
               <div className="mb-4 md:flex md:space-x-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 text-sm font-semibold mb-2">Create Password<span className='mandatory'>*</span></label>
-                  <p className="text-gray-400 text-xs">(Password must contain at least 6 characters, including at least 1 number and 1 special character.)</p>
+                  <p className="text-gray-400 text-xs">(Password must contain at least 6 characters, including at least 1 number and 1 special character)</p>
                   <div className="relative">
                     <input type={showPassword ? "text" : "password"} name="password" className='border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500' accept="application/pdf" value={formValues.password}
                       onChange={handleChange} />
