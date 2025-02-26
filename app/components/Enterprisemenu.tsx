@@ -133,7 +133,7 @@ useEffect(() => {
       
       
       <li className="pt-[8px]">
-        <Link href="/enterprise/dashboard" className=" text-black font-bold py-2 px-4 rounded" onClick={closeMenu}>
+        <Link href="/enterprise/dashboard" className=" text-black font-bold py-2 px-4 rounded  cursor-default" onClick={closeMenu}>
           Hello, {session?.user?.name || "Enterprise"}!
         </Link>
       </li>

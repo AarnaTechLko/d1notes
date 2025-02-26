@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
   ]; 
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2 p-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-2">
       {statsArray.map((stat, index) => (
         <div
           key={index}

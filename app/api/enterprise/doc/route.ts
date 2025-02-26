@@ -42,9 +42,12 @@ return NextResponse.json({result,rolesList}, { status: 200 });
 export async function POST(req: NextRequest) {
   const body=await req.json();
   const enterprise_id=body.enterprise_id;
-  const enterproseQuery=await db.select().from(enterprises).where(eq(enterprises.id,body.enterprise_id));
+  const enterproseQuery=await db.select().from(enterprises).where(eq(enterprises.id,Number(body.enterprise_id)));
+
+ 
   const password = generateRandomPassword(10);
   const hashedPassword = await hash(password, 10);
+  
   try{
   await db.insert(enterprises).values({
     organizationName: enterproseQuery[0].organizationName,
@@ -61,6 +64,8 @@ export async function POST(req: NextRequest) {
     role_id: body.role_id,
     parent_id: body.enterprise_id,
     mobileNumber: body.phone,
+    buy_evaluation: body.acceptEvaluations,
+    view_evaluation: body.buyLicenses,
     password:hashedPassword,
     
   });
@@ -75,9 +80,11 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({body}, { status: 200 });
 }
-catch(err){
-  return NextResponse.json({err}, { status: 500 });
+catch(err:any){
+  console.error("Error:", err); // Log the full error
+  return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
 }
+
 }
 
 
@@ -106,6 +113,8 @@ export async function PUT(req: NextRequest) {
         role_id: body.role_id,
         parent_id: body.enterprise_id,
         mobileNumber: body.phone,
+        buy_evaluation: body.acceptEvaluations,
+        view_evaluation: body.buyLicenses,
          
       })
       .where(eq(enterprises.id, body.id)).execute();  // Ensure you're updating the correct record based on the enterprise_id

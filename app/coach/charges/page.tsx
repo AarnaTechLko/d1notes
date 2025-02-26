@@ -7,6 +7,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { getCurrencyInUSD } from "@/lib/clientHelpers";
 import Swal from "sweetalert2";
 import { currencies, turnAroundTime } from "@/lib/constants";
+import { ClassNames } from "@emotion/react";
 
 const Home: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -220,8 +221,13 @@ const Home: React.FC = () => {
                         {/* <h2 className="text-lg font-semibold mb-4">
                             {isEditMode ? "Edit Evaluation Rate" : "Add Evaluation Rate"}
                         </h2> */}
+                        {Number(turnaroundtime)==120 &&(
+                            <div className="mb-5">Evaluation Rates for 120 Hours</div>
+                        )}
+                        {Number(turnaroundtime)!=120 &&(
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1">Turnaround Time</label>
+
                             <select
                                 name="turnaroundtime"
                                 value={turnaroundtime}
@@ -235,13 +241,14 @@ const Home: React.FC = () => {
 
                             </select>
                         </div>
+                         )}
                         <div className="mb-4 flex space-x-4">
                             
                             
 
                             {/* Amount Input */}
                             <div className="w-1/2">
-                                <label className="block text-sm font-medium mb-1">Base Evaluation Rate $
+                                <label className="block text-sm font-medium mb-1">Evaluation Rate $
                                     {/* {session?.user.coachCurrency}*/}</label> 
                                 <input
                                     type="number"

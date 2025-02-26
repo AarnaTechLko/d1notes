@@ -2,7 +2,7 @@
 import Swal from 'sweetalert2';
 import React, { useEffect, useState } from "react";
 import { useSession, getSession } from "next-auth/react";
-import Sidebar from "../../components/enterprise/Sidebar";
+import Sidebar from "../../components/teams/Sidebar";
 import { showError, showSuccess } from "@/app/components/Toastr";
 import { FaEdit, FaKey, FaTrash } from "react-icons/fa";
 import { countryCodesList } from '@/lib/constants';
@@ -22,13 +22,16 @@ const Home: React.FC = () => {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [search, setSearch] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [countryCodes, setCountryCodes] = useState<string>("");
+  const [countryCodes, setCountryCodes] = useState<string>("+1");
   const [email, setEmail] = useState<string>("");
+  const [buyLicenses, setBuyLicenses] = useState(false);
+  const [acceptEvaluations, setAcceptEvaluations] = useState(false);
   const [phone, setPhone] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
+  const [selectedRole, setSelectedRole] = useState<number>(0);
 
   const limit = 10; // Items per page
   const { data: session } = useSession();
@@ -66,10 +69,10 @@ const Home: React.FC = () => {
       isValid = false;
     }
 
-    if (!role.trim()) {
-      if (!firstError) firstError = "Role is required.";
-      isValid = false;
-    }
+    // if (!role.trim()) {
+    //   if (!firstError) firstError = "Role is required.";
+    //   isValid = false;
+    // }
 
     if (firstError) {
       showError(firstError); // Show only the first error
@@ -83,26 +86,28 @@ const Home: React.FC = () => {
     if (!validateForm()) {
       return;
     }
-    let enterprise_id = session?.user?.id;
+    let team_id = session?.user?.id;
 
-    if (!enterprise_id) {
+    if (!team_id) {
       showError("Enterprise ID is not available.");
       return;
     }
 
     const data = {
       email,
-      enterprise_id,
+      team_id,
       name,
       phone,
       countryCodes,
-      role_id: role,
+      buyLicenses,
+      acceptEvaluations,
+      role_id: selectedRole,
       ...(selectedRecord ? { id: selectedRecord.id } : {})
     };
 
     const endpoint = selectedRecord
-      ? `/api/enterprise/doc`
-      : "/api/enterprise/doc";
+      ? `/api/teams/doc`
+      : "/api/teams/doc";
 
     const method = selectedRecord ? "PUT" : "POST";
 
@@ -145,7 +150,7 @@ const Home: React.FC = () => {
       return;
     }
 
-    const response = await fetch(`/api/enterprise/doc?club_id=${enterpriseId}`, {
+    const response = await fetch(`/api/teams/doc?club_id=${enterpriseId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -284,7 +289,7 @@ const Home: React.FC = () => {
     });
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`/api/enterprise/doc?id=${id}`, {
+        const response = await fetch(`/api/teams/doc?id=${id}`, {
           method: 'DELETE',
         });
 
@@ -307,10 +312,11 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Sub Administrator</h1>
           <div className="flex items-center gap-4">
             <input
               type="text"
-              placeholder="Search by name or Email"
+              placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -319,7 +325,7 @@ const Home: React.FC = () => {
               onClick={() => setModalOpen(true)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
-              Add Sub Admin
+              Add Sub Administrator
             </button>
           </div>
 
@@ -383,32 +389,44 @@ const Home: React.FC = () => {
         value={phone}
         onChange={handlePhoneNumberChange}
         className="flex-1 p-2 border border-gray-300 rounded-lg"
-        placeholder="(123) 123-1231"
+        placeholder="(xxx) xxx-xxxx"
       />
     </div>
   </div>
 </div>
 
+<div className="flex items-center space-x-4">
+  {/* Buy Licenses Toggle */}
+  <div className="flex items-center space-x-2">
+    <span>Buy Licenses</span>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={buyLicenses}
+        onChange={() => setBuyLicenses(!buyLicenses)}
+      />
+      <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+    </label>
+  </div>
+
+  {/* Accept Evaluations Toggle */}
+  <div className="flex items-center space-x-2">
+    <span>Accept Evaluations</span>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={acceptEvaluations}
+        onChange={() => setAcceptEvaluations(!acceptEvaluations)}
+      />
+      <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+    </label>
+  </div>
+</div>
 
 
-                  <div className="mb-4">
-                    <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                      Role<span className='mandatory'>*</span>
-                    </label>
-                    <select
-                      name="role"
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                    >
-                      <option value="">Select</option>
-                      {roleList.map((roleItem, index) => (
-                        <option key={index} value={roleItem.id}>
-                          {roleItem.role_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+
 
                   <div className="flex justify-end gap-4">
                     <button
@@ -433,7 +451,7 @@ const Home: React.FC = () => {
           <table className="w-full text-sm text-left text-gray-700">
             <thead>
               <tr>
-                <th>Serial Number</th>
+                
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
@@ -445,11 +463,13 @@ const Home: React.FC = () => {
               {paginatedOrders.length > 0 ? (
                 paginatedOrders.map((order, index) => (
                   <tr key={order.id}>
-                    <td>{(currentPage - 1) * limit + index + 1}</td>
+                    
                     <td>{order.name}</td>
                     <td>{order.email}</td>
                     <td>{order.countryCodes} {order.phone}</td>
-                    <td>{order.role_name}</td>
+                    <td>
+                    {order.role_id === '1' ? "A" : "B"}
+                    </td>
                     <td>
                     <button
                         onClick={() => handleResetpassword(order)}
@@ -474,7 +494,7 @@ const Home: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6}>No Role(s) found</td>
+                  <td colSpan={6}>No Sub Administrators added yet...</td>
                 </tr>
               )}
             </tbody>

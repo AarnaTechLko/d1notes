@@ -64,7 +64,7 @@ useEffect(()=>{
         href={`/coach/${slug}`}
         className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold"
       >
-        View Full Bio
+        View Details
       </a>
     </div>
     </div>

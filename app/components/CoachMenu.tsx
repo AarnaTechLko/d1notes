@@ -121,7 +121,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
             <li className="pt-[8px]">
                 <Link
                     href="/coach/dashboard"
-                    className="text-black font-bold py-2 px-4 rounded"
+                    className="text-black font-bold py-2 px-4 rounded  cursor-default"
                     onClick={closeMenu}
                 >
                     Hello, {session?.user?.name || "Coach"}!

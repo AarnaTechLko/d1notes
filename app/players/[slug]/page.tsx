@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/app/components/Loading';
 import ProfileCard from '@/app/components/teams/ProfileCard';
-import CoachProfileCard from '@/app/components/ProfileCard';
+import ClubProfileCard from '@/app/components/enterprise/ProfileCard';
 import PlayerProfileCard from '../../components/players/ProfileCard'
 import Profile from '@/app/coach/profile/page';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
@@ -54,6 +54,7 @@ interface CoachData {
   xlink: string;
   youtube: string;
   id: number;
+  school_name: string;
 }
 
 interface CoachProfileProps {
@@ -68,6 +69,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [teamData, setTeamData] = useState<Profile[]>([]);
   const [banners, setBanners] = useState<string[]>([]);
   const [coaches, setCoaches] = useState<string[]>([]);
+  const [organizations, setOrganization] = useState<string[]>([]);
   const [clubName, setClubName] = useState<string | null>(null);
   const [teams, setTeams] = useState<string[]>([]);
   const [restTeams, setRestTeams] = useState<RestTeam[]>([]);
@@ -101,7 +103,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         const responseData = await response.json();
         setCoachData(responseData.clubdata);
-        setBanners(responseData.banners.map((banner: any) => banner.filepath));
+        
         setTeamData(responseData.teamplayersList);
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
@@ -209,12 +211,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 )}
               </div>
             <div className='bg-white p-6 w-full mt-4'>
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-3 gap-5">
                 <div><b>Organization Name:</b> {clubName}</div>
                 <div><b>Position:</b> {coachData.position}</div>
                 <div><b>High School Graduation Year:</b> {coachData.graduation}</div>
-                {/* <div><b>Weight:</b> {coachData.weight} Lbs</div> */}
+                 <div><b>Weight:</b> {coachData.weight} Lbs</div>  
                 <div><b>Height:</b> {coachData.height}</div>
+                <div><b>School Name:</b> {coachData.school_name}</div>
                 <div><b>Team:</b> {coachData.team}</div>
                 <div><b>Level:</b> {coachData.grade_level}</div>
               </div>
@@ -255,22 +258,23 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       </div>
       <div className="container mx-auto mt-4 mb-20">
       <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-          Coaches
+          Organization
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-         {coaches.length > 0 ? (
-  coaches.map((item: any) => (
-    <CoachProfileCard
+         {organizations.length > 0 ? (
+  organizations.map((item: any) => (
+    <ClubProfileCard
       key={item.id}
-      name={item.coachFirstName}
-      organization={item.clubName}
-      image={item.coachImage ?? '/default.jpg'}
-      rating={item.rating}
+   
+      organization={item.organizationName}
+      logo={item.logo ?? '/default.jpg'}
+      id={item.id}
+      country={item.country}
       slug={item.slug}
     />
   ))
 ) : (
-  <p>No Coach Associated</p>
+  <p>No Organization added yet..</p>
 )}
 
         </div>
@@ -290,7 +294,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 slug={item.teamSlug}
               />
           ) )) : (
-            <p>No Team(s) Associated</p>
+            <p>No Teams added yet...</p>
           )}
         </div>
 

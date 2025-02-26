@@ -96,7 +96,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
         href={`/players/${slug}`}
         className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold"
       >
-        View Full Bio
+        View Details
       </a>
     </div>
 
@@ -125,9 +125,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     {/* <p className="text-gray-500 teampagefont">
      <b>Weight: </b>  {weight} Lbs.
     </p> */}
-    <p className="text-gray-500 teampagefont">
-     <b>Birthdate: </b>  {formattedDate} 
-    </p>
+    
     <p className="text-gray-500 teampagefont"><b>Level: </b>{grade_level}</p>
   </div>
   <div className="flex space-x-4 justify-center mt-3 mb-3 h-5">

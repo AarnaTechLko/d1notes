@@ -102,14 +102,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
             <FormControl component="fieldset" sx={{ mb: 2 }}>
               <FormLabel component="legend">Select Your Role</FormLabel>
               <RadioGroup
-                value={role}
-                onChange={(e) => setRole(e.target.value as 'Coach' | 'Player' | 'Enterprise')}
-              >
-                <FormControlLabel value="Coach" control={<Radio checked={type === 'coach'} />} label="Coach" />
-                <FormControlLabel value="Player" control={<Radio checked={type === 'player'} />} label="Player" />
-                <FormControlLabel value="Enterprise" control={<Radio checked={type === 'enterprise'} />} label="Organization" />
-                <FormControlLabel value="Team" control={<Radio checked={type === 'team'} />} label="Team" />
-              </RadioGroup>
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+>
+  <FormControlLabel value="coach" control={<Radio checked={role === 'coach'} />} label="Coach" />
+  <FormControlLabel value="player" control={<Radio checked={role === 'player'} />} label="Player" />
+  <FormControlLabel value="enterprise" control={<Radio checked={role === 'enterprise'} />} label="Organization" />
+  <FormControlLabel value="team" control={<Radio checked={role === 'team'} />} label="Team" />
+</RadioGroup>
             </FormControl>
 
             <Button

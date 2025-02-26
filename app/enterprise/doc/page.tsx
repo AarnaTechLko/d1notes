@@ -22,8 +22,10 @@ const Home: React.FC = () => {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [search, setSearch] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [countryCodes, setCountryCodes] = useState<string>("");
+  const [countryCodes, setCountryCodes] = useState<string>("+1");
   const [email, setEmail] = useState<string>("");
+  const [buyLicenses, setBuyLicenses] = useState(false);
+  const [acceptEvaluations, setAcceptEvaluations] = useState(false);
   const [phone, setPhone] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -97,6 +99,8 @@ const Home: React.FC = () => {
       name,
       phone,
       countryCodes,
+      buyLicenses,
+      acceptEvaluations,
       role_id: selectedRole,
       ...(selectedRecord ? { id: selectedRecord.id } : {})
     };
@@ -308,10 +312,11 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Sub Administrator</h1>
           <div className="flex items-center gap-4">
             <input
               type="text"
-              placeholder="Search by name or Email"
+              placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -320,7 +325,7 @@ const Home: React.FC = () => {
               onClick={() => setModalOpen(true)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
-              Add Sub Admin
+              Add Sub Administrator
             </button>
           </div>
 
@@ -384,25 +389,42 @@ const Home: React.FC = () => {
         value={phone}
         onChange={handlePhoneNumberChange}
         className="flex-1 p-2 border border-gray-300 rounded-lg"
-        placeholder="(123) 123-1231"
+        placeholder="(xxx) xxx-xxxx"
       />
     </div>
   </div>
 </div>
 
 <div className="flex items-center space-x-4">
-  <span>Buy Licenses</span>
-  <label className="relative inline-flex items-center cursor-pointer">
-    <input
-      type="checkbox"
-      className="sr-only peer"
-      checked={selectedRole === 2}
-      onChange={() => setSelectedRole(selectedRole === 1 ? 2 : 1)}
-    />
-    <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
-  </label>
-  <span>Accept Evaluations</span>
+  {/* Buy Licenses Toggle */}
+  <div className="flex items-center space-x-2">
+    <span>Buy Licenses</span>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={buyLicenses}
+        onChange={() => setBuyLicenses(!buyLicenses)}
+      />
+      <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+    </label>
+  </div>
+
+  {/* Accept Evaluations Toggle */}
+  <div className="flex items-center space-x-2">
+    <span>Accept Evaluations</span>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={acceptEvaluations}
+        onChange={() => setAcceptEvaluations(!acceptEvaluations)}
+      />
+      <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+    </label>
+  </div>
 </div>
+
 
 
 
@@ -472,7 +494,7 @@ const Home: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6}>No Role(s) found</td>
+                  <td colSpan={6}>No Sub Administrators added yet...</td>
                 </tr>
               )}
             </tbody>

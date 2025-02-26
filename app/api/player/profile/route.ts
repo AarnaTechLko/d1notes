@@ -28,10 +28,10 @@ export async function POST(req: NextRequest) {
         }
 
         // Step 2: Fetch banners associated with the user
-        const banners = await db
+        const enterprisesList = await db
             .select()
-            .from(playerbanner)
-            .where(eq(playerbanner.user_id, user[0].id))
+            .from(enterprises)
+            .where(eq(enterprises.id, Number(user[0].enterprise_id)))
             .execute();
 
         // Step 3: Get teams associated with the main player
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         if (teamIds.length === 0) {
             return NextResponse.json({
                 clubdata: user[0],
-                banners,
+                enterprisesList,
                 clubname:enterprise[0],
                 playerOfTheTeam: [],
                 teamPlayers: [],
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             clubdata: user[0],
             clubname:enterprise[0],
-            banners,
+            enterprisesList,
             playerOfTheTeam: teamsOfPlayer,
             teamPlayers: allTeamPlayers,
             coachesList:coachesList

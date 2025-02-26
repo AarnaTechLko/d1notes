@@ -167,74 +167,11 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       <div className={`${isMobileOpen ? 'block' : 'hidden'} md:block`}>
+   
+
+     
       
-        <div className="space-x-4 mb-4">
-          Age<span className="mandatory">*</span>:
-          </div>
-                            <div className="space-x-4 mb-4">
-        <label className="inline-flex items-center cursor-pointer">
-          <input
-            type="radio"
-            name="option"
-            value="ageGroup"
-            checked={selectedOption === "ageGroup"}
-            onChange={() => setSelectedOption("ageGroup")}
-            className="hidden"
-          />
-          <span
-            className={`px-4 py-2 rounded-full ${
-              selectedOption === "ageGroup"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-          >
-            Age Group
-          </span>
-        </label>
-
-        <label className="inline-flex items-center cursor-pointer">
-          <input
-            type="radio"
-            name="option"
-            value="birthYear"
-            checked={selectedOption === "birthYear"}
-            onChange={() => setSelectedOption("birthYear")}
-            className="hidden"
-          />
-          <span
-            className={`px-4 py-2 rounded-full ${
-              selectedOption === "birthYear"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-          >
-            Birth Year
-          </span>
-        </label>
-      </div>
-
-      {/* Dropdowns */}
-      {selectedOption === "ageGroup" && (
-        <select className="w-full p-2 border rounded-md" name="age_group" onChange={(e) => handleFilterChange('ageGroup', e.target.value)} value={ageGroup}>
-          <option value="">Select</option>
-          {ageGroups.map((group) => (
-            <option key={group} value={group}>
-              {group}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {selectedOption === "birthYear" && (
-        <select className="w-full p-2 border rounded-md" name="team_year" value={year} onChange={(e) => handleFilterChange('team_year', e.target.value)}>
-          <option value="">Select</option>
-          {birthYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      )}
+      
         <div className="mb-4 mt-4">
         <div className="flex items-center space-x-4">
   <label className="flex items-center">

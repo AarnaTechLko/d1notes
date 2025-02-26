@@ -224,45 +224,49 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
-          {teamData?.map((item: any) => {
-            console.log(item); // Check the structure of item
-            return (
-              <ProfileCard
-                key={item?.teamSlug}
-                creatorname={item.creatorName}
-                teamName={item.team_name} // Ensure `team_name` is correct
-                logo={item.logo ?? '/default.jpg'}
-                rating={5}
-                slug={item.slug}
-              />
-            );
-          })}
+        <div className="flex flex-col md:flex-row md:space-x-8">
+  {teamData && teamData.length > 0 ? (
+    teamData.map((item: any) => {
+      console.log(item); // Check the structure of item
+      return (
+        <ProfileCard
+          key={item?.teamSlug}
+          creatorname={item.creatorName}
+          teamName={item.team_name} // Ensure `team_name` is correct
+          logo={item.logo ?? '/default.jpg'}
+          rating={5}
+          slug={item.slug}
+        />
+      );
+    })
+  ) : (
+    <p className="text-red-500 text-lg">No Teams added yet...</p>
+  )}
+</div>
 
-          </div>
         </section>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Coaches
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+        <div className="flex flex-col md:flex-row md:space-x-8">
+  {coachList && coachList.length > 0 ? (
+    coachList.map((item: any) => (
+      <CoachProfileCard
+        key={item?.teamSlug}
+        name={item.firstName}
+        organization={item.clubName} // Ensure `clubName` is correct
+        image={item.image ?? '/default.jpg'}
+        rating={5}
+        slug={item.slug}
+      />
+    ))
+  ) : (
+    <p className="text-red-500 text-lg">No Coach added yet....</p>
+  )}
+</div>
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
-          {coachList?.map((item: any) => {
-            
-            return (
-              <CoachProfileCard
-                key={item?.teamSlug}
-                name={item.firstName}
-                organization={item.clubName} // Ensure `team_name` is correct
-                image={item.image ?? '/default.jpg'}
-                rating={5}
-                slug={item.slug}
-              />
-            );
-          })}
-
-          </div>
         </section>
 
 
@@ -271,36 +275,37 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
-          {playerList?.map((profile: any) => {
-            
-            return (
-              <PlayerProfileCard
-                    key={profile.slug}
-                    rating={5}
-                    coachName=""
-                    graduation={profile.graduation}
-                    birthdate={profile.birthday}
-                    firstName={toSentenceCase(profile.first_name)}
-                    lastName={toSentenceCase(profile.last_name)}
-                    image={profile.image ?? "/default.jpg"}
-                    jersey={profile.jersey}
-                    slug={profile.slug}
-                    position={toSentenceCase(profile.position)}
-                    grade_level={toSentenceCase(profile.grade_level)}
-                    location={toSentenceCase(profile.location)}
-                    height={profile.height}
-                    weight={profile.weight}
-                    facebook={profile.facebook}
-                    instagram={profile.instagram}
-                    linkedin={profile.linkedin}
-                    youtube={profile.youtube}
-                    xlink={profile.xlink}
-                  />
-            );
-          })}
+        <div className="flex flex-col md:flex-row md:space-x-8">
+  {playerList && playerList.length > 0 ? (
+    playerList.map((profile: any) => (
+      <PlayerProfileCard
+        key={profile.slug}
+        rating={5}
+        coachName=""
+        graduation={profile.graduation}
+        birthdate={profile.birthday}
+        firstName={toSentenceCase(profile.first_name)}
+        lastName={toSentenceCase(profile.last_name)}
+        image={profile.image ?? "/default.jpg"}
+        jersey={profile.jersey}
+        slug={profile.slug}
+        position={toSentenceCase(profile.position)}
+        grade_level={toSentenceCase(profile.grade_level)}
+        location={toSentenceCase(profile.location)}
+        height={profile.height}
+        weight={profile.weight}
+        facebook={profile.facebook}
+        instagram={profile.instagram}
+        linkedin={profile.linkedin}
+        youtube={profile.youtube}
+        xlink={profile.xlink}
+      />
+    ))
+  ) : (
+    <p className="text-red-500 text-lg">No Player added yet...</p>
+  )}
+</div>
 
-          </div>
         </section>
 
 

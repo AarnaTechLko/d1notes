@@ -213,6 +213,7 @@ export async function PUT(req: NextRequest) {
   const linkedin = formData.get('linkedin') as string | null;
   const youtube = formData.get('youtube') as string | null;
   const xlink = formData.get('xlink') as string | null;
+  const age_group = formData.get('age_group') as string | null;
   const playerIDAsNumber = parseInt(playerID, 10);
   try {
     const timestamp = Date.now();
@@ -250,6 +251,7 @@ export async function PUT(req: NextRequest) {
         linkedin: linkedin || null,
         youtube: youtube || null,
         xlink: xlink || null,
+        age_group: age_group || null,
         gpa: gpa || '0.00',
         status: "Active",
       

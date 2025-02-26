@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaDashcube, FaDollarSign, FaBars, FaFacebookMessenger, FaCompressAlt, FaUserPlus } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import CertificateIcon from '@mui/icons-material/WorkspacePremium';
@@ -69,13 +69,7 @@ const Sidebar: React.FC = () => {
         )}
         <nav className="flex-grow mt-10">
         <ul className="space-y-2 p-4">
-        <li>
-            <Visibility  
-          playerId={session?.user.id}
-          type="Team"
-          visibilitystatus={session?.user?.visibility}
-          />
-          </li>
+       
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/teampanel/dashboard" className="flex items-center space-x-2 p-2">
               <MdDashboard className="text-xl" />
@@ -101,6 +95,16 @@ const Sidebar: React.FC = () => {
             </a>
           </li>
         
+
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/teampanel/doc" className="flex items-center space-x-2 p-2">
+                <FaUserPlus className='text-xl' />
+
+                <span>Sub Administrator</span>
+              </a>
+            </li> 
+
+
           <li className="hover:bg-gray-700 rounded transition duration-200">
               <a
                 href="#tab1"

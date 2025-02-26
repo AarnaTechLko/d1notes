@@ -116,10 +116,11 @@ const Home: React.FC = () => {
           <Processing/>
         )}
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Invitation Logs</h1>
           <div>
             <input
               type="text"
-              placeholder="Search by Player Name or Status"
+              placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}

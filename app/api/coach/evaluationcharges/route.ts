@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../../lib/db'; // Import your Drizzle ORM database instance
-import { evaluation_charges } from '@/lib/schema';
+import { coaches, evaluation_charges } from '@/lib/schema';
 import { eq,sum,desc, and, ne } from 'drizzle-orm';
 import { NextRequest } from 'next/server'; 
 
@@ -69,6 +69,16 @@ export async function PUT(req: NextRequest) {
             amount:amount,
             currency:currency
         }).where(eq(evaluation_charges.id,id));
+
+
+        if(turnaroundtime==120)
+        {
+            const updatedCoaches = await db.update(coaches).set({
+              
+                expectedCharge:amount,
+                
+            }).where(eq(coaches.id,body.coach_id));
+        }
 
         return NextResponse.json({
             message: "Evaluation charge updated successfully",

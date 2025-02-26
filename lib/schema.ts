@@ -56,6 +56,7 @@ export const users = pgTable(
     linkedin:text("linkedin"),
     xlink:text("xlink"),
     youtube:text("youtube"),
+    age_group:text("age_group"),
     status: varchar("status").default("Inactive"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -278,6 +279,8 @@ export const enterprises=pgTable('enterprises', {
   slug: text('slug'),
   parent_id: integer('parent_id'),
   role_id: integer('role_id'),
+  buy_evaluation: text('buy_evaluation'),
+  view_evaluation: text('view_evaluation'),
   password: text('password').notNull(),
   description: text('description'),
   facebook: text('facebook'),
@@ -369,6 +372,9 @@ export const teams=pgTable('teams', {
   linkedin: text('linkedin'),
   xlink: text('xlink'),
   youtube: text('youtube'),
+  buy_evaluation: text('buy_evaluation'),
+  view_evaluation: text('view_evaluation'),
+  parent_id: integer("parent_id"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

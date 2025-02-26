@@ -52,7 +52,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
          onClick={() => handleRedirect(slug)}
           className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold cursor-pointer"
         >
-          View Full Bio
+          View Details
         </a>
       </div>
   

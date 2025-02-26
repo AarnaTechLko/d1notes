@@ -44,6 +44,7 @@ interface FormValues {
   instagram?: string;
   linkedin?: string;
   youtube?: string;
+  age_group?: string;
   xlink?: string;
   image: string | null; // Updated to store Base64 string
 }
@@ -77,6 +78,7 @@ export default function Register() {
     instagram: "",
     linkedin: "",
     youtube: "",
+    age_group: "",
     xlink: "",
     gpa:undefined,
     image: null,
@@ -93,7 +95,7 @@ export default function Register() {
   const [height, setHeight] = useState("");
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -194,6 +196,7 @@ export default function Register() {
     if (!formValues.country.trim()) newErrors.country = "Country is required.";
     if (!formValues.state.trim()) newErrors.state = "State/Province is required.";
     if (!formValues.city.trim()) newErrors.city = "City is required.";
+    if (!formValues.league.trim()) newErrors.age_group = "Age Group is required.";
     if (!formValues.league.trim()) newErrors.league = "League details is required.";
 
     // Set validation errors if any
@@ -598,7 +601,7 @@ export default function Register() {
                 </div>
                 
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
               
 
               <div>
@@ -644,6 +647,25 @@ export default function Register() {
 
                       <option value={gender.value} key={gender.value}>{gender.label}</option>
                     ))}
+
+                  </select>
+
+                </div>
+
+                <div>
+                  <label htmlFor="age_group" className="block text-gray-700 text-sm font-semibold mb-2">Age Group <span className="mandatory">*</span></label>
+                  <select
+                    name="age_group"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.age_group}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+          {ageGroups.map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
 
                   </select>
 

@@ -221,35 +221,13 @@ const Sidebar: React.FC = () => {
 
             
     )} */}
+  <li className="hover:bg-gray-700 rounded transition duration-200">
+              <a href="/enterprise/doc" className="flex items-center space-x-2 p-2">
+                <FaUserPlus className='text-xl' />
 
-
-{
-    (session?.user.added_by === null || (session?.user.added_by && hasDoc)) && (
-            <li className="hover:bg-gray-700 rounded transition duration-200">
-              <button onClick={toggleDocList} className="flex items-center space-x-2 p-2 w-full text-left">
-                <FaUser className='text-xl' />
-                <span>Sub Admin</span>
-              </button>
-              {/* Submenu for DOC */}
-              {isDocListOpen && (
-                <ul className="pl-8 space-y-2">
-                  <li className="hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/enterprise/doc" className="flex items-center space-x-2 p-2">
-                      <FaUserPlus className="text-lg" />
-                      <span>Add Sub Admin</span>
-                    </a>
-                  </li>
-                  {/* <li className="hover:bg-gray-700 rounded transition duration-200">
-                    <a href="/enterprise/roles" className="flex items-center space-x-2 p-2">
-                      <FaClipboardList className="text-lg" />
-                      <span>Roles</span>
-                    </a>
-                  </li> */}
-                  {/* Add more DOC submenu items as needed */}
-                </ul>
-              )}
-            </li>
-    )}
+                <span>Sub Administrator</span>
+              </a>
+            </li> 
 <li className="hover:bg-gray-700 rounded transition duration-200">
               <a
                 href="#tab1"
