@@ -100,7 +100,7 @@ const Sidebar: React.FC = () => {
               <a href="/teampanel/doc" className="flex items-center space-x-2 p-2">
                 <FaUserPlus className='text-xl' />
 
-                <span>Sub Administrator</span>
+                <span>Sub Administrators</span>
               </a>
             </li> 
 

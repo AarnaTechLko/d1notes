@@ -240,7 +240,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       );
     })
   ) : (
-    <p className="text-red-500 text-lg">No Teams added yet...</p>
+    <p className="text-black-500 text-lg">No Teams added yet...</p>
   )}
 </div>
 
@@ -263,7 +263,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       />
     ))
   ) : (
-    <p className="text-red-500 text-lg">No Coach added yet....</p>
+    <p className="text-black-500 text-lg">No Coach added yet....</p>
   )}
 </div>
 
@@ -302,7 +302,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       />
     ))
   ) : (
-    <p className="text-red-500 text-lg">No Player added yet...</p>
+    <p className="text-black-500 text-lg">No Player added yet...</p>
   )}
 </div>
 

@@ -189,7 +189,7 @@ const Home: React.FC = () => {
           <div className="flex justify-between items-center">
             <input
               type="text"
-              placeholder="Search by name, email, or phone"
+              placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={handleSearchChange}
@@ -265,7 +265,7 @@ const Home: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7}>No Player found</td>
+                    <td colSpan={7}>No Players added yet...</td>
                   </tr>
                 )}
               </tbody>

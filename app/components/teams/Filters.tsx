@@ -174,7 +174,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       
         <div className="mb-4 mt-4">
         <div className="flex items-center space-x-4">
-  <label className="flex items-center">
+  {/* <label className="flex items-center">
     <input
       type="radio"
       name="option"
@@ -195,7 +195,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
     />
     <span className="ml-2 text-sm text-gray-900">Women</span>
-  </label>
+  </label> */}
   
 </div>
 

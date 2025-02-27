@@ -312,20 +312,20 @@ const Home: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-        <h1 className="text-2xl font-bold mb-4">Sub Administrator</h1>
+        <h1 className="text-2xl font-bold mb-4">Sub Administrators</h1>
           <div className="flex items-center gap-4">
-            <input
+            {/* <input
               type="text"
               placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-            />
+            /> */}
             <button
               onClick={() => setModalOpen(true)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
-              Add Sub Administrator
+              Add Sub Administrators
             </button>
           </div>
 
@@ -365,7 +365,7 @@ const Home: React.FC = () => {
 
   <div className="flex-1">
     <label className="block text-sm font-medium text-gray-700">
-     Phone Number<span className='mandatory'>*</span>
+    Mobile Number<span className='mandatory'>*</span>
     </label>
     <div className="flex items-center gap-2">
     <select
@@ -398,7 +398,7 @@ const Home: React.FC = () => {
 <div className="flex items-center space-x-4">
   {/* Buy Licenses Toggle */}
   <div className="flex items-center space-x-2">
-    <span>Buy Licenses</span>
+    <span>View Licenses</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -454,7 +454,7 @@ const Home: React.FC = () => {
                 
                 <th>Name</th>
                 <th>Email</th>
-                <th>Phone Number</th>
+                <th>Mobile Number</th>
                 <th>Role</th>
                 <th>Action</th>
               </tr>

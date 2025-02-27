@@ -225,7 +225,7 @@ const Sidebar: React.FC = () => {
               <a href="/enterprise/doc" className="flex items-center space-x-2 p-2">
                 <FaUserPlus className='text-xl' />
 
-                <span>Sub Administrator</span>
+                <span>Sub Administrators</span>
               </a>
             </li> 
 <li className="hover:bg-gray-700 rounded transition duration-200">

@@ -282,7 +282,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype }) => {
       {/* Mobile Input */}
       <div className="mb-6">
         <label className="block text-xl font-medium text-gray-700 mb-4">
-          Phone Number  
+          Mobile Number  
         </label>
         {mobiles.map((mobile, index) => (
           <div key={index} className="flex space-x-3 mb-4 items-center">

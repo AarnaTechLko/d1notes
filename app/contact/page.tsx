@@ -76,16 +76,16 @@ const Contact = () => {
     
     if (!formData.mobile)
       {
-        newErrors.mobile = 'Phone Number is required';
+        newErrors.mobile = 'Mobile Number is required';
       }
     if (formData.mobile.length < 14)
       {
-        newErrors.mobile = 'Phone Number Must be of 10 Digits Minimum';
+        newErrors.mobile = 'Mobile Number Must be of 10 Digits Minimum';
       } 
 
     if (formData.mobile.length > 14)
       {
-        newErrors.mobile = 'Phone Number Must be of 10 Digits Maximum';
+        newErrors.mobile = 'Mobile Number Must be of 10 Digits Maximum';
       } 
  
 
@@ -171,7 +171,7 @@ const Contact = () => {
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
                 <div>
-                    <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Phone Number<span className='mandatory'>*</span></label>
+                    <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
 
                     <div className="flex">
                       <select

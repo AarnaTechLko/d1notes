@@ -268,7 +268,7 @@ const Home: React.FC = () => {
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Country Code</th>
-                        <th>Phone Number</th>
+                        <th>Mobile Number</th>
                         <th>League</th>
                         <th>Experience</th>
                       </tr>
@@ -331,7 +331,7 @@ const Home: React.FC = () => {
                                                     <th>Last Name</th>
                                                     <th>Email</th>
                                                     <th>Country Code</th>
-                                                    <th>Phone Number</th>
+                                                    <th>Mobile Number</th>
                                                     <th>League</th>
                                                     <th>Experience</th>
                                                     <th>Remove</th>

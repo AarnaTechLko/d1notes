@@ -190,7 +190,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
         if (!formValues.lastName) errors.lastName = 'Last Name is required';
 
         if (!formValues.countrycode) errors.countrycode = 'Country Code required';
-        if (!formValues.phoneNumber) errors.phoneNumber = 'Phone Number is required';
+        if (!formValues.phoneNumber) errors.phoneNumber = 'Mobile Number is required';
         if (!formValues.email) {
             errors.email = 'Email is required';
         } else if (
@@ -199,9 +199,9 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
             errors.email = 'Invalid email format';
         }
 
-        if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Minimum';
+        if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Mobile Number Must be of 10 Digits Minimum';
 
-        if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Maximum';
+        if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Mobile Number Must be of 10 Digits Maximum';
         if (!formValues.gender) errors.gender = 'Gender is required';
 
         if (!formValues.sport) errors.sport = 'Sport is required';

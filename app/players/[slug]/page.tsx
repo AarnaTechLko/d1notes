@@ -274,7 +274,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     />
   ))
 ) : (
-  <p>No Organization added yet..</p>
+  <p>No Organizations added yet..</p>
 )}
 
         </div>

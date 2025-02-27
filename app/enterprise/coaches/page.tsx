@@ -533,7 +533,7 @@ const Home: React.FC = () => {
         ))
       ) : (
         <tr>
-          <td colSpan={8}>No coaches found</td>
+          <td colSpan={8}>No Coaches found yet...</td>
         </tr>
       )}
     </tbody>

@@ -300,7 +300,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={9}>No Player found</td>
+                    <td colSpan={9}>No Players added yet...</td>
                   </tr>
                 )}
               
