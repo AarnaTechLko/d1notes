@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner, enterprises } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers, coaches, playerbanner, enterprises, countries } from '../../../../lib/schema'
 import debug from 'debug';
 import { eq, sql,inArray,and,ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -17,8 +17,44 @@ export async function POST(req: NextRequest) {
     try {
         // Step 1: Fetch the user based on slug
         const user = await db
-            .select()
+            .select({
+                first_name: users.first_name,
+                last_name: users.last_name,
+                grade_level: users.grade_level,
+                location: users.location,
+                birthday: users.birthday,
+                gender: users.gender,
+                sport: users.sport,
+                team: users.team,
+                position: users.position,
+                age_group: users.age_group,
+                number: users.number,
+                email: users.email,
+                image: users.image,
+                bio: users.bio,
+                country: users.country,
+                state: users.state,
+                city: users.city,
+                jersey: users.jersey,
+                countrycode: users.countrycode,
+                height: users.height,
+                weight: users.weight,
+                playingcountries: users.playingcountries,
+                id: users.id,
+                enterprise_id: users.enterprise_id,
+                league: users.league,
+                graduation: users.graduation,
+                school_name: users.school_name,
+    
+                gpa: users.gpa,
+               countryName:countries.name
+        
+              })
             .from(users)
+            .leftJoin(
+                countries, 
+                eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`) // ✅ Explicit cast using sql
+              )
             .where(eq(users.slug, slug))
             .limit(1)
             .execute();

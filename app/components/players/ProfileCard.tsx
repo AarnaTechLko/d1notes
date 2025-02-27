@@ -28,6 +28,9 @@ interface ProfileCardProps {
   linkedin?:string;
   youtube?:string;
   xlink?:string;
+  sport?:string;
+  age_group?:string;
+
   
 }
  
@@ -35,7 +38,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
   instagram,
   linkedin,
   youtube,
-  xlink }) => {
+  xlink, sport,age_group }) => {
   //const positions = getInitialsAfterComma(position);
   const positions = position;
   const handleRedirect = (slug: string) => {
@@ -120,8 +123,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <p className="text-gray-500 mt-2 teampagefont"><b>High School Graduation Year:</b> {graduation}</p>
 
     <p className="text-gray-500 teampagefont">
-     <b>Height: </b> {height} 
+     <b>Age Group: </b> {age_group} 
     </p>
+   
     {/* <p className="text-gray-500 teampagefont">
      <b>Weight: </b>  {weight} Lbs.
     </p> */}
