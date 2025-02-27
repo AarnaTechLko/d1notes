@@ -248,8 +248,16 @@ const Home: React.FC = () => {
 
                             {/* Amount Input */}
                             <div className="w-1/2">
-                                <label className="block text-sm font-medium mb-1">Evaluation Rate $
+                            {Number(turnaroundtime)==120 &&(
+                                <label className="block text-sm font-medium mb-1">Base Evaluation Rate $
+
                                     {/* {session?.user.coachCurrency}*/}</label> 
+                            )}
+                            {Number(turnaroundtime)!=120 &&(
+                                <label className="block text-sm font-medium mb-1">Evaluation Rate $
+
+                                    {/* {session?.user.coachCurrency}*/}</label> 
+                            )}
                                 <input
                                     type="number"
                                     className="w-full border rounded px-3 py-2"

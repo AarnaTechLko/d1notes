@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, evaluation_charges, invitations, otps, teamCoaches } from '../../../../lib/schema';
+import { coaches, evaluation_charges, invitations, licenses, otps, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -261,6 +261,7 @@ export async function GET(req: NextRequest) {
         xlink:coaches.xlink,
         youtube:coaches.youtube,
         expectedCharge:coaches.expectedCharge,
+        license_type:coaches.license_type,
       })
       .from(coaches)
       .where(and(...conditions))
@@ -285,6 +286,7 @@ export async function GET(req: NextRequest) {
         xlink:coach.xlink,
         youtube:coach.youtube,
         evaluation_rate:coach.expectedCharge,
+        license_type:coach.license_type,
       }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList);

@@ -73,7 +73,7 @@ if(sendedBy=='Club')
       team_id: team_id,
       jersey: null,
       slug: null,
-      visibility: "on",
+      visibility: "off",
       password: hashedPassword,
       createdAt: new Date(),
     };

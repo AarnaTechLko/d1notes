@@ -28,6 +28,7 @@ interface Profile {
   xlink?: string;
   youtube?: string;
   expectedCharge: number;
+  license_type?: string;
   evaluation_rate: number;
 }
 
@@ -87,6 +88,8 @@ const Home = () => {
         const sport = (profile.sport || '').toLowerCase(); // Example additional field
         const qualifications = (profile.qualifications || '').toLowerCase(); // Example additional field
         const rating = String(profile.rating || ''); // Example additional field
+        const facebook = String(profile.facebook || ''); // Example additional field
+        const license_type = String(profile.license_type || ''); // Example additional field
     
         return (
           fullName.includes(searchQuery.toLowerCase()) ||
@@ -96,7 +99,9 @@ const Home = () => {
           qualifications.includes(searchQuery.toLowerCase()) ||
           sport.includes(searchQuery.toLowerCase()) ||
           rating.includes(searchQuery) || // You can keep adding more fields as needed
-          phoneNumber.includes(searchQuery) // You can keep adding more fields as needed
+          phoneNumber.includes(searchQuery) ||// You can keep adding more fields as needed
+          facebook.includes(searchQuery) ||// You can keep adding more fields as needed
+          license_type.includes(searchQuery) // You can keep adding more fields as needed
         );
       })
     );
