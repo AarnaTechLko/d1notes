@@ -10,8 +10,24 @@ import ProfileCard from "../components/ProfileCard";
 import { calculateHoursFromNow } from "@/lib/clientHelpers";
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
 import PromptComponent from "../components/Prompt";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import  { useRef } from "react";
 
 const Dashboard: React.FC = () => {
+  const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
+
+  // Scroll handlers
+  const scrollLeft = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+    }
+  };
+
+  const scrollRight = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft += 200;
+    }
+  };
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
     Requested: [],
     Accepted: [],
@@ -504,7 +520,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Table to display evaluations */}
-          <div className=" overflow-x-auto max-h-[400px] overflow-y-auto">
+          <div ref={tableContainerRef}className=" overflow-x-auto max-h-[400px] overflow-y-auto">
             <input
               type="text"
               placeholder="Search by Keywords..."
@@ -512,6 +528,12 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
             />
+            <button
+        onClick={scrollLeft}
+        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
+      >
+        ⬅
+      </button>
             <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
               <thead>
                 {tableInstance.headerGroups.map((headerGroup) => (
@@ -562,6 +584,12 @@ const Dashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
+            <button
+        onClick={scrollRight}
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
+      >
+        ➡
+      </button>
           </div>
         </div>
 
