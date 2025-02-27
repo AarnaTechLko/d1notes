@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         graduation: users.graduation,
         school_name: users.school_name,
         gpa: users.gpa,
-        countryName:countries.name
+       countryName:countries.name
 
       })
       .from(users)

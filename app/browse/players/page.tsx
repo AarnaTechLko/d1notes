@@ -27,6 +27,8 @@ interface Profile {
   linkedin: string;
   youtube: string;
   xlink: string;
+  sport: string;
+  age_group: string;
 
 
 }
@@ -135,7 +137,6 @@ const Home = () => {
                     firstName={profile.firstName}
                     lastName={profile.lastName}
                     image={profile.image ?? '/default.jpg'}
-
                     birthdate={profile.birthday}
                     slug={profile.slug}
                     position={profile.position}
@@ -149,6 +150,9 @@ const Home = () => {
                     linkedin={profile.linkedin}
                     youtube={profile.youtube}
                     xlink={profile.xlink}
+                    sport={profile.sport}
+                  
+                    age_group={profile.age_group}
                   />
 
 

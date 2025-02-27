@@ -55,6 +55,15 @@ interface CoachData {
   youtube: string;
   id: number;
   school_name: string;
+  gpa: string;
+  sport: string;
+  playingcountries: string;
+  countryName: string;
+  age_group: string;
+  gender: string;
+  state: string;
+  city: string;
+  bio: string;
 }
 
 interface CoachProfileProps {
@@ -218,8 +227,29 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                  <div><b>Weight:</b> {coachData.weight} Lbs</div>  
                 <div><b>Height:</b> {coachData.height}</div>
                 <div><b>School Name:</b> {coachData.school_name}</div>
+                <div><b>GPA:</b> {coachData.gpa}</div>
+                <div><b>Sport:</b> {coachData.sport}</div>
+                <div><b>Nationality:</b> {coachData.playingcountries}</div>
+                <div><b>Gender:</b> {coachData.gender}</div>
                 <div><b>Team:</b> {coachData.team}</div>
                 <div><b>Level:</b> {coachData.grade_level}</div>
+                <div><b>Country:</b> {coachData.countryName}</div>
+                <div><b>State:</b> {coachData.state}</div>
+                <div><b>City:</b> {coachData.city}</div>
+                
+              </div>
+              <div className="grid grid-cols-2 gap-5 mt-4">
+              <div><b>Team Name / (Birth Year or Age Group):</b> {coachData.city}</div>
+              <div><b>Age Group:</b> {coachData.age_group}</div>
+              
+              </div>
+              <div className="grid grid-cols-1 gap-5 mt-4">
+              <div><b>Leagues:</b> {coachData.city}</div>
+              
+              </div>
+              <div className="grid grid-cols-1 gap-5 mt-4">
+              <div><b>Experience/Accolades:</b> {coachData.bio}</div>
+              
               </div>
               <div>
               {session?.user?.type === "team" && (
