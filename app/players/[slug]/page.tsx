@@ -221,7 +221,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </div>
             <div className='bg-white p-6 w-full mt-4'>
               <div className="grid grid-cols-3 gap-5">
-                <div><b>Organization Name:</b> {clubName}</div>
+                {/* <div><b>Organization Name:</b> {clubName}</div> */}
                 <div><b>Position:</b> {coachData.position}</div>
                 <div><b>High School Graduation Year:</b> {coachData.graduation}</div>
                  <div><b>Weight:</b> {coachData.weight} Lbs</div>  
@@ -251,7 +251,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <div><b>Experience/Accolades:</b> {coachData.bio}</div>
               
               </div>
-              <div>
+              {/* <div>
               {session?.user?.type === "team" && (
   <>
     {isRequested > 0 ? (
@@ -273,7 +273,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 )}
 
 
-            </div>
+            </div> */}
             </div>
               
               
