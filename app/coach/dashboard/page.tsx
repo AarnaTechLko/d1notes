@@ -647,7 +647,7 @@ const Dashboard: React.FC = () => {
                         <th
                           {...column.getHeaderProps()}
                           key={column.id}
-                          className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
+                          className="border-b-2 border-gray-200 bg-green-100 px-4 py-2 text-left text-gray-600"
                           style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
                         >
                           {column.render('Header')}
