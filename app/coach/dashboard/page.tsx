@@ -47,6 +47,27 @@ const Dashboard: React.FC = () => {
       tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
     }
   };
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tableContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+        const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+
+        setIsMiddle(scrollPercentage >= 40);
+      }
+    };
+
+    const container = tableContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []); // Empty dependency array means it runs only once after mount
 
   const scrollRight = () => {
     if (tableContainerRef.current) {
@@ -54,6 +75,7 @@ const Dashboard: React.FC = () => {
     }
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMiddle, setIsMiddle] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
   //const [clubId, setClubId]=useState<string | undefined>(undefined);
@@ -635,7 +657,11 @@ const Dashboard: React.FC = () => {
               />
               <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
+        
+
+        className={`absolute left-0 top-1/2 right-4 p-3 text-white transform -translate-y-1/2 rounded-full p-2 shadow-md z-10 transition-colors duration-300 w-10 bg-blue-500 text-white py-2 px-4 rounded lg:hidden ${
+          isMiddle ? "bg-green-500" : "bg-blue-500"
+        }`}
       >
         ⬅
       </button>
@@ -647,7 +673,7 @@ const Dashboard: React.FC = () => {
                         <th
                           {...column.getHeaderProps()}
                           key={column.id}
-                          className="border-b-2 border-gray-200 bg-green-100 px-4 py-2 text-left text-gray-600"
+                          className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
                           style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
                         >
                           {column.render('Header')}
@@ -713,8 +739,9 @@ const Dashboard: React.FC = () => {
               </table>
               <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-md z-10 w-10 bg-blue-500 text-white py-2 px-4 rounded block lg:hidden"
       >
+        
         ➡
       </button>
             </div>
