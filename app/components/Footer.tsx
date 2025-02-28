@@ -1,5 +1,5 @@
 "use client"
-import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa'; // You can install react-icons for icons
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'; // You can install react-icons for icons
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 export default function Footer() {
   return (
@@ -44,7 +44,10 @@ export default function Footer() {
               
             </a>
             <a href="https://www.instagram.com/d1.notes/" target='_blank' aria-label="Instagram">
-              <FaInstagram className="h-6 w-6 hover:text-pink-500" />
+              <FaInstagram className="h-6 w-6 text-pink-500" />
+            </a>
+            <a href="#" target="_blank" aria-label="LinkedIn">
+              <FaLinkedin className="h-6 w-6 " />
             </a>
           </div>
         </div>

@@ -188,8 +188,10 @@ const Home: React.FC = () => {
 </tbody>
             </table>
             {/* Pagination Controls */}
+            {paginatedOrders.length > 0 && (
             <div className="flex justify-between items-center mt-4">
   {/* Previous Button */}
+  
   <button
     onClick={handlePrevPage}
     disabled={currentPage === 1}
@@ -220,6 +222,7 @@ const Home: React.FC = () => {
     Next 
   </button>
 </div>
+            )}
           </div>
         </div>
       </main>
