@@ -1,9 +1,0 @@
-{
-    "cron": [
-      {
-        "path": "/api/cron-task",
-        "schedule": "0 * * * *" 
-      }
-    ]
-  }
-  
