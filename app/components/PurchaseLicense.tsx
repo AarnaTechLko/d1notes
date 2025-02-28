@@ -10,14 +10,16 @@ interface License {
   minimum_license: number;
   maximum_license: number | string;
   amount: number;
+
 }
 
 interface PurchaseLicenseProps {
  
   organizationId: string;
+  type:string;
 }
 
-const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
+const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId, type }) => {
   const [selectedLicense, setSelectedLicense] = useState<License | null>(null);
   const [licenseCount, setLicenseCount] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
@@ -75,6 +77,7 @@ const PurchaseLicense: React.FC<PurchaseLicenseProps> = ({organizationId }) => {
         no_of_licenses: licenseCount,
         rate: amount / licenseCount,
         organizationId: organizationId,
+        type:type
       };
 
       const response = await fetch('/api/enterprise/packagepayments', {

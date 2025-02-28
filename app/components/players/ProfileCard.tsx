@@ -46,6 +46,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     window.location.href = `/players/${slug}`;
   };
 
+  const extractYear = (birthdate: string) => {
+    return new Date(birthdate).getUTCFullYear(); // Use getUTCFullYear() to ensure correct year
+  };
+
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
   ));
@@ -124,7 +128,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
     <p className="text-gray-500 mt-2 teampagefont"><b>High School Graduation Year:</b> {graduation}</p>
 
     <p className="text-gray-500 teampagefont">
-     <b>Age Group: </b> {age_group} 
+     <b>Age: </b>{extractYear(birthdate)}/ {age_group} 
     </p>
    
     {/* <p className="text-gray-500 teampagefont">

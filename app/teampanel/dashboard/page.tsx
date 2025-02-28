@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
         {!sessions?.user.club_id && (
  <div className="bg-white shadow-md rounded-lg p-6 ">
  {/*<InviteForm usertype="Club"/>*/}
-<PurchaseLicense organizationId={sessions?.user.id || ''}/> 
+<PurchaseLicense organizationId={sessions?.user.id || ''} type={sessions?.user.type || ''}/> 
  </div>
         )}
        

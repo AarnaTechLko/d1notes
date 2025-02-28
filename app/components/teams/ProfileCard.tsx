@@ -2,6 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaUser } from 'react-icons/fa';
+import { getSession } from 'next-auth/react';
+import Swal from 'sweetalert2';
  
 
 interface ProfileCardProps {
@@ -10,12 +12,26 @@ interface ProfileCardProps {
   creatorname: string;
   logo: string;
   rating: number;
+  redirect?:boolean
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug }) => {
-  const handleRedirect = (slug: string) => {
-    //console.log(slug);
-    window.open(`/teams/${slug}`, '_blank');
+const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug, redirect }) => {
+  
+  const handleRedirect =async (slug: string) => {
+    const session = await getSession();
+    if(redirect)
+    {
+      window.location.href = `/teams/${slug}`;
+    }
+    else{
+      Swal.fire({
+        title: 'Unauthorized!',
+        text: 'Only members of this Team may access.',
+        icon: 'error', // 'success' displays a green checkmark icon
+        confirmButtonText: 'OK',
+      });
+    }
+   /// window.open(`/teams/${slug}`, '_blank');
   };
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>

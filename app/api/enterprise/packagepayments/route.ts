@@ -21,8 +21,19 @@ export async function POST(req: NextRequest) {
   try {
     // Parse the request body
     const body = await req.json();
-    const { packageId, amount, organizationId, no_of_licenses, rate } = body;
+    const { packageId, amount, organizationId, no_of_licenses, rate, type } = body;
+let success_url;
+let cancel_url;
 
+    if(type=='enterprise')
+    {
+      success_url=`${req.headers.get('origin')}/enterprise/paymentDone?session_id={CHECKOUT_SESSION_ID}`;
+      cancel_url=`${req.headers.get('origin')}/enterprise/PaymentCancel`;
+    }
+    else{
+      success_url=`${req.headers.get('origin')}/teampanel/paymentDone?session_id={CHECKOUT_SESSION_ID}`;
+      cancel_url=`${req.headers.get('origin')}/teampanel/PaymentCancel`;
+    }
     // Create a checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -39,8 +50,8 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/enterprise/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/enterprise/PaymentCancel`,
+      success_url:success_url ,
+      cancel_url:cancel_url ,
     });
 
     try {

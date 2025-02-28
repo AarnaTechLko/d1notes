@@ -83,7 +83,7 @@ const PaymentDonePage: NextPage<{ searchParams: { session_id?: string } }> = ({ 
           </p>
         </div>
         <button className="w-full py-2 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200">
-          <a href="/enterprise/dashboard">Go to Dashboard</a>
+          <a href="/teampanel/dashboard">Go to Dashboard</a>
         </button>
       </div>
     </div>
