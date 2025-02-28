@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       <main className="flex-grow p-6">
       <div className="bg-white shadow-lg rounded-lg p-8 border border-gray-200">
-      <PurchaseLicense  organizationId={sessions?.user.id || ''}/>
+      <PurchaseLicense  organizationId={sessions?.user.id || ''} type={sessions?.user.type || ""}/>
       
     </div>
     </main>
