@@ -69,15 +69,21 @@ export async function POST(req: NextRequest) {
             xlink,
             youtube
         }).returning({ insertedId: enterprises.id });
+        const protocol = req.headers.get('x-forwarded-proto') || 'http';
+        const host = req.headers.get('host');
+        const baseUrl = `${protocol}://${host}`;
 
         const emailResult = await sendEmail({
-            to: email,
-            subject: "D1 NOTES Enterprise  Registration",
-            text: "D1 NOTES Enterprise Registration",
-            html: `<p>Dear ${contactPerson}! You have successfully created D1 NOTES Enterprise account for ${organizationName}. </p><p>Your login credentials are as given below:.</p>
-            <p><b>Email: </b>${email}</p>
-            <p><b>Password: </b>${password}</p>`,
+            to:  email || '',
+            subject: `D1 NOTES Registration Completed for ${organizationName}`,
+            text: `D1 NOTES Registration Completed for ${organizationName}`,
+            html: `<p>Dear ${organizationName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Click here</a>  to get started!
+            </p><p className="mt-10">Regards,<br>
+        D1 Notes Team</p>`,
         });
+
+
+ 
 
         return NextResponse.json({ message: "Profile Completed", image: imageFile }, { status: 200 });
     }

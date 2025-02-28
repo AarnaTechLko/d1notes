@@ -89,12 +89,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
     const emailResult = await sendEmail({
       to: email,
-      subject: "D1 NOTES Coach Registration",
-      text: "D1 NOTES Coach Registration", 
-      html: `<p>Dear Coach! Your account creation as a Coach on D1 NOTES has been started. </p><p>Please complete your profile in next step to enjoy the evaluation from best coaches.</p>`,
+      subject: "D1 NOTES Coach Registration Follow Up",
+      text: "D1 NOTES Coach Registration Follow Up", 
+      html: `<p>Dear Coach! Your D1 Notes <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">login</a> account has been created. If you have not done so already, please complete your profile in order to take advantage of all D1 Notes has to offer!</p><p className="mt-10">Regards,<br>
+D1 Notes Team</p>`,
   });
     // Return the response with the generated token
     return NextResponse.json({ message:"Profile Completed"}, { status: 200 });
@@ -190,8 +193,28 @@ export async function PUT(req: NextRequest) {
   };
   
   await db.insert(evaluation_charges).values(data);
+  const user = await db
+  .select({
+    firstName: coaches.firstName,
+    lastName: coaches.lastName,
+    email: coaches.email // Add email to the selection
+  })
+  .from(coaches)
+  .where(eq(coaches.id, coachIdAsNumber))
+  .execute()
+  .then(result => result[0]);
 
-
+   const protocol = req.headers.get('x-forwarded-proto') || 'http';
+      const host = req.headers.get('host');
+      const baseUrl = `${protocol}://${host}`;
+  const emailResult = await sendEmail({
+    to:  user.email || '',
+    subject: `D1 NOTES Registration Completed for ${firstName}`,
+    text: `D1 NOTES Registration Completed for ${firstName}`,
+    html: `<p>Dear ${firstName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Click here</a>  to get started!
+    </p><p className="mt-10">Regards,<br>
+D1 Notes Team</p>`,
+});
   return NextResponse.json({ message:"Profile Completed", image:imageFile }, { status: 200 });
 
 }

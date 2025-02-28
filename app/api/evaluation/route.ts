@@ -102,20 +102,23 @@ export async function POST(req: NextRequest) {
         };
     
         const insertedUser = await db.insert(messages).values(userValues).returning();
-
+        const protocol = req.headers.get('x-forwarded-proto') || 'http';
+        const host = req.headers.get('host');
+        const baseUrl = `${protocol}://${host}`;
         const emailResult = await sendEmail({
             to: coachData[0].email || '',
-            subject: "D1 NOTES Evaluation Request",
-            text: "D1 NOTES Evaluation Request",
-            html: `<p>Dear ${coachData[0].firstName}! You have recieved an Evaluation Request from ${playerData[0].first_name}.</p><p>Please login to your coach account to start Evaluation.</p>`,
+            subject: `D1 NOTES Evaluation Request Received from ${playerData[0].first_name}`,
+            text:`D1 NOTES Evaluation Request Received from ${playerData[0].first_name}`,
+            html: `<p>Dear ${coachData[0].firstName}! You have received an evaluation request from ${playerData[0].first_name}.  <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a>  to your coach account and view your Dashboard to accept or decline the request. 
+             <p  className="mt-10">Regards<br>D1 Notes Team</p>`,
         });
 
-        const emailResultPlayer = await sendEmail({
-            to: playerData[0].email,
-            subject: "D1 NOTES Evaluation Request Sent",
-            text: "D1 NOTES Evaluation Request Sent",
-            html: `<p>Dear ${playerData[0].first_name}! You have successfully requested the  Evaluation to ${coachData[0].firstName}.</p><p>Please login to your player account to see the progress.</p>`,
-        });
+        // const emailResultPlayer = await sendEmail({
+        //     to: playerData[0].email,
+        //     subject: "D1 NOTES Evaluation Request Sent",
+        //     text: "D1 NOTES Evaluation Request Sent",
+        //     html: `<p>Dear ${playerData[0].first_name}! You have successfully requested the  Evaluation to ${coachData[0].firstName}.</p><p>Please login to your player account to see the progress.</p>`,
+        // });
 
         // const updateLicnes=await db.update(licenses).set({
         //     status: 'Consumed',

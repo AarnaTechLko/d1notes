@@ -250,76 +250,70 @@ export default function TeamsPage() {
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
                 </thead>
-                {loadingData ? (
-                  <tbody>
-                    <tr>
-                      <td colSpan={8}>
-                        <div className="flex justify-center items-center">
-                          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                ) : (
-                  <tbody>
-                    {sortedTeams.map((team) => (
-                      <tr key={team.id} className="border-b">
-                        <td className="px-4 py-2">
-                        <a href={`/teams/${team.slug}`}  target="_blank" title="Team Roster">
-                          <div className="text-center items-center">
-                          <img 
-  src={team.logo ? team.logo : '/Team.jpg'} 
-  className="w-12 h-12 mx-auto rounded-full" 
-  alt={`${team.team_name} logo`} 
-/>
-                            <div className="mb-1">{team.team_name}</div>
+                <tbody>
+  {loadingData ? (
+    <tr>
+      <td colSpan={8}>
+        <div className="flex justify-center items-center">
+          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+        </div>
+      </td>
+    </tr>
+  ) : sortedTeams.length > 0 ? (
+    sortedTeams.map((team) => (
+      <tr key={team.id} className="border-b">
+        <td className="px-4 py-2">
+          <a href={`/teams/${team.slug}`} target="_blank" title="Team Roster">
+            <div className="text-center items-center">
+              <img
+                src={team.logo ? team.logo : '/Team.jpg'}
+                className="w-12 h-12 mx-auto rounded-full"
+                alt={`${team.team_name} logo`}
+              />
+              <div className="mb-1">{team.team_name}</div>
+            </div>
+          </a>
+        </td>
 
-                          </div>
-                          </a>
-                        </td>
+        <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
+        <td className="px-4 py-2">{team.team_type}</td>
+        <td className="px-4 py-2">
+          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+            Add Coaches to Team
+          </Link>
+          <p className="mt-2">Total Coaches: {team.totalCoaches}</p>
+        </td>
+        <td className="px-4 py-2">
+          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+            Add Players to Team
+          </Link>
+          <p className="mt-2">Total Players: {team.totalPlayers}</p>
+        </td>
+        <td>
+          <button className="px-4 py-2">{team.status}</button>
+        </td>
+        <td className="px-4 py-2">
+          <div className="flex items-center space-x-2">
+            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
+              <FaClipboard />
+            </a>
+            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
+              <FaEdit />
+            </a>
+            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
+              <FaArchive />
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={8} className="text-center py-4 text-gray-500">No Team added yet...</td>
+    </tr>
+  )}
+</tbody>
 
-                        <td className="px-4 py-2">{team.age_group ? "Age Group: "+team.age_group : "Birth Year: "+team.team_year}</td>
-                        <td className="px-4 py-2">{team.team_type}</td>
-                        <td className="px-4 py-2">
-                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Coaches to Team
-                          </Link>
-                          <p className="mt-2"> Total Coaches : {team.totalCoaches}</p>
-                        </td>
-                        <td className="px-4 py-2">
-                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Players to Team
-                          </Link>
-                          <p  className="mt-2"> Total Players : {team.totalPlayers}</p>
-                        </td>
-                       
-                        
-                        <td>
-                          <button
-                            className={`px-4 py-2 `}
-                          >
-                            {team.status}
-                          </button>
-                        </td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center space-x-2">
-                           
-                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
-                            <FaClipboard/>
-                            </a>
-                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
-                              <FaEdit />
-                            </a>
-                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
-                             
-                              <FaArchive/>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                )}
               </table>
             </div>
 

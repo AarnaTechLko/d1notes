@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { chats, messages } from '../../../lib/schema';
+import { chats, coaches, messages, users } from '../../../lib/schema';
 import { eq, isNotNull, and, between, lt, ilike, or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
@@ -57,7 +57,31 @@ export async function POST(req: NextRequest) {
 
     // Insert message
     const insertMessage = await db.insert(messages).values(chatMessage).returning();
+    
+    const coachQuery=await db.select().from(coaches).where(eq(coaches.id,validCoachId));
+    const playerQuery=await db.select().from(users).where(eq(users.id,validPlayerId));
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    if(sender_type=='player')
+    {
+      const emailResultPlayer = await sendEmail({
+        to: coachQuery[0].email || '',
+        subject:` D1 NOTES Message from ${playerQuery[0].first_name}`,
+        text: ` D1 NOTES Message from ${playerQuery[0].first_name}`,
+        html:`Dear ${coachQuery[0].firstName}! You have received a Message from ${playerQuery[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your coach account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
+      });
 
+    }
+    else{
+      const emailResultPlayer = await sendEmail({
+        to: playerQuery[0].email || '',
+        subject:` D1 NOTES Message from ${coachQuery[0].firstName}`,
+        text: ` D1 NOTES Message from ${coachQuery[0].firstName}`,
+        html:`Dear ${playerQuery[0].first_name}! You have received a Message from ${coachQuery[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player  account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
+      });
+
+    }
     return NextResponse.json(insertChat);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to insert chat message' });

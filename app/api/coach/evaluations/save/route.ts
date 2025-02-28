@@ -137,8 +137,24 @@ export async function POST(req: NextRequest) {
       const insertChatfriend = await db.insert(chats).values(chatFriend).returning();
       const coachData = await db.select().from(coaches).where(eq(coaches.id, coachId));
       const playerData = await db.select().from(users).where(eq(users.id, playerId));
+
+let subject;
+let mailmessage;
+let coachsubject;
+let coachmailmessage;
+
+const protocol = req.headers.get('x-forwarded-proto') || 'http';
+const host = req.headers.get('host');
+const baseUrl = `${protocol}://${host}`;
       const message = "Your Evaluation has been submitted by me. Please check.";
-      const mailmessage = `Dear ${playerData[0].first_name}, your Evaluation Request has been completed by ${coachData[0].firstName}. Please login to your player account for more details.`
+       
+      subject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
+    
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation was completed by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and view your Dashboard to access the evaluation. Feel free to follow up with any Messages or Rating or Testimonial. Let’s go! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
+
+      coachsubject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
+    
+      coachmailmessage=`Dear ${coachData[0].firstName}! Your completed evaluation was sent to  ${playerData[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your coach account to check on your Earnings History and any Messages or Rating or Testimonial! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
 
 
 
@@ -154,10 +170,20 @@ export async function POST(req: NextRequest) {
 
       const emailResultPlayer = await sendEmail({
         to: playerData[0].email,
-        subject: "D1 NOTES Evaluation Request Completed",
-        text: "D1 NOTES Evaluation Request Completed",
+        subject:subject,
+        text: subject,
         html: mailmessage || '',
       });
+
+      const emailResultCoach = await sendEmail({
+        to: coachData[0].email || '',
+        subject:coachsubject,
+        text:coachsubject,
+        html: coachmailmessage || '',
+      });
+
+
+      
 
     }
 

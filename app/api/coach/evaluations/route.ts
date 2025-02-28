@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       .select({
         first_name: users.first_name,
         last_name: users.last_name,
-        
+
         number: users.number,
         image: users.image,
         team: users.team,
@@ -25,22 +25,22 @@ export async function POST(req: NextRequest) {
         coachPhoto: coaches.image,
         expectedCharge: coaches.expectedCharge,
         evaluationId: playerEvaluation.id, // Select specific columns from playerEvaluation
-        review_title: playerEvaluation.review_title, 
-        turnaroundTime: playerEvaluation.turnaroundTime, 
+        review_title: playerEvaluation.review_title,
+        turnaroundTime: playerEvaluation.turnaroundTime,
         evaluationStatus: playerEvaluation.status,
-        video_description:playerEvaluation.video_description,
-        video_descriptionTwo:playerEvaluation.video_descriptionTwo,
-        video_descriptionThree:playerEvaluation.video_descriptionThree,
+        video_description: playerEvaluation.video_description,
+        video_descriptionTwo: playerEvaluation.video_descriptionTwo,
+        video_descriptionThree: playerEvaluation.video_descriptionThree,
         createdAt: playerEvaluation.created_at,
         updatedAt: playerEvaluation.updated_at,
-        primary_video_link:playerEvaluation.primary_video_link,
-        video_link_two:playerEvaluation.video_link_two,
-        video_link_three:playerEvaluation.video_link_three,
-        created_at:playerEvaluation.created_at,
-        percentage:playerEvaluation.percentage,
-        lighttype:playerEvaluation.lighttype,
-        evaluationposition:playerEvaluation.position,
-        id:playerEvaluation.id,
+        primary_video_link: playerEvaluation.primary_video_link,
+        video_link_two: playerEvaluation.video_link_two,
+        video_link_three: playerEvaluation.video_link_three,
+        created_at: playerEvaluation.created_at,
+        percentage: playerEvaluation.percentage,
+        lighttype: playerEvaluation.lighttype,
+        evaluationposition: playerEvaluation.position,
+        id: playerEvaluation.id,
         videoOneTiming: playerEvaluation.videoOneTiming,
         videoTwoTiming: playerEvaluation.videoTwoTiming,
         videoThreeTiming: playerEvaluation.videoThreeTiming,
@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
         jerseyColorOne: playerEvaluation.jerseyColorOne,
         jerseyColorTwo: playerEvaluation.jerseyColorTwo,
         jerseyColorThree: playerEvaluation.jerseyColorThree,
-        
-       
-        
+
+
+
       })
       .from(playerEvaluation)
       .innerJoin(users, eq(playerEvaluation.player_id, users.id)) // Assuming player_id is the foreign key in playerEvaluation
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       .limit(10) // Limit the number of results to 10
       .execute();
 
-    return NextResponse.json(evaluationsData); 
+    return NextResponse.json(evaluationsData);
 
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
@@ -83,58 +83,64 @@ export async function PUT(req: NextRequest) {
     const { evaluationId, status, remark } = await req.json();
     const parsedEvaluationId = parseInt(evaluationId, 10);
 
-    const evaluationData=await db.select().from(playerEvaluation).where(eq(playerEvaluation.id,parsedEvaluationId));
-    let playerId=evaluationData[0].player_id;
-    let requestToID=evaluationData[0].coach_id;
+    const evaluationData = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, parsedEvaluationId));
+    let playerId = evaluationData[0].player_id;
+    let requestToID = evaluationData[0].coach_id;
     const currentDateTime = new Date();
     const result = await db
       .update(playerEvaluation)
-      .set({ status: status || undefined ,rejectremarks: remark || undefined, accepted_at:currentDateTime }) // Set the new status value
+      .set({ status: status || undefined, rejectremarks: remark || undefined, accepted_at: currentDateTime }) // Set the new status value
       .where(eq(playerEvaluation.id, parsedEvaluationId)) // Condition for evaluation ID
       .returning();
 
-      let chatFriend:any={
-        playerId: playerId,
-        coachId: requestToID,
-        club_id:0        
+    let chatFriend: any = {
+      playerId: playerId,
+      coachId: requestToID,
+      club_id: 0
     };
 
-let message;
-let mailmessage;
-    const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
+    let message;
+    let mailmessage;
+    let subject;
+    const insertChatfriend = await db.insert(chats).values(chatFriend).returning();
 
-    const coachData=await db.select().from(coaches).where(eq(coaches.id,requestToID));
-    const playerData=await db.select().from(users).where(eq(users.id,playerId));
+    const coachData = await db.select().from(coaches).where(eq(coaches.id, requestToID));
+    const playerData = await db.select().from(users).where(eq(users.id, playerId));
 
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
 
-if(status===1)
-{
-   message="Hi! I have accepted your evaluation request!";
-   mailmessage=`Dear ${playerData[0].first_name}, your Evaluation Request has been accepted by ${coachData[0].firstName}. Please login to your player account for more details.`
-}
-if(status===3)
-  {
-     message="Sorry! Right now I am unable to accept your evaluation request. Reason :"+remark;
-      mailmessage=`Dear ${playerData[0].first_name}, your Evaluation Request has been rejected by ${coachData[0].firstName}. Please login to your player account for more details.`
-  }
-   
+    if (status === 1) {
+      message = "Hi! I have accepted your evaluation request!";
+      subject = `D1 NOTES Evaluation Request Accepted by ${coachData[0].firstName}`;
+      
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was accepted by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and view your Dashboard to track the progress and check any Messages. <p>Regards<br>D1 Notes Team</p>`;
+    }
+    if (status === 3) {
+      subject = `D1 NOTES Evaluation Request Declined by ${coachData[0].firstName}`;
+      message = "Sorry! Right now I am unable to accept your evaluation request. Reason :" + remark;
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was declined by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and check for any Messages from Dinesh.
+      <p  className="mt-10">Regards<br>D1 Notes Team</p>`;
+    }
+
 
     let userValues: any = {
-        senderId: requestToID,
-        chatId:insertChatfriend[0].id,
-        message: message,
-        club_id:0
+      senderId: requestToID,
+      chatId: insertChatfriend[0].id,
+      message: message,
+      club_id: 0
     };
 
     const insertedUser = await db.insert(messages).values(userValues).returning();
- 
 
-  const emailResultPlayer = await sendEmail({
+
+    const emailResultPlayer = await sendEmail({
       to: playerData[0].email,
       subject: "D1 NOTES Evaluation Request Update",
       text: "D1 NOTES Evaluation Request Update",
       html: mailmessage || '',
-  });
+    });
 
     return NextResponse.json("Success");
 
