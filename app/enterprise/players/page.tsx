@@ -431,7 +431,7 @@ const handleResetPassword=(coach: Coach)=>{
                   <th>Phone</th>
                   <th>Sport</th>
                   <th>Team</th>
-                  <th>Position</th>
+                  <th>Position(s)</th>
                   <th>Evaluations</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -523,7 +523,7 @@ const handleResetPassword=(coach: Coach)=>{
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={9}>No Players added yet...</td>
+                    <td colSpan={10}>No Players added yet...</td>
                   </tr>
                 )}
               </tbody>
