@@ -739,7 +739,7 @@ const Dashboard: React.FC = () => {
               </table>
               <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-md z-10 w-10 bg-blue-500 text-white py-2 px-4 rounded block lg:hidden"
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-md z-10 w-10 bg-black-500 text-white py-2 px-4 rounded block lg:hidden"
       >
         
         ➡
