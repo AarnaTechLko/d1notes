@@ -309,7 +309,7 @@ export default function TeamsPage() {
     ))
   ) : (
     <tr>
-      <td colSpan={8} className="text-center py-4 text-gray-500">No Team added yet...</td>
+      <td colSpan={8} className="text-center py-4 text-gray-500">No Teams added yet...</td>
     </tr>
   )}
 </tbody>

@@ -222,7 +222,7 @@ const Home: React.FC = () => {
                             {isEditMode ? "Edit Evaluation Rate" : "Add Evaluation Rate"}
                         </h2> */}
                         {Number(turnaroundtime)==120 &&(
-                            <div className="mb-5">Base Evaluation Rate of 120 Hours</div>
+                            <div className="mb-5">Base Tournaround Time of 120 Hours</div>
                         )}
                         {Number(turnaroundtime)!=120 &&(
                         <div className="mb-4">

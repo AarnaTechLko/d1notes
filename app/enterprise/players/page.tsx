@@ -431,7 +431,7 @@ const handleResetPassword=(coach: Coach)=>{
                   <th>Phone</th>
                   <th>Sport</th>
                   <th>Team</th>
-                  <th>Position</th>
+                  <th>Position(s)</th>
                   <th>Evaluations</th>
                   <th>Status</th>
                   <th>Action</th>
