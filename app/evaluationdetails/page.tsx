@@ -9,6 +9,7 @@ import { getSession } from 'next-auth/react';
 import StarRating from '../components/StarRating';
 import defaultImage from '../../public/default.jpg'
 import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { showError } from '../components/Toastr';
 type EvaluationPageProps = {
     searchParams: {
         evaluationId: string; // Assuming evaluationId is a string
@@ -36,6 +37,11 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
     const formattedDate = evaluationData?.updated_at ? format(new Date(evaluationData.updated_at), 'MM/dd/yyyy') : '';
 
     const handleSubmitRating = async () => {
+        if(rating<=0)
+        {
+            showError("Please select rating");
+            return
+        }
         try {
             const response = await fetch('/api/submitRating', {
                 method: 'PUT',

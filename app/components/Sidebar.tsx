@@ -83,14 +83,14 @@ const Sidebar: React.FC = () => {
               <span>Dashboard</span>
             </a>
           </li>
-          {session?.user.club_id && (
+          {/* {session?.user.club_id && (
           <li className="hover:bg-gray-700 rounded transition duration-200">
             <a href="/askforevaluation" className="flex items-center space-x-2 p-2">
             <FaClipboardList className="text-xl" />
               <span>Request For Evaluation</span>
             </a>
           </li>
-          )}
+          )} */}
          
           {/* <li className="hover:bg-gray-700 rounded transition duration-200">
             <a 

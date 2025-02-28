@@ -12,6 +12,7 @@ interface Item {
     created_at: string;
     currency: string;
     slug: string;
+    image: string;
 }
 
 interface PaymentDatatableProps {
@@ -87,30 +88,39 @@ const PaymentDatatable: React.FC<PaymentDatatableProps> = ({ limit, defaultSort,
                     </tr>
                 </thead>
                 <tbody>
-                    {loading ? (
-                        <tr><td colSpan={7}>Loading...</td></tr>
-                    ) : (
-                        data.map(item => (
-                            <tr key={item.id}>
-                                 <td>{formatDate(item.created_at)}</td>
-                                <td><a href={`/coach/${item.slug}`} target='_blank' className='text-blue-700'>{item.firstName} {item.lastName}</a></td>
-                                <td>{item.review_title}</td>
-                                
-                                <td>{item.currency} {item.amount}</td>
-                                <td> 
-                                    {item.status === 'paid' && (
-                                       'Paid'
-                                    )}
-                                    {item.status != 'paid' && (
-                                       'Pending'
-                                    )}
-                                   
-                                </td>
-                               
-                            </tr>
-                        ))
-                    )}
-                </tbody>
+    {loading ? (
+        <tr>
+            <td colSpan={7}>Loading...</td>
+        </tr>
+    ) : data.length > 0 ? (
+        data.map(item => (
+            <tr key={item.id}>
+                <td>{formatDate(item.created_at)}</td>
+                <td>
+    <a href={`/coach/${item.slug}`} target="_blank" className="flex items-center space-x-3 text-blue-700">
+        <img 
+            src={item.image} 
+            alt={`${item.firstName} ${item.lastName}`} 
+            className="w-10 h-10 rounded-full object-cover"
+        />
+        <span>{item.firstName} {item.lastName}</span>
+    </a>
+</td>
+
+                <td>{item.review_title}</td>
+                <td>{item.currency} {item.amount}</td>
+                <td>
+                    {item.status === 'paid' ? 'Paid' : 'Pending'}
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan={7} className="text-center">No payment history found</td>
+        </tr>
+    )}
+</tbody>
+
             </table>
             <div className="pagination">
                 <button 
