@@ -499,7 +499,7 @@ const Home: React.FC = () => {
               )}
             </tbody>
           </table>
-
+          {paginatedOrders.length > 0 && (
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={handlePrevPage}
@@ -525,6 +525,7 @@ const Home: React.FC = () => {
               Next
             </button>
           </div>
+          )}
         </div>
       </main>
     </div>
