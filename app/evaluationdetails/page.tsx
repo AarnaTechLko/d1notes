@@ -185,12 +185,12 @@ setLoading(false);
   <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
                                     <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoOneTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne} 
                                          <span className="mx-2">|</span>
                                          <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
-                                         <strong>Position:</strong> {evaluationData?.positionOne}
+                                         <strong>Position(s):</strong> {evaluationData?.positionOne}
                                     </div>
                                     <div className="mb-4">
 <strong>Description: </strong>{evaluationData?.video_description}
@@ -203,7 +203,7 @@ setLoading(false);
                                    
   <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo} 
                                          <span className="mx-2">|</span>
@@ -222,7 +222,7 @@ setLoading(false);
                                    
   <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree} 
                                          <span className="mx-2">|</span>
@@ -349,19 +349,19 @@ setLoading(false);
                
                 {/* Final Remarks Section */}
                 <div className="mt-6 text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <label htmlFor="final-remarks" className="text-sm font-medium">Final Remarks:</label>
+                    <label htmlFor="final-remarks" className="text-sm font-medium">Additional Comments:</label>
                     {evaluationData?.finalRemarks} 
                 </div>
 
                 <div className="mt-6 text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <label htmlFor="final-remarks" className="text-sm font-medium">Things to work on:</label>
+                    <label htmlFor="final-remarks" className="text-sm font-medium">Things to Work On:</label>
                     {evaluationData?.thingsToWork} 
                 </div>
                
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
-                        <h3 className="text-lg text-center font-semibold mb-2">Provide Your Rating and Testimonial.</h3>
+                        <h3 className="text-lg text-center font-semibold mb-2">Please Provide a Review.</h3>
 
                         {/* Star Rating */}
                         <div className="flex justify-center items-center mb-4">
@@ -390,7 +390,7 @@ setLoading(false);
                         <textarea
                             className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none"
                             rows={4}
-                            placeholder="Optional"
+                            placeholder="Leave a Testimonial..."
                             value={remarks}
                             onChange={(e) => setRemarks(e.target.value)}
                         />

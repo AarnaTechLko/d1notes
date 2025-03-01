@@ -461,7 +461,7 @@ let ppositons;
 
               
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(s)</label>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(ies)</label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
