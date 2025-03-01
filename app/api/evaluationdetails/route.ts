@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
         first_name:users.first_name,
         last_name:users.last_name,
         image:users.image,
+        coachimage:coaches.image,
        
         team:users.team,
         number:users.number,

@@ -152,16 +152,16 @@ setLoading(false);
 
                         <div className="flex items-center mb-4">
                             <strong className="mr-2">Coach:</strong>
-                            {evaluationData?.image && evaluationData?.image !== 'null' && (
+                            {evaluationData?.coachimage && evaluationData?.coachimage !== 'null' && (
   <Image
-    src={evaluationData?.image}
+    src={evaluationData?.coachimage}
     alt="Player Avatar"
                     className='w-12 h-12 mr-3 rounded-full object-cover'
                     width={30}
                     height={30}
   />
 )}
-{(!evaluationData?.image || evaluationData?.image === 'null') && (
+{(!evaluationData?.coachimage || evaluationData?.coachimage === 'null') && (
   <Image
     src={defaultImage}
     alt="Player Avatar"
@@ -178,13 +178,15 @@ setLoading(false);
                         <div className="mb-4">
                             <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span> 
                         </div>
+                        {evaluationData?.document && (
                         <div className="mb-4 flex items-center space-x-2">
   <strong>View / Download Additional Document:</strong> 
-  <a className="text-[15px] text-blue-700 underline flex items-center space-x-1" href={evaluationData?.document}>
+  <a className="text-[15px] text-blue-700 underline flex items-center space-x-1" target='_blank' href={evaluationData?.document}>
     <FaFileAlt />
     <span>Download</span>
   </a>
 </div>
+)}
 
 
                         <fieldset className="border border-gray-300 rounded-md p-4 mb-4">

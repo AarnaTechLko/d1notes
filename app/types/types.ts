@@ -57,6 +57,7 @@ export interface Evaluation {
   video_descriptionThree: string;
 document:string;
 thingsToWork:string;
+coachimage:string;
 
 }
 

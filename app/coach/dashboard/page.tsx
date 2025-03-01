@@ -10,7 +10,7 @@ import Modal from '../../components/Modal';
 import AcceptanceModal from '@/app/components/coach/AcceptanceModal';
 import { useSession, signOut } from 'next-auth/react';
 import EvaluationForm from '@/app/components/coach/EvaluationForm';
-import { FaEye } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
 import PromptComponent from '@/app/components/Prompt';
@@ -663,7 +663,7 @@ const Dashboard: React.FC = () => {
           isMiddle ? "bg-green-500" : "bg-blue-500"
         }`}
       >
-        ⬅
+        <FaArrowLeft/>
       </button>
               <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
                 <thead>
@@ -741,8 +741,7 @@ const Dashboard: React.FC = () => {
         onClick={scrollRight}
         className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-md z-10 w-10 bg-black-500 text-white py-2 px-4 rounded block lg:hidden"
       >
-        
-        ➡
+      <FaArrowRight/>
       </button>
             </div>
           </div>

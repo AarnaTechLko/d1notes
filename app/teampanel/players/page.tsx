@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [selectedCoach, setSelectedCoach] =useState<Coach | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLicenseNoModal, setShowLicenseNoModal] = useState<boolean>(false);
@@ -360,8 +360,8 @@ const handleResetPassword=(coach: Coach)=>{
                )}
             </table>
          
-
-          {/* Pagination Controls */}
+              {totalPages>=1 && (
+         
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
@@ -389,6 +389,7 @@ const handleResetPassword=(coach: Coach)=>{
               Next
             </button>
           </div>
+          )}
         </div>
         {showLicenseNoModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
