@@ -362,12 +362,12 @@ const ChatBox: React.FC = () => {
  />
  <div className="text-center">
    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-   <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
+   {/* <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
    <p className="text-sm text-gray-500"><b>Location:</b> {selectedUser.location}</p>
   
    <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
    <p className="text-sm text-gray-500"><b>Height:</b> {selectedUser.height}</p>
-   <p className="text-sm text-gray-500"><b>Weight:</b> {selectedUser.weight} Lbs</p>
+   <p className="text-sm text-gray-500"><b>Weight:</b> {selectedUser.weight} Lbs</p> */}
    
  </div>
  <a

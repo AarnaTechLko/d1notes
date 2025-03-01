@@ -192,12 +192,15 @@ const Home: React.FC = () => {
                                                 >
                                                     <FaEdit />
                                                 </button>
-                                                <button
-                                                    className="bg-red-500 text-white p-2 rounded ml-3"
-                                                    onClick={() => handleDelete(charge.id)}
-                                                >
-                                                    <FaTrash />
-                                                </button>
+                                                {charge.turnaroundtime!=120 &&(
+ <button
+ className="bg-red-500 text-white p-2 rounded ml-3"
+ onClick={() => handleDelete(charge.id)}
+>
+ <FaTrash />
+</button>
+                                                )}
+                                               
                                             </td>
                                         </tr>
                                     ))
@@ -274,6 +277,7 @@ const Home: React.FC = () => {
                             >
                                 Cancel
                             </button>
+                            
                             <button
                                 className="bg-blue-500 text-white rounded px-4 py-2"
                                 onClick={handleSubmit}
