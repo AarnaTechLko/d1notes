@@ -286,7 +286,7 @@ const ChatBox: React.FC = () => {
 
                 <textarea
                     className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
-                    placeholder="Send a message"
+                    placeholder=""
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={(e) => {
@@ -345,7 +345,7 @@ const ChatBox: React.FC = () => {
    href={`/coach/${selectedUser.slug}`}
    className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
  >
-   <FaEye className="mr-1" /> View Profile
+   <FaEye className="mr-1" /> View Details
  </a>
 </div>
 </>
@@ -374,7 +374,7 @@ const ChatBox: React.FC = () => {
    href={`/players/${selectedUser.slug}`}
    className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
  >
-   <FaEye className="mr-1" /> View Profile
+   <FaEye className="mr-1" /> View Details
  </a>
 </div>
 </>

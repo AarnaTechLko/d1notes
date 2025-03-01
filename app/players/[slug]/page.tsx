@@ -223,7 +223,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <div className="grid grid-cols-3 gap-5">
                 {/* <div><b>Organization Name:</b> {clubName}</div> */}
                 <div><b>Position:</b> {coachData.position}</div>
-                <div><b>High School Graduation Year:</b> {coachData.graduation}</div>
+                <div><b>Graduation Year (High School):</b> {coachData.graduation}</div>
                  <div><b>Weight:</b> {coachData.weight} Lbs</div>  
                 <div><b>Height:</b> {coachData.height}</div>
                 <div><b>School Name:</b> {coachData.school_name}</div>
@@ -239,12 +239,12 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 
               </div>
               <div className="grid grid-cols-2 gap-5 mt-4">
-              <div><b>Team Name / (Birth Year or Age Group):</b> {coachData.city}</div>
+              <div><b>Team Name:</b> {coachData.city}</div>
               <div><b>Age Group:</b> {coachData.age_group}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>Leagues:</b> {coachData.city}</div>
+              <div><b>League(s):</b> {coachData.city}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">

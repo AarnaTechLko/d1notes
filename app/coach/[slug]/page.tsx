@@ -505,7 +505,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         )}
 
         <h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
-          Rating and Testimonials
+          Reviews
         </h2>
         <section className="mt-8 bg-gray-50 p-0 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
           {evaluationList.length > 0 ? (
