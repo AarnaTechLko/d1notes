@@ -213,10 +213,10 @@ const EditTeam = ({ params }: TeamProps) => {
         }
 
 
-        if (!formValues.logo) {
-            showError("Logo is required.");
-            return;
-        }
+        // if (!formValues.logo) {
+        //     showError("Logo is required.");
+        //     return;
+        // }
 
         // if (!formValues.cover_image) {
         //     showError("Cover Image is required.");
@@ -332,7 +332,7 @@ const EditTeam = ({ params }: TeamProps) => {
                             <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Team Details</h3>
                             <div onClick={handleImageClick} className="cursor-pointer relative">
                                 <label className="block text-sm font-medium text-gray-700">
-                                    Team Logo<span className="mandatory">*</span>
+                                    Team Logo 
                                 </label>
                                 <div className="relative">
                                     <Image
@@ -563,7 +563,10 @@ const EditTeam = ({ params }: TeamProps) => {
 
 
                                             </td>
-                                            <td className="px-4 py-2">{coach.first_name} {coach.last_name}</td>
+                                            <td className="px-4 py-2">{coach.first_name} {coach.last_name}<br/>
+                                            <span className={coach.status ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+  {coach.status ? "Active" : "Inactive"}
+</span></td>
                                             <td className="px-4 py-2 text-center">
                                                 <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(teamid, coach.coachId, "coach")}>
                                                     <FaTrash />
@@ -610,7 +613,12 @@ const EditTeam = ({ params }: TeamProps) => {
 
 
                                             </td>
-                                            <td className="px-4 py-2">{player.first_name} {player.last_name}</td>
+                                            <td className="px-4 py-2">{player.first_name} {player.last_name}
+                                            <br/>
+                                            <span className={player.status ? "text-red-600 font-bold" : "text-green-600 font-bold"}>
+  {player.status ? "Inactive" : "Active"}
+</span>
+                                            </td>
                                             <td className="px-4 py-2 text-center">
                                                 <button className="text-red-500 hover:text-red-700"
                                                     onClick={() => handleDelete(teamid, player.playerId, "player")}>

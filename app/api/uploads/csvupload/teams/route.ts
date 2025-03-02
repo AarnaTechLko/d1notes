@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const payload = body.csvData;
         const enterprise_id = body.enterprise_id;
+        const logo = body.logo;
 
         if (!Array.isArray(payload)) {
             return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
@@ -69,10 +70,11 @@ export async function POST(req: NextRequest) {
                     creator_id: enterprise_id,
                     slug: teamNameFormatted,
                     team_type: item.Gender,
-                    team_year: item.Year,
+                   
+                    team_year: item.YearAndAgeGroup,
                     club_id: enterprise_id,
                     status: 'Active',
-                    logo: '',
+                    logo:logo,
                     cover_image: '',
                     description: 'Team Created',
                 }).returning({ teamId: teams.id });
@@ -93,6 +95,7 @@ export async function POST(req: NextRequest) {
                     const user = existingUser[0];
                     if (user.enterprise_id !== enterprise_id) {
                         excludedUsers.push({
+                            first_name: userEmail,
                             email: userEmail,
                             existingEnterprise: user.enterprise_id
                         });
@@ -100,6 +103,7 @@ export async function POST(req: NextRequest) {
                     }
                 } else {
                     const user = await db.insert(users).values({
+                        first_name: userEmail,
                         email: userEmail,
                         password: hashedPassword,
                         status: 'Inactive',
@@ -126,6 +130,7 @@ export async function POST(req: NextRequest) {
                     const coach = existingCoach[0];
                     if (coach.enterprise_id !== enterprise_id) {
                         excludedCoaches.push({
+                            firstName: userEmail,
                             email: userEmail,
                             existingEnterprise: coach.enterprise_id
                         });
@@ -133,6 +138,7 @@ export async function POST(req: NextRequest) {
                     }
                 } else {
                     const user = await db.insert(coaches).values({
+                        firstName: userEmail,
                         email: userEmail,
                         password: hashedPassword,
                         status: 'Active',

@@ -207,10 +207,8 @@ const Home: React.FC = () => {
                   <div className="mt-4">
                   <div className="w-full flex items-center justify-between">
                       <div className="flex flex-col">
-                        <h3 className="font-semibold">CSV Data Preview</h3>
-                        <p className="text-sm text-red-600">
-                          (Preview of the CSV data. You can edit values before submission.)
-                        </p>
+                        <h3 className="font-semibold">Preview of the CSV data</h3>
+                         
                       </div>
                       <div className="flex space-x-4">
                         <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>

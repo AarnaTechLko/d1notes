@@ -35,7 +35,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [coachId, setCoachId] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [loadingKey, setLoadingKey] = useState<boolean>(false);
   const [showLicenseModal, setShowLicenseModal] = useState<boolean>(false);
@@ -88,6 +88,15 @@ const Home: React.FC = () => {
     }
   };
 
+  const handlePopup=()=>{
+    Swal.fire({
+      title: "No Evaluations Completed Yet...",
+      text: "",
+      icon: "info", // Can be 'success', 'error', 'warning', 'info', 'question'
+      confirmButtonText: "OK",
+    });
+    
+  }
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
@@ -312,6 +321,7 @@ const Home: React.FC = () => {
         userId={coachId}/>
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Your Coaches</h1>
         <div className="flex justify-between items-center">
   <input
     type="text"
@@ -345,8 +355,7 @@ const Home: React.FC = () => {
         <th>Email</th>
         <th>Phone</th>
         <th>Sport</th>
-        <th>Available License</th>
-        <th>Used License</th>
+        
         <th>Evaluations Completed</th>
         <th>Status</th>
         <th style={{width:225}}>Action</th>
@@ -365,16 +374,27 @@ const Home: React.FC = () => {
             <td>{coach.email}</td>
             <td>{coach.countrycode}{coach.phoneNumber}</td>
             <td>{coach.sport}</td>
-            <td>{coach.assignedLicenseCount}</td>
-            <td>{coach.consumeLicenseCount}</td>
-            <td align='center'><a
+            
+            <td align='center'>
+              {Number(coach.totalEvaluations)>=1 && (<a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
                   className='underline text-blue-500'
                   target="_blank"
                 >
-                  {coach.totalEvaluations}
-                </a></td>
+                 View {/* {coach.totalEvaluations} */}
+                </a>
+              )}
+              {Number(coach.totalEvaluations)==0 && (<button
+                 
+                  title='History'
+                  className='underline text-blue-500'
+                  onClick={handlePopup}
+                >
+                 View {/* {coach.totalEvaluations} */}
+                </button>
+              )}
+              </td>
             <td>
               {coach.status === 'Inactive' ? (
                 <button

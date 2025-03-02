@@ -238,6 +238,7 @@ const handleResetPassword=(coach: Coach)=>{
         userId={coachId}/>
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Your Players</h1>
         <div className="flex justify-between items-center">
   <input
     type="text"
