@@ -229,7 +229,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>School Name:</b> {coachData.school_name}</div>
                 <div><b>GPA:</b> {coachData.gpa}</div>
                 <div><b>Sport:</b> {coachData.sport}</div>
-                <div><b>Nationality:</b> {coachData.playingcountries}</div>
+                <div><b>Nationality(ies):</b> {coachData.playingcountries}</div>
                 <div><b>Gender:</b> {coachData.gender}</div>
                 <div><b>Team:</b> {coachData.team}</div>
                 <div><b>Level:</b> {coachData.grade_level}</div>

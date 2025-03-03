@@ -577,7 +577,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit,teamId }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(s) <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies) <span className="text-xs text-gray-500">(Optional)</span></label>
                   <Select
                     isMulti
                     options={countries}
@@ -726,7 +726,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({ onSubmit,teamId }) => {
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / (Birth Year or Age Group)<span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     placeholder="Team Name/ 2024"
                     type="text"

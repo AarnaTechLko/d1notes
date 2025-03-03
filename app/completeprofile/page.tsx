@@ -677,7 +677,7 @@ export default function Register() {
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name / (Birth Year or Age Group)<span className='mandatory'>*</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"

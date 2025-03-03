@@ -206,7 +206,7 @@ const Home: React.FC = () => {
                       <div className="flex flex-col">
                         <h3 className="font-semibold">CSV Data Preview</h3>
                         <p className="text-sm text-red-600">
-                          (Preview of the CSV data. You can edit values before submission.)
+                          (Preview of the CSV data.)
                         </p>
                       </div>
                       <div className="flex space-x-4">

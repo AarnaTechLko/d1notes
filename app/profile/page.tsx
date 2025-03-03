@@ -688,7 +688,7 @@ let ppositons;
 
               {/* Club Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name/ Year</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name</label>
                 {isEditMode ? (
                   <input
                     type="text"

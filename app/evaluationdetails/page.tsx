@@ -369,7 +369,7 @@ setLoading(false);
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
-                        <h3 className="text-lg text-center font-semibold mb-2">Please Provide a Review.</h3>
+                        <h3 className="text-lg text-center font-semibold mb-2">Please Provide a Review</h3>
 
                         {/* Star Rating */}
                         <div className="flex justify-center items-center mb-4">

@@ -335,8 +335,8 @@ const ChatBox: React.FC = () => {
  />
  <div className="text-center">
    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-   <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
-   <p className="text-sm text-gray-500"><b>Qualifications:</b> {selectedUser.qualifications}</p>
+   {/* <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
+   <p className="text-sm text-gray-500"><b>Qualifications:</b> {selectedUser.qualifications}</p> */}
   
    <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
    
@@ -353,7 +353,7 @@ const ChatBox: React.FC = () => {
                    
                    {loggedInUserType=='coach' && (
                         <>
- <h2 className="text-xl font-semibold mb-4">Coach Profile</h2>
+ <h2 className="text-xl font-semibold mb-4">Player Profile</h2>
  <div className="flex flex-col items-center mb-4">
  <img
    src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}

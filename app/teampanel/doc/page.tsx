@@ -392,7 +392,7 @@ const Home: React.FC = () => {
 <div className="flex items-center space-x-4">
   {/* Buy Licenses Toggle */}
   <div className="flex items-center space-x-2">
-    <span>View Licenses</span>
+    <span>Purchase Evaluvations</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -406,7 +406,7 @@ const Home: React.FC = () => {
 
   {/* Accept Evaluations Toggle */}
   <div className="flex items-center space-x-2">
-    <span>Accept Evaluations</span>
+    <span>View Evaluations</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"

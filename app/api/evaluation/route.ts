@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
             club_id:0        
         };
     
-        let message=`Dear ${coachData[0].firstName}! You have recieved an Evaluation Request from ${playerData[0].first_name}`;
+        let message=`Dear ${coachData[0].firstName}! You have received an Evaluation Request from ${playerData[0].first_name}`;
         const insertChatfriend=await db.insert(chats).values(chatFriend).returning();
 
         let userValues: any = {

@@ -167,7 +167,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 </p>
               )}
                 {coachData.age_group && (
- <p className="bg-blue-700 text-white p-2">
+ <p className=" text-black p-2">
  <span ><b>Age Group: </b>{coachData.age_group}</span> 
 </p>
               )}
@@ -267,7 +267,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         />
       ))
     ) : (
-      <p className="col-span-full text-center">No coaches available.</p>
+      <p className="col-span-full text-left">No Coaches yet...</p>
     )}
   </div>
 </section>
@@ -306,7 +306,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 </div>
               ))
             ) : (
-              <p>No team data available.</p>
+              <p>No Players yet...</p>
             )}
 
 
