@@ -35,7 +35,7 @@ const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
                 <h3 className="text-lg font-bold mb-4">Full Description</h3>
                 <p>{description}</p>
-                <button onClick={onClose} className="mt-4 text-blue-500 hover:underline">
+                <button onClick={onClose} className="mt-4 text-blue-500">
                     Close
                 </button>
             </div>
@@ -266,7 +266,7 @@ const EvaluationDataTable: React.FC<EvaluationDataTableProps> = ({ limit, defaul
                                 </td>
 
                                 <td>{item.video_description.substring(0, 30)}
-                                    <button onClick={() => handleReadMore(item.video_description)} className="text-blue-500 hover:underline ml-2">
+                                    <button onClick={() => handleReadMore(item.video_description)} className="text-blue-500  ml-2">
                                         Read More
                                     </button>
                                 </td>

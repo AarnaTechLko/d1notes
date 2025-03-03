@@ -76,6 +76,7 @@ let team_id=teamId;
                 image: null,
                 rating: null,
                 certificate: null,
+                status:'Pending',
                 password: hashedPassword,
                
             }; 
@@ -84,10 +85,10 @@ let team_id=teamId;
         const insertedPlayers = await db.insert(coaches).values(insertData).returning({ id: coaches.id });
 
         
-  if(enterprise_id)
+  if(Number(enterprise_id))
   {
     const teamCoachData = insertedPlayers.map(player => ({
-        teamId: Number(teamId),           // Adjusted to match the schema
+        teamId: Number(teamId || 0),           // Adjusted to match the schema
         coachId: player.id,       // Adjusted to match the schema
         enterprise_id: Number(enterprise_id), // Adjusted to match the schema
       }));

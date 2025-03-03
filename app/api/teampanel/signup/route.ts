@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
             to:  manager_email || '',
             subject: `D1 NOTES Registration Completed for ${team_name}`,
             text: `D1 NOTES Registration Completed for ${team_name}`,
-            html: `<p>Dear ${team_name}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Click here</a>  to get started!
+            html: `<p>Dear ${team_name}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Click here</a>  to get started!
             </p><p className="mt-10">Regards,<br>
         D1 Notes Team</p>`,
         });

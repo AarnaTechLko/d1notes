@@ -27,6 +27,7 @@ export async function GET(req: Request) {
         first_name:users.first_name,
         last_name:users.last_name,
         image:users.image,
+        status:users.status,
     })
     .from(teamPlayers)
     .innerJoin(users, eq(teamPlayers.playerId, users.id))
@@ -41,6 +42,7 @@ export async function GET(req: Request) {
         first_name:coaches.firstName,
         last_name:coaches.lastName,
         image:coaches.image,
+        status:coaches.status,
     })
     .from(teamCoaches)
     .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))

@@ -281,7 +281,7 @@ const Home: React.FC = () => {
               className={`px-4 py-2 text-sm ${
                 currentPage === 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500'
               }`}
             >
               Previous
@@ -295,7 +295,7 @@ const Home: React.FC = () => {
               className={`px-4 py-2 text-sm ${
                 currentPage === totalPages
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500'
               }`}
             >
               Next

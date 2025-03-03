@@ -181,7 +181,7 @@ setLoading(false);
                         {evaluationData?.document && (
                         <div className="mb-4 flex items-center space-x-2">
   <strong>View / Download Additional Document:</strong> 
-  <a className="text-[15px] text-blue-700 underline flex items-center space-x-1" target='_blank' href={evaluationData?.document}>
+  <a className="text-[15px] text-blue-700  flex items-center space-x-1" target='_blank' href={evaluationData?.document}>
     <FaFileAlt />
     <span>Download</span>
   </a>

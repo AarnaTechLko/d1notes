@@ -120,7 +120,7 @@ const Home: React.FC = () => {
        
         <td className="flex items-center space-x-3 p-2">
   <img src={`${order.image}`} alt="{order.first_name}"  className="w-10 h-10 rounded-full object-cover" />
-  <a href={`/players/${order.slug}`} target="_blank"  className="text-blue-600 hover:underline font-medium">
+  <a href={`/players/${order.slug}`} target="_blank"  className="text-blue-600 font-medium">
     {order.first_name} {order.last_name}
   </a>
 </td>

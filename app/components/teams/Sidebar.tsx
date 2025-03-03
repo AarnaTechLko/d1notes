@@ -82,7 +82,7 @@ const Sidebar: React.FC = () => {
             <a href="/teampanel/players" className="flex items-center space-x-2 p-2">
             
               <FaCompressAlt className='text-xl'/>
-              <span>Players</span>
+              <span>Your Players</span>
             </a>
           </li>
         
@@ -91,7 +91,7 @@ const Sidebar: React.FC = () => {
             <a href="/teampanel/coaches" className="flex items-center space-x-2 p-2">
             
               <FaCompressAlt className='text-xl'/>
-              <span>Coaches</span>
+              <span>Your Coaches</span>
             </a>
           </li>
         

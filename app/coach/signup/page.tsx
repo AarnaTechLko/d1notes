@@ -342,7 +342,7 @@ export default function Register() {
                 />
                 <label htmlFor="terms" className="text-gray-700 text-sm">
                   I accept the{' '}
-                  <a href="#" onClick={() => setIsModalOpen(true)} className="text-blue-500 hover:underline">
+                  <a href="#" onClick={() => setIsModalOpen(true)} className="text-blue-500">
                     terms and conditions.
                   </a>
                 </label>
@@ -367,7 +367,7 @@ export default function Register() {
             </form>
             <p className="text-center text-gray-600 text-sm mt-4">
               Already have an account?{' '}
-              <a href="/login" className="text-blue-500 hover:underline">
+              <a href="/login" className="text-blue-500 ">
                 Login
               </a>
             </p>

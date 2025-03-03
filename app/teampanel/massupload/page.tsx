@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "../../components/teams/Sidebar";
 import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSpinner, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import Swal from "sweetalert2";
@@ -130,7 +130,7 @@ const Home: React.FC = () => {
         <div className="w-full h-screen flex justify-center items-center">
           <div className="bg-white h-screen p-4 rounded-lg w-[100%] overflow-hidden">
             <div className=" top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
-              <h2 className="text-xl font-semibold text-gray-800">Bulk Upload Players</h2>
+              <h2 className="text-xl font-semibold text-gray-800">Mass Upload Players</h2>
             </div>
             <div className="pt-4 pb-4 overflow-y-auto h-screen">
               {showUploadControls && (
@@ -204,10 +204,8 @@ const Home: React.FC = () => {
                   <div className="mt-4">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex flex-col">
-                        <h3 className="font-semibold">CSV Data Preview</h3>
-                        <p className="text-sm text-red-600">
-                          (Preview of the CSV data.)
-                        </p>
+                        <h3 className="font-semibold">Preview of the CSV data</h3>
+                       
                       </div>
                       <div className="flex space-x-4">
                         <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
@@ -286,7 +284,7 @@ const Home: React.FC = () => {
                                 onClick={() => handleDelete(index)}
                                 className="text-red-500"
                               >
-                                🗑️
+                                <FaTrash/>
                               </button>
                             </td>
                           </tr>

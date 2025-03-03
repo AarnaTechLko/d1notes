@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
             to: coachData[0].email || '',
             subject: `D1 NOTES Evaluation Request Received from ${playerData[0].first_name}`,
             text:`D1 NOTES Evaluation Request Received from ${playerData[0].first_name}`,
-            html: `<p>Dear ${coachData[0].firstName}! You have received an evaluation request from ${playerData[0].first_name}.  <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a>  to your coach account and view your Dashboard to accept or decline the request. 
+            html: `<p>Dear ${coachData[0].firstName}! You have received an evaluation request from ${playerData[0].first_name}.  <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a>  to your coach account and view your Dashboard to accept or decline the request. 
              <p  className="mt-10">Regards<br>D1 Notes Team</p>`,
         });
 

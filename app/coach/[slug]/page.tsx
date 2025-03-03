@@ -485,7 +485,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       {coachData.certificate ? (
         <button
           onClick={openCertificateModal}
-          className="text-blue-500 underline hover:text-blue-700 transform transition-all duration-300"
+          className="text-blue-500  hover:text-blue-700 transform transition-all duration-300"
         >
           View Certification
         </button>

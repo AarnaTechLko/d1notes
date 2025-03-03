@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "../../components/enterprise/Sidebar";
 import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSpinner, FaTrash } from "react-icons/fa";
 import Papa from "papaparse";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -74,6 +74,7 @@ const Home: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           enterprise_id: session?.user.id,
+          logo: session?.user.image,
           csvData,
         }),
       });
@@ -260,10 +261,8 @@ const Home: React.FC = () => {
                   <div className="mt-4">
                   <div className="w-full flex items-center justify-between">
                       <div className="flex flex-col">
-                        <h3 className="font-semibold">CSV Data Preview</h3>
-                        <p className="text-sm text-red-600">
-                          (Preview of the CSV data. You can edit values before submission.)
-                        </p>
+                        <h3 className="font-semibold">Preview of the CSV data</h3>
+                        
                       </div>
                       <div className="flex space-x-4">
                         <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
@@ -350,7 +349,7 @@ const Home: React.FC = () => {
                             <td>
                               <input
                                 type="text"
-                                value={row.Year}
+                                value={row.YearAndAgeGroup}
                                 onChange={(e) =>
                                   handleInputChange(index, "Year", e.target.value)
                                 }
@@ -365,7 +364,7 @@ const Home: React.FC = () => {
                                 onClick={() => handleDelete(index)}
                                 className="text-red-500"
                               >
-                                🗑️
+                                <FaTrash/>
                               </button>
                             </td>
                           </tr>

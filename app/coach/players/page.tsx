@@ -317,7 +317,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
               className={`px-4 py-2 text-sm ${
                 currentPage === 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500'
               }`}
             >
               Previous
@@ -331,7 +331,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
               className={`px-4 py-2 text-sm ${
                 currentPage === totalPages
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500 '
               }`}
             >
               Next
@@ -383,7 +383,7 @@ const handleInputChange = (index:any, field:any, value:any) => {
                                         )}
           {/* <button
           type='button'
-  className="text-xs text-gray-500 underline"
+  className="text-xs text-gray-500"
   onClick={() => handleLoadLicense()}
 >
   Assign License

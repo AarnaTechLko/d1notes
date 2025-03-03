@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       html: `
             <div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
             Dear ${registrationType}! You have been invited by ${userName} to take advantage of D1 Note's Enterprises / white label service.  <a href="${inviteUrl}" 
-                     style="font-weight: bold; color: blue; text-decoration: underline;">
+                     style="font-weight: bold; color: blue;">
                     Click Here
                   </a> to login or create a  ${registrationType} profile and your access to the Organization or Team will automatically be activated. 
 

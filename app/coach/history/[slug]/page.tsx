@@ -204,7 +204,7 @@ Evaluation History
             {stars}    
                {evaluation.rating || 0} / 5</p>
 <div className=' mt-5'>
-               <a href={`/evaluationdetails?evaluationId=${evaluation.id}`} className='underline' target='_blank'>View Evaluation</a>
+               <a href={`/evaluationdetails?evaluationId=${evaluation.id}`} className='' target='_blank'>View Evaluation</a>
                </div>
           </div>
           </div>

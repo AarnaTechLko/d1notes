@@ -229,6 +229,15 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page
   };
 
+  const handlePopup=()=>{
+    Swal.fire({
+      title: "No Evaluations Completed Yet...",
+      text: "",
+      icon: "info", // Can be 'success', 'error', 'warning', 'info', 'question'
+      confirmButtonText: "OK",
+    });
+    
+  }
   const handleSubmitCoachForm = async (formData: any) => {
     try {
       const response = await fetch('/api/enterprise/coach/signup', {
@@ -469,18 +478,30 @@ const Home: React.FC = () => {
             <td>{coach.sport}</td>
             {/* <td>{coach.assignedLicenseCount}</td>
             <td>{coach.consumeLicenseCount}</td> */}
-            <td align='center'><a
+            <td align='center'>
+              {Number(coach.totalEvaluations)>=1 && (<a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   target="_blank"
                 >
                  View {/* {coach.totalEvaluations} */}
-                </a></td>
+                </a>
+              )}
+              {Number(coach.totalEvaluations)==0 && (<button
+                 
+                  title='History'
+                  className=' text-blue-500'
+                  onClick={handlePopup}
+                >
+                 View {/* {coach.totalEvaluations} */}
+                </button>
+              )}
+              </td>
             <td>
-              {coach.status === 'Inactive' ? (
+              {coach.status === 'Pending' ? (
                 <button
-                  className="bg-red px-1 py-2 text-xs rounded bg-red-500 text-white"
+                  className="bg-red px-1 py-2 text-xs rounded bg-orange-500 text-white"
                   onClick={() => handleEnterLicense(coach)}
                 >
                   {coach.status}
@@ -547,7 +568,7 @@ const Home: React.FC = () => {
     {currentPage > 1 && (
       <button
         onClick={() => handlePageChange(currentPage - 1)}
-        className="px-4 py-2 text-sm text-blue-500 hover:underline"
+        className="px-4 py-2 text-sm text-blue-500"
       >
         Previous
       </button>
@@ -558,7 +579,7 @@ const Home: React.FC = () => {
     {currentPage < totalPages && (
       <button
         onClick={() => handlePageChange(currentPage + 1)}
-        className="px-4 py-2 text-sm text-blue-500 hover:underline"
+        className="px-4 py-2 text-sm text-blue-500"
       >
         Next
       </button>
@@ -635,7 +656,7 @@ const Home: React.FC = () => {
                                         )}
           {/* <button
           type='button'
-  className="text-xs text-gray-500 underline"
+  className="text-xs text-gray-500"
   onClick={() => handleLoadLicense()}
 >
   Assign License

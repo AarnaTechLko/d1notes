@@ -53,14 +53,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
         variant="text"
         onClick={openModal}
         sx={{
-          textDecoration: 'underline',
+          
           color: 'primary.main',
           textTransform: 'none',
           padding: 0,
           marginLeft:-1,
           '&:hover': {
             backgroundColor: 'transparent',
-            textDecoration: 'underline'
+            
           },
         }}
       >Reset

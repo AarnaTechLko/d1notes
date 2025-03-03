@@ -184,7 +184,7 @@ export default function Home(): JSX.Element {
             How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? 
             Would you like access to a curated network of top coaches, trainers, and scouts?
           </p>
-          <a href='/howitworks' className='text-lg font-bold underline'>How It Works for Players</a>
+          <a href='/howitworks' className='text-lg font-bold'>How It Works for Players</a>
         </div>
 
         {/* Coaches Box */}
@@ -194,7 +194,7 @@ export default function Home(): JSX.Element {
             Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services? 
             You are worth more than you know to young athletes today.
           </p>
-          <a href='/howitworks#coach' className='text-lg font-bold underline'>How It Works for Coaches</a>
+          <a href='/howitworks#coach' className='text-lg font-bold '>How It Works for Coaches</a>
         </div>
 
         {/* Enterprises Box */}
@@ -205,7 +205,7 @@ export default function Home(): JSX.Element {
             value and level of satisfaction delivered to your participants?
           </p>
           
-          <a href='/howitworks#enterprises' className='text-lg font-bold underline'>How It Works for Enterprises</a>
+          <a href='/howitworks#enterprises' className='text-lg font-bold'>How It Works for Enterprises</a>
         </div>
       </div>
 
