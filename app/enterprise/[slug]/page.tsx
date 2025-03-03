@@ -264,7 +264,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 />
               ))
             ) : (
-              <p className="text-black-500 text-lg">No Coachs added yet....</p>
+              <p className="text-black-500 text-lg">No Coaches added yet....</p>
             )}
           </div>
 
