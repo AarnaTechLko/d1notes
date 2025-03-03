@@ -26,7 +26,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
     else{
       Swal.fire({
         title: 'Unauthorized!',
-        text: 'Only logged in members of this Team may access.',
+        text: 'Only logged in members and administrators of this Organization / Team may view.',
         icon: 'error', // 'success' displays a green checkmark icon
         confirmButtonText: 'OK',
       });

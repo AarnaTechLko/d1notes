@@ -5,7 +5,7 @@ import Sidebar from '../../components/enterprise/Sidebar'
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import Select from "react-select";
-import { countryCodesList, countries, states,positionOptionsList } from '@/lib/constants';
+import { countryCodesList, countries, states, positionOptionsList } from '@/lib/constants';
 import { upload } from '@vercel/blob/client';
 
 const Profile: React.FC = () => {
@@ -28,7 +28,14 @@ const Profile: React.FC = () => {
     city: "",
     logo: "",
     affiliationDocs: "",
-    
+    sport: "",
+    description: "",
+    facebook: "",
+    linkedin: "",
+    instagram: "",
+    xlink: "",
+    youtube: "",
+
   });
 
 
@@ -36,6 +43,27 @@ const Profile: React.FC = () => {
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+
+  
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+  }, []);
+
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -53,7 +81,7 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data[0]);
-        
+
         } else {
           console.error("Error fetching profile data:", response.statusText);
         }
@@ -87,12 +115,12 @@ const Profile: React.FC = () => {
     if (fileInputRef.current?.files?.length) {
       const file = fileInputRef.current.files[0];
       setPhotoUpoading(true);
-  
+
       try {
         const newBlob = await upload(file.name, file, {
-            access: 'public',
-            handleUploadUrl: '/api/uploads',
-          });
+          access: 'public',
+          handleUploadUrl: '/api/uploads',
+        });
         setPhotoUpoading(false);
         const imageUrl = newBlob.url;
         setProfileData((prevData) => ({ ...prevData, logo: imageUrl }));
@@ -134,9 +162,9 @@ const Profile: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            ...profileData,
-            logo: profileData.logo || ""
-          }), // Include playerId and profileData
+          ...profileData,
+          logo: profileData.logo || ""
+        }), // Include playerId and profileData
       });
 
       if (response.ok) {
@@ -163,7 +191,7 @@ const Profile: React.FC = () => {
       console.error("Error updating profile:", error);
     }
   };
- 
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -181,7 +209,7 @@ const Profile: React.FC = () => {
   const triggerCertificateUpload = () => {
     certificateInputRef.current?.click();
   };
-   
+
   return (
     <>
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -207,7 +235,7 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
               <div
                 onClick={handleImageClick}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
@@ -226,12 +254,12 @@ const Profile: React.FC = () => {
               </div>
               {isEditMode && (
                 <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                ref={fileInputRef}
-              />
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  ref={fileInputRef}
+                />
               )}
             </div>
 
@@ -239,7 +267,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5 mb-2">
               {/* First Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -252,10 +280,10 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.organizationName}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Owner Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -268,7 +296,7 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.owner_name}</p>
                 )}
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Player Director</label>
                 {isEditMode ? (
                   <input
@@ -281,13 +309,13 @@ const Profile: React.FC = () => {
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.contactPerson}</p>
                 )}
-              </div>
+              </div> */}
 
-       
+
 
               {/* Email */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Email<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -300,10 +328,30 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.email}</p>
                 )}
               </div>
+               
+                {/* Sports */}
+                
+                <div className="flex-1">
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                  {isEditMode ? (
+                  <select
+                    name="sport"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.sport}
+                    onChange={handleChange}
+                  >
+                    <option value="Soccer">Soccer</option>
+
+                  </select>
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.sport}</p>
+                  )}
+                </div>
+                
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Mobile Number<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -330,10 +378,10 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryCodes} {profileData.mobileNumber}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Address</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Address<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -346,42 +394,63 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+              
+
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Country<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                   <input
-                   type="text"
-                   name="country"
-                   value={profileData.country}
-                   onChange={handleChange}
-                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 />
+                  <select
+                  name="country"
+                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  value={profileData.country}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  {countriesList
+                    .map((country: any) => (
+                      <option key={country.id} value={country.id}>
+                        {country.name}
+                      </option>
+                    ))}
+                </select>
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.country}</p>
                 )}
+
+
+
               </div>
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization State/Province<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                <input
-                type="text"
-                name="state"
-                value={profileData.state}
-                onChange={handleChange}
-                className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-              />
+                  <select
+                  name="state"
+                  id="state"
+                  value={profileData.state}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                >
+                  <option value="">Select</option>
+                  {statesList.map((state: any, index) => (
+                    <option key={index} value={state.name}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.state}</p>
                 )}
+
+
               </div>
 
               {/* Location */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization City<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -394,7 +463,108 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.city}</p>
                 )}
               </div>
-</div>
+              <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
+                <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Organization Description<span className='mandatory'>*</span></label>
+
+                {isEditMode ? (
+                  <textarea name="description" maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
+                    value={profileData.description}
+                    onChange={handleChange}
+                  ></textarea>
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.description}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+                <div>
+                  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="facebook"
+                      value={profileData.facebook}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.facebook}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
+
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="instagram"
+                      value={profileData.instagram}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
+
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="linkedin"
+                      value={profileData.linkedin}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.linkedin}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+
+                <div>
+                  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
+
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="linkedin"
+                      value={profileData.xlink}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.xlink}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="youtube"
+                      value={profileData.youtube}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                  )}
+
+                </div>
+
+
+
+              </div>
+
+
+            </div>
 
 
 
