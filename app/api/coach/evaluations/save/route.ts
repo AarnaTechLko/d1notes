@@ -150,11 +150,11 @@ const baseUrl = `${protocol}://${host}`;
        
       subject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
     
-      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation was completed by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and view your Dashboard to access the evaluation. Feel free to follow up with any Messages or Rating or Testimonial. Let’s go! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation was completed by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Login</a> to your player account and view your Dashboard to access the evaluation. Feel free to follow up with any Messages or Rating or Testimonial. Let’s go! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
 
       coachsubject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
     
-      coachmailmessage=`Dear ${coachData[0].firstName}! Your completed evaluation was sent to  ${playerData[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your coach account to check on your Earnings History and any Messages or Rating or Testimonial! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
+      coachmailmessage=`Dear ${coachData[0].firstName}! Your completed evaluation was sent to  ${playerData[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your coach account to check on your Earnings History and any Messages or Rating or Testimonial! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
 
 
 

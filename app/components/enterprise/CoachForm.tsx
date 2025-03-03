@@ -706,7 +706,7 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
                                         )}
                                         <button
                                             type='button'
-                                            className="text-xs text-gray-500 underline"
+                                            className="text-xs text-gray-500 "
                                             onClick={() => handleAssignLicense()}
                                         >
                                             Assign License

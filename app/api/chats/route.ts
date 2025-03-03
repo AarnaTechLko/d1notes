@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         to: coachQuery[0].email || '',
         subject:` D1 NOTES Message from ${playerQuery[0].first_name}`,
         text: ` D1 NOTES Message from ${playerQuery[0].first_name}`,
-        html:`Dear ${coachQuery[0].firstName}! You have received a Message from ${playerQuery[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your coach account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
+        html:`Dear ${coachQuery[0].firstName}! You have received a Message from ${playerQuery[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your coach account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
       });
 
     }
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
         to: playerQuery[0].email || '',
         subject:` D1 NOTES Message from ${coachQuery[0].firstName}`,
         text: ` D1 NOTES Message from ${coachQuery[0].firstName}`,
-        html:`Dear ${playerQuery[0].first_name}! You have received a Message from ${coachQuery[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player  account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
+        html:`Dear ${playerQuery[0].first_name}! You have received a Message from ${coachQuery[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Login</a> to your player  account and view Messages in the menu. <p>Regars<br/>Team D1 Notes/p>`,
       });
 
     }

@@ -190,7 +190,7 @@ const Home: React.FC = () => {
               setCopiedIndex(index); // Set the copied index
               setTimeout(() => setCopiedIndex(null), 2000); // Reset after 2 seconds
             }}
-            className="text-blue-500 hover:underline"
+            className="text-blue-500"
           >
             {copiedIndex === index ? "Copied" : "Copy"}
           </button>

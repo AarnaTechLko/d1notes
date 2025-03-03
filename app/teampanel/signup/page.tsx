@@ -639,7 +639,7 @@ const [showPassword, setShowPassword] = useState(false);
                   onChange={(e) => setTermsAccepted(e.target.checked)}
                   className="mr-2"
                 />
-                <span className="text-gray-700 text-sm font-semibold">I accept the <a href="#" className="text-blue-500 hover:underline" onClick={() => setIsModalOpen(true)}>terms and conditions</a>.</span>
+                <span className="text-gray-700 text-sm font-semibold">I accept the <a href="#" className="text-blue-500 " onClick={() => setIsModalOpen(true)}>terms and conditions</a>.</span>
               </label>
             </div>
             

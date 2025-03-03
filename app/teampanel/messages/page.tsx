@@ -161,7 +161,7 @@ const Messages: React.FC = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className={`px-4 py-2 text-sm ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:underline'}`}
+              className={`px-4 py-2 text-sm ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500'}`}
             >
               Previous
             </button>
@@ -171,7 +171,7 @@ const Messages: React.FC = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 text-sm ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:underline'}`}
+              className={`px-4 py-2 text-sm ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500'}`}
             >
               Next
             </button>

@@ -115,12 +115,12 @@ export async function PUT(req: NextRequest) {
       message = "Hi! I have accepted your evaluation request!";
       subject = `D1 NOTES Evaluation Request Accepted by ${coachData[0].firstName}`;
       
-      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was accepted by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and view your Dashboard to track the progress and check any Messages. <p>Regards<br>D1 Notes Team</p>`;
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was accepted by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your player account and view your Dashboard to track the progress and check any Messages. <p>Regards<br>D1 Notes Team</p>`;
     }
     if (status === 3) {
       subject = `D1 NOTES Evaluation Request Declined by ${coachData[0].firstName}`;
       message = "Sorry! Right now I am unable to accept your evaluation request. Reason :" + remark;
-      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was declined by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Login</a> to your player account and check for any Messages from Dinesh.
+      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation request was declined by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your player account and check for any Messages from Dinesh.
       <p  className="mt-10">Regards<br>D1 Notes Team</p>`;
     }
 

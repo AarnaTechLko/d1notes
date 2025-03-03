@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "D1 NOTES Coach Registration Follow Up",
       text: "D1 NOTES Coach Registration Follow Up", 
-      html: `<p>Dear Coach! Your D1 Notes <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">login</a> account has been created. If you have not done so already, please complete your profile in order to take advantage of all D1 Notes has to offer!</p><p className="mt-10">Regards,<br>
+      html: `<p>Dear Coach! Your D1 Notes <a href="${baseUrl}/login" style="font-weight: bold; color: blue">login</a> account has been created. If you have not done so already, please complete your profile in order to take advantage of all D1 Notes has to offer!</p><p className="mt-10">Regards,<br>
 D1 Notes Team</p>`,
   });
     // Return the response with the generated token
@@ -211,7 +211,7 @@ export async function PUT(req: NextRequest) {
     to:  user.email || '',
     subject: `D1 NOTES Registration Completed for ${firstName}`,
     text: `D1 NOTES Registration Completed for ${firstName}`,
-    html: `<p>Dear ${firstName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; text-decoration: underline;">Click here</a>  to get started!
+    html: `<p>Dear ${firstName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Click here</a>  to get started!
     </p><p className="mt-10">Regards,<br>
 D1 Notes Team</p>`,
 });

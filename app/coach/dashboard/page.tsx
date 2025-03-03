@@ -31,7 +31,7 @@ const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
         <h3 className="text-lg font-bold mb-4">Full Description</h3>
         <p>{description}</p>
-        <button onClick={onClose} className="mt-4 text-blue-500 hover:underline">
+        <button onClick={onClose} className="mt-4 text-blue-500 ">
           Close
         </button>
       </div>
@@ -221,7 +221,7 @@ const Dashboard: React.FC = () => {
 />
             <a
               href={`/players/${row.original.playerSlug}`}
-              className="underline font-bold text-blue-700"
+              className=" font-bold text-blue-700"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -299,7 +299,7 @@ const Dashboard: React.FC = () => {
             <div>
               <span>{truncatedDescription}</span>
               {description.length > 30 && (
-                <button onClick={() => handleReadMore(description)} className="text-blue-500 hover:underline ml-2">
+                <button onClick={() => handleReadMore(description)} className="text-blue-500  ml-2">
                   Read More
                 </button>
               )}
@@ -367,7 +367,7 @@ const Dashboard: React.FC = () => {
           } else {
             if (selectedTab != '3') {
 
-              return <a onClick={() => handleEvaluationDetails(evaluation)} href='#' className='underline text-blue-700'>View</a>;
+              return <a onClick={() => handleEvaluationDetails(evaluation)} href='#' className=' text-blue-700'>View</a>;
             }
             else {
               return 'Declined';
@@ -751,19 +751,19 @@ const Dashboard: React.FC = () => {
 
           <p className="mt-2">Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations
 can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes
-verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:support@d1notes.com" className="text-blue-700 underline">here</a> Upon receiving an evaluation request,
-you can either accept or politely decline it with a comment. A completed evaluation will look like <a href="#" className="text-blue-700 underline">this</a>. </p>
+verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:support@d1notes.com" className="text-blue-700 ">here</a> Upon receiving an evaluation request,
+you can either accept or politely decline it with a comment. A completed evaluation will look like <a href="#" className="text-blue-700 ">this</a>. </p>
 
           <p className="mt-2">In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation
-turnaround times, click <a href="/coach/charges" className="text-blue-700 underline">here</a> or on Time and Rate in the menu. The default rate is your base evaluation
+turnaround times, click <a href="/coach/charges" className="text-blue-700 ">here</a> or on Time and Rate in the menu. The default rate is your base evaluation
 rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your
-oﬀering is optional. If you would like to modify your base evaluation rate, click <a href="/coach/profile" className="text-blue-700 underline">here</a> or on Settings in the
+oﬀering is optional. If you would like to modify your base evaluation rate, click <a href="/coach/profile" className="text-blue-700 ">here</a> or on Settings in the
 menu and edit your profile.
           </p>
           <p className="mt-2">
           If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
-you can view a summary by clicking <a href="/coach/joinrequests" className="text-blue-700 underline">here</a> or on Join Requests in the menu. Another way to access any
-organization or single team that has added you to their team is to click <a href="/coach/teams" className="text-blue-700 underline">here</a> or on Your Teams in the
+you can view a summary by clicking <a href="/coach/joinrequests" className="text-blue-700 ">here</a> or on Join Requests in the menu. Another way to access any
+organization or single team that has added you to their team is to click <a href="/coach/teams" className="text-blue-700 ">here</a> or on Your Teams in the
 menu where you can view rosters.
           </p>
 

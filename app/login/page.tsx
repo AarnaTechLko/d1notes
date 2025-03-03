@@ -295,7 +295,7 @@ export default function Login() {
                     formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
                       '/register'
                 }
-                className="text-blue-500 underline"
+                className="text-blue-500"
               >
                 Register
               </a>

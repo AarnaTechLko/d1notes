@@ -482,7 +482,7 @@ const Home: React.FC = () => {
               {Number(coach.totalEvaluations)>=1 && (<a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   target="_blank"
                 >
                  View {/* {coach.totalEvaluations} */}
@@ -491,7 +491,7 @@ const Home: React.FC = () => {
               {Number(coach.totalEvaluations)==0 && (<button
                  
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   onClick={handlePopup}
                 >
                  View {/* {coach.totalEvaluations} */}
@@ -568,7 +568,7 @@ const Home: React.FC = () => {
     {currentPage > 1 && (
       <button
         onClick={() => handlePageChange(currentPage - 1)}
-        className="px-4 py-2 text-sm text-blue-500 hover:underline"
+        className="px-4 py-2 text-sm text-blue-500"
       >
         Previous
       </button>
@@ -579,7 +579,7 @@ const Home: React.FC = () => {
     {currentPage < totalPages && (
       <button
         onClick={() => handlePageChange(currentPage + 1)}
-        className="px-4 py-2 text-sm text-blue-500 hover:underline"
+        className="px-4 py-2 text-sm text-blue-500"
       >
         Next
       </button>
@@ -656,7 +656,7 @@ const Home: React.FC = () => {
                                         )}
           {/* <button
           type='button'
-  className="text-xs text-gray-500 underline"
+  className="text-xs text-gray-500"
   onClick={() => handleLoadLicense()}
 >
   Assign License

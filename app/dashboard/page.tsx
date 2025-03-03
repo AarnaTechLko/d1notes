@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
           <h3 className="text-lg font-bold mb-4">Full Description</h3>
           <p>{description}</p>
-          <button onClick={onClose} className="mt-4 text-blue-500 hover:underline">
+          <button onClick={onClose} className="mt-4 text-blue-500 ">
             Close
           </button>
         </div>
@@ -335,7 +335,7 @@ const Dashboard: React.FC = () => {
 />
             <a
               href={`/coach/${row.original.slug}`}
-              className="underline font-bold text-blue-700"
+              className=" font-bold text-blue-700"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -411,7 +411,7 @@ const Dashboard: React.FC = () => {
             <div>
               <span>{truncatedDescription}</span>
               {description.length > 30 && (
-                <button onClick={() => handleReadMore(description)} className="text-blue-500 hover:underline ml-2">
+                <button onClick={() => handleReadMore(description)} className="text-blue-500  ml-2">
                   Read More
                 </button>
               )}
@@ -427,7 +427,7 @@ const Dashboard: React.FC = () => {
             Cell: ({ row }: CellProps<Evaluation>) => (
               <button
                 onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
-                className="text-blue-500 underline"
+                className="text-blue-500"
               >
                 View
               </button>
@@ -597,11 +597,11 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 underline" >here</a> or on Coaches in
-            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 underline" >this</a>. </p>
+          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 " >here</a> or on Coaches in
+            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 " >this</a>. </p>
 
           <p className="mt-2">If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
-            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 underline" >here</a> or on Join Requests in the menu. In order to request an
+            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 " >here</a> or on Join Requests in the menu. In order to request an
             individual game film evaluation from a coach from the organization or single team that added you, find
             the coach by clicking here or on Your Teams and click on the coach’s profile.
           </p>

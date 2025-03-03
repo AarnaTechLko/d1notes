@@ -379,7 +379,7 @@ const Home: React.FC = () => {
               {Number(coach.totalEvaluations)>=1 && (<a
                   href={`/coach/history/${coach.slug}`}
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   target="_blank"
                 >
                  View {/* {coach.totalEvaluations} */}
@@ -388,7 +388,7 @@ const Home: React.FC = () => {
               {Number(coach.totalEvaluations)==0 && (<button
                  
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   onClick={handlePopup}
                 >
                  View {/* {coach.totalEvaluations} */}
@@ -466,7 +466,7 @@ const Home: React.FC = () => {
              className={`px-4 py-2 text-sm ${
                currentPage === 1
                  ? 'text-gray-400 cursor-not-allowed'
-                 : 'text-blue-500 hover:underline'
+                 : 'text-blue-500'
              }`}
            >
              Previous
@@ -480,7 +480,7 @@ const Home: React.FC = () => {
              className={`px-4 py-2 text-sm ${
                currentPage === totalPages
                  ? 'text-gray-400 cursor-not-allowed'
-                 : 'text-blue-500 hover:underline'
+                 : 'text-blue-500'
              }`}
            >
              Next
@@ -557,7 +557,7 @@ const Home: React.FC = () => {
                                         )}
           {/* <button
           type='button'
-  className="text-xs text-gray-500 underline"
+  className="text-xs text-gray-500"
   onClick={() => handleLoadLicense()}
 >
   Assign License

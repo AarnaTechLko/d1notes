@@ -316,7 +316,7 @@ const handleResetPassword=(coach: Coach)=>{
                       <a
                   href={`/player/history/${coach.slug}`}
                   title='History'
-                  className='underline text-blue-500'
+                  className=' text-blue-500'
                   target="_blank"
                 >
                         {coach.totalEvaluations}
@@ -370,7 +370,7 @@ const handleResetPassword=(coach: Coach)=>{
               className={`px-4 py-2 text-sm ${
                 currentPage === 1
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500'
               }`}
             >
               Previous
@@ -384,7 +384,7 @@ const handleResetPassword=(coach: Coach)=>{
               className={`px-4 py-2 text-sm ${
                 currentPage === totalPages
                   ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-blue-500 hover:underline'
+                  : 'text-blue-500 '
               }`}
             >
               Next

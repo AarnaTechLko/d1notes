@@ -125,7 +125,7 @@ const Home: React.FC = () => {
               setCopiedIndex(index); // Set the copied index
               setTimeout(() => setCopiedIndex(null), 2000); // Reset after 2 seconds
             }}
-            className="text-blue-500 hover:underline"
+            className="text-blue-500 "
           >
             {copiedIndex === index ? "Copied" : "Copy"}
           </button>
@@ -149,7 +149,7 @@ const Home: React.FC = () => {
                 className={`px-4 py-2 text-sm ${
                   currentPage === 1
                     ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500 hover:underline'
+                    : 'text-blue-500 '
                 }`}
               >
                 Previous
@@ -163,7 +163,7 @@ const Home: React.FC = () => {
                 className={`px-4 py-2 text-sm ${
                   currentPage === totalPages
                     ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500 hover:underline'
+                    : 'text-blue-500 '
                 }`}
               >
                 Next
