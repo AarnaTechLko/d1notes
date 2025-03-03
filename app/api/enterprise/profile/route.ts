@@ -1,79 +1,105 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { hash } from 'bcryptjs';
-import { db } from '../../../../lib/db';
-import { coaches, enterprises,joinRequest, playerEvaluation, teams, users } from '../../../../lib/schema'
-import debug from 'debug';
-import { eq ,and, isNotNull} from 'drizzle-orm';
-import { promises as fs } from 'fs';
-import path from 'path';
-import jwt from 'jsonwebtoken';
-import next from 'next';
-import { SECRET_KEY } from '@/lib/constants';
-
+import { db } from '@/lib/db';
+import { coaches, enterprises, joinRequest, playerEvaluation, teams, users, countries } from '@/lib/schema'; 
+import { eq, and, isNotNull } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
-    const { slug,loggeInUser } = await req.json();
-
     try {
-        // Using 'like' with lower case for case-insensitive search
+        const { slug, loggeInUser } = await req.json();
+
+        // Fetch club details
         const Clublist = await db
-            .select()
+            .select({
+                id: enterprises.id,
+                organizationName: enterprises.organizationName,
+                contactPerson: enterprises.contactPerson,
+                address: enterprises.address,
+                createdAt: enterprises.createdAt,
+                slug: enterprises.slug,
+                country: countries.name, // Get country name
+                state: enterprises.state,
+                city: enterprises.city,
+                logo: enterprises.logo,
+            })
             .from(enterprises)
-            .where(
-                eq(enterprises.slug, slug)
+            .leftJoin(
+                countries,
+                eq(countries.id, isNaN(Number(enterprises.country)) ? 231 : Number(enterprises.country)) // Corrected
             )
+            .where(eq(enterprises.slug, slug))
             .limit(1)
             .execute();
-        const payload = Clublist.map(club => ({
-            organizationName: club.organizationName,
-            contactPerson: club.contactPerson,
-            address: club.address,
 
-            createdAt: club.createdAt,
-            slug: club.slug,
-            id: club.id,
+        if (Clublist.length === 0) {
+            return NextResponse.json({ message: 'Club not found' }, { status: 404 });
+        }
 
-            country: club.country,
-            state: club.state,
-            city: club.city,
+        const clubData = Clublist[0];
 
-            logo: club.logo ? `${club.logo}` : null,
-        }));
-
-        const clubTeams=await db.select().from(teams).where(
-            and(
-            eq(teams.creator_id,Number(payload[0].id)),
-            eq(teams.created_by,'Enterprise'),
-            )
-        ).execute();
-
-         
-            const clubCoaches=await db.select().from(coaches)
+        // Fetch club teams
+        const clubTeams = await db
+            .select()
+            .from(teams)
             .where(
                 and(
-                eq(coaches.enterprise_id, String(payload[0].id)),
-                isNotNull(coaches.firstName)
+                    eq(teams.creator_id, Number(clubData.id)),
+                    eq(teams.created_by, 'Enterprise')
                 )
-            ).execute();
-         
-            const requested=await db.select().from(joinRequest).where(
-                and(
-                  eq(joinRequest.player_id,loggeInUser),
-                  eq(joinRequest.requestToID,payload[0].id),
-                )).execute();
-              
-                const isRequested = requested.length;
+            )
+            .execute();
 
-                const clubPlayers=await db.select().from(users).where(
+        // Fetch club coaches
+        const clubCoaches = await db
+            .select()
+            .from(coaches)
+            .where(
+                and(
+                    eq(coaches.enterprise_id, String(clubData.id)),
+                    isNotNull(coaches.firstName)
+                )
+            )
+            .execute();
+
+        // Fetch join requests
+        let isRequested = 0;
+        if (loggeInUser) {
+            const requested = await db
+                .select()
+                .from(joinRequest)
+                .where(
                     and(
-                    eq(users.enterprise_id, String(payload[0].id)),
-                    isNotNull(users.first_name)
+                        eq(joinRequest.player_id, loggeInUser),
+                        eq(joinRequest.requestToID, clubData.id)
                     )
-                ).execute();
-        return NextResponse.json({ clubdata: payload[0], clubTeams:clubTeams, coachesList:clubCoaches,isRequested:isRequested,clubPlayers:clubPlayers });
+                )
+                .execute();
+            isRequested = requested.length > 0 ? 1 : 0;
+        }
+
+        // Fetch club players
+        const clubPlayers = await db
+            .select()
+            .from(users)
+            .where(
+                and(
+                    eq(users.enterprise_id, String(clubData.id)),
+                    isNotNull(users.first_name)
+                )
+            )
+            .execute();
+
+        return NextResponse.json({
+            clubdata: clubData,
+            clubTeams,
+            coachesList: clubCoaches,
+            isRequested,
+            clubPlayers,
+        });
     } catch (error) {
-        const err = error as any;
         console.error('Error fetching enterprises:', error);
-        return NextResponse.json({ message: 'Failed to fetch Clubs' }, { status: 500 });
+        return NextResponse.json(
+            { message: 'Failed to fetch Clubs' },
+            { status: 500 }
+        );
     }
 }

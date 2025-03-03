@@ -242,7 +242,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 {coachData.firstName} {coachData.lastName}
               </h1>
               <p className="text-gray-600 text-lg">
-                {coachData.sport} Coach at {coachData.clubName}
+                {/* {coachData.sport} Coach at  */}{coachData.clubName}
               </p>
               <div className="flex space-x-4  mt-3 mb-3 h-5">
                 {coachData.facebook && (
@@ -296,14 +296,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   {!session ? (
                     <button
                       onClick={() => setIsModalOpen(true)} // Open modal on click
-                      className="mt-6 bg-customBlue text-black px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white"
+                      className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
-                      Sign in to book
+                     Login to Request  Evaluation 
                     </button>
                   ) : (
                     <button
                       onClick={() => handleLicenseCheck(totalLicneses || '', setIsevaluationModalOpen)}// Open modal on click
-                      className="mt-6 bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600"
+                      className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
                       Request Evaluation
                     </button>
@@ -375,14 +375,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     {/* Column 1 */}
     <div className="flex-1 mb-4 md:mb-0">
       <ul className="space-y-4">
-      {compareValues(coachData.enterprise_id, playerClubId)=='Yes' && (
+      {/* {compareValues(coachData.enterprise_id, playerClubId)=='Yes' && (
   <li>
     <strong>Evaluation Rate:</strong> {coachData.expectedCharge} 
   </li>
-)}
+)} */}
 
 
-                <li><strong>Sport :</strong> {coachData.sport}</li>
+                <li><strong>Sport(s) :</strong> {coachData.sport}</li>
                 <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
                 <li><strong>Gender:</strong> {coachData.gender}</li>
 
@@ -560,7 +560,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               })}
             </ul>
           ) : (
-            <p className="text-gray-500">Not  available.</p>
+            <p className="text-gray-500">No Reviews...</p>
           )}
         </section>
 

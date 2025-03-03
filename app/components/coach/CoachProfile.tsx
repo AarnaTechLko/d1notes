@@ -32,7 +32,7 @@ const CoachProfile: FC<ProfileProps> = ({ name, imageUrl, averageCompletionTime,
             <span>Evals: {evaluations}</span>
           </div>
         </div>
-        <button className="book-button">Sign in to book</button>
+        <button className="book-button">Login in to book</button>
       </div>
     </div>
   );
