@@ -70,7 +70,7 @@ useEffect(()=>{
     </div>
   <div className="text-center mt-4">
     <h3 className="text-lg font-semibold"  onClick={() => handleRedirect(slug)}>{name}</h3>
-    
+    <p>Sport(s): Soccer</p>
      <div className="mt-2 flex justify-center">
       <div className="mt-1">${evaluation_rate}</div>
     </div>

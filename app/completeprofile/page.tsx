@@ -178,7 +178,7 @@ export default function Register() {
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
    /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sports is required.";
-    if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
+    //if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
     if (!formValues.playingcountries) newErrors.playingcountries = "Nationaly is required.";
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
@@ -447,7 +447,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (in lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="weight"
@@ -506,7 +506,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number <span className="mandatory">*</span></label>
+                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number (Optional)</label>
                   <input
                     type="text"
                     name="jersey"

@@ -145,6 +145,14 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
         {/* Filter Fields */}
         {/* Country */}
         <div className="mb-4">
+          <label className="block text-gray-700 mb-2 font-bold">Sport(s)</label>
+          <select name='sport' className='w-full p-2 border rounded-md' >
+           
+            <option value="Soccer">Soccer</option>
+          </select>
+         
+        </div>
+        <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2">High School Graduation Year</label>
           <select
             className="w-full p-2 border rounded-md"

@@ -351,7 +351,8 @@ const [showPassword, setShowPassword] = useState(false);
             </div>
 
             {/* Address */}
-            <div className="mb-4">
+            <div className="mb-4 md:flex md:space-x-4">
+            <div className="flex-1">
               <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
               Team Address
               </label>
@@ -363,6 +364,21 @@ const [showPassword, setShowPassword] = useState(false);
                 onChange={handleChange}
                 className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              </div>
+
+<div className="flex-1">
+                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                  <select
+                    name="sport"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value="Soccer"
+                    onChange={handleChange}
+                  >
+                   
+                    <option value="Soccer">Soccer</option>
+
+                  </select>
+                  </div>
             </div>
 
             {/* Country, State, and City */}

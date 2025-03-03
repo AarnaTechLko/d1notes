@@ -190,7 +190,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             {/* Coach Info */}
             <div className="text-left md:text-left">
             <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
-              <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> {coachData.first_name} {coachData.last_name}
+            {coachData?.jersey && ( <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> )} {coachData.first_name} {coachData.last_name}
             </h3>
             <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
                 {coachData.facebook && (
@@ -222,33 +222,33 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <div className='bg-white p-6 w-full mt-4'>
               <div className="grid grid-cols-3 gap-5">
                 {/* <div><b>Organization Name:</b> {clubName}</div> */}
-                <div><b>Position:</b> {coachData.position}</div>
-                <div><b>Graduation Year (High School):</b> {coachData.graduation}</div>
-                 <div><b>Weight:</b> {coachData.weight} Lbs</div>  
-                <div><b>Height:</b> {coachData.height}</div>
-                <div><b>School Name:</b> {coachData.school_name}</div>
-                <div><b>GPA:</b> {coachData.gpa}</div>
-                <div><b>Sport:</b> {coachData.sport}</div>
-                <div><b>Nationality(ies):</b> {coachData.playingcountries}</div>
-                <div><b>Gender:</b> {coachData.gender}</div>
-                <div><b>Team:</b> {coachData.team}</div>
-                <div><b>Level:</b> {coachData.grade_level}</div>
-                <div><b>Country:</b> {coachData.countryName}</div>
-                <div><b>State:</b> {coachData.state}</div>
-                <div><b>City:</b> {coachData.city}</div>
+                <div><b>Position:</b> {coachData.position ?? "N/A"}</div>
+                <div><b>Graduation Year (High School):</b> {coachData.graduation ?? "N/A"}</div>
+                 <div><b>Weight(lbs):</b> {coachData.weight ?? "N/A"}</div>  
+                <div><b>Height:</b> {coachData.height ?? "N/A"}</div>
+                <div><b>School Name:</b> {coachData.school_name ?? "N/A"}</div>
+                <div><b>GPA:</b> {coachData.gpa ?? "N/A"}</div>
+                <div><b>Sport:</b> {coachData.sport ?? "N/A"}</div>
+                <div><b>Nationality(ies):</b> {coachData.playingcountries ?? "N/A"}</div>
+                <div><b>Gender:</b> {coachData.gender ?? "N/A"}</div>
+                <div><b>Team:</b> {coachData.team ?? "N/A"}</div>
+                <div><b>Level:</b> {coachData.grade_level ?? "N/A"}</div>
+                <div><b>Country:</b> {coachData.countryName ?? "N/A"}</div>
+                <div><b>State:</b> {coachData.state ?? "N/A"}</div>
+                <div><b>City:</b> {coachData.city ?? "N/A"}</div>
                 
               </div>
               <div className="grid grid-cols-2 gap-5 mt-4">
-              <div><b>Team Name:</b> {coachData.city}</div>
-              <div><b>Age Group:</b> {coachData.age_group}</div>
+              <div><b>Team Name:</b> {coachData.city ?? "N/A"}</div>
+              <div><b>Age Group:</b> {coachData.age_group ?? "N/A"}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>League(s):</b> {coachData.city}</div>
+              <div><b>League(s):</b> {coachData.city ?? "N/A"}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>Experience/Accolades:</b> {coachData.bio}</div>
+              <div><b>Experience/Accolades:</b> {coachData.bio ?? "N/A"}</div>
               
               </div>
               {/* <div>
