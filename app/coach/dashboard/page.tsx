@@ -656,15 +656,14 @@ const Dashboard: React.FC = () => {
                 className="w-full p-2 mb-4 border border-gray-300 rounded-md"
               />
               <button
-        onClick={scrollLeft}
-        
+  onClick={scrollLeft}
+  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-blue-500 lg:hidden ${
+    isMiddle ? "bg-green-500" : "bg-blue-500"
+  }`}
+>
+  <FaArrowLeft />
+</button>
 
-        className={`absolute left-0 top-1/2 right-4 p-3 text-white transform -translate-y-1/2 rounded-full p-2 shadow-md z-10 transition-colors duration-300 w-10 bg-blue-500 text-white py-2 px-4 rounded lg:hidden ${
-          isMiddle ? "bg-green-500" : "bg-blue-500"
-        }`}
-      >
-        <FaArrowLeft/>
-      </button>
               <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
                 <thead>
                   {tableInstance.headerGroups.map((headerGroup) => (
@@ -738,11 +737,12 @@ const Dashboard: React.FC = () => {
                 </tbody>
               </table>
               <button
-        onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-md z-10 w-10 bg-black-500 text-white py-2 px-4 rounded block lg:hidden"
-      >
-      <FaArrowRight/>
-      </button>
+  onClick={scrollRight}
+  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden"
+>
+  <FaArrowRight />
+</button>
+
             </div>
           </div>
 

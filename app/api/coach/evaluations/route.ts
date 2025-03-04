@@ -3,13 +3,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../../lib/db';
 import { playerEvaluation, users, coaches, messages, chats } from '../../../../lib/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
   try {
     const { coachId, status } = await req.json();
-
+ 
+    await db
+    .update(playerEvaluation)
+    .set({ status: 3 }) // Update status to 3
+    .where(
+      sql`(EXTRACT(EPOCH FROM (NOW() - ${playerEvaluation.created_at})) / 3600 > CAST(NULLIF(${playerEvaluation.turnaroundTime}, '') AS INTEGER))
+          AND (${playerEvaluation.status} = 0 OR ${playerEvaluation.status} = 1)`
+    );
+  
     const evaluationsData = await db
       .select({
         first_name: users.first_name,
@@ -163,6 +171,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
     }
 
+    
     // Define an initial condition with the playerId
     const conditions = [eq(playerEvaluation.coach_id, coachId)];
 

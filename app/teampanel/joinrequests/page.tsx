@@ -3,20 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/teams/Sidebar';
 import { useRouter } from 'next/navigation';
-import { showSuccess } from '@/app/components/Toastr';
+import { showError, showSuccess } from '@/app/components/Toastr';
+import { FaRedo } from 'react-icons/fa';
+import Processing from '@/app/components/Processing';
 
 // Define the type for the data
 interface Order {
-  id: number;
-  requestedToName: string;
-  message: string;
+  invitationId: number;
+  email: string;
+  invitation_for: string;
   status: string;
-  image: string;
-  type: string;
-  first_name?: string;
-  last_name?: string;
-  playerId?: number;
-  slug?: number;
+ 
 }
 
 const Home: React.FC = () => {
@@ -24,43 +21,63 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
- 
-  
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [processing, setProcessing] = useState<boolean>(false);
   const router = useRouter();
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
   
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const fetchOrders = async () => {
-    const session = await getSession();
-    const enterpriseId = session?.user?.id; // Adjust according to your session structure
-
-    if (!enterpriseId) {
-      console.error('Enterprise ID not found in session');
-      return;
-    }
-
-    const response = await fetch(`/api/teams/joinrequest?team_id=${session.user.id}&type=team`);
-
+  const resendInvitation=async(id:any)=>{
+    setProcessing(true);
+    const response = await fetch(`/api/joinrequest/resend/?invitationId=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (!response.ok) {
-      console.error('Failed to fetch orders');
+      setProcessing(false);
+      showError('Failed to rresend Invitation.');
       return;
     }
-
     const data = await response.json();
-    setOrders(data.data);
-    setFilteredOrders(data.data); // Initially show all orders
-  };
-  useEffect(() => {
+    setProcessing(false);
+    showSuccess(data.message);
     
+  
+
+  }
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const session = await getSession();
+      const enterpriseId = session?.user?.id; // Adjust according to your session structure
+
+      if (!enterpriseId) {
+        console.error('Enterprise ID not found in session');
+        return;
+      }
+
+      const response = await fetch(`/api/joinrequest?player_id=${session.user.id}&type=team`);
+
+      if (!response.ok) {
+        console.error('Failed to fetch orders');
+        return;
+      }
+
+      const data = await response.json();
+      setOrders(data.data);
+      setFilteredOrders(data.data); // Initially show all orders
+    };
 
     fetchOrders();
-  }, [session]);
+  }, []);
 
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.requestedToName.toLowerCase().includes(search.toLowerCase()) ||
+        order.email.toLowerCase().includes(search.toLowerCase()) ||
         order.status.toString().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
@@ -81,22 +98,29 @@ const Home: React.FC = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+    setSelectedOrder(null);
+  };
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
   
 
-  
+ 
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
+        { processing && (
+          <Processing/>
+        )}
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Invitation Logs</h1>
           <div>
             <input
               type="text"
-              placeholder="Search by Player Name or Status"
+              placeholder="Search..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -104,41 +128,54 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  <th>Serial Number</th>
-                  <th>Player Name</th>
-                  <th>Notes</th>
+                  
+                  <th>Email</th>
+                  <th>User Type</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
   {paginatedOrders.length > 0 ? (
     paginatedOrders.map((order, index) => (
-      <tr key={order.id}>
+      <tr key={order.invitationId}>
         {/* Serial Number Column */}
-        <td>{(currentPage - 1) * limit + index + 1}</td>
        
        
-        <td className="flex items-center space-x-3 p-2">
-  <img src={`${order.image}`} alt="{order.first_name}"  className="w-10 h-10 rounded-full object-cover" />
-  <a href={`/players/${order.slug}`} target="_blank"  className="text-blue-600 font-medium">
-    {order.first_name} {order.last_name}
-  </a>
+        <td>
+  {/* Name on top */}
+ {order.email} 
+ 
 </td>
 
-        <td>{order.message}</td>
+        <td>{order.invitation_for.toUpperCase()	}</td>
         <td>
-        
-  <button
-    onClick={handlePrevPage}
-    disabled={currentPage === 1}
-    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-      currentPage === 1
-        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-        : "bg-blue-500 text-white hover:bg-blue-600"
-    }`}
-  >
-    Previous
-  </button>
+        <button
+                          className={`px-4 py-2 rounded-lg ${
+                            order.status === 'Sent'
+                              ? 'text-blue-500'
+                              : order.status === 'Joined'
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                          }`}
+                          onClick={() => {
+                            if (order.status === 'Requested') {
+                              setSelectedOrder(order);
+                              setShowConfirmation(true);
+                            }
+                          }}
+                        >
+                          {order.status.toUpperCase()}
+                        </button>
+
+                        {order.status=='Sent' &&(
+                         <button
+                         className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+                         title="Resend"
+                         onClick={() => resendInvitation(order.invitationId)}
+                       >
+                         <FaRedo />
+                       </button>
+                        )}
         </td>
      
       </tr>
@@ -151,8 +188,10 @@ const Home: React.FC = () => {
 </tbody>
             </table>
             {/* Pagination Controls */}
+            {paginatedOrders.length > 0 && (
             <div className="flex justify-between items-center mt-4">
   {/* Previous Button */}
+  
   <button
     onClick={handlePrevPage}
     disabled={currentPage === 1}
@@ -183,11 +222,12 @@ const Home: React.FC = () => {
     Next 
   </button>
 </div>
+            )}
           </div>
         </div>
       </main>
 
-      
+     
     </div>
   );
 };

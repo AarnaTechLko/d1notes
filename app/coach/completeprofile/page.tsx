@@ -840,6 +840,7 @@ export default function Register() {
                     placeholder=' '
                       type="file"
                       name="youtube"
+                      accept="image/*,application/pdf"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleCVChange}
                      
@@ -861,6 +862,7 @@ export default function Register() {
                     placeholder='Ex: https://youtube.com/username'
                       type="file"
                       name="license"
+                      accept="image/*,application/pdf"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleLicenseChange}
                      

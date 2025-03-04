@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
-import Sidebar from "@/app/components/enterprise/Sidebar";
+import Sidebar from "@/app/components/teams/Sidebar";
 import { useSession } from "next-auth/react";
 import PlayerTransfer from "@/app/components/PlayerTransfer";
 import Link from "next/link";
@@ -95,11 +95,11 @@ export default function TeamsPage({ params }: PageProps) {
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
             <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
-              {teamName} ({teamType})
+              {teamName} 
             </span>
           </p>
 
-          <h2 className="text-xl font-bold w-full text-blue-600">Add Coach(s) To this Team</h2>
+          <h2 className="text-xl font-bold w-full text-blue-600">Add Coach(es) To this Team</h2>
 
           <div className="w-full mx-auto px-4 mt-5">
             {/* Tabs Header */}
@@ -128,7 +128,7 @@ export default function TeamsPage({ params }: PageProps) {
             <div className="tab-content mt-4">
               {activeTab === 0 && (
                 <div className="tab-panel">
-                  <InviteForm usertype="Coach" teamId={teamId}/>
+                  <InviteForm usertype="Team" teamId={teamId}  registrationType="coach"/>
                 </div>
               )}
               {activeTab === 1 && (

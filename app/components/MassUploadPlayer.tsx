@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
  
 import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSpinner, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import Swal from "sweetalert2";
@@ -92,8 +92,8 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
           teamId: selectedTeam,
           csvData,
           registrationType:'player',
-          usertype:'Club',
-          username:session?.user.name,
+          usertype:'Team',
+          userName:session?.user.name,
           userId:session?.user.id
         }),
       });
@@ -103,8 +103,8 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
         setFailedData(data.duplicates);
         showWarning("Coaches Players. But we have found some duplicate records.");
       } else {
-        router.push("/enterprise/players");
-        showSuccess("Successfully Imported Players.");
+        router.push("/teampanel/players");
+        showSuccess("Invitation Sent Successfully.");
       }
       setShowUploadControls(true);
       setCsvData([]);
@@ -269,7 +269,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                                 onClick={() => handleDelete(index)}
                                 className="text-red-500"
                               >
-                                🗑️
+                                <FaTrash/>
                               </button>
                             </td>
                           </tr>

@@ -46,13 +46,18 @@ export default function TeamsPage() {
   const [playerModalOpen, setPlayerModalOpen] = useState(false);
   const [enterpriseId, setEnterpriseID] = useState<string | null>(null);
   const { data: session } = useSession();
+  const limit = 10;
   const [currentTeamId, setCurrentTeamId] = useState<number | null>(null);
   const [loadingData, setLoadingData] = useState<boolean>(false);
-
+  const [search, setSearch] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [fullDescription, setFullDescription] = useState<string | null>(null); // State for full description
   const [descriptionModalOpen, setDescriptionModalOpen] = useState(false); // State for showing full description modal
-
-  const fetchTeams = async () => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setCurrentPage(1); // Reset to the first page
+  };
+  const fetchTeams =async (page = 1, searchQuery = '') => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
       return;
@@ -60,7 +65,7 @@ export default function TeamsPage() {
 
     try {
       setLoadingData(true);
-      const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
+      const res = await fetch(`/api/teams?enterprise_id=${session.user.id}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`);
       if (!res.ok) throw new Error("Failed to fetch teams");
       const { data, teamplayersList }: { data: Team[]; teamplayersList: any[] } = await res.json();
       setTeams(data);
@@ -207,24 +212,33 @@ export default function TeamsPage() {
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
         <div className="container mx-auto p-4">
-  <h1 className="text-2xl font-bold mb-4">Your Teams</h1>
+        <div className="flex items-center justify-between mb-4">
+        <input
+    type="text"
+    placeholder="Search..."
+    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={search}
+    onChange={handleSearchChange}
+  />
   <div className="flex items-stretch gap-5">
-  {/* Left Column: Add Team Button */}
-  <button
-    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
-    onClick={() => setModalOpen(true)}
-  >
-    Manually Add Team
-  </button>
- 
-  {/* Right Column: Mass Upload Button */}
-  <a
-    href="/enterprise/massuploadteams"
-    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full flex items-center justify-center"
-  >
-    Mass Team Upload
-  </a>
+    
+    <button
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
+      onClick={() => setModalOpen(true)}
+    >
+      Manually Add Team
+    </button>
+
+    
+    <a
+      href="/enterprise/massuploadteams"
+      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full flex items-center justify-center"
+    >
+      Mass Team Upload
+    </a>
+  </div>
 </div>
+
 
 
 

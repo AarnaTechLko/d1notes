@@ -37,7 +37,11 @@ if(sendedBy=='Club')
   enterprise_id=referenceId;
   team_id=teamId;
 }
-
+if(sendedBy=='Team')
+  {
+    enterprise_id=null;
+    team_id=teamId;
+  }
   // const existingOtp = await db
   //   .select()
   //   .from(otps)

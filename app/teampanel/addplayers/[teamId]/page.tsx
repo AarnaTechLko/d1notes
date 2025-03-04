@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
-import Sidebar from "@/app/components/enterprise/Sidebar";
+import Sidebar from "@/app/components/teams/Sidebar";
 import { useSession } from "next-auth/react";
 import PlayerTransfer from "@/app/components/PlayerTransfer";
 import Link from "next/link";
@@ -76,6 +76,7 @@ export default function TeamsPage({ params }: PageProps) {
 
       const data = await res.json();
       setTeamName(data.team.team_name);
+      setTeamType(data.team.team_type);
     } catch (error) {
       console.error("Error fetching players:", error);
     }
@@ -92,7 +93,7 @@ export default function TeamsPage({ params }: PageProps) {
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
             <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
-              {teamName} ({teamType})
+              {teamName} 
             </span>
           </p>
 
@@ -125,7 +126,7 @@ export default function TeamsPage({ params }: PageProps) {
             <div className="tab-content mt-4">
               {activeTab === 0 && (
                 <div className="tab-panel">
-                  <InviteForm usertype="Team" teamId={teamId}/>
+                  <InviteForm usertype="Team" teamId={teamId} registrationType="player"/>
                 </div>
               )}
               {activeTab === 1 && (
