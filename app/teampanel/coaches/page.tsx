@@ -345,7 +345,7 @@ const Home: React.FC = () => {
     </button> */}
      <a
      href={`/teampanel/addcoaches/${teamId}`}
-      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-green-700 rounded-lg"
     >
      Manually Add Coaches
     </a>
