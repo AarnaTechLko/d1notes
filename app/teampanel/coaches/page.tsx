@@ -347,7 +347,13 @@ const Home: React.FC = () => {
      href={`/teampanel/addcoaches/${teamId}`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
-     Invite Coaches
+     Manually Add Coaches
+    </a>
+    <a
+     href={`/teampanel/addcoaches/${teamId}`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Mass Coaches Upload
     </a>
     {/* <a
      href={`/teampanel/massuploadcoach`}

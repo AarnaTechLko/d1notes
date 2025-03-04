@@ -533,7 +533,7 @@ export default function Register() {
                 </div>
 
                 <div>
-                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationalities <span className="mandatory">*</span></label>
+                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationalit(ies) <span className="mandatory">*</span></label>
                   <Select
                     isMulti
                     options={countries}

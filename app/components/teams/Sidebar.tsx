@@ -99,7 +99,7 @@ const Sidebar: React.FC = () => {
             <a href="/teampanel/joinrequests" className="flex items-center space-x-2 p-2">
             
               <FaCompressAlt className='text-xl'/>
-              <span>Invitation Logs</span>
+              <span>Invitation Log</span>
             </a>
           </li>
         
