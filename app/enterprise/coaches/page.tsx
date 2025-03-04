@@ -170,7 +170,7 @@ const Home: React.FC = () => {
       if (!response.ok) {
         console.error('Failed to fetch coaches');
         return;
-      }
+      } 
 
       const data = await response.json();
       setCoaches(data.coaches);

@@ -79,6 +79,17 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handlePopup=()=>{
+    Swal.fire({
+      title: "No Evaluations Completed Yet...",
+      text: "",
+      icon: "info", // Can be 'success', 'error', 'warning', 'info', 'question'
+      confirmButtonText: "OK",
+    });
+    
+  }
+  
   const handleLicenseKeySubmit = async () => {
     try {
       const session = await getSession();
@@ -325,16 +336,26 @@ const handleResetPassword=(coach: Coach)=>{
                       <td>{coach.sport}</td>
                       <td>{coach.team}</td>
                       <td>{coach.position}</td>
-                      <td>
-                      <a
-                  href={`/player/history/${coach.slug}`}
+                      <td align='center'>
+              {Number(coach.totalEvaluations)>=1 && (<a
+                  href={`/players/history/${coach.slug}`}
                   title='History'
                   className=' text-blue-500'
                   target="_blank"
                 >
-                        {coach.totalEvaluations}
-                        </a>
-                        </td>
+                 View {/* {coach.totalEvaluations} */}
+                </a>
+              )}
+              {Number(coach.totalEvaluations)==0 && (<button
+                 
+                  title='History'
+                  className=' text-blue-500'
+                  onClick={handlePopup}
+                >
+                 View {/* {coach.totalEvaluations} */}
+                </button>
+              )}
+              </td>
                       <td>{coach.status === 'Inactive' ? (
     <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
       {coach.status}
