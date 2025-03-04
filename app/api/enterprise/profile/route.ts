@@ -28,7 +28,6 @@ export async function POST(req: NextRequest) {
             organizationName: club.organizationName,
             contactPerson: club.contactPerson,
             address: club.address,
-
             createdAt: club.createdAt,
             slug: club.slug,
             id: club.id,
