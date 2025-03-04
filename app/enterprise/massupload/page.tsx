@@ -147,7 +147,7 @@ const Home: React.FC = () => {
         <div className="w-full h-screen flex justify-center items-center">
           <div className="bg-white h-screen p-4 rounded-lg w-[100%] overflow-hidden">
             <div className=" top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
-              <h2 className="text-xl font-semibold text-gray-800">Bulk Upload Players</h2>
+              <h2 className="text-xl font-semibold text-gray-800">Mass Upload Players</h2>
             </div>
             <div className="pt-4 pb-4 overflow-y-auto h-screen">
               {showUploadControls && (

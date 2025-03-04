@@ -280,9 +280,15 @@ const handleResetPassword=(coach: Coach)=>{
 
     <a
      href={`/teampanel/addplayers/${teamId}`}
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-green-700 rounded-lg"
+    >
+     Manually Add Players
+    </a>
+    <a
+     href={`/teampanel/addplayers/${teamId}`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
-     Invite Players
+     Mass Players Uplaod
     </a>
   </div>
 </div>
@@ -298,7 +304,7 @@ const handleResetPassword=(coach: Coach)=>{
                   <th>Phone</th>
                   <th>Sport</th>
                   <th>Team</th>
-                  <th>Position</th>
+                  <th>Position(s)</th>
                   <th>Evaluations</th>
                   <th>Status</th>
                   <th>Action</th>

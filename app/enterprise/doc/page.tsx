@@ -455,7 +455,7 @@ const Home: React.FC = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Mobile Number</th>
-                <th>Role</th>
+                <th>Access</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -468,7 +468,7 @@ const Home: React.FC = () => {
                     <td>{order.email}</td>
                     <td>{order.countryCodes} {order.phone}</td>
                     <td>
-                    {order.role_id === '1' ? "A" : "B"}
+                    {order.role_id === '1' ? "Purchase Evaluvations" : "View Evaluations"}
                     </td>
                     <td>
                     <button
