@@ -186,7 +186,7 @@ export default function Login() {
         <div className="flex-1 bg-white p-4 md:p-8">
 
           <div className="bg-white rounded-lg p-12 max-w-md mx-auto">
-            <h2 className="text-2xl font-bold mb-6 text-left">Login In {!registrationType ? "" : "as " + (registrationType.charAt(0).toUpperCase() + registrationType.slice(1).toLowerCase())}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-left">Log In {!registrationType ? "" : "as " + (registrationType.charAt(0).toUpperCase() + registrationType.slice(1).toLowerCase())}</h2>
             <form onSubmit={handleSubmit}>
               {!registrationType && (
                 <div className="mb-4">
