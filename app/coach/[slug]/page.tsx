@@ -165,15 +165,20 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     }
     setIsevaluationModalOpen(true);
   };
-  const handleDownload = async (url: string, filename: string) => {
+  const handleDownload = async (url: string) => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
   
+      // Extract file extension from URL
+      const extension = url.split('.').pop()?.split('?')[0] || "file";
+      const filename = `download.${extension}`;
+  
+      // Create a download link
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.setAttribute("download", filename);
+      link.download = filename; // Ensure proper file download
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -184,6 +189,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       console.error("Download failed:", error);
     }
   };
+  
   
 
   if (loading) {
@@ -402,7 +408,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </section>
 
         <h2 className="text-lg font-semibold mt-5  bg-customBlue text-black p-4 rounded-lg">
-          Evaluation Rates
+          Evaluation Rate(s)
         </h2>
         <section className="bg-white p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
@@ -460,7 +466,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               {/* <h3 className="text-lg font-semibold mb-2">Background</h3> */}
               <p className="text-gray-700">
         <button
-          onClick={() => handleDownload(coachData.cv, "cv.pdf")}
+          onClick={() => handleDownload(coachData.cv)}
           className="flex items-center space-x-2"
         >
           <FaFileAlt className="text-blue-500" />
@@ -470,7 +476,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
       <p className="text-gray-700">
         <button
-          onClick={() => handleDownload(coachData.license, "license.pdf")}
+          onClick={() => handleDownload(coachData.license)}
           className="flex items-center space-x-2"
         >
           <FaFileAlt className="text-blue-500" />

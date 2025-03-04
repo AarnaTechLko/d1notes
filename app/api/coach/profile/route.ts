@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
 
-import { coaches, countries } from '../../../../lib/schema'
+import { coaches, countries, evaluation_charges } from '../../../../lib/schema'
 import debug from 'debug';
-import { eq,sql } from 'drizzle-orm';
+import { eq,sql,and } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -80,7 +80,14 @@ import { SECRET_KEY } from '@/lib/constants';
           youtube:coach.youtube,
         }));
 
-       
+        await db.update(evaluation_charges)
+        .set({ amount: payload[0].expectedCharge })
+        .where(
+          and(
+            eq(evaluation_charges.coach_id,coachId),
+            eq(evaluation_charges.turnaroundtime,'120'),
+        )
+      );
   
       return NextResponse.json(payload[0]);
     } catch (error) {

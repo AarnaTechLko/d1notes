@@ -143,7 +143,7 @@ const Contact = () => {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                    Name
+                    Name<span className='mandatory'>*</span>
                   </label>
                   <input
                     type="text"
@@ -158,7 +158,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
+                    Email<span className='mandatory'>*</span>
                   </label>
                   <input
                     type="email"
@@ -207,7 +207,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                    Message
+                    Message<span className='mandatory'>*</span>
                   </label>
                   <textarea
                     id="message"

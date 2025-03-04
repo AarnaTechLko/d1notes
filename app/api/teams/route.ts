@@ -9,12 +9,15 @@ import { hash } from 'bcryptjs';
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const enterpriseId = url.searchParams.get("enterprise_id");
+  const search = url.searchParams.get('search') || '';  // Default to empty string if not provided
+  const page = parseInt(url.searchParams.get('page') || '1', 10);  // Default to 1 if not provided
+  const limit = parseInt(url.searchParams.get('limit') || '10', 10);  // Default to 10 if not provided
 
   if (!enterpriseId) {
     return NextResponse.json(
       { error: "Enterprise ID is required" },
       { status: 400 }
-    );
+    ); 
   }
   const query = await db.select(
     {

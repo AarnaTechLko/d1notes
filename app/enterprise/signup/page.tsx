@@ -358,31 +358,31 @@ export default function Signup() {
               {/* Address */}
               <div className="mb-4 md:flex md:space-x-4">
                 <div className="flex-1">
-                <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-                  Organization Address
-                </label>
-                <input
-                  placeholder='Ex. 12 Fireside Road Suite 200'
-                  type="text"
-                  name="address"
-                  value={formValues.address}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
+                    Organization Address
+                  </label>
+                  <input
+                    placeholder='Ex. 12 Fireside Road Suite 200'
+                    type="text"
+                    name="address"
+                    value={formValues.address}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
                 <div className="flex-1">
-                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value="Soccer"
                     onChange={handleChange}
                   >
-                   
+
                     <option value="Soccer">Soccer</option>
 
                   </select>
-                  </div>
+                </div>
               </div>
 
 
@@ -405,8 +405,6 @@ export default function Signup() {
                           {country.name}
                         </option>
                       ))}
-
-
                   </select>
 
                 </div>
@@ -456,78 +454,78 @@ export default function Signup() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
 
-<div>
-  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="facebook"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.facebook}
-    onChange={handleChange}
-  />
+                <div>
+                  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="facebook"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.facebook}
+                    onChange={handleChange}
+                  />
 
-</div>
-<div>
-  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="instagram"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.instagram}
-    onChange={handleChange}
-  />
-  
-</div>
-<div>
-  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="linkedin"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.linkedin}
-    onChange={handleChange}
-  />
-   
-</div>
+                </div>
+                <div>
+                  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="instagram"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.instagram}
+                    onChange={handleChange}
+                  />
 
+                </div>
+                <div>
+                  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="linkedin"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.linkedin}
+                    onChange={handleChange}
+                  />
 
-
-
-</div>
-
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
-
-<div>
-  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="xlink"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.xlink}
-    onChange={handleChange}
-  />
-  
-</div>
-<div>
-  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="youtube"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.youtube}
-    onChange={handleChange}
-  />
-  
-</div>
+                </div>
 
 
 
-</div>
+
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+
+                <div>
+                  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="xlink"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.xlink}
+                    onChange={handleChange}
+                  />
+
+                </div>
+                <div>
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="youtube"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.youtube}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+
+
+              </div>
               <div className="mb-4">
                 <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Organization Logo<span className='mandatory'>*</span></label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>

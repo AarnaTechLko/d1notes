@@ -32,6 +32,7 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [teamId, setTeamId] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>(0);
   const [selectedCoach, setSelectedCoach] =useState<Coach | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -119,8 +120,13 @@ const Home: React.FC = () => {
     }
   };
   useEffect(() => {
+    if(session)
+    {
+      setTeamId(session?.user.id)
+    }
+    
     fetchCoaches(currentPage, search);
-  }, [currentPage, search]);
+  }, [currentPage, search, session]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -254,11 +260,18 @@ const handleResetPassword=(coach: Coach)=>{
     >
       Add Player
     </button> */}
-    <a
+   {/*<a
      href={`/teampanel/massupload`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
      Mass Upload
+    </a>*/}
+
+    <a
+     href={`/teampanel/addplayers/${teamId}`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Invite Players
     </a>
   </div>
 </div>

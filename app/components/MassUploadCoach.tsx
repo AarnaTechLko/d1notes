@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
  
 import { showError, showSuccess, showWarning } from "@/app/components/Toastr";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSpinner, FaTrash } from "react-icons/fa";
 import Papa from "papaparse";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -275,7 +275,7 @@ const MassUploadCoach: React.FC<InviteFormProps> = ({ teamId }) => {
                                 onClick={() => handleDelete(index)}
                                 className="text-red-500"
                               >
-                                🗑️
+                               <FaTrash/>
                               </button>
                             </td>
                           </tr>

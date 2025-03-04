@@ -32,6 +32,7 @@ interface Coach {
 const Home: React.FC = () => {
   const [coaches, setCoaches] = useState<Coach[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [teamId, setTeamId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [coachId, setCoachId] = useState<number>(1);
@@ -160,8 +161,13 @@ const Home: React.FC = () => {
     }
 };
   useEffect(() => {
+    if(session)
+    {
+      setTeamId(session?.user.id)
+    }
+   
     fetchCoaches(currentPage, search);
-  }, [currentPage, search]);
+  }, [currentPage, search, session]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -337,12 +343,18 @@ const Home: React.FC = () => {
     >
       Add Coach
     </button> */}
-    <a
+     <a
+     href={`/teampanel/addcoaches/${teamId}`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Invite Coaches
+    </a>
+    {/* <a
      href={`/teampanel/massuploadcoach`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
      Mass Upload
-    </a>
+    </a> */}
   </div>
 </div>
 
@@ -366,9 +378,10 @@ const Home: React.FC = () => {
         coaches.map((coach) => (
           <tr key={coach.id}>
             <td className="text-center">
-          
+          <a href={`/coach/${coach.slug}`} target='_blank'>
               <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
               {coach.firstName} {coach.lastName}
+              </a>
             </td>
             <td>{coach.gender}</td>
             <td>{coach.email}</td>

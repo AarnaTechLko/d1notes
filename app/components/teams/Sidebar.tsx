@@ -95,6 +95,14 @@ const Sidebar: React.FC = () => {
             </a>
           </li>
         
+          <li className="hover:bg-gray-700 rounded transition duration-200">
+            <a href="/teampanel/joinrequests" className="flex items-center space-x-2 p-2">
+            
+              <FaCompressAlt className='text-xl'/>
+              <span>Invitation Logs</span>
+            </a>
+          </li>
+        
 
           <li className="hover:bg-gray-700 rounded transition duration-200">
               <a href="/teampanel/doc" className="flex items-center space-x-2 p-2">
