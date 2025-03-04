@@ -4,7 +4,7 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
 import { showError, showSuccess } from '@/app/components/Toastr';
-import { FaArchive, FaKey, FaSpinner, FaTeamspeak, FaTrash, FaUsers } from 'react-icons/fa';
+import { FaArchive, FaKey, FaSpinner, FaTeamspeak, FaTrash, FaUndo, FaUsers } from 'react-icons/fa';
 import defaultImage from '../../public/default.jpg';
 import ResetPassword from '@/app/components/ResetPassword';
 import Swal from 'sweetalert2';
@@ -47,6 +47,7 @@ type Team = {
   playerIds?: number[];
 };
 const Home: React.FC = () => {
+  const [beingRestored, setBeingRestored] = useState<boolean>(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [coaches, setCoaches] = useState<Coach[]>([]);
   const [search, setSearch] = useState<string>('');
@@ -68,6 +69,7 @@ const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] =useState<{ first_name?: string , id?:number}>({});
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
   const handlePasswordChangeSuccess = () => {
     console.log('Password changed successfully!');
   };
@@ -352,6 +354,45 @@ const handleResetPassword=(coach: Coach)=>{
   setCoachId(coach.id);
   setIsModalOpen(true)
 }
+
+const handleRestore=async(id:number)=>{
+  setBeingRestored(true);
+  setCoachId(id);
+}
+
+const handleAssign=async(e:any) => {
+  e.preventDefault();
+
+  if (!selectedTeam) {
+    showError("Please select a team.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/coach/unarchived`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        coachId,
+        type:'player',
+        teamId:selectedTeam,
+        club_id:session?.user?.id
+      }),
+    });
+    if (response.ok) {
+      fetchCoaches();
+      setBeingRestored(false)
+      Swal.fire("Restored!", "Player restored successfully!", "success");
+    } else {
+      Swal.fire("Failed!", "Failed to restore Player", "error");
+    }
+  } catch (error) {
+    Swal.fire("Error!", "An error occurred while archiving the player", "error");
+  }
+  
+};
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -518,6 +559,15 @@ const handleResetPassword=(coach: Coach)=>{
                 >
                     <FaUsers size={24} />
                 </button>
+                {coach.status=='Archived' && (
+                  <button
+                    onClick={() => handleRestore(coach.id)} // Pass the banner ID to the delete handler
+                    className=" text-green-500 hover:text-green-700"
+                    aria-label="Archive Player"
+                >
+                    <FaUndo size={24} />
+                </button>
+                )}
 
 
                       <button
@@ -628,6 +678,55 @@ const handleResetPassword=(coach: Coach)=>{
               </div>
               <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
                 <PlayerForm onSubmit={handleSubmitCoachForm} />
+              </div>
+            </div>
+          </div>
+        )}
+
+
+
+{beingRestored && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg w-4/12 max-h-[100vh] overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
+                <h2 className="text-2xl font-semibold text-gray-800">Assign A Team</h2>
+                <button
+                  onClick={() => setBeingRestored(false)}
+                  className="text-xl text-gray-600 hover:text-gray-900"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
+              <form onSubmit={handleAssign}>
+        {/* Dynamically Render Team Names with Radio Buttons */}
+        {teams.map((team, index) => (
+         <label key={index} className="flex items-center gap-3 p-2">
+         {/* Team Logo */}
+        
+       
+         {/* Radio Button */}
+         <input
+           type="radio"
+           name="selectedTeam"
+           value={team.id}
+           className="form-radio text-blue-500"
+           onChange={() => setSelectedTeam(team.id?.toString() || '')}
+         />
+       
+       <img src={team.logo} alt={team.team_name} className="w-10 h-10 rounded-full object-cover" />
+         <span className="text-gray-800">{team.team_name}</span>
+       </label>
+       
+        ))}
+
+<button
+              type="submit"
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600"
+            >
+              Assign Team
+            </button>
+      </form>
               </div>
             </div>
           </div>

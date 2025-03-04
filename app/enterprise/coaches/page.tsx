@@ -580,7 +580,7 @@ const Home: React.FC = () => {
                 >
                     <FaUndo size={24} />
                 </button>
-                )}
+                )} 
               {/* <button
                   onClick={() => handleResetPassword(coach)}
                   title='Reset Password'
