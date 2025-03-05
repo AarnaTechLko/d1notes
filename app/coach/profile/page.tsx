@@ -7,12 +7,18 @@ import { getSession } from "next-auth/react";
 import { countryCodesList, states } from '@/lib/constants';
 import { upload } from '@vercel/blob/client';
 import FileUploader from '@/app/components/FileUploader';
+import { showError } from '@/app/components/Toastr';
+import { FaFileAlt } from 'react-icons/fa';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const LisenseInputRef = useRef<HTMLInputElement | null>(null);
+  const CvInputRef = useRef<HTMLInputElement | null>(null);
   const [loadingProfile,setLoadingprofile]=useState<boolean>(false);
+  const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
+  const [cvUpoading, setCvUpoading] = useState<boolean>(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -37,6 +43,9 @@ const Profile: React.FC = () => {
      xlink:"",
      youtube:"",
     city: "",
+    license_type: "",
+    license: "",
+    cv: "",
   });
 
   const { data: session, status } = useSession();
@@ -189,6 +198,79 @@ const Profile: React.FC = () => {
     certificateInputRef.current?.click();
   };
 
+
+  const handleCVChange = async () => {
+
+    if (!CvInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+ 
+    setCvUpoading(true);
+    const file = CvInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads/documentupload',
+      });
+      setCvUpoading(false);
+      const imageUrl = newBlob.url;
+      setProfileData({ ...profileData, cv: imageUrl });
+
+    } catch (error:any) {
+      setCvUpoading(false);
+      showError('Only JPG and PNG Images Allowed.');
+    }
+  }
+
+  const handleDownload = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+  
+      // Extract file extension from URL
+      const extension = url.split('.').pop()?.split('?')[0] || "file";
+      const filename = `download.${extension}`;
+  
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename; // Ensure proper file download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      // Revoke object URL to free memory
+      setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
+  const handleLicenseChange = async () => {
+
+    if (!LisenseInputRef.current?.files) {
+      throw new Error('No file selected');
+    }
+ 
+    setLicenseUpoading(true);
+    const file = LisenseInputRef.current.files[0];
+
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads/documentupload',
+      });
+      setLicenseUpoading(false);
+      const imageUrl = newBlob.url;
+      setProfileData({ ...profileData, license: imageUrl });
+
+    } catch (error:any) {
+      setLicenseUpoading(false);
+      showError('Error While Uplading File.');
+    }
+  }
   return (
     <>
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -387,8 +469,9 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.email}</p>
                 )}
               </div>
+              </div>
  
-
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
               {/* Gender */}
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
@@ -446,7 +529,34 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
+              <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Coaching License Type<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <select
+                    name="sport"
+                    value={profileData.license_type}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  >
+                   
+                    <option value="">Select</option>
+                      <option value="PRO">PRO</option>
+                      <option value="Elite-A">Elite-A</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                      <option value="E">E</option>
+                  </select>
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.license_type}</p>
+                )}
+              </div>
 
+
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
           <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
           {isEditMode ? (
@@ -619,40 +729,81 @@ const Profile: React.FC = () => {
 
 </div>
 
-            {/* Certificate Image Thumbnail */}
-            {/* <div className="mt-8">
-              <div className="flex flex-col items-center">
-                <label className="block text-sm font-medium text-gray-700">Certificate Image</label>
-                <div onClick={triggerCertificateUpload} className="mt-4 cursor-pointer">
-                  {profileData.certificate ? (
-                    <img
-                    src={
-                      !profileData.certificate || profileData.certificate === 'null'
-                        ? '/certificate.png'
-                        : profileData.certificate
-                    }
-                      alt="Certificate"
-                      className="h-32 w-32 object-cover rounded-lg border-4 border-indigo-300 hover:shadow-lg transition-all"
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+{isEditMode ? (       
+<div>
+  
+                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <input
+                    placeholder=' '
+                      type="file"
+                      name="youtube"
+                      accept="image/*,application/pdf"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      onChange={handleCVChange}
+                     
+                      ref={CvInputRef}
                     />
-                  ) : (
-                    <div className="h-32 w-32 bg-gray-200 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-400">
-                      <span className="text-gray-500">Upload Image</span>
-                    </div>
-                  )}
-                </div>
-                {isEditMode && (
-                  <input
-                    type="file"
-                    name="certificate"
-                    accept="image/*"
-                    ref={certificateInputRef}
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                )}
+                         {cvUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
+                  </div>
+):(
+  <div> 
+  <p className="text-gray-700">
+        <button
+          onClick={() => handleDownload(profileData.cv)}
+          className="flex items-center space-x-2"
+        >
+          <FaFileAlt className="text-blue-500" />
+          <span>Download CV</span>
+        </button>
+      </p></div>
+)}
+{isEditMode ? (  
+              <div>
+                    <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <input
+                    placeholder='Ex: https://youtube.com/username'
+                      type="file"
+                      name="license"
+                      accept="image/*,application/pdf"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      onChange={handleLicenseChange}
+                     
+                      ref={LisenseInputRef}
+                    />
+                         {licenseUpoading ? (
+                      <>
+                        <FileUploader />
+                      </>
+                    ) : (
+                      <>
+                        {/* Optional: Placeholder for additional content */}
+                      </>
+                    )}
+                  </div>
+):(
+  <div>
+  <p className="text-gray-700">
+        <button
+          onClick={() => handleDownload(profileData.license)}
+          className="flex items-center space-x-2"
+        >
+          <FaFileAlt className="text-blue-500" />
+          <span>Download License</span>
+        </button>
+      </p></div>
+)}
               </div>
-            </div> */}
-          </div>
+              </div>
+              
         </main>
       </div>
     </>

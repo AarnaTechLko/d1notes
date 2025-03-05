@@ -104,9 +104,9 @@ export default function Login() {
         loginAs: formValues.loginAs,
         teamId: formValues?.teamId
       });
-
+     
       if (!response || !response.ok) {
-        showError('Email or Password Incorrect.');
+        showError(response?.error || "");
       } else {
         if (teamId) {
           const apiResponse = await fetch('/api/player/assignteam', {
@@ -168,7 +168,7 @@ export default function Login() {
       }
       else if (session.user.type === 'team') {
 
-        window.location.href = '/teampanel/dashboard';
+        window.location.href = '/teampanel/dashboard'; 
       }
       else if (!session.user.name && session.user.type == 'player') {
         window.location.href = '/completeprofile';

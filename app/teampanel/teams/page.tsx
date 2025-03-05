@@ -205,25 +205,25 @@ export default function TeamsPage() {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="container mx-auto p-4">
-  <h1 className="text-2xl font-bold mb-4">Your Teams</h1>
-  <div className="">
-    {/* Left Column: Add Team Button */}
-    <button
-      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      onClick={() => setModalOpen(true)}
-    >
-     Manually Add Team
-    </button>
-    
-    {/* Right Column: Mass Upload Button */}
-    <a href="/enterprise/massuploadteams"
-      className="bg-green-500 text-white px-4 ml-5 py-2 rounded hover:bg-green-600"
-       
-    >
-      Mass Team Upload
-    </a>
-  </div>
+          <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Your Teams</h1>
+            <div className="">
+              {/* Left Column: Add Team Button */}
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => setModalOpen(true)}
+              >
+                Manually Add Team
+              </button>
+
+              {/* Right Column: Mass Upload Button */}
+              <a href="/enterprise/massuploadteams"
+                className="bg-green-500 text-white px-4 ml-5 py-2 rounded hover:bg-green-600"
+
+              >
+                Mass Team Upload
+              </a>
+            </div>
 
 
             <div className="mt-4 overflow-x-auto">
@@ -242,8 +242,8 @@ export default function TeamsPage() {
                     </th>
                     <th className="text-left px-4 py-2">Coaches</th>
                     <th className="text-left px-4 py-2">Players</th>
-                   
-                   
+
+
                     <th className="text-left px-4 py-2">Status</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
@@ -264,11 +264,11 @@ export default function TeamsPage() {
                       <tr key={team.id} className="border-b">
                         <td className="px-4 py-2">
                           <div className="text-center items-center">
-                          <img 
-  src={team.logo ? team.logo : '/Team.jpg'} 
-  className="w-12 h-12 mx-auto rounded-full" 
-  alt={`${team.team_name} logo`} 
-/>
+                            <img
+                              src={team.logo ? team.logo : '/Team.jpg'}
+                              className="w-12 h-12 mx-auto rounded-full"
+                              alt={`${team.team_name} logo`}
+                            />
                             <div className="mb-1">{team.team_name}</div>
 
                           </div>
@@ -286,10 +286,10 @@ export default function TeamsPage() {
                           <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
                             Add Player(s) to Team
                           </Link>
-                          <p  className="mt-2"> Total Players : {team.totalPlayers}</p>
+                          <p className="mt-2"> Total Players : {team.totalPlayers}</p>
                         </td>
-                       
-                        
+
+
                         <td>
                           <button
                             className={`px-4 py-2 rounded ${team.status === 'Active' ? 'bg-blue-500' : 'bg-red-500'} text-white`}
@@ -299,16 +299,16 @@ export default function TeamsPage() {
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">
-                           
+
                             <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
-                            <FaClipboard/>
+                              <FaClipboard />
                             </a>
                             <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
                               <FaEdit />
                             </a>
                             <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
-                             
-                              <FaArchive/>
+
+                              <FaArchive />
                             </button>
                           </div>
                         </td>

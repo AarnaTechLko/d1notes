@@ -15,6 +15,8 @@ interface Order {
   countryCodes: string;
   phone: string;
   role_id: string;
+  view_evaluation: string;
+  buy_evaluation: string;
 }
 
 const Home: React.FC = () => {
@@ -200,12 +202,30 @@ const Home: React.FC = () => {
   };
 
   const openEditModal = (record: Order) => {
+    console.log(record);
     setSelectedRecord(record);
     setName(record.name);
     setEmail(record.email);
     setPhone(record.phone);
     setRole(String(record.role_id));
     setCountryCodes(record.countryCodes);
+    if(record.view_evaluation=='true')
+    {
+      setAcceptEvaluations(true);
+    }
+    else{
+      setAcceptEvaluations(false);
+    }
+
+    if(record.buy_evaluation=='true')
+      {
+        setBuyLicenses(true);
+      }
+      else{
+        setBuyLicenses(false);
+      }
+    
+    
     setModalOpen(true);
   };
 
@@ -398,7 +418,7 @@ const Home: React.FC = () => {
 <div className="flex items-center space-x-4">
   {/* Buy Licenses Toggle */}
   <div className="flex items-center space-x-2">
-    <span>Purchase Evaluvations</span>
+    <span>Purchase Evaluvations{buyLicenses}</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -412,7 +432,7 @@ const Home: React.FC = () => {
 
   {/* Accept Evaluations Toggle */}
   <div className="flex items-center space-x-2">
-    <span>View Evaluations</span>
+    <span>View Evaluations{acceptEvaluations}</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -455,7 +475,7 @@ const Home: React.FC = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Mobile Number</th>
-                <th>Role</th>
+                <th>Access</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -468,8 +488,9 @@ const Home: React.FC = () => {
                     <td>{order.email}</td>
                     <td>{order.countryCodes} {order.phone}</td>
                     <td>
-                    {order.role_id === '1' ? "A" : "B"}
-                    </td>
+  {order.buy_evaluation==='true' && <p>Purchase Evaluations</p>}
+  {order.view_evaluation==='true' && <p>View Evaluations</p>}
+</td>
                     <td>
                     <button
                         onClick={() => handleResetpassword(order)}

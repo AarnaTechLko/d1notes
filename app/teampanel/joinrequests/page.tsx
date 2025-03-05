@@ -116,7 +116,7 @@ const Home: React.FC = () => {
           <Processing/>
         )}
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-        <h1 className="text-2xl font-bold mb-4">Invitation Logs</h1>
+        <h1 className="text-2xl font-bold mb-4">Invitation Log</h1>
           <div>
             <input
               type="text"

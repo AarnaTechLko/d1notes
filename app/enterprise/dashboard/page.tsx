@@ -58,13 +58,16 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
+          
         <DashboardContent/>
           
         </div>
+        {sessions?.user.buy_evaluation=="true" && (
         <div className="bg-white shadow-md rounded-lg p-6 ">
         {/*<InviteForm usertype="Club"/>*/}
         <PurchaseLicense organizationId={sessions?.user.id || ''}  type={sessions?.user.type || ''}/>
         </div>
+        )}
       </main>
     </div>
   );

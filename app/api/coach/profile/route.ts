@@ -41,7 +41,10 @@ import { SECRET_KEY } from '@/lib/constants';
           instagram:coaches.instagram,
           xlink:coaches.xlink,
           youtube:coaches.youtube,
-          countryName:countries.name
+          countryName:countries.name,
+          license_type:coaches.license_type,
+          cv:coaches.cv,
+          license:coaches.license
 
         })
         .from(coaches)
@@ -78,6 +81,9 @@ import { SECRET_KEY } from '@/lib/constants';
           instagram:coach.instagram,
           xlink:coach.xlink,
           youtube:coach.youtube,
+          license_type:coach.license_type,
+          license:coach.license,
+          cv:coach.cv,
         }));
 
         await db.update(evaluation_charges)
@@ -124,7 +130,10 @@ import { SECRET_KEY } from '@/lib/constants';
         linkedin,
         instagram,
         xlink,
-        youtube
+        youtube,
+        license_type,
+        license,
+        cv  
         
       } = finalBody;
       let updateData: any = {
@@ -148,7 +157,10 @@ import { SECRET_KEY } from '@/lib/constants';
         linkedin: linkedin || null,
         instagram: instagram || null,
         xlink: xlink || null,
-        youtube: youtube || null
+        youtube: youtube || null,
+        license_type: license_type || null,
+        cv: cv || null,
+        license: license || null,
       };
 
       if (password) {
@@ -186,6 +198,8 @@ import { SECRET_KEY } from '@/lib/constants';
             instagram: coaches.instagram,
             xlink: coaches.xlink,
             youtube: coaches.youtube,
+            license: coaches.license,
+            cv: coaches.cv,
             
   
           }).from(coaches)

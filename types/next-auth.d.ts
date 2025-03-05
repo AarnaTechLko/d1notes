@@ -18,6 +18,8 @@ declare module 'next-auth' {
       coachCurrency?: string | null;
       visibility?: string | null;
       teamId?: string | null;
+      view_evaluation?: string | null;
+      buy_evaluation?: string | null;
     }
   }
 }

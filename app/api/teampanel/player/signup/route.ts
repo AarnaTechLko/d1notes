@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs';
 import { db } from '../../../../../lib/db';
 import { users, otps, licenses, teamPlayers, playerEvaluation } from '../../../../../lib/schema'
 import debug from 'debug';
-import { eq, and, gt, or, ilike, count, desc,sql } from 'drizzle-orm';
+import { eq, and, gt, or, ilike, count, desc,sql, ne } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 import { SECRET_KEY } from '@/lib/constants';

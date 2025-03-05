@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import TeamModal from "@/app/components/coach/TeamModal";
 import Sidebar from "@/app/components/coach/Sidebar";
 import { useSession } from "next-auth/react";

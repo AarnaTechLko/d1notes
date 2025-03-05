@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import EvaluationForm from '../components/coach/EvaluationForm';
 import { Evaluation } from '../types/types';
 import { format } from 'date-fns';
@@ -10,6 +10,8 @@ import StarRating from '../components/StarRating';
 import defaultImage from '../../public/default.jpg'
 import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { showError } from '../components/Toastr';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 type EvaluationPageProps = {
     searchParams: {
         evaluationId: string; // Assuming evaluationId is a string
@@ -36,6 +38,18 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
 
     const formattedDate = evaluationData?.updated_at ? format(new Date(evaluationData.updated_at), 'MM/dd/yyyy') : '';
 
+    const pdfRef = useRef<HTMLDivElement>(null);
+
+    const downloadPDF = async () => {
+      if (!pdfRef.current) return;
+      const canvas = await html2canvas(pdfRef.current);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("download.pdf");
+    };
     const handleSubmitRating = async () => {
         if(rating<=0)
         {
@@ -107,6 +121,12 @@ setLoading(false);
 
 
             <div className="p-6 border border-gray-300 rounded-lg font-sans">
+            <button onClick={downloadPDF} className="mt-4 p-2 bg-blue-500 text-white rounded">
+        Download PDF
+      </button>
+                </div>
+                <div ref={pdfRef}> 
+            <div className="p-6 border border-gray-300 rounded-lg font-sans" >
                 {/* Evaluation Form Header - Full Width */}
                 <div className="w-full mb-0">
                     <div className="bg-white p-6 border border-gray-300 rounded-lg">
@@ -422,6 +442,7 @@ setLoading(false);
                     </div>
 
                 )}
+            </div>
             </div>
 
 
