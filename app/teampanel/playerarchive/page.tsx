@@ -180,7 +180,7 @@ const Home: React.FC = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This action will archive this player!",
+      text: "This action will deleted this player!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -342,7 +342,7 @@ const Home: React.FC = () => {
                           {/* Archive Button */}
                           <button
                             onClick={() => handleDelete(coach.id)}
-                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-green-700"
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
                             aria-label="Archive Player"
                           > Trash
                           </button>

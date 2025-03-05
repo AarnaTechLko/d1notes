@@ -114,110 +114,102 @@ export async function POST(req: NextRequest) {
 
 }
 export async function GET(req: NextRequest) {
-
-  const url = new URL(req.url);
-  const search = url.searchParams.get('search') || '';  // Default to empty string if not provided
-  const page = parseInt(url.searchParams.get('page') || '1', 10);  // Default to 1 if not provided
-  const limit = parseInt(url.searchParams.get('limit') || '10', 10);  // Default to 10 if not provided
-  const team_id = url.searchParams.get('team_id');  
-  try{
-  if (!team_id) {
-    return NextResponse.json(
-      { message: 'Enterprise ID not found!' },
-      { status: 500 }
-    );
-  }
-  const offset = (page - 1) * limit;
-
-  const whereClause = search
-  ? and(
-      eq(coaches.team_id, team_id),
-      or(
-        ilike(coaches.firstName, `%${search}%`),
-        ilike(coaches.email, `%${search}%`),
-        ilike(coaches.phoneNumber, `%${search}%`)
-      ),
-      eq(coaches.status, "Active")  // Ensure that we are only getting active coaches
-    )
-  : and(
-      eq(coaches.team_id, team_id),
-      eq(coaches.status, "Active")  // If no search term, still filter by active coaches
-    );
-
-
-    const coachesData = await db
-    .select(
-      {
-        firstName: coaches.firstName,
-        lastName: coaches.lastName,
-        gender: coaches.gender,
-        image: coaches.image,
-        id: coaches.id,
-        email: coaches.email,
-        phoneNumber: coaches.phoneNumber,
-        slug: coaches.slug,
-        sport: coaches.sport,
-        qualifications: coaches.qualifications,
-        status: coaches.status,
-        consumeLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Consumed' THEN 1 END)`,
-        assignedLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Assigned' THEN 1 END)`,
-        earnings: sql<number>`SUM(CASE WHEN coachaccount.coach_id = coaches.id THEN coachaccount.amount ELSE 0 END)`, // Sum of earnings
-        totalEvaluations: sql<number>`COUNT(CASE WHEN player_evaluation.status = 2 THEN player_evaluation.id END)` // Total evaluations with status = 2
+    const url = new URL(req.url);
+    const search = url.searchParams.get('search') || '';  // Default to empty string if not provided
+    const page = parseInt(url.searchParams.get('page') || '1', 10);  // Default to 1 if not provided
+    const limit = parseInt(url.searchParams.get('limit') || '10', 10);  // Default to 10 if not provided
+    const team_id = url.searchParams.get('team_id');  
+  
+    try {
+      if (!team_id) {
+        return NextResponse.json(
+          { message: 'Enterprise ID not found!' },
+          { status: 500 }
+        );
       }
-    )
-    .from(coaches)
-    .leftJoin(licenses, sql`${licenses.assigned_to} = ${coaches.id}`)
-    .leftJoin(coachaccount, sql`${coachaccount.coach_id} = ${coaches.id}`) // Join coachaccount table
-    .leftJoin(playerEvaluation, sql`${playerEvaluation.coach_id} = ${coaches.id}`) // Join player_evaluation table
-    .where(whereClause)
-    .groupBy(
-      coaches.id,
-      coaches.firstName,
-      coaches.lastName,
-      coaches.gender,
-      coaches.image,
-      coaches.email,
-      coaches.phoneNumber,
-      coaches.slug,
-      coaches.sport,
-      coaches.qualifications,
-      coaches.status
-    )
-    .offset(offset)
-    .orderBy(desc(coaches.createdAt))
-    .limit(limit);
   
-
-  // Query to get the total count
-  const totalCount = await db
-  .select({ count: count() })/// Use raw SQL for COUNT(*) function
-  .from(coaches)
-  .where(whereClause)
-  .then((result) => result[0]?.count || 0);
-
-  const totalLicensesCount = await db
-    .select({
-      count: sql<number>`COUNT(*)`
-    })
-    .from(licenses)
-    .where(
-      and(
-        eq(licenses.status, 'Free'),
-       // eq(licenses.team_id, Number(team_id)) // Replace `enterprise_id` with the desired variable or value
-      )
-    );
-
-  const totalPages = Math.ceil(totalCount / limit);
-  return NextResponse.json({coaches: coachesData, totalLicensesCount:totalLicensesCount, totalPages});
-
-} catch (error) {
+      const offset = (page - 1) * limit;
   
-  return NextResponse.json(
-    { 
-      message: 'Failed to fetch coaches', 
-      error: error instanceof Error ? error.message : String(error) // Include the error message in the response
-    },
-    { status: 500 }
-  );
-}
-}
+      const whereClause = search
+        ? and(
+            eq(coaches.team_id, team_id),  // Ensure team_id is a string here
+            or(
+              ilike(coaches.firstName, `%${search}%`),
+              ilike(coaches.email, `%${search}%`),
+              ilike(coaches.phoneNumber, `%${search}%`)
+            )
+          )
+        : eq(coaches.team_id, team_id);  // Ensure team_id is a string here
+  
+      const coachesData = await db
+        .select(
+          {
+            firstName: coaches.firstName,
+            lastName: coaches.lastName,
+            gender: coaches.gender,
+            image: coaches.image,
+            id: coaches.id,
+            email: coaches.email,
+            phoneNumber: coaches.phoneNumber,
+            slug: coaches.slug,
+            sport: coaches.sport,
+            qualifications: coaches.qualifications,
+            status: coaches.status,
+            consumeLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Consumed' THEN 1 END)`,
+            assignedLicenseCount: sql<number>`COUNT(CASE WHEN licenses.status = 'Assigned' THEN 1 END)`,
+            earnings: sql<number>`SUM(CASE WHEN coachaccount.coach_id = coaches.id THEN coachaccount.amount ELSE 0 END)`, // Sum of earnings
+            totalEvaluations: sql<number>`COUNT(CASE WHEN player_evaluation.status = 2 THEN player_evaluation.id END)` // Total evaluations with status = 2
+          }
+        )
+        .from(coaches)
+        .leftJoin(licenses, sql`${licenses.assigned_to} = ${coaches.id}`)
+        .leftJoin(coachaccount, sql`${coachaccount.coach_id} = ${coaches.id}`) // Join coachaccount table
+        .leftJoin(playerEvaluation, sql`${playerEvaluation.coach_id} = ${coaches.id}`) // Join player_evaluation table
+       .where(and(eq(coaches.status, "Archived"), eq(coaches.team_id, team_id)))
+        //.where(whereClause) // Using the `whereClause` variable here
+        .groupBy(
+          coaches.id,
+          coaches.firstName,
+          coaches.lastName,
+          coaches.gender,
+          coaches.image,
+          coaches.email,
+          coaches.phoneNumber,
+          coaches.slug,
+          coaches.sport,
+          coaches.qualifications,
+          coaches.status
+        )
+        .offset(offset)
+        .orderBy(desc(coaches.createdAt))
+        .limit(limit);
+  
+      // Query to get the total count of coaches
+      const totalCount = await db
+        .select({ count: count() }) // Use raw SQL for COUNT(*) function
+        .from(coaches)
+        .where(eq(coaches.team_id, team_id))  // Ensure team_id is a string here
+        .then((result) => result[0]?.count || 0);
+  
+      // Query to get the total count of available licenses (not assigned)
+      const totalLicensesCount = await db
+        .select({
+          count: sql<number>`COUNT(*)`
+        })
+        .from(licenses)
+        .where(eq(licenses.status, 'Free'));
+  
+      const totalPages = Math.ceil(totalCount / limit);
+      return NextResponse.json({ coaches: coachesData, totalLicensesCount: totalLicensesCount, totalPages });
+  
+    } catch (error) {
+      return NextResponse.json(
+        { 
+          message: 'Failed to fetch coaches', 
+          error: error instanceof Error ? error.message : String(error) // Include the error message in the response
+        },
+        { status: 500 }
+      );
+    }
+  }
+  

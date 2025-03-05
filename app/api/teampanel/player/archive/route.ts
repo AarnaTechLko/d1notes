@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
             createdAt: users.createdAt,
             totalEvaluations: sql<number>`COUNT(CASE WHEN player_evaluation.status = 2 THEN player_evaluation.id END)`,
           })
-          .from(users)
+          .from(users) 
           .innerJoin(teamPlayers, eq(teamPlayers.playerId, users.id))
           .where(and(eq(users.status, "Archived"), eq(teamPlayers.teamId, Number(teamId)))) // Ensure "Archived" filter applies here
           .orderBy(desc(users.createdAt))

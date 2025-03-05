@@ -70,7 +70,7 @@ const Home: React.FC = () => {
       }
 
       const response = await fetch(
-        `/api/teampanel/coach/signup?team_id=${teamId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
+        `/api/teampanel/coach/archived?team_id=${teamId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
       );
 
       if (!response.ok) {
@@ -101,33 +101,32 @@ const Home: React.FC = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This action will archive this player!",
+      text: "This action will deleted this Coache!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, archive it!",
+      confirmButtonText: "Yes, Delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`/api/player/archived`, {
-            method: 'POST',
+          const response = await fetch(`/api/teampanel/restore`, {
+            method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              id,
-              type: 'coach'
+              coachId: id,
             }),
           });
           if (response.ok) {
             fetchCoaches();
-            Swal.fire("Archive!", "Player archived successfully!", "success");
+            Swal.fire("Archive!", "Coache Deleted successfully!", "success");
           } else {
-            Swal.fire("Failed!", "Failed to archive Player", "error");
+            Swal.fire("Failed!", "Failed to archive Coache", "error");
           }
         } catch (error) {
-          Swal.fire("Error!", "An error occurred while archiving the player", "error");
+          Swal.fire("Error!", "An error occurred while archiving the Coache", "error");
         }
       }
     });
@@ -274,47 +273,45 @@ const Home: React.FC = () => {
     setCoachId(coach.id);
     setIsModalOpen(true)
   }
-  const handleLicenseKeySubmit = async () => {
-    try {
-      const session = await getSession();
-      const enterpriseId = session?.user?.id;
+  
 
-      if (!enterpriseId || !selectedCoach) {
-        console.error('Missing required data');
-        return;
-      }
+  const handlecocheRestore = async (id: number) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This action will restore this coach!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, restore it!",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                console.log("Sending Request with:", { coachId: id }); // Debug log
 
-      const response = await fetch('/api/enterprise/coach/updatestatus', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          coach_id: selectedCoach.id,
-          licenseKey: licenseKey,
+                const response = await fetch(`/api/teampanel/restore`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ coachId: id }),
+                });
+
+                const responseData = await response.json();
+                console.log("Response Data:", responseData); // Debug log
+
+                if (response.ok) {
+                    fetchCoaches();
+                    Swal.fire("Restored!", "Coach restored successfully!", "success");
+                } else {
+                    Swal.fire("Failed!", responseData.message || "Failed to restore Coach", "error");
+                }
+            } catch (error) {
+                Swal.fire("Error!", "An error occurred while restoring the Coach", "error");
+            }
+        }
+    });
+};
 
 
-        }),
-      });
-
-      if (response.ok) {
-        showSuccess('License shared successfully');
-        fetchCoaches(currentPage, search);
-
-        setShowLicenseNoModal(false);
-      } else {
-        const errorData = await response.json();
-        const errorMessage = errorData.message || 'Failed to Change Status';
-        showError(errorMessage);
-        setShowLicenseNoModal(true);
-      }
-    } catch (error) {
-      console.error('Error shared license:', error);
-    } finally {
-
-      setLicenseCount(0);
-    }
-  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -335,27 +332,7 @@ const Home: React.FC = () => {
               value={search}
               onChange={handleSearchChange}
             />
-            <div className="flex space-x-4">
-              
-              {/* <a
-                href={`/teampanel/addcoaches/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-              >
-                Manually Add Coaches
-              </a>
-              <a
-                href={`/teampanel/addcoaches/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-              >
-                Mass Coaches Upload
-              </a> */}
-              {/* <a
-     href={`/teampanel/massuploadcoach`}
-      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-    >
-     Mass Upload
-    </a> */}
-            </div>
+            
           </div>
 
           <div className="overflow-x-auto">
@@ -367,8 +344,6 @@ const Home: React.FC = () => {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Sport</th>
-
-                  <th>Evaluations Completed</th>
                   <th>Status</th>
                   <th style={{ width: 225 }}>Action</th>
                 </tr>
@@ -388,26 +363,7 @@ const Home: React.FC = () => {
                       <td>{coach.countrycode}{coach.phoneNumber}</td>
                       <td>{coach.sport}</td>
 
-                      <td align='center'>
-                        {Number(coach.totalEvaluations) >= 1 && (<a
-                          href={`/coach/history/${coach.slug}`}
-                          title='History'
-                          className=' text-blue-500'
-                          target="_blank"
-                        >
-                          View {/* {coach.totalEvaluations} */}
-                        </a>
-                        )}
-                        {Number(coach.totalEvaluations) == 0 && (<button
-
-                          title='History'
-                          className=' text-blue-500'
-                          onClick={handlePopup}
-                        >
-                          View {/* {coach.totalEvaluations} */}
-                        </button>
-                        )}
-                      </td>
+                      
                       <td>
                         {coach.status === 'Inactive' ? (
                           <button
@@ -425,36 +381,25 @@ const Home: React.FC = () => {
                       </td>
                       <td>
                         <div className="flex items-center space-x-2">
-                          {/* <button
-                  onClick={() => handleResetPassword(coach)}
-                  title='Reset Password'
-                  className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
-                >
-                 <FaKey/>
-                </button>
-                <a
-                  href={`/coach/${coach.slug}`}
-                  title='View Bio'
-                  className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                  target="_blank"
-                >
-                  <FaEye/>
-                </a>
-               
-                <button
-                  onClick={() => handleAssignLicense(coach)}
-                  title="Share License"
-                  className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-                >
-                 <FaShare/>
-                </button> */}
+                         
+                          {/* Add Back Button */}
                           <button
-                            onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
-                            className=" text-red-500 hover:text-red-700"
-                            aria-label="Archive Player"
+                            onClick={() => handlecocheRestore(coach.id)} // Restore functionality
+                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700"
+                            aria-label="Restore Player"
                           >
-                            <FaArchive size={24} />
+                            Add Back
                           </button>
+
+                          {/* Archive Button */}
+                          <button
+                            onClick={() => handleDelete(coach.id)}
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+                            aria-label="Archive Player"
+                          > Trash
+                          </button>
+
+                          
                         </div>
                       </td>
                     </tr>
@@ -566,13 +511,7 @@ const Home: React.FC = () => {
 
                 </>
               )}
-              {/* <button
-          type='button'
-  className="text-xs text-gray-500"
-  onClick={() => handleLoadLicense()}
->
-  Assign License
-</button> */}
+              
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowLicenseNoModal(false)}
@@ -580,12 +519,7 @@ const Home: React.FC = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handleLicenseKeySubmit}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                >
-                  Submit
-                </button>
+                
               </div>
             </div>
           </div>
