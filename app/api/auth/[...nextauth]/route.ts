@@ -76,7 +76,9 @@ const handler = NextAuth({
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
           } 
-         
+          if (user[0].status === "Deactivated") {
+            throw new Error("Your account has been deactivated.");
+          }
             else {
               if(user[0].enterprise_id)
                 {
@@ -154,7 +156,7 @@ const handler = NextAuth({
   },
   jwt: { 
 ////secret:SECRET_KEY,
-secret: process.env.NEXTAUTH_SECRET,    
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     

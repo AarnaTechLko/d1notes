@@ -104,9 +104,9 @@ export default function Login() {
         loginAs: formValues.loginAs,
         teamId: formValues?.teamId
       });
-
+     
       if (!response || !response.ok) {
-        showError('Email or Password Incorrect.');
+        showError(response?.error || "");
       } else {
         if (teamId) {
           const apiResponse = await fetch('/api/player/assignteam', {
