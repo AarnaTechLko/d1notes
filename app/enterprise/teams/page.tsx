@@ -289,46 +289,6 @@ export default function TeamsPage() {
                           </a>
                         </td>
 
-<<<<<<< HEAD
-                        <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
-                        <td className="px-4 py-2">{team.team_type}</td>
-                        <td className="px-4 py-2">
-                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Coaches to Team
-                          </Link>
-                          <p className="mt-2">Total Coaches: {team.totalCoaches}</p>
-                        </td>
-                        <td className="px-4 py-2">
-                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                            Add Players to Team
-                          </Link>
-                          <p className="mt-2">Total Players: {team.totalPlayers}</p>
-                        </td>
-                        <td>
-                          <button className="px-4 py-2">{team.status}</button>
-                        </td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center space-x-2">
-                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
-                              <FaClipboard />
-                            </a>
-                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
-                              <FaEdit />
-                            </a>
-                            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
-                              <FaArchive />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={8} className="text-center py-4 text-gray-500">No Teams added yet...</td>
-                    </tr>
-                  )}
-                </tbody>
-=======
         <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
         <td className="px-4 py-2">{team.team_type}</td>
         <td className="px-4 py-2">
@@ -367,7 +327,6 @@ export default function TeamsPage() {
     </tr>
   )}
 </tbody>
->>>>>>> d1321c3bd9aeb66623bf223c5966cc931f5ec501
 
               </table>
             </div>
