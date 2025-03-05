@@ -12,10 +12,11 @@ import { upload } from '@vercel/blob/client';
 import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import FileUploader from "../components/FileUploader";
-import { countryCodesList, states, positionOptionsList, genders, playingLevels, Grades,countries } from "@/lib/constants";
+import { countryCodesList, states, positionOptionsList, genders, playingLevels, Grades, countries } from "@/lib/constants";
 import { showError } from "../components/Toastr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
 interface FormValues {
   first_name: string;
   last_name: string;
@@ -46,6 +47,7 @@ interface FormValues {
   youtube?: string;
   age_group?: string;
   xlink?: string;
+  team_year?: string;
   image: string | null; // Updated to store Base64 string
 }
 
@@ -79,13 +81,15 @@ export default function Register() {
     linkedin: "",
     youtube: "",
     age_group: "",
+    team_year: "",
     xlink: "",
-    gpa:undefined,
+    gpa: undefined,
     image: null,
   });
 
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -95,7 +99,7 @@ export default function Register() {
   const [height, setHeight] = useState("");
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18", "U19", "High School", "College", "Semi Pro", "Pro"];
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -108,30 +112,30 @@ export default function Register() {
   const formatHeight = (value: string) => {
     // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
     const numericValue = value.replace(/[^0-9.'"]/g, "");
-  
+
     if (numericValue.length === 0) return ""; // Return empty if no input
-  
+
     // Split the input by the apostrophe (')
     const parts = numericValue.split("'");
-  
+
     let feet = parts[0]; // The whole number part for feet
-  
+
     // If there's something after the apostrophe, handle inches
     let inches = parts[1] || "";
-    
+
     // If there's a decimal point in inches, keep it intact
     if (inches.includes('"')) {
       inches = inches.replace('"', "");
     }
-  
+
     if (inches) {
       return `${feet}'${inches}"`; // Format as feet and decimal inches
     } else {
       return `${feet}'`; // Format as feet only
     }
   };
-  
-  
+
+
 
   const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -159,7 +163,7 @@ export default function Register() {
     // }
     if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
     if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
-    
+
 
     const heightRegex = /^(\d{1,2})'(\d{1,2}(?:\.\d{1,2})?)?"$/;
 
@@ -172,11 +176,11 @@ export default function Register() {
     }
 
 
-   
+
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
     if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
-   /// if (!formValues.gender) newErrors.gender = "Gender is required.";
+    /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sports is required.";
     //if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
     if (!formValues.playingcountries) newErrors.playingcountries = "Nationaly is required.";
@@ -251,8 +255,8 @@ export default function Register() {
         const email = session?.user?.email;
       }
 
-      router.push("/dashboard");
-      window.location.href = "/dashboard"; // Redirect after successful registration
+     router.push("/dashboard");
+     // window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
@@ -392,10 +396,10 @@ export default function Register() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
                 <div>
                   <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
-                   Player First Name<span className='mandatory'>*</span>
+                    Player First Name<span className='mandatory'>*</span>
                   </label>
                   <input
-                  
+
                     type="text"
                     name="first_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -409,7 +413,7 @@ export default function Register() {
                 <div>
                   <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                   <input
-                  
+
                     type="text"
                     name="last_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -528,7 +532,7 @@ export default function Register() {
                     <option value="Soccer">Soccer</option>
 
                   </select>
-                  
+
 
                 </div>
 
@@ -544,6 +548,123 @@ export default function Register() {
                   />
 
                 </div>
+                </div>
+
+
+                <div>
+  <div className="flex items-center space-x-2 mb-2">
+    <span>Age<span className="text-red-500">*</span>:</span>
+  </div>
+
+
+ 
+
+
+<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-6 pb-5">
+
+  
+  {/* Radio Buttons */}
+  <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="ageGroup"
+        checked={selectedOption === "ageGroup"}
+        onChange={() => {
+          setSelectedOption("ageGroup");
+          setFormValues((prev) => ({ ...prev, team_year: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "ageGroup"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Age Group
+      </span>
+    </label>
+    </div>
+    <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="birthYear"
+        checked={selectedOption === "birthYear"}
+        
+        onChange={() => {
+          setSelectedOption("birthYear");
+          setFormValues((prev) => ({ ...prev, age_group: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "birthYear"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Birth Year
+      </span>
+    </label>
+  </div>
+
+  {/* Conditional Select Dropdowns (Always in the Same Line) */}
+  {selectedOption === "ageGroup" && (
+    <div>
+    <select
+      className="  p-2 border rounded-md"
+      name="age_group"
+      onChange={handleChange}
+      value={formValues.age_group}
+    >
+      <option value="">Select Age Group</option>
+      {ageGroups.map((group) => (
+        <option key={group} value={group}>
+          {group}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+
+  {selectedOption === "birthYear" && (
+    <div>
+    <select
+      className=" p-2 border rounded-md"
+      name="team_year"
+      onChange={handleChange}
+      value={formValues.team_year}
+    >
+      <option value="">Select Birth Year</option>
+      {birthYears.map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
 
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -557,7 +678,7 @@ export default function Register() {
                   >
                     <option value="">Select</option>
                     {countriesList
-                      .map((country:any) => (
+                      .map((country: any) => (
                         <option key={country.id} value={country.id}>
                           {country.name}
                         </option>
@@ -580,17 +701,17 @@ export default function Register() {
                   >
                     <option value="">Select</option>
                     {statesList.map((state: any, index) => (
-    <option key={index} value={state.name}>
-      {state.name}
-    </option>
-  ))}
+                      <option key={index} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
                   </select>
 
                 </div>
                 <div>
                   <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                   <input
-                  placeholder="Ex: Austin"
+                    placeholder="Ex: Austin"
                     type="text"
                     name="city"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -599,21 +720,21 @@ export default function Register() {
                   />
 
                 </div>
-                
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
-              
 
-              <div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+
+
+                <div>
                   <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
-                  
+
                   <DatePicker
-  selected={formValues.birthday ? new Date(formValues.birthday) : null}
-  onChange={handleDateChange}
-  dateFormat="MM-dd-yyyy" // Correct format
-  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-  placeholderText="Select a date"
-/>
+                    selected={formValues.birthday ? new Date(formValues.birthday) : null}
+                    onChange={handleDateChange}
+                    dateFormat="MM-dd-yyyy" // Correct format
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    placeholderText="Select a date"
+                  />
 
                 </div>
                 <div>
@@ -652,28 +773,10 @@ export default function Register() {
 
                 </div>
 
-                <div>
-                  <label htmlFor="age_group" className="block text-gray-700 text-sm font-semibold mb-2">Age Group <span className="mandatory">*</span></label>
-                  <select
-                    name="age_group"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value={formValues.age_group}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-          {ageGroups.map((group) => (
-            <option key={group} value={group}>
-              {group}
-            </option>
-          ))}
-
-                  </select>
-
-                </div>
-                
+               
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
-             
+
 
                 {/* Team */}
                 <div>
@@ -750,7 +853,7 @@ export default function Register() {
                   />
 
                 </div>
-                
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
@@ -768,78 +871,78 @@ export default function Register() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
 
-<div>
-  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="facebook"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.facebook}
-    onChange={handleChange}
-  />
+                <div>
+                  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="facebook"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.facebook}
+                    onChange={handleChange}
+                  />
 
-</div>
-<div>
-  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="instagram"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.instagram}
-    onChange={handleChange}
-  />
-  
-</div>
-<div>
-  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="linkedin"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.linkedin}
-    onChange={handleChange}
-  />
-   
-</div>
+                </div>
+                <div>
+                  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="instagram"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.instagram}
+                    onChange={handleChange}
+                  />
 
+                </div>
+                <div>
+                  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="linkedin"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.linkedin}
+                    onChange={handleChange}
+                  />
 
-
-
-</div>
-
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
-
-<div>
-  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="xlink"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.xlink}
-    onChange={handleChange}
-  />
-  
-</div>
-<div>
-  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  <input
-  placeholder=''
-    type="text"
-    name="youtube"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={formValues.youtube}
-    onChange={handleChange}
-  />
-  
-</div>
+                </div>
 
 
 
-</div>
+
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+
+                <div>
+                  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="xlink"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.xlink}
+                    onChange={handleChange}
+                  />
+
+                </div>
+                <div>
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="youtube"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.youtube}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+
+
+              </div>
               <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                 <button
                   type="submit"

@@ -238,7 +238,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>City:</b> {coachData.city ?? "N/A"}</div>
                 
               </div>
-              <div className="grid grid-cols-2 gap-5 mt-4">
+              <div className="grid grid-cols-3 gap-5 mt-4">
               <div><b>Team Name:</b> {coachData.city ?? "N/A"}</div>
               <div><b>Age Group:</b> {coachData.age_group ?? "N/A"}</div>
               

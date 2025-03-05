@@ -30,6 +30,8 @@ export async function GET(req: NextRequest) {
             id:enterprises.id,
             role_id:enterprises.role_id,
             countryCodes:enterprises.countryCodes,
+            buy_evaluation:enterprises.buy_evaluation,
+            view_evaluation:enterprises.view_evaluation,
             
         }
     ).from(enterprises).where(eq(enterprises.parent_id,Number(club_id)));
