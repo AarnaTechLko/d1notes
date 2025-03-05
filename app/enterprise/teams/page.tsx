@@ -308,10 +308,10 @@ export default function TeamsPage() {
         </td>
         <td className="px-4 py-2">
           <div className="flex items-center space-x-2">
-            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
+            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team Roster">
               <FaClipboard />
             </a>
-            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
+            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
               <FaEdit />
             </a>
             <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">

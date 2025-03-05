@@ -465,21 +465,23 @@ const Home: React.FC = () => {
                     {order.role_id === '1' ? "Purchase Evaluvations" : "View Evaluations"}
                     </td>
                     <td>
-                    <button
+                    {/* <button
                         onClick={() => handleResetpassword(order)}
                         className="px-2 py-1 bg-blue-500 mr-4 text-white rounded hover:bg-green-600"
                       >
                         <FaKey />
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => openEditModal(order)}
-                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                        className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        title='Edit Sub Adminstrator'
                       >
                         <FaEdit />
                       </button>
                       <button
                         onClick={() => handleDelete(order.id)}
                         className="px-2 ml-4 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+                        title='Delete Sub Adminstrator'
                       >
                         <FaTrash />
                       </button>
