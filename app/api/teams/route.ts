@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { teams, teamPlayers, coaches, teamCoaches } from "@/lib/schema";
-import { eq, and, desc,count } from "drizzle-orm";
+import { teams, teamPlayers, coaches, teamCoaches, users } from "@/lib/schema";
+import { eq, and, desc,count,sql} from "drizzle-orm";
 import { sendEmail } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/helpers";
 import { hash } from 'bcryptjs';
@@ -166,8 +166,55 @@ export async function PUT(req: NextRequest) {
 
 
 export async function DELETE(req: NextRequest) {
-  const { id } = await req.json();
- /// await db.delete(teams).where(eq(teams.id, id));
- await db.update(teams).set({status:'Archived'}).where(eq(teams.id, id));
-  return NextResponse.json({ success: true });
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'Team ID is required' }, { status: 400 });
+    }
+
+    // Archive the team instead of deleting
+    await db.update(teams).set({ status: 'Archived' }).where(eq(teams.id, id));
+
+    console.log("Teams ID",id);
+    // Get the list of coach IDs associated with the team
+    const coachesInTeam = await db
+      .select({ coachId: teamCoaches.coachId }) // Use correct select syntax
+      .from(teamCoaches)
+      .where(eq(teamCoaches.teamId, id)); // Changed 'team_id' to 'teamId'
+
+    const coachesIds = coachesInTeam.map((entry) => entry.coachId); 
+
+    console.log("Coaches ID",coachesIds);
+
+    if (coachesIds.length > 0) {
+      await db
+        .update(coaches)
+        .set({ status: 'Archived' } as any)
+        .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
+    }
+
+    // Correct the query to properly select playerIds by teamId
+    const playerInTeam = await db
+      .select({ playerId: teamPlayers.playerId }) // Ensure correct select syntax
+      .from(teamPlayers)
+      .where(eq(teamPlayers.teamId, id)); // Fixed issue: filter by teamId, not playerId
+
+    const playersIds = playerInTeam.map((entry) => entry.playerId);
+
+    console.log("Players ID", playersIds);
+
+    if (playersIds.length > 0) {
+      await db
+        .update(users)
+        .set({ status: 'Archived' } as any)
+        .where(sql`${users.id} IN (${sql.join(playersIds)})`); // Use proper SQL query
+    }
+
+    return NextResponse.json({ success: true, message: 'Team and related players and coaches archived successfully' });
+  } catch (error) {
+    console.error('Error archiving team:', error);
+    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+  }
 }
+

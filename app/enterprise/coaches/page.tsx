@@ -523,6 +523,7 @@ const Home: React.FC = () => {
                 >
               <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
               {coach.firstName} {coach.lastName}
+              
               </a>
             </td>
             <td>{coach.gender}</td>
