@@ -457,6 +457,7 @@ const Home: React.FC = () => {
                             onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
                             className=" text-red-500 hover:text-red-700"
                             aria-label="Archive Player"
+                            title="Archive Player"
                           >
                             <FaArchive size={24} />
                           </button>

@@ -165,7 +165,7 @@ const MassUploadCoach: React.FC<InviteFormProps> = ({ teamId }) => {
                       accept=".csv"
                       ref={fileInputRef}
                     />
-                    <p className="text-sm text-blue-400"><a href="/MassInviteSample.csv" download>Click Here to Download Sample CSV</a></p>
+                    <p className="text-sm text-blue-400"><a href="/MassInviteSample.csv" download>Please Download and Use CSV (Open this File in Excel or Any CSV supported Tool(s))</a></p>
                   </div>
                   <div className="mt-5">
                     <button

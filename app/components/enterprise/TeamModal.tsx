@@ -363,7 +363,7 @@ export default function TeamModal({
     className="bg-white rounded-lg shadow-lg w-[500px] max-w-6xl p-6 overflow-y-auto"
     style={{ maxHeight: '90vh' }}
   >
-    <h2 className="text-xl font-bold mb-4">{team ? "Edit Team" : "Add Team"}</h2>
+    <h2 className="text-xl font-bold mb-4">{team ? "Manually Edit Team" : "Manually Add Team"}</h2>
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-1 gap-6">
       {/* First Column: Team Details */}
       

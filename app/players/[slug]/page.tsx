@@ -190,8 +190,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             {/* Coach Info */}
             <div className="text-left md:text-left">
             <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
-            {coachData?.jersey && ( <span className="bg-blue-500 text-xl p-2 text-white">#{coachData.jersey || '-'}</span> )} {coachData.first_name} {coachData.last_name}
-            </h3>
+  {coachData?.jersey && (
+    <span className="bg-blue-500 text-xl text-white px-4 py-2 rounded-full w-10 h-10 inline-flex items-center justify-center">
+      #{coachData.jersey || '-'}
+    </span>
+  )}{" "}
+  {coachData.first_name} {coachData.last_name}
+</h3>
+
             <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
                 {coachData.facebook && (
                   <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
@@ -222,9 +228,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <div className='bg-white p-6 w-full mt-4'>
               <div className="grid grid-cols-3 gap-5">
                 {/* <div><b>Organization Name:</b> {clubName}</div> */}
-                <div><b>Position:</b> {coachData.position ?? "N/A"}</div>
+                <div><b>Position(s):</b> {coachData.position ?? "N/A"}</div>
                 <div><b>Graduation Year (High School):</b> {coachData.graduation ?? "N/A"}</div>
-                 <div><b>Weight(lbs):</b> {coachData.weight ?? "N/A"}</div>  
+                 <div><b>Weight (lbs):</b> {coachData.weight ?? "N/A"}</div>  
                 <div><b>Height:</b> {coachData.height ?? "N/A"}</div>
                 <div><b>School Name:</b> {coachData.school_name ?? "N/A"}</div>
                 <div><b>GPA:</b> {coachData.gpa ?? "N/A"}</div>
