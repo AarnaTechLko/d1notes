@@ -470,7 +470,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           className="flex items-center space-x-2"
         >
           <FaFileAlt className="text-blue-500" />
-          <span>Download CSV</span>
+          <span>Download CV</span>
         </button>
       </p>
 

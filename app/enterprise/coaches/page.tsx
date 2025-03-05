@@ -474,11 +474,23 @@ const Home: React.FC = () => {
       Add Coach
     </button> */}
     <a
+     href={`/enterprise/invitations/0?mass=0`}
+      className="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-700 rounded-lg"
+    >
+     Manual Invitation
+    </a>
+    <a
+     href={`/enterprise/invitations/0?mass=1`}
+      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+    >
+     Mass Invitation
+    </a>
+    {/* <a
      href={`/enterprise/massuploadcoach`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
      Mass Upload
-    </a>
+    </a> */}
   </div>
 </div>
 

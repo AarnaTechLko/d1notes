@@ -5,7 +5,7 @@ import Sidebar from '../../components/teams/Sidebar'
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import Select from "react-select";
-import { countryCodesList, countries, states,positionOptionsList } from '@/lib/constants';
+import { countryCodesList, countries, states, positionOptionsList } from '@/lib/constants';
 import { upload } from '@vercel/blob/client';
 
 const Profile: React.FC = () => {
@@ -14,6 +14,7 @@ const Profile: React.FC = () => {
   const [countriesArray, setCountriesArray] = useState([]);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [profileData, setProfileData] = useState({
     id: "",
     team_name: "",
@@ -24,15 +25,41 @@ const Profile: React.FC = () => {
     logo: "",
     description: "",
     country: "",
+    countryName: "",
+    stateName: "",
     state: "",
     city: "",
     address: "",
-   
-    
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    xlink: "",
+    youtube: "",
+
+
   });
 
 
   const { data: session, status } = useSession();
+
+  
+
+  const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+
+  
+  
+
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
@@ -53,7 +80,7 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data[0]);
-        
+
         } else {
           console.error("Error fetching profile data:", response.statusText);
         }
@@ -63,6 +90,13 @@ const Profile: React.FC = () => {
     };
 
     fetchProfileData();
+  }, []);
+  useEffect(() => {
+    fetch('/api/masters/countries')
+      .then((response) => response.json())
+      .then((data) => setCountriesList(data || []))
+      .catch((error) => console.error('Error fetching countries:', error));
+      fetchStates(231);
   }, []);
   const mapCountriesToOptions = (playingCountries: any) => {
     return playingCountries
@@ -75,6 +109,7 @@ const Profile: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+    
   };
 
   const handleImageClick = () => {
@@ -87,12 +122,12 @@ const Profile: React.FC = () => {
     if (fileInputRef.current?.files?.length) {
       const file = fileInputRef.current.files[0];
       setPhotoUpoading(true);
-  
+
       try {
         const newBlob = await upload(file.name, file, {
-            access: 'public',
-            handleUploadUrl: '/api/uploads',
-          });
+          access: 'public',
+          handleUploadUrl: '/api/uploads',
+        });
         setPhotoUpoading(false);
         const imageUrl = newBlob.url;
         setProfileData((prevData) => ({ ...prevData, logo: imageUrl }));
@@ -134,9 +169,9 @@ const Profile: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            ...profileData,
-            logo: profileData.logo || ""
-          }), // Include playerId and profileData
+          ...profileData,
+          logo: profileData.logo || ""
+        }), // Include playerId and profileData
       });
 
       if (response.ok) {
@@ -163,7 +198,7 @@ const Profile: React.FC = () => {
       console.error("Error updating profile:", error);
     }
   };
- 
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -181,7 +216,7 @@ const Profile: React.FC = () => {
   const triggerCertificateUpload = () => {
     certificateInputRef.current?.click();
   };
-   
+
   return (
     <>
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -226,12 +261,12 @@ const Profile: React.FC = () => {
               </div>
               {isEditMode && (
                 <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                ref={fileInputRef}
-              />
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  ref={fileInputRef}
+                />
               )}
             </div>
 
@@ -239,7 +274,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5 mb-2">
               {/* First Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -252,10 +287,10 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.team_name}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name<span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -268,13 +303,15 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.manager_name}</p>
                 )}
               </div>
-            
+              </div>
 
-       
+
+
 
               {/* Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Email</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Email<span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -290,7 +327,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Mobile Number</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Mobile Number<span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -317,58 +354,114 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryCodes} {profileData.manager_phone}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Address</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Team Address</label>
                 {isEditMode ? (
+                
                   <input
+                    placeholder='Ex. 12 Fireside Road Suite 200'
                     type="text"
                     name="address"
                     value={profileData.address}
                     onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Sports<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                   <input
-                   type="text"
-                   name="country"
-                   value={profileData.country}
-                   onChange={handleChange}
-                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 />
+                
+                <select
+                name="sport"
+                className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                value="Soccer"
+                onChange={handleChange}
+              >
+
+                <option value="Soccer">Soccer</option>
+
+              </select>
+
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.country}</p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
+                )}
+              </div>
+            
+          
+              
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+              <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Country<span className="mandatory">*</span></label>
+                {isEditMode ? (
+                  // <input
+                  //   type="text"
+                  //   name="country"
+                  //   value={profileData.country}
+                  //   onChange={handleChange}
+                  //   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  // />
+                  <select
+                  name="country"
+                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  value={profileData.country}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  {countriesList
+                    .map((country: any) => (
+                      <option key={country.id} value={country.id}>
+                        {country.name}
+                      </option>
+                    ))}
+
+
+                </select>
+
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryName}</p>
                 )}
               </div>
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Team State/Provience<span className="mandatory">*</span></label>
                 {isEditMode ? (
-                <input
-                type="text"
-                name="state"
-                value={profileData.state}
-                onChange={handleChange}
-                className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-              />
+                  // <input
+                  //   type="text"
+                  //   name="state"
+                  //   value={profileData.state}
+                  //   onChange={handleChange}
+                  //   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  // />
+                  <select
+                    name="state"
+                    id="state"
+                    value={profileData.state}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  >
+                    <option value="">Select</option>
+                    {statesList.map((state: any, index) => (
+                      <option key={index} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.state}</p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.stateName}</p>
                 )}
               </div>
 
               {/* Location */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Team City<span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -381,7 +474,110 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.city}</p>
                 )}
               </div>
-</div>
+              </div>
+                {/* description */}
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
+              <div>
+              <label  htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Team Description<span className='mandatory'>*</span></label>
+              {isEditMode ? (
+                 <textarea name="description"   maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+                 placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
+                 value={profileData.description}
+                 onChange={handleChange}
+                 ></textarea>
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.description}</p>
+                )}
+              </div>
+
+              </div>
+
+              {/* Facebook */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+              <div>
+                <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="facebook"
+                    value={profileData.facebook}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.facebook}</p>
+                )}
+              </div>
+              {/* Instagram */}
+              <div>
+                <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="instagram"
+                    value={profileData.instagram}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                )}
+              </div>
+              {/* Linkedin */}
+              <div>
+                <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="linkedin"
+                    value={profileData.linkedin}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.linkedin}</p>
+                )}
+              </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+              {/* xlink */}
+              <div>
+                <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="xlink"
+                    value={profileData.xlink}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.xlink}</p>
+                )}
+              </div>
+              {/* youtube */}
+              <div>
+                <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="youtube"
+                    value={profileData.youtube}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                )}
+              </div>
+              </div>
+
+           
 
 
 

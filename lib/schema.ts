@@ -57,6 +57,7 @@ export const users = pgTable(
     xlink:text("xlink"),
     youtube:text("youtube"),
     age_group:text("age_group"),
+    birth_year:text("birth_year"),
     status: varchar("status").default("Inactive"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -288,6 +289,7 @@ export const enterprises=pgTable('enterprises', {
   linkedin: text('linkedin'),
   xlink: text('xlink'),
   youtube: text('youtube'),
+  status: text('status').default('Active'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 

@@ -12,6 +12,8 @@ import ProfileCard from '@/app/components/teams/ProfileCard';
 import CoachProfileCard from '@/app/components/ProfileCard';
 import LoginModal from '@/app/components/LoginModal';
 import PlayerProfileCard from '@/app/components/players/ProfileCard';
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 
 
@@ -22,15 +24,21 @@ interface CoachData {
   contactPerson: string;
   address: string;
 
-  createdAt: string;
+  createdAt: string; 
   slug: string;
 
   country: string;
+  country_name: string;
   state: string;
   city: string;
 
   logo: string;
   id: string;
+  facebook: string;
+  instagram: string;
+  linkedin: string;
+  youtube: string;
+  xlink: string;
 }
 
 interface CoachProfileProps {
@@ -151,6 +159,33 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
                 {coachData.organizationName}
               </h1>
+              <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
+                {coachData.facebook && (
+                  <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+                    <FaFacebook size={25} />
+                  </a>
+                )}
+                {coachData.instagram && (
+                  <a href={coachData.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+                    <FaInstagram size={25} />
+                  </a>
+                )}
+                {coachData.linkedin && (
+                  <a href={coachData.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+                    <FaLinkedin size={25} />
+                  </a>
+                )}
+                {coachData.xlink && (
+                  <a href={coachData.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+                    <FaXTwitter size={25} />
+                  </a>
+                )}
+                {coachData.youtube && (
+                  <a href={coachData.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                    <FaYoutube size={25} />
+                  </a>
+                )}
+              </div>
               {/* <p className="text-gray-600 text-lg">Club</p> */}
               {/* <div className="flex items-center justify-center md:justify-start mt-2">
                 <div className="mt-1">{stars}</div>
@@ -167,10 +202,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   <strong>Address:</strong> {coachData.address}
                 </li>
                 <li>
-                  <strong>Country:</strong> {coachData.country}
+                  <strong>Country:</strong> {coachData.country_name}
                 </li>
                 <li>
-                  <strong>State:</strong> {coachData.state}
+                  <strong>State/Province:</strong> {coachData.state}
                 </li>
                 <li>
                   <strong>City:</strong> {coachData.city}
@@ -225,7 +260,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {teamData && teamData.length > 0 ? (
               teamData.map((item: any) => {
                 console.log(item); // Check the structure of item
@@ -251,7 +286,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           Coaches
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
-          <div className="flex flex-col md:flex-row md:space-x-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {coachList && coachList.length > 0 ? (
               coachList.map((item: any) => (
                 <CoachProfileCard
@@ -276,7 +311,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
-          <div className="flex flex-col md:flex-row md:space-x-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {playerList && playerList.length > 0 ? (
               playerList.map((profile: any) => (
                 <PlayerProfileCard

@@ -25,6 +25,8 @@ interface ExtendedUser {
   added_by?: string | null;
   visibility?: string | null;
   teamId?:string | null
+  buy_evaluation?:string | null
+  view_evaluation?:string | null
 }
   
 const handler = NextAuth({
@@ -74,7 +76,9 @@ const handler = NextAuth({
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
           } 
-         
+          if (user[0].status === "Deactivated") {
+            throw new Error("Your account has been deactivated.");
+          }
             else {
               if(user[0].enterprise_id)
                 {
@@ -125,37 +129,21 @@ const handler = NextAuth({
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
             return null; // Invalid credentials
           } else {
-            if(enterprise[0].role_id!=null)
-            {
-              return {
-                id: enterprise[0]?.parent_id?.toString() || '',
-                name: enterprise[0]?.organizationName || '',
-                email: enterprise[0]?.email || '',
-                package_id: enterprise[0]?.package_id || null,
-                expectedCharge: 0,
-                type: 'enterprise', // Custom field indicating player
-                image: enterprise[0]?.logo || '',
-                coach_id: null,
-                club_id: null,
-                visibility:'on',
-                added_by:enterprise[0].id.toString()
-              };
-            }
-            else{
-              return {
-                id: enterprise[0].id.toString(),
-                name: enterprise[0].organizationName,
-                email: enterprise[0].email,
-                package_id: enterprise[0].package_id,
-                expectedCharge:0,
-                type: 'enterprise', // Custom field indicating player
-                image:enterprise[0].logo,
-                coach_id:null,
-                club_id:null,
-                visibility:'on',
-                added_by:null
-              };
-            }
+            return {
+              id: enterprise[0].id.toString(),
+              name: enterprise[0].organizationName,
+              email: enterprise[0].email,
+              package_id: enterprise[0].package_id,
+              expectedCharge:0,
+              type: 'enterprise', // Custom field indicating player
+              image:enterprise[0].logo,
+              view_evaluation:enterprise[0].view_evaluation,
+              buy_evaluation:enterprise[0].buy_evaluation,
+              coach_id:null,
+              club_id:null,
+              visibility:'on',
+              added_by:null
+            };
             
           }
         }
@@ -167,8 +155,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-////secret: process.env.NEXTAUTH_SECRET, 
+////secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     
@@ -188,6 +176,8 @@ secret:SECRET_KEY,
         token.added_by = extendedUser.added_by;
         token.visibility = extendedUser.visibility;
         token.teamId = extendedUser.teamId;
+        token.buy_evaluation = extendedUser.buy_evaluation;
+        token.view_evaluation = extendedUser.view_evaluation;
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -210,6 +200,8 @@ secret:SECRET_KEY,
         session.user.added_by = token.added_by as string | null;
         session.user.visibility = token.visibility as string | null;
         session.user.teamId = token.teamId as string | null;
+        session.user.buy_evaluation = token.buy_evaluation as string | null;
+        session.user.view_evaluation = token.view_evaluation as string | null;
         //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session

@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
              xlink: enterprises.xlink,
              youtube:enterprises.youtube,
 
-    }).from(enterprises).leftJoin(
+    }).from(enterprises).leftJoin( 
               countries,
               eq(countries.id, isNaN(Number(enterprises.country)) ? 231 : Number(enterprises.country)) 
             ).leftJoin(

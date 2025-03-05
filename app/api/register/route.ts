@@ -222,6 +222,7 @@ export async function PUT(req: NextRequest) {
   const youtube = formData.get('youtube') as string | null;
   const xlink = formData.get('xlink') as string | null;
   const age_group = formData.get('age_group') as string | null;
+  const birth_year = formData.get('team_year') as string | null;
   const playerIDAsNumber = parseInt(playerID, 10);
   try {
     const timestamp = Date.now();
@@ -246,7 +247,7 @@ export async function PUT(req: NextRequest) {
         bio: bio || null,
         jersey: jersey || null,
         league: league || null,
-        countrycode: league || null,
+        countrycode: countrycode || null,
         image: imageFile,
         slug: slug,
         playingcountries: playingcountries || null,
@@ -260,6 +261,7 @@ export async function PUT(req: NextRequest) {
         youtube: youtube || null,
         xlink: xlink || null,
         age_group: age_group || null,
+        birth_year: birth_year || null,
         gpa: gpa || '0.00',
         status: "Active",
       

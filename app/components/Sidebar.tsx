@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import Visibility from './Visibility';
 import { useRouter } from 'next/navigation';
 import LogoutLoader from './LoggingOut';
+import Swal from 'sweetalert2';
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,6 +36,61 @@ const Sidebar: React.FC = () => {
     } catch (error) {
       console.error("Logout error:", error);
       setIsLoggingOut(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: "Deleting an account will casuse you to lose all your informations and you will have to create a new account to use D1 Notes again!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await fetch("/api/delete-account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type:session?.user.type,
+            userId: session?.user.id,
+          }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          await Swal.fire("Deleted!", "Your account has been deleted.", "success");
+          setIsLoggingOut(true);
+  
+    try {
+      const result = await signOut({
+        redirect: false, 
+        callbackUrl: "/login",
+      });
+  
+      setTimeout(() => {
+        if (result.url) {
+          router.push(result.url); // Use Next.js router for redirection
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
+        } else {
+          Swal.fire("Error!", data.message || "Failed to delete account", "error");
+        }
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+      }
     }
   };
 
@@ -191,6 +247,12 @@ const Sidebar: React.FC = () => {
                   <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a  onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
                       <span>Sign Out</span>
+                    </a>
+                  </li>
+
+                  <li className="hover:bg-gray-600 rounded transition duration-200 ">
+                    <a  onClick={handleDeleteAccount} className="flex text-sm text-red-300 mt-10 items-center space-x-2 p-2 cursor-pointer">
+                      <span>Delete Account</span>
                     </a>
                   </li>
                 </ul>

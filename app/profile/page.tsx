@@ -5,10 +5,12 @@ import Sidebar from '../components/Sidebar';
 import { useSession } from 'next-auth/react';
 import { getSession } from "next-auth/react";
 import Select from "react-select";
-import { countryCodesList, countries, states,positionOptionsList, Grades } from '@/lib/constants';
+import { countryCodesList, countries, states, positionOptionsList, Grades, genders, playingLevels } from '@/lib/constants';
 import FileUploader from '../components/FileUploader';
 import { upload } from '@vercel/blob/client';
 import { profile } from 'console';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -17,8 +19,8 @@ const Profile: React.FC = () => {
   const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
-let nationalities;
-let ppositons;
+  let nationalities;
+  let ppositons;
   const [profileData, setProfileData] = useState({
     first_name: "",
     last_name: "",
@@ -47,11 +49,17 @@ let ppositons;
     graduation: "",
     school_name: "",
     gpa: "",
+    age_group: "",
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    xlink: "",
+    youtube: "",
   });
 
 
   const { data: session, status } = useSession();
-
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18", "U19", "High School", "College", "Semi Pro", "Pro"];
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -71,36 +79,36 @@ let ppositons;
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
-         
+
           if (data.playingcountries.includes(',')) {
             nationalities = data.playingcountries
               .split(',')
-              .map((country: string) => 
+              .map((country: string) =>
                 countries.find(option => option.value.trim() === country.trim())
               )
               .filter(Boolean);
           } else {
-             
-            nationalities =[data.playingcountries.trim()];
+
+            nationalities = [data.playingcountries.trim()];
           }
-          
-          setNationality({label:nationalities,value:nationalities});
+
+          setNationality({ label: nationalities, value: nationalities });
 
 
           if (data.position.includes(',')) {
             ppositons = data.position
               .split(',')
-              .map((country: string) => 
+              .map((country: string) =>
                 positionOptionsList.find(option => option.value.trim() === country.trim())
               )
               .filter(Boolean);
           } else {
-             
-            ppositons =[data.position.trim()];
+
+            ppositons = [data.position.trim()];
           }
           console.log(ppositons);
           setPosition(ppositons);
-           
+
 
         } else {
           console.error("Error fetching profile data:", response.statusText);
@@ -109,7 +117,7 @@ let ppositons;
         console.error("Error fetching profile data:", error);
       }
     };
-   
+
     fetchProfileData();
   }, []);
 
@@ -117,22 +125,22 @@ let ppositons;
   const formatHeight = (value: string) => {
     // Remove non-numeric characters except for the decimal point and the apostrophe (for feet)
     const numericValue = value.replace(/[^0-9.'"]/g, "");
-  
+
     if (numericValue.length === 0) return ""; // Return empty if no input
-  
+
     // Split the input by the apostrophe (')
     const parts = numericValue.split("'");
-  
+
     let feet = parts[0]; // The whole number part for feet
-  
+
     // If there's something after the apostrophe, handle inches
     let inches = parts[1] || "";
-    
+
     // If there's a decimal point in inches, keep it intact
     if (inches.includes('"')) {
       inches = inches.replace('"', "");
     }
-  
+
     if (inches) {
       return `${feet}' ${inches}"`; // Format as feet and decimal inches
     } else {
@@ -245,7 +253,7 @@ let ppositons;
   const handleCountryChange = (selectedOptions: any) => {
     const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
     setProfileData({ ...profileData, playingcountries: playingcountries });
-     
+
   };
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -272,7 +280,11 @@ let ppositons;
     setProfileData({ ...profileData, position: positions });
   };
 
- 
+  const handleDateChange = (date: Date | null) => {
+    setProfileData({ ...profileData, birthday: date ? date.toISOString().split("T")[0] : "" });
+  };
+
+
   return (
     <>
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
@@ -303,7 +315,7 @@ let ppositons;
                 onClick={triggerImageUpload}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
               >
-                {profileData.image!='null' && profileData.image!=null ? (
+                {profileData.image != 'null' && profileData.image != null ? (
                   <img
                     src={profileData.image}
                     alt="Profile"
@@ -312,11 +324,11 @@ let ppositons;
                 ) : (
                   <div className="h-32 w-32 flex items-center justify-center rounded-full">
                     <img
-                    src='/default.jpg'
-                    alt="Profile"
-                    className="h-32 w-32 object-cover rounded-full"
-                  />
-                    
+                      src='/default.jpg'
+                      alt="Profile"
+                      className="h-32 w-32 object-cover rounded-full"
+                    />
+
                   </div>
                 )}
               </div>
@@ -332,19 +344,19 @@ let ppositons;
               )}
             </div>
             {photoUpoading ? (
-                      <>
-                        <FileUploader />
-                      </>
-                    ) : (
-                      <>
-                        {/* Optional: Placeholder for additional content */}
-                      </>
-                    )}
+              <>
+                <FileUploader />
+              </>
+            ) : (
+              <>
+                {/* Optional: Placeholder for additional content */}
+              </>
+            )}
             {/* Profile Information Form */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Player First Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -360,7 +372,7 @@ let ppositons;
 
               {/* Last Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -373,8 +385,8 @@ let ppositons;
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.last_name}</p>
                 )}
               </div>
-           
-
+                </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-5">
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
                 {isEditMode ? (
@@ -391,7 +403,7 @@ let ppositons;
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Weight</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Weight(lbs)</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -408,20 +420,20 @@ let ppositons;
                 <label htmlFor="graduation" className="block text-gray-700 text-sm font-semibold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
-                  name="graduation"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  value={profileData.graduation}
-                  onChange={handleChange}
-                >
-                  <option value="">Select</option>
-                  {Grades
-                    .map((grade) => (
-                      <option key={grade} value={grade}>
-                        {grade}
-                      </option>
-                    ))}
+                    name="graduation"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.graduation}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    {Grades
+                      .map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
 
-                </select>
+                  </select>
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.graduation}</p>
                 )}
@@ -431,13 +443,13 @@ let ppositons;
               <div>
                 <label htmlFor="school_name" className="block text-gray-700 text-sm font-semibold mb-2">School Name</label>
                 {isEditMode ? (
-                 <input
-                 type="text"
-                 name="school_name"
-                 value={profileData.school_name}
-                 onChange={handleChange}
-                 className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-               />
+                  <input
+                    type="text"
+                    name="school_name"
+                    value={profileData.school_name}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.school_name}</p>
                 )}
@@ -447,21 +459,57 @@ let ppositons;
               <div>
                 <label htmlFor="gpa" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
                 {isEditMode ? (
-                   <input
-                   type="text"
-                   name="gpa"
-                   value={profileData.gpa}
-                   onChange={handleChange}
-                   className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                 />
+                  <input
+                    type="text"
+                    name="gpa"
+                    value={profileData.gpa}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.gpa}</p>
                 )}
               </div>
-
-              
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(ies)</label>
+                <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number (Optional)</label>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="jersey"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.jersey}
+                    onChange={handleChange}
+                  />
+
+
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.jersey}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <select
+                    name="sport"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.sport}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    <option value="Soccer">Soccer</option>
+
+                  </select>
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.sport}</p>
+                )}
+
+
+
+              </div>
+
+
+              <div>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(ies)<span className='mandatory'>*</span></label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -478,9 +526,10 @@ let ppositons;
                 )}
               </div>
 
-
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Country</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -498,7 +547,7 @@ let ppositons;
               </div>
 
               <div >
-                <label className="block text-gray-700 text-sm font-semibold mb-2">State</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
                 {isEditMode ? (
 
                   <select
@@ -521,7 +570,7 @@ let ppositons;
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">City</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -534,199 +583,158 @@ let ppositons;
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.city}</p>
                 )}
               </div>
+              </div>
+              {/* dob */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Location</label>
+                <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                  <input
-                    type="text"
-                    name="location"
-                    value={profileData.location}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  <DatePicker
+                    selected={profileData.birthday ? new Date(profileData.birthday) : null}
+                    onChange={handleDateChange}
+                    dateFormat="MM-dd-yyyy" // Correct format
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    placeholderText="Select a date"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.location}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.birthday}</p>
                 )}
               </div>
-
-              {/* Email */}
+              {/* level */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileData.email}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.email}</p>
-                )}
-              </div>
+                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={profileData.grade_level}>
+                    {playingLevels.map((level) => (
 
 
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold ">Mobile Number</label>
-                {isEditMode ? (
-                  <div className="flex">
-                    <select
-                      name="countrycode"
-                      className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
-                      value={profileData.countrycode}
-                      onChange={handleChange}
-                    >
-                      {countryCodesList.map((item) => (
-                        <option key={item.id} value={item.code}>
-                          {item.code} ({item.country})
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      name="number"
-                      value={profileData.number}
-                      onChange={handlePhoneNumberChange}
-                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                    />
-                  </div>
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800"> {profileData.number}</p>
-                )}
-              </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-5">
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Birth Date</label>
-                {isEditMode ? (
-                  <input
-                    type="date"
-                    name="birthday"
-                    value={ profileData.birthday ? new Date(profileData.birthday).toISOString().split('T')[0] : ''}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{formatDate(profileData.birthday)}</p>
-                )}
-              </div>
+                      <option value={level.value} key={level.value}>{level.label}</option>
+                    ))}
 
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Level</label>
-                {isEditMode ? (
-                  <select
-                    name="grade_level"
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                    value={profileData.grade_level}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select  Level</option>
-                    <option value="Club">Club</option>
-                    <option value="League">League</option>
-                    <option value="Academy">Academy</option>
-                    <option value="Organization">Organization</option>
+
                   </select>
+
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.grade_level}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.grade_level}</p>
                 )}
+
               </div>
-
-
+              {/* gender */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Gender</label>
+                <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <select
                     name="gender"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={profileData.gender}
                     onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    {genders.map((gender) => (
+
+
+                      <option value={gender.value} key={gender.value}>{gender.label}</option>
+                    ))}
+
                   </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.gender}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.gender}</p>
                 )}
               </div>
-
-              {/* Location */}
+              {/* age group */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number (Optional)</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="jersey"
-                    value={profileData.jersey}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.jersey}</p>
-                )}
-              </div>
-
-              {/* Sport */}
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Sport</label>
+                <label htmlFor="age_group" className="block text-gray-700 text-sm font-semibold mb-2">Age Group <span className="mandatory">*</span></label>
                 {isEditMode ? (
                   <select
-                    name="sport"
-                    value={profileData.sport}
+                    name="age_group"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.age_group}
                     onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
-                    <option value="">Select Sport</option>
-                    <option value="Soccer">Soccer</option>
-                    {/* Add other sports as options */}
+                    <option value="">Select</option>
+                    {ageGroups.map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+
                   </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.sport}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.age_group}</p>
                 )}
               </div>
-
-              {/* Club Name */}
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name</label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="team"
-                    value={profileData.team}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.team}</p>
-                )}
               </div>
-              <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)</label>
+              {/* Team */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
+                <div>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
                   {isEditMode ? (
-                  <Select
-                    isMulti
-                    options={positionOptionsList}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    onChange={handlePositionChange}
-                    placeholder="Select Position(s)"
-                    value={position}
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.position}</p>
-                )}
+                    <input
+                      placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
+                      type="text"
+                      name="team"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      value={profileData.team}
+                      onChange={handleChange}
+                    />
+
+                  ) : (
+                    <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
+                  )}
                 </div>
+                  {/* Position */}
+                  <div>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
+                  {isEditMode ? (
+                      <Select
+                      isMulti
+                      options={positionOptionsList}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      onChange={handlePositionChange}
+                      placeholder="Select"
+                    />
+                      ) : (
+                        <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
+                      )}
+                  </div>
+
+               
 
 
+                <div>
+                  <label className="block text-gray-700 text-sm font-semibold ">Mobile Number<span className='mandatory'>*</span></label>
+                  {isEditMode ? (
+                    <div className="flex">
+                      <select
+                        name="countrycode"
+                        className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
+                        value={profileData.countrycode}
+                        onChange={handleChange}
+                      >
+                        {countryCodesList.map((item) => (
+                          <option key={item.id} value={item.code}>
+                            {item.code} ({item.country})
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        name="number"
+                        value={profileData.number}
+                        onChange={handlePhoneNumberChange}
+                        className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                      />
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800"> {profileData.number}</p>
+                  )}
+                </div>
+              </div>
               
 
 
-</div>
-
-
-<div className="col-span-1 mt-5">
-                <label className="block text-gray-700 text-sm font-semibold mb-2">League</label>
+              <div className="col-span-1 mt-5">
+                <label className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     name="league"
@@ -743,7 +751,7 @@ let ppositons;
               </div>
 
               <div className="col-span-1 mt-5">
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <textarea
                     name="bio"
@@ -758,12 +766,96 @@ let ppositons;
                   </p>
                 )}
               </div>
+              {/* Facebook */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+              <div>
+                <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
-             
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="facebook"
+                    value={profileData.facebook}
+                    onChange={handleChange}
+                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.facebook}</p>
+                )}
+              </div>
+              {/* Instagram */}
+              <div>
+                <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
-            {/* Certificate Image Thumbnail */}
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="instagram"
+                    value={profileData.instagram}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                )}
+              </div>
+              {/* Linkedin */}
+              <div>
+                <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
-          </div>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="linkedin"
+                    value={profileData.linkedin}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.linkedin}</p>
+                )}
+              </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+              {/* xlink */}
+              <div>
+                <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="xlink"
+                    value={profileData.xlink}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.xlink}</p>
+                )}
+              </div>
+              {/* youtube */}
+              <div>
+                <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="youtube"
+                    value={profileData.youtube}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                )}
+              </div>
+              </div>
+
+
+
+              {/* Certificate Image Thumbnail */}
+
+            </div>
         </main>
       </div>
     </>
