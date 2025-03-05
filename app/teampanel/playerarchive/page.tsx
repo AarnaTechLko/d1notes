@@ -61,7 +61,7 @@ const Home: React.FC = () => {
       }
 
       const response = await fetch(
-        `/api/teampanel/player/signup?team_id=${teamId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
+        `/api/teampanel/player/archive?team_id=${teamId}&page=${page}&limit=${limit}&search=${encodeURIComponent(searchQuery)}`,
 
       );
 
@@ -151,13 +151,13 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page
   };
   const handleEnterLicense = (coach: Coach) => {
-    handleLoadLicense();
+   
     setSelectedCoach(coach);
     setShowLicenseNoModal(true);
   };
   const handleSubmitCoachForm = async (formData: any) => {
     try {
-      const response = await fetch('/api/teampanel/player/signup', {
+      const response = await fetch('/api/teampanel/player/archive', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -189,19 +189,19 @@ const Home: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`/api/player/archived`, {
-            method: 'POST',
+          const response = await fetch(`/api/player/restore`, {
+            method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              id,
-              type: 'player'
+              playerID: id,
             }),
           });
+  
           if (response.ok) {
-            fetchCoaches();
-            Swal.fire("Archived!", "Player archived successfully!", "success");
+            fetchCoaches(); // Refresh player list
+            Swal.fire("Archived!", "Player deleted successfully!", "success");
           } else {
             Swal.fire("Failed!", "Failed to archive Player", "error");
           }
@@ -211,39 +211,45 @@ const Home: React.FC = () => {
       }
     });
   };
-  const handleLoadLicense = async () => {
-
-    try {
-      setLoadingKey(true);
-      const userId = session?.user.id;
-      const response = await fetch("/api/fetchlicense", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userId,
-          type: "Enterprise",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch license");
+  
+  
+  const handleRestore = async (id: number) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action will restore this player!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, restore it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/api/player/restore`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              playerID: id, 
+            }),
+          });
+  
+          if (response.ok) {
+            fetchCoaches(); // Refresh player list
+            Swal.fire("Restored!", "Player restored successfully!", "success");
+          } else {
+            const errorData = await response.json();
+            Swal.fire("Failed!", errorData.message || "Failed to restore Player", "error");
+          }
+        } catch (error) {
+          Swal.fire("Error!", "An error occurred while restoring the player", "error");
+        }
       }
-      setLoadingKey(false);
-      const data = await response.json();
-      setLicenseKey(data.licenseKey);
-
-    } catch (error) {
-      console.error("Error fetching license:", error);
-      alert("Failed to assign license");
-    }
+    });
   };
-  const handleResetPassword = (coach: Coach) => {
-    console.log(coach);
-    setCoachId(coach.id);
-    setIsModalOpen(true)
-  }
+  
+  
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
@@ -254,7 +260,7 @@ const Home: React.FC = () => {
         userId={coachId} />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-          <h1 className="text-2xl font-bold mb-4">Your Players</h1>
+          <h1 className="text-2xl font-bold mb-4">Archived Players</h1>
           <div className="flex justify-between items-center">
             <input
               type="text"
@@ -263,33 +269,7 @@ const Home: React.FC = () => {
               value={search}
               onChange={handleSearchChange}
             />
-            <div className="flex space-x-4">
-              {/* <button
-        onClick={handleAddCoachClick}
-        className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
-      >
-        Add Player
-      </button> */}
-                {/*<a
-      href={`/teampanel/massupload`}
-        className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-      >
-      Mass Upload
-      </a>*/}
 
-              <a
-                href={`/teampanel/addplayers/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-green-700 rounded-lg"
-              >
-                Manually Add Players
-              </a>
-              <a
-                href={`/teampanel/addplayers/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-              >
-                Mass Players Uplaod
-              </a>
-            </div>
           </div>
 
 
@@ -304,7 +284,7 @@ const Home: React.FC = () => {
                 <th>Sport</th>
                 <th>Team</th>
                 <th>Position(s)</th>
-                <th>Evaluations</th>
+                {/* <th>Evaluations</th> */}
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -322,45 +302,22 @@ const Home: React.FC = () => {
                     <tr key={coach.id}>
                       <td className='text-center'>
                         <a href={`/players/${coach.slug}`} target='_blank'>
-                          {coach.image === null || coach.image === '' ? (
-                            <img
-                              src={defaultImage.src}
-                              className="rounded-full w-16 h-16 object-cover m-auto"
-                              alt={`${coach.first_name} ${coach.last_name}`}
-                            />
-                          ) : (
-                            <img
-                              src={coach.image} // Use defaultImage if coach.image is null or empty
-                              className="rounded-full w-16 h-16 object-cover m-auto"
-                              alt={`${coach.first_name} ${coach.last_name}`}
-                            />)}
-                          {coach.first_name} {coach.last_name}</a></td>
+                          <img
+                            src={coach.image ? coach.image : "/default.jpg"}
+                            className="rounded-full w-16 h-16 object-cover m-auto"
+                            alt={`${coach.first_name} ${coach.last_name}`}
+                          />
+                          {coach.first_name} {coach.last_name}
+                        </a>
+                      </td>
+
                       <td>{coach.gender}</td>
                       <td>{coach.email}</td>
                       <td>{coach.countrycode}{coach.number}</td>
                       <td>{coach.sport}</td>
                       <td>{coach.team}</td>
                       <td>{coach.position}</td>
-                      <td align='center'>
-                        {Number(coach.totalEvaluations) >= 1 && (<a
-                          href={`/players/history/${coach.slug}`}
-                          title='History'
-                          className=' text-blue-500'
-                          target="_blank"
-                        >
-                          View {/* {coach.totalEvaluations} */}
-                        </a>
-                        )}
-                        {Number(coach.totalEvaluations) == 0 && (<button
 
-                          title='History'
-                          className=' text-blue-500'
-                          onClick={handlePopup}
-                        >
-                          View {/* {coach.totalEvaluations} */}
-                        </button>
-                        )}
-                      </td>
                       <td>{coach.status === 'Inactive' ? (
                         <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
                           {coach.status}
@@ -372,23 +329,28 @@ const Home: React.FC = () => {
                       )}</td>
                       <td>
                         <div className="flex items-center space-x-2">
-                          {/* <button
-                  onClick={() => handleResetPassword(coach)}
-                  title='Reset Password'
-                  className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
-                >
-                 <FaKey/>
-                </button> */}
+                          
+                          {/* Add Back Button */}
                           <button
-                            onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
-                            className=" text-red-500 hover:text-red-700"
-                            aria-label="Archive Player"
+                            onClick={() => handleRestore(coach.id)} // Restore functionality
+                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700"
+                            aria-label="Restore Player"
                           >
-                            <FaArchive size={24} />
+                            Add Back
                           </button>
-                        </div>
 
+                          {/* Archive Button */}
+                          <button
+                            onClick={() => handleDelete(coach.id)}
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-green-700"
+                            aria-label="Archive Player"
+                          > Trash
+                          </button>
+
+                          
+                        </div>
                       </td>
+
                     </tr>
                   ))
                 ) : (
@@ -407,8 +369,8 @@ const Home: React.FC = () => {
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 className={`px-4 py-2 text-sm ${currentPage === 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500'
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-blue-500'
                   }`}
               >
                 Previous
@@ -420,8 +382,8 @@ const Home: React.FC = () => {
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 text-sm ${currentPage === totalPages
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-blue-500 '
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-blue-500 '
                   }`}
               >
                 Next
