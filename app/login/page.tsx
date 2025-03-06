@@ -49,14 +49,16 @@ export default function Login() {
         setRegistrationType(decryptedData.registrationType);
         setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.referenceEmail);
-
+ 
         setTeam(decryptedData.teamId);
 
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
           teamId: decryptedData.teamId || '',
-          loginAs: decryptedData.registrationType || 'coach', // Auto-set loginAs
+          loginAs: decryptedData.registrationType || 'coach',
+          referenceId: decryptedData.userId || '',
+        
         }));
 
 
@@ -103,7 +105,8 @@ export default function Login() {
         email,
         password,
         loginAs: formValues.loginAs,
-        teamId: formValues?.teamId
+        teamId: formValues?.teamId,
+        referenceId:referenceId
       });
      
       if (!response || !response.ok) {
@@ -176,42 +179,42 @@ export default function Login() {
 
   useEffect(() => {
 
-    if (status === "authenticated" && session) {
+    // if (status === "authenticated" && session) {
 
-      // Redirect based on session type
-      if (session.user.type === 'coach' && !teamId) {
-        window.location.href = '/coach/dashboard';
-      }
-      else if (session.user.type === 'coach' && teamId) {
-        window.location.href = '/coach/joinrequests';
-      }
+    //   // Redirect based on session type
+    //   if (session.user.type === 'coach' && !teamId) {
+    //     window.location.href = '/coach/dashboard';
+    //   }
+    //   else if (session.user.type === 'coach' && teamId) {
+    //     window.location.href = '/coach/joinrequests';
+    //   }
 
-      if (session.user.type === 'player' && !teamId) {
-        window.location.href = '/dashboard';
-      }
-      else if (session.user.type === 'player' && teamId) {
-        window.location.href = '/joinrequests';
-      }
+    //   if (session.user.type === 'player' && !teamId) {
+    //     window.location.href = '/dashboard';
+    //   }
+    //   else if (session.user.type === 'player' && teamId) {
+    //     window.location.href = '/joinrequests';
+    //   }
 
 
-      else if (session.user.type === 'player') {
-        window.location.href = '/dashboard';
-      }
-      else if (session.user.type === 'enterprise') {
+    //   else if (session.user.type === 'player') {
+    //     window.location.href = '/dashboard';
+    //   }
+    //   else if (session.user.type === 'enterprise') {
 
-        window.location.href = '/enterprise/dashboard';
-      }
-      else if (session.user.type === 'team') {
+    //     window.location.href = '/enterprise/dashboard';
+    //   }
+    //   else if (session.user.type === 'team') {
 
-        window.location.href = '/teampanel/dashboard'; 
-      }
-      else if (!session.user.name && session.user.type == 'player') {
-        window.location.href = '/completeprofile';
-      }
-      else if (!session.user.name && session.user.type == 'coach') {
-        window.location.href = '/coach/completeprofile';
-      }
-    }
+    //     window.location.href = '/teampanel/dashboard'; 
+    //   }
+    //   else if (!session.user.name && session.user.type == 'player') {
+    //     window.location.href = '/completeprofile';
+    //   }
+    //   else if (!session.user.name && session.user.type == 'coach') {
+    //     window.location.href = '/coach/completeprofile';
+    //   }
+    // }
   }, [session]);
 
   return (

@@ -38,16 +38,23 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'text', placeholder: 'email@example.com' },
         password: { label: 'Password', type: 'password' },
         loginAs: { label: 'Login As', type: 'text' },
-        teamId:{label:'teamId', type:'text'} // Either 'player' or 'coach'
+        teamId:{label:'teamId', type:'text'},
+        referenceId:{label:'referenceId', type:'text'}
       },
       async authorize(credentials) {
         if (!credentials) {
           return null;
         }
 
-        const { email, password, loginAs,teamId } = credentials;
+        const { email, password, loginAs,teamId, referenceId } = credentials;
         let club:any;
         if (loginAs === 'coach') {
+          if(referenceId)
+            {
+              await db.update(coaches)
+              .set({ enterprise_id:referenceId }) // Fields to update
+              .where(eq(coaches.email, email));
+            }
           const coach = await db.select().from(coaches).where(eq(coaches.email, email)).execute();
           if (coach.length === 0 || !(await bcrypt.compare(password, coach[0].password))) {
             return null; // Invalid credentials
@@ -64,7 +71,7 @@ const handler = NextAuth({
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id:coach[0].id,
-              club_id:coach[0].enterprise_id ?? '',
+              club_id: referenceId ? referenceId : coach[0]?.enterprise_id ?? '',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by:null,
               teamId:teamId,
@@ -72,6 +79,13 @@ const handler = NextAuth({
             };
           }
         } else if (loginAs === 'player') {
+          if(referenceId)
+          {
+            await db.update(users)
+            .set({ enterprise_id:referenceId }) // Fields to update
+            .where(eq(users.email, email));
+          }
+           // Condition
           const user = await db.select().from(users).where(eq(users.email, email)).execute();
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
@@ -155,8 +169,8 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-secret:SECRET_KEY,
-///secret: process.env.NEXTAUTH_SECRET, 
+///secret:SECRET_KEY,
+secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     
