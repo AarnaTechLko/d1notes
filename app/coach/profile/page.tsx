@@ -16,7 +16,7 @@ const Profile: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const LisenseInputRef = useRef<HTMLInputElement | null>(null);
   const CvInputRef = useRef<HTMLInputElement | null>(null);
-  const [loadingProfile,setLoadingprofile]=useState<boolean>(false);
+  const [loadingProfile, setLoadingprofile] = useState<boolean>(false);
   const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
   const [cvUpoading, setCvUpoading] = useState<boolean>(false);
   const [profileData, setProfileData] = useState({
@@ -33,15 +33,15 @@ const Profile: React.FC = () => {
     image: "",
     certificate: "",
     password: "",
-    countrycode: "", 
+    countrycode: "",
     country: "",
     state: "",
-     countryName:"",
-     facebook:"",
-     instagram:"",
-     linkedin:"",
-     xlink:"",
-     youtube:"",
+    countryName: "",
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    xlink: "",
+    youtube: "",
     city: "",
     license_type: "",
     license: "",
@@ -122,19 +122,19 @@ const Profile: React.FC = () => {
     }
   };
 
- 
+
   const handleSubmit = async () => {
     try {
       const session = await getSession();
       const coachId = session?.user.id;
-     
+
       const response = await fetch('/api/coach/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          coachId, 
+          coachId,
           profileData: {
             ...profileData,
             image: profileData.image || "", // Send base64 image
@@ -142,7 +142,7 @@ const Profile: React.FC = () => {
           }
         }), // Include coachId and profileData
       });
-  
+
       if (response.ok) {
         // Fetch the updated data again
         const updatedResponse = await fetch('/api/coach/profile', {
@@ -158,9 +158,9 @@ const Profile: React.FC = () => {
         } else {
           console.error("Failed to fetch updated profile data:", updatedResponse.statusText);
         }
-        
+
         setIsEditMode(false); // Exit edit mode after saving
-        window.location.reload(); 
+        window.location.reload();
       } else {
         console.error("Failed to update profile:", response.statusText);
       }
@@ -204,7 +204,7 @@ const Profile: React.FC = () => {
     if (!CvInputRef.current?.files) {
       throw new Error('No file selected');
     }
- 
+
     setCvUpoading(true);
     const file = CvInputRef.current.files[0];
 
@@ -217,7 +217,7 @@ const Profile: React.FC = () => {
       const imageUrl = newBlob.url;
       setProfileData({ ...profileData, cv: imageUrl });
 
-    } catch (error:any) {
+    } catch (error: any) {
       setCvUpoading(false);
       showError('Only JPG and PNG Images Allowed.');
     }
@@ -228,11 +228,11 @@ const Profile: React.FC = () => {
       const response = await fetch(url);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
-  
+
       // Extract file extension from URL
       const extension = url.split('.').pop()?.split('?')[0] || "file";
       const filename = `download.${extension}`;
-  
+
       // Create a download link
       const link = document.createElement("a");
       link.href = blobUrl;
@@ -240,7 +240,7 @@ const Profile: React.FC = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-  
+
       // Revoke object URL to free memory
       setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
     } catch (error) {
@@ -253,7 +253,7 @@ const Profile: React.FC = () => {
     if (!LisenseInputRef.current?.files) {
       throw new Error('No file selected');
     }
- 
+
     setLicenseUpoading(true);
     const file = LisenseInputRef.current.files[0];
 
@@ -266,7 +266,7 @@ const Profile: React.FC = () => {
       const imageUrl = newBlob.url;
       setProfileData({ ...profileData, license: imageUrl });
 
-    } catch (error:any) {
+    } catch (error: any) {
       setLicenseUpoading(false);
       showError('Error While Uplading File.');
     }
@@ -279,7 +279,7 @@ const Profile: React.FC = () => {
           <div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-6xl">
             {/* Profile Header */}
             <div className="flex justify-between items-center mb-6">
-            
+
               <button
                 onClick={() => {
                   if (isEditMode) {
@@ -287,9 +287,8 @@ const Profile: React.FC = () => {
                   }
                   setIsEditMode(!isEditMode);
                 }}
-                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${
-                  isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
               >
                 {isEditMode ? 'Save Profile' : 'Edit Profile'}
               </button>
@@ -297,32 +296,32 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-{loadingProfile &&(
-  <div className="flex justify-center items-center gap-2">
-  <svg
-    className="animate-spin h-5 w-5 text-gray-500"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      className="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      strokeWidth="4"
-    ></circle>
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8v8H4z"
-    ></path>
-  </svg>
-  <span>Loading Profile...</span>
-</div>
-)}
-              </div>
+              {loadingProfile && (
+                <div className="flex justify-center items-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-gray-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  <span>Loading Profile...</span>
+                </div>
+              )}
+            </div>
             <div className="flex flex-col items-center mb-8">
               <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
               <div
@@ -331,11 +330,11 @@ const Profile: React.FC = () => {
               >
                 {profileData.image ? (
                   <img
-                  src={
-                    !profileData.image || profileData.image === 'null'
-                      ? '/default.jpg'
-                      : profileData.image
-                  }
+                    src={
+                      !profileData.image || profileData.image === 'null'
+                        ? '/default.jpg'
+                        : profileData.image
+                    }
                     alt="Profile"
                     className="h-32 w-32 object-cover rounded-full"
                   />
@@ -355,17 +354,17 @@ const Profile: React.FC = () => {
                   className="hidden"
                 />
               )}
-             
+
             </div>
             {photoUpoading ? (
-                      <>
-                        <FileUploader />
-                      </>
-                    ) : (
-                      <>
-                        {/* Optional: Placeholder for additional content */}
-                      </>
-                    )}
+              <>
+                <FileUploader />
+              </>
+            ) : (
+              <>
+                {/* Optional: Placeholder for additional content */}
+              </>
+            )}
             {/* Profile Information Form */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
@@ -399,8 +398,8 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.lastName}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2"> Base Evaluation Rate $<span className='mandatory'>*</span></label>
                 {isEditMode ? (
@@ -420,38 +419,38 @@ const Profile: React.FC = () => {
                 <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
 
                 <div className="flex">
-                {isEditMode ? (
-                  <>
-    <select 
-      name="countrycode" 
-      className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
-      value={profileData.countrycode} 
-      onChange={handleChange}
-    >
-      <option value="">Select</option>
-     {countryCodesList.map((item) => (
-        <option key={item.id} value={item.code}>
-          {item.code} ({item.country})
-        </option>
-      ))}
-    </select>
+                  {isEditMode ? (
+                    <>
+                      <select
+                        name="countrycode"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-2/5 mr-1" // Added mr-4 for margin-right
+                        value={profileData.countrycode}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select</option>
+                        {countryCodesList.map((item) => (
+                          <option key={item.id} value={item.code}>
+                            {item.code} ({item.country})
+                          </option>
+                        ))}
+                      </select>
 
-    <input
-      placeholder="(342) 342-3423"
-      type="text"
-      name="number"
-      className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
-      value={profileData.phoneNumber}
-      onChange={handlePhoneNumberChange}
-      maxLength={14} // (123) 456-7890 is 14 characters long
-    /></>
-                ):(
-                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countrycode} {profileData.phoneNumber}</p>
-                )}
-  </div>
+                      <input
+                        placeholder="(342) 342-3423"
+                        type="text"
+                        name="number"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-3/5"
+                        value={profileData.phoneNumber}
+                        onChange={handlePhoneNumberChange}
+                        maxLength={14} // (123) 456-7890 is 14 characters long
+                      /></>
+                  ) : (
+                    <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countrycode} {profileData.phoneNumber}</p>
+                  )}
+                </div>
 
- 
-               
+
+
               </div>
 
               {/* Email */}
@@ -469,9 +468,9 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.email}</p>
                 )}
               </div>
-              </div>
- 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
               {/* Gender */}
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Gender<span className='mandatory'>*</span></label>
@@ -492,9 +491,9 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-           
 
-              
+
+
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
                 {isEditMode ? (
@@ -538,15 +537,15 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
-                   
+
                     <option value="">Select</option>
-                      <option value="PRO">PRO</option>
-                      <option value="Elite-A">Elite-A</option>
-                      <option value="A">A</option>
-                      <option value="B">B</option>
-                      <option value="C">C</option>
-                      <option value="D">D</option>
-                      <option value="E">E</option>
+                    <option value="PRO">PRO</option>
+                    <option value="Elite-A">Elite-A</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
                   </select>
                 ) : (
                   <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.license_type}</p>
@@ -554,256 +553,256 @@ const Profile: React.FC = () => {
               </div>
 
 
-              </div>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
-          <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
-          {isEditMode ? (
-          <select
-            name="country"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={profileData.country  ?? ""}
-            onChange={handleChange}
-          >
-            <option value="">Select</option>
-            {countriesList
-                      .map((country:any) => (
+                <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <select
+                    name="country"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.country ?? ""}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select</option>
+                    {countriesList
+                      .map((country: any) => (
                         <option key={country.id} value={country.id}>
                           {country.name}
                         </option>
                       ))}
-           
-          </select>
-           ) : (
-            <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countryName}</p>
-          )}
-        </div>
 
-        <div>
-          <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
-          
-          {isEditMode ? (
-          <select
-        name="state"
-        id="state"
-        value={profileData.state  ?? ""}
-        onChange={handleChange}
-        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-      >
-        <option value="">Select</option>
-        {states.map((state) => (
-          <option key={state.abbreviation} value={state.abbreviation}>
-            {state.name}
-          </option>
-        ))}
-      </select>
-          ):(
-<p className="mt-2 text-sm font-medium  text-gray-500">{profileData.state}</p>
-          )}
-          
-        </div>
-        <div>
-          <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
-          {isEditMode ? (
-          <input
-            type="text"
-            name="city"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-            value={profileData.city  ?? ""}
-            onChange={handleChange}
-          />
-          ):(
-            <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.city}</p>
-          )}
-          
-        </div>
-        </div>
-        <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Background/Qualifications<span className='mandatory'>*</span></label>
+                  </select>
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.countryName}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
+
                 {isEditMode ? (
-                  <textarea
-                    name="qualifications"
-                    rows={4}
-                    value={profileData.qualifications}
+                  <select
+                    name="state"
+                    id="state"
+                    value={profileData.state ?? ""}
                     onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  >
+                    <option value="">Select</option>
+                    {states.map((state) => (
+                      <option key={state.abbreviation} value={state.abbreviation}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.state}</p>
+                )}
+
+              </div>
+              <div>
+                <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="city"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.city ?? ""}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500">{profileData.city}</p>
+                )}
+
+              </div>
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Background/Qualifications<span className='mandatory'>*</span></label>
+              {isEditMode ? (
+                <textarea
+                  name="qualifications"
+                  rows={4}
+                  value={profileData.qualifications}
+                  onChange={handleChange}
+                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                />
+              ) : (
+                <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+                  {profileData.qualifications}
+                </p>
+              )}
+            </div>
+
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5 mt-5">
+
+              <div>
+                <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="facebook"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.facebook}
+                    onChange={handleChange}
                   />
                 ) : (
                   <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-                    {profileData.qualifications}
+                    {profileData.facebook}
+                  </p>
+                )}
+              </div>
+              <div >
+                <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="instagram"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.instagram}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium text-gray-500 whitespace-pre-wrap">
+                    {profileData.instagram}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="linkedin"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.linkedin}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+                    {profileData.linkedin}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="xlink"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.xlink}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+                    {profileData.xlink}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="youtube"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.youtube}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
+                    {profileData.youtube}
                   </p>
                 )}
               </div>
 
-            
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5 mt-5">
-
-<div>
-  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
-  {isEditMode ? (
-  <input
-  placeholder=''
-    type="text"
-    name="facebook"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={profileData.facebook}
-    onChange={handleChange}
-  />
-) : (
-  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-    {profileData.facebook}
-  </p>
-)}
-</div>
-<div >
-  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  {isEditMode ? (
-  <input
-  placeholder=''
-    type="text"
-    name="instagram"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={profileData.instagram}
-    onChange={handleChange}
-  />
-) : (
-  <p className="mt-2 text-sm font-medium text-gray-500 whitespace-pre-wrap">
-    {profileData.instagram}
-  </p>
-)}
-</div>
-<div>
-  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  {isEditMode ? (
-  <input
-  placeholder=''
-    type="text"
-    name="linkedin"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={profileData.linkedin}
-    onChange={handleChange}
-  />
-) : (
-  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-    {profileData.linkedin}
-  </p>
-)}
-</div>
-<div>
-  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  {isEditMode ? (
-  <input
-  placeholder=''
-    type="text"
-    name="xlink"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={profileData.xlink}
-    onChange={handleChange}
-  />
-) : (
-  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-    {profileData.xlink}
-  </p>
-)}
-</div>
-<div>
-  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
-  {isEditMode ? (
-  <input
-  placeholder=''
-    type="text"
-    name="youtube"
-    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-    value={profileData.youtube}
-    onChange={handleChange}
-  />
-) : (
-  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-    {profileData.youtube}
-  </p>
-)}
-</div>
 
 
+            </div>
 
-</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+              {isEditMode ? (
+                <div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
-{isEditMode ? (       
-<div>
-  
-                    <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>
-                    <input
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className='mandatory'>*</span></label>
+                  <input
                     placeholder=' '
-                      type="file"
-                      name="youtube"
-                      accept="image/*,application/pdf"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                      onChange={handleCVChange}
-                     
-                      ref={CvInputRef}
-                    />
-                         {cvUpoading ? (
-                      <>
-                        <FileUploader />
-                      </>
-                    ) : (
-                      <>
-                        {/* Optional: Placeholder for additional content */}
-                      </>
-                    )}
-                  </div>
-):(
-  <div> 
-  <p className="text-gray-700">
-        <button
-          onClick={() => handleDownload(profileData.cv)}
-          className="flex items-center space-x-2"
-        >
-          <FaFileAlt className="text-blue-500" />
-          <span>Download CV</span>
-        </button>
-      </p></div>
-)}
-{isEditMode ? (  
-              <div>
-                    <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className="text-xs text-gray-500">(Optional)</span></label>
-                    <input
+                    type="file"
+                    name="youtube"
+                    accept="image/*,application/pdf"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    onChange={handleCVChange}
+
+                    ref={CvInputRef}
+                  />
+                  {cvUpoading ? (
+                    <>
+                      <FileUploader />
+                    </>
+                  ) : (
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-700">
+                    <button
+                      onClick={() => handleDownload(profileData.cv)}
+                      className="flex items-center space-x-2"
+                    >
+                      <FaFileAlt className="text-blue-500" />
+                      <span>Download CV</span>
+                    </button>
+                  </p></div>
+              )}
+              {isEditMode ? (
+                <div>
+                  <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className='mandatory'>*</span></label>
+                  <input
                     placeholder='Ex: https://youtube.com/username'
-                      type="file"
-                      name="license"
-                      accept="image/*,application/pdf"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                      onChange={handleLicenseChange}
-                     
-                      ref={LisenseInputRef}
-                    />
-                         {licenseUpoading ? (
-                      <>
-                        <FileUploader />
-                      </>
-                    ) : (
-                      <>
-                        {/* Optional: Placeholder for additional content */}
-                      </>
-                    )}
-                  </div>
-):(
-  <div>
-  <p className="text-gray-700">
-        <button
-          onClick={() => handleDownload(profileData.license)}
-          className="flex items-center space-x-2"
-        >
-          <FaFileAlt className="text-blue-500" />
-          <span>Download License</span>
-        </button>
-      </p></div>
-)}
-              </div>
-              </div>
-              
+                    type="file"
+                    name="license"
+                    accept="image/*,application/pdf"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    onChange={handleLicenseChange}
+
+                    ref={LisenseInputRef}
+                  />
+                  {licenseUpoading ? (
+                    <>
+                      <FileUploader />
+                    </>
+                  ) : (
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-700">
+                    <button
+                      onClick={() => handleDownload(profileData.license)}
+                      className="flex items-center space-x-2"
+                    >
+                      <FaFileAlt className="text-blue-500" />
+                      <span>Download License</span>
+                    </button>
+                  </p></div>
+              )}
+            </div>
+          </div>
+
         </main>
       </div>
     </>

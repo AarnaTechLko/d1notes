@@ -158,7 +158,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <div className="flex flex-col items-center md:items-start">
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
                 {coachData.organizationName}
-              </h1>
+              </h1>  
+             <p> <strong>Sport: </strong> Soccer</p>
               <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
                 {coachData.facebook && (
                   <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">

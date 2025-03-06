@@ -69,7 +69,7 @@ const Home: React.FC = () => {
   const limit = 10; // Items per page
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] =useState<{ firstName?: string , id?:number}>({});
+  const [selectedPlayer, setSelectedPlayer] = useState<{ firstName?: string, id?: number }>({});
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<string>('');
   const [loadingData, setLoadingData] = useState<boolean>(false);
@@ -82,20 +82,20 @@ const Home: React.FC = () => {
   const { data: session } = useSession();
 
 
-  const handleTeamAssign= async (player:any)=>{
-    console.log("id",player);
+  const handleTeamAssign = async (player: any) => {
+    console.log("id", player);
     setSelectedPlayer(player);
     // setSelectedTeams([]); // Reset selections
     setIsOpen(true);
   };
-  
-  
+
+
   const fetchTeams = async () => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
       return;
     }
-  
+
     try {
       setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
@@ -114,33 +114,33 @@ const Home: React.FC = () => {
       console.error("Error fetching teams:", error);
     }
   };
-  
+
   const handleCheckboxChange = (teamId: number) => {
     setSelectedTeams((prev) =>
       prev.includes(teamId) ? prev.filter((id) => id !== teamId) : [...prev, teamId]
     );
   };
-  
-  
+
+
   const handleSubmit = async () => {
     if (!selectedPlayer) return;
-  
+
     const payload = {
       playerId: selectedPlayer.id,
       teamIds: selectedTeams,
-      type:'coach',
-      enterpriseId:session?.user?.id
+      type: 'coach',
+      enterpriseId: session?.user?.id
     };
-  
+
     console.log("Submitting Data:", payload);
-  
+
     try {
       const response = await fetch("/api/assignteams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok) {
         showSuccess("Teams assigned successfully!");
         setIsOpen(false);
@@ -172,7 +172,7 @@ const Home: React.FC = () => {
       if (!response.ok) {
         console.error('Failed to fetch coaches');
         return;
-      } 
+      }
 
       const data = await response.json();
       setCoaches(data.coaches);
@@ -186,37 +186,37 @@ const Home: React.FC = () => {
   };
 
   const handleLoadLicense = async () => {
-        
-    try {
-        setLoadingKey(true);
-        const userId= session?.user.id; 
-        const response = await fetch("/api/fetchlicense", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                userId:userId,
-                type:"Enterprise",
-            }),
-        });
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch license");
-        }
-        setLoadingKey(false);
-        const data = await response.json();
-        setLicenseKey(data.licenseKey);
-       
+    try {
+      setLoadingKey(true);
+      const userId = session?.user.id;
+      const response = await fetch("/api/fetchlicense", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          type: "Enterprise",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch license");
+      }
+      setLoadingKey(false);
+      const data = await response.json();
+      setLicenseKey(data.licenseKey);
+
     } catch (error) {
-        console.error("Error fetching license:", error);
-        alert("Failed to assign license");
+      console.error("Error fetching license:", error);
+      alert("Failed to assign license");
     }
-};
+  };
   useEffect(() => {
     fetchCoaches(currentPage, search);
     fetchTeams();
-  }, [currentPage, search,session]);
+  }, [currentPage, search, session]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -231,14 +231,14 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page
   };
 
-  const handlePopup=()=>{
+  const handlePopup = () => {
     Swal.fire({
       title: "No Evaluations Completed Yet...",
       text: "",
       icon: "info", // Can be 'success', 'error', 'warning', 'info', 'question'
       confirmButtonText: "OK",
     });
-    
+
   }
   const handleSubmitCoachForm = async (formData: any) => {
     try {
@@ -253,7 +253,7 @@ const Home: React.FC = () => {
       if (response.ok) {
         console.log('Coach added successfully');
         fetchCoaches();  /// Refresh data table
-       
+
       } else {
         console.error('Failed to add coach');
       }
@@ -285,12 +285,12 @@ const Home: React.FC = () => {
         console.error('Missing required data');
         return;
       }
-      if(licenseCount>totalLicenses){
+      if (licenseCount > totalLicenses) {
         showError('License Qualtity can not be greater than available license.');
         setAssignLicenseLoader(false);
         return;
       }
-      if(licenseCount===0){
+      if (licenseCount === 0) {
         showError('Enter number of licenses.');
         setAssignLicenseLoader(false);
         return;
@@ -310,7 +310,7 @@ const Home: React.FC = () => {
       if (response.ok) {
         showSuccess('License shared successfully');
         setAssignLicenseLoader(false);
-        fetchCoaches(); 
+        fetchCoaches();
         setShowLicenseModal(false);
       } else {
         const errorData = await response.json();
@@ -328,7 +328,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleResetPassword=(coach: Coach)=>{
+  const handleResetPassword = (coach: Coach) => {
     console.log(coach);
     setCoachId(coach.id);
     setIsModalOpen(true)
@@ -351,15 +351,15 @@ const Home: React.FC = () => {
         body: JSON.stringify({
           coach_id: selectedCoach.id,
           licenseKey: licenseKey,
-         
-          
+
+
         }),
       });
 
       if (response.ok) {
         showSuccess('License shared successfully');
         fetchCoaches(currentPage, search);
-        
+
         setShowLicenseNoModal(false);
       } else {
         const errorData = await response.json();
@@ -370,14 +370,14 @@ const Home: React.FC = () => {
     } catch (error) {
       console.error('Error shared license:', error);
     } finally {
-     
+
       setLicenseCount(0);
     }
   };
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This will archive this coach !",
+      text: "This will archive this coach!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -393,7 +393,7 @@ const Home: React.FC = () => {
             },
             body: JSON.stringify({
               id,
-              type:'coach'
+              type: 'coach'
             }),
           });
           if (response.ok) {
@@ -409,19 +409,19 @@ const Home: React.FC = () => {
     });
   };
 
-  const handleRestore=async(id:number)=>{
+  const handleRestore = async (id: number) => {
     setBeingRestored(true);
     setCoachId(id);
   }
 
-  const handleAssign=async(e:any) => {
+  const handleAssign = async (e: any) => {
     e.preventDefault();
 
     if (!selectedTeam) {
       showError("Please select a team.");
       return;
     }
- 
+
     try {
       const response = await fetch(`/api/coach/unarchived`, {
         method: 'POST',
@@ -430,9 +430,9 @@ const Home: React.FC = () => {
         },
         body: JSON.stringify({
           coachId,
-          type:'coach',
-          teamId:selectedTeam,
-          club_id:session?.user?.id
+          type: 'coach',
+          teamId: selectedTeam,
+          club_id: session?.user?.id
         }),
       });
       if (response.ok) {
@@ -445,158 +445,158 @@ const Home: React.FC = () => {
     } catch (error) {
       Swal.fire("Error!", "An error occurred while archiving the player", "error");
     }
-    
+
   };
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <ResetPassword  isOpen={isModalOpen}
+      <ResetPassword isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSuccess={handlePasswordChangeSuccess}
         type="coach"
-        userId={coachId}/>
+        userId={coachId} />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-        <h1 className="text-2xl font-bold mb-4">Your Coaches</h1>
-        <div className="flex justify-between items-center">
-  <input
-    type="text"
-    placeholder="Search..."
-    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    value={search}
-    onChange={handleSearchChange}
-  />
-  <div className="flex space-x-4">
-    {/* <button
+          <h1 className="text-2xl font-bold mb-4">Your Coaches</h1>
+          <div className="flex justify-between items-center">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={search}
+              onChange={handleSearchChange}
+            />
+            <div className="flex space-x-4">
+              {/* <button
       onClick={handleAddCoachClick}
       className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
       Add Coach
     </button> */}
-    <a
-     href={`/enterprise/invitations/0?mass=0`}
-      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
-    >
-     Add Coach Manually
-    </a>
-    <a
-     href={`/enterprise/invitations/0?mass=1`}
-      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-    >
-     Mass Coach Uplaod
-    </a>
-    {/* <a
+              <a
+                href={`/enterprise/invitations/0?mass=0`}
+                className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
+              >
+                Add Coach Manually
+              </a>
+              <a
+                href={`/enterprise/invitations/0?mass=1`}
+                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+              >
+                Mass Coach Uplaod
+              </a>
+              {/* <a
      href={`/enterprise/massuploadcoach`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
      Mass Upload
     </a> */}
-  </div>
-</div>
+            </div>
+          </div>
 
           <div className="overflow-x-auto">
-  <table className="min-w-full table-auto border-collapse border border-gray-300">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Gender</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Sport</th>
-        {/* <th>Available License</th>
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Sport</th>
+                  {/* <th>Available License</th>
         <th>Used License</th> */}
-        <th>Evaluations Completed</th>
-        <th>Status</th>
-        <th style={{width:225}}>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {coaches.length > 0 ? (
-        coaches.map((coach) => (
-          <tr key={coach.id}>
-            <td className="text-center">
-            <a
-                  href={`/coach/${coach.slug}`}
-                  title='View Bio'
-                  className="px-4 py-2"
-                  target="_blank"
-                >
-              <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
-              {coach.firstName} {coach.lastName}
-              
-              </a>
-            </td>
-            <td>{coach.gender}</td>
-            <td>{coach.email}</td>
-            <td>{coach.countrycode}{coach.phoneNumber}</td>
-            <td>{coach.sport}</td>
-            {/* <td>{coach.assignedLicenseCount}</td>
-            <td>{coach.consumeLicenseCount}</td> */}
-            <td align='center'>
-              {Number(coach.totalEvaluations)>=1 && (<a
-                  href={`/coach/history/${coach.slug}`}
-                  title='History'
-                  className=' text-blue-500'
-                  target="_blank"
-                >
-                 View {/* {coach.totalEvaluations} */}
-                </a>
-              )}
-              {Number(coach.totalEvaluations)==0 && (<button
-                 
-                  title='History'
-                  className=' text-blue-500'
-                  onClick={handlePopup}
-                >
-                 View {/* {coach.totalEvaluations} */}
-                </button>
-              )}
-              </td>
-            <td>
-              {coach.status === 'Pending' ? (
-                <button
-                  className="bg-red px-1 py-2 text-xs rounded bg-orange-500 text-white"
-                  onClick={() => handleEnterLicense(coach)}
-                >
-                  {coach.status}
-                </button>
-              ) : (
-                <button className="bg-red px-2 text-xs py-2 rounded bg-green-500 text-white">
-                  {coach.status}
-                </button>
-              )}
-              
-            </td>
-            <td>
-              <div className="flex items-center space-x-2">
-              <button
-                    onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler
-                    className=" text-green-500 hover:text-green-700 mr-4"
-                    aria-label="Archive Player"
-                    title='Assign a Team'
-                >
-                    <FaUsers size={24} />
-                </button>
-              <button
-                    onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
-                    className=" text-red-500 hover:text-red-700"
-                    aria-label="Archive Player"
-                    title="Archive Coach"
-                >
-                    <FaArchive size={24} />
-                </button>
+                  <th>Evaluations Completed</th>
+                  <th>Status</th>
+                  <th style={{ width: 225 }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {coaches.length > 0 ? (
+                  coaches.map((coach) => (
+                    <tr key={coach.id}>
+                      <td className="text-center">
+                        <a
+                          href={`/coach/${coach.slug}`}
+                          title='View Bio'
+                          className="px-4 py-2"
+                          target="_blank"
+                        >
+                          <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto" />
+                          {coach.firstName} {coach.lastName}
 
-                {coach.status=='Archived' && (
-                  <button
-                    onClick={() => handleRestore(coach.id)} // Pass the banner ID to the delete handler
-                    className=" text-green-500 hover:text-green-700"
-                    aria-label="Archive Player"
-                    title="Archive Coach"
-                >
-                    <FaUndo size={24} />
-                </button>
-                )} 
-              {/* <button
+                        </a>
+                      </td>
+                      <td>{coach.gender}</td>
+                      <td>{coach.email}</td>
+                      <td>{coach.countrycode}{coach.phoneNumber}</td>
+                      <td>{coach.sport}</td>
+                      {/* <td>{coach.assignedLicenseCount}</td>
+            <td>{coach.consumeLicenseCount}</td> */}
+                      <td align='center'>
+                        {Number(coach.totalEvaluations) >= 1 && (<a
+                          href={`/coach/history/${coach.slug}`}
+                          title='History'
+                          className=' text-blue-500'
+                          target="_blank"
+                        >
+                          View {/* {coach.totalEvaluations} */}
+                        </a>
+                        )}
+                        {Number(coach.totalEvaluations) == 0 && (<button
+
+                          title='History'
+                          className=' text-blue-500'
+                          onClick={handlePopup}
+                        >
+                          View {/* {coach.totalEvaluations} */}
+                        </button>
+                        )}
+                      </td>
+                      <td>
+                        {coach.status === 'Pending' ? (
+                          <button
+                            className=" text-orange-500"
+                            onClick={() => handleEnterLicense(coach)}
+                          >
+                            {coach.status}
+                          </button>
+                        ) : (
+                          <button className=" text-green-500">
+                            {coach.status}
+                          </button>
+                        )}
+
+                      </td>
+                      <td>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler
+                            className=" text-green-500 hover:text-green-700 mr-4"
+                            aria-label="Archive Player"
+                            title='Assign a Team'
+                          >
+                            <FaUsers size={24} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
+                            className=" text-black-500 hover:text-black-700"
+                            aria-label="Archive Player"
+                            title="Archive Coach"
+                          >
+                            <FaArchive size={24} />
+                          </button>
+
+                          {coach.status == 'Archived' && (
+                            <button
+                              onClick={() => handleRestore(coach.id)} // Pass the banner ID to the delete handler
+                              className=" text-green-500 hover:text-green-700"
+                              aria-label="Archive Player"
+                              title="Archive Coach"
+                            >
+                              <FaUndo size={24} />
+                            </button>
+                          )}
+                          {/* <button
                   onClick={() => handleResetPassword(coach)}
                   title='Reset Password'
                   className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75"
@@ -614,44 +614,44 @@ const Home: React.FC = () => {
                 >
                  <FaShare/>
                 </button> */}
-              </div>
-            </td>
-          </tr>
-        ))
-      ) : (
-        <tr>
-          <td colSpan={8}>No Coaches found yet...</td>
-        </tr>
-      )}
-    </tbody>
-  </table>
-</div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={8}>No Coaches found yet...</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-  <div className="flex justify-between items-center mt-4">
-    {currentPage > 1 && (
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        className="px-4 py-2 text-sm text-blue-500"
-      >
-        Previous
-      </button>
-    )}
-    <span>
-      Page {currentPage} of {totalPages}
-    </span>
-    {currentPage < totalPages && (
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        className="px-4 py-2 text-sm text-blue-500"
-      >
-        Next
-      </button>
-    )}
-  </div>
-)}
+            <div className="flex justify-between items-center mt-4">
+              {currentPage > 1 && (
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className="px-4 py-2 text-sm text-blue-500"
+                >
+                  Previous
+                </button>
+              )}
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              {currentPage < totalPages && (
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className="px-4 py-2 text-sm text-blue-500"
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* License Modal */}
@@ -660,17 +660,17 @@ const Home: React.FC = () => {
             <div className="bg-white p-4 rounded-lg w-96">
               <h2 className="text-2xl font-semibold mb-4">Assign Licenses</h2>
               <div className="mb-2">
-              <label>Available License Keys: </label> 
-               <span className='bg-blue-500 w-16 h-16 rounded-full p-2 text-white'>{totalLicenses}</span>
-                </div>
-                <div className="mb-2">
-              <input
-                type="number"
-                className="w-full p-2 border rounded-lg mb-4"
-                value={licenseCount}
-                onChange={(e) => setLicenseCount(Number(e.target.value))}
-                placeholder="Number of licenses"
-              />
+                <label>Available License Keys: </label>
+                <span className='bg-blue-500 w-16 h-16 rounded-full p-2 text-white'>{totalLicenses}</span>
+              </div>
+              <div className="mb-2">
+                <input
+                  type="number"
+                  className="w-full p-2 border rounded-lg mb-4"
+                  value={licenseCount}
+                  onChange={(e) => setLicenseCount(Number(e.target.value))}
+                  placeholder="Number of licenses"
+                />
               </div>
               <div className="flex">
                 <button
@@ -684,16 +684,16 @@ const Home: React.FC = () => {
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg"
                 >
                   {assignLicenseLoader ? (
-                                            <>
-                                             <span className="flex items-center">
-                                               <FaSpinner className="animate-spin mr-2" /> Sharing...
-                                               </span>
-                                            </>
-                                        ) : (
-                                            <>
-                                               Share License
-                                            </>
-                                        )}
+                    <>
+                      <span className="flex items-center">
+                        <FaSpinner className="animate-spin mr-2" /> Sharing...
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      Share License
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -712,15 +712,15 @@ const Home: React.FC = () => {
                 placeholder="Enter License Key"
               />
               {loadingKey ? (
-                                            <>
-                                                <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
-                                            </>
-                                        ) : (
-                                            <>
-                                               
-                                            </>
-                                        )}
-          {/* <button
+                <>
+                  <p><FaSpinner className="animate-spin mr-2" /> Finding Key...</p>
+                </>
+              ) : (
+                <>
+
+                </>
+              )}
+              {/* <button
           type='button'
   className="text-xs text-gray-500"
   onClick={() => handleLoadLicense()}
@@ -745,55 +745,55 @@ const Home: React.FC = () => {
           </div>
         )}
 
-{isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 md:p-8">
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md sm:max-w-lg">
-          <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-            Select Teams for {selectedPlayer?.firstName}
-          </h2>
-          <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
-            <ul>
-              {teams.map((team) => (
-                <li
-                  key={team.id ?? Math.random()}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition"
+        {isOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 md:p-8">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md sm:max-w-lg">
+              <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+                Select Teams for {selectedPlayer?.firstName}
+              </h2>
+              <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
+                <ul>
+                  {teams.map((team) => (
+                    <li
+                      key={team.id ?? Math.random()}
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedTeams.includes(team.id!)}
+                        onChange={() => setSelectedTeam(team.id?.toString() || '')}
+                        className="w-5 h-5 text-green-600 focus:ring focus:ring-green-300"
+                      />
+                      <a href={`/teams/${team.slug}`} target='_blank' className="flex items-center gap-3 w-full">
+                        <img
+                          src={team.logo}
+                          alt={team.team_name}
+                          className="w-12 h-12 rounded-full border border-gray-300 shadow-sm"
+                        />
+                        <span className="text-gray-700 font-medium">{team.team_name}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex justify-between mt-5">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                 >
-                  <input
-                    type="checkbox"
-                    checked={selectedTeams.includes(team.id!)}
-                    onChange={() => setSelectedTeam(team.id?.toString() || '')}
-                    className="w-5 h-5 text-green-600 focus:ring focus:ring-green-300"
-                  />
-                  <a href={`/teams/${team.slug}`} target='_blank' className="flex items-center gap-3 w-full">
-                    <img
-                      src={team.logo}
-                      alt={team.team_name}
-                      className="w-12 h-12 rounded-full border border-gray-300 shadow-sm"
-                    />
-                    <span className="text-gray-700 font-medium">{team.team_name}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+                  Close
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between mt-5">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-            >
-              Close
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
-      )}
-{showModal && (
+        )}
+        {showModal && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg w-11/12 max-h-[100vh] overflow-hidden relative">
               <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
@@ -813,7 +813,7 @@ const Home: React.FC = () => {
         )}
 
 
-{beingRestored && (
+        {beingRestored && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg w-4/12 max-h-[100vh] overflow-hidden relative">
               <div className="absolute top-0 left-0 right-0 bg-white p-4 flex justify-between items-center border-b">
@@ -826,35 +826,35 @@ const Home: React.FC = () => {
                 </button>
               </div>
               <div className="pt-16 pb-4 overflow-y-auto max-h-[70vh]">
-              <form onSubmit={handleAssign}>
-        {/* Dynamically Render Team Names with Radio Buttons */}
-        {teams.map((team, index) => (
-         <label key={index} className="flex items-center gap-3 p-2">
-         {/* Team Logo */}
-        
-       
-         {/* Radio Button */}
-         <input
-           type="radio"
-           name="selectedTeam"
-           value={team.id}
-           className="form-radio text-blue-500"
-           onChange={() => setSelectedTeam(team.id?.toString() || '')}
-         />
-       
-       <img src={team.logo} alt={team.team_name} className="w-10 h-10 rounded-full object-cover" />
-         <span className="text-gray-800">{team.team_name}</span>
-       </label>
-       
-        ))}
+                <form onSubmit={handleAssign}>
+                  {/* Dynamically Render Team Names with Radio Buttons */}
+                  {teams.map((team, index) => (
+                    <label key={index} className="flex items-center gap-3 p-2">
+                      {/* Team Logo */}
 
-<button
-              type="submit"
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600"
-            >
-              Assign Team
-            </button>
-      </form>
+
+                      {/* Radio Button */}
+                      <input
+                        type="radio"
+                        name="selectedTeam"
+                        value={team.id}
+                        className="form-radio text-blue-500"
+                        onChange={() => setSelectedTeam(team.id?.toString() || '')}
+                      />
+
+                      <img src={team.logo} alt={team.team_name} className="w-10 h-10 rounded-full object-cover" />
+                      <span className="text-gray-800">{team.team_name}</span>
+                    </label>
+
+                  ))}
+
+                  <button
+                    type="submit"
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600"
+                  >
+                    Assign Team
+                  </button>
+                </form>
               </div>
             </div>
           </div>

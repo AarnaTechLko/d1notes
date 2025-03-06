@@ -131,25 +131,36 @@ export default function TeamsPage() {
   };
 
   const handleDelete = async (id?: number) => {
+    // Show the confirmation dialog
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This will Archive this team! !',
+      text: 'This will archive this team!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, archive it!',
       cancelButtonText: 'Cancel',
     });
+  
+    // If the user clicks "Cancel", the function will exit early and prevent deletion.
+    if (!result.isConfirmed) {
+      return; // Exit the function early if Cancel is clicked
+    }
+  
     try {
+      // Proceed with the deletion (archiving the team) if the user confirmed.
       await fetch("/api/teams", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
+  
+      // Refresh the list of teams after deletion
       fetchTeams();
     } catch (error) {
       console.error("Error deleting team:", error);
     }
   };
+  
 
   const handleAddPlayers = (teamId: number) => {
     const team = teams.find((t) => t.id === teamId);
@@ -258,8 +269,6 @@ export default function TeamsPage() {
                     </th>
                     <th className="text-left px-4 py-2">Coaches</th>
                     <th className="text-left px-4 py-2">Players</th>
-
-
                     <th className="text-left px-4 py-2">Status</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
@@ -289,44 +298,44 @@ export default function TeamsPage() {
                           </a>
                         </td>
 
-        <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
-        <td className="px-4 py-2">{team.team_type}</td>
-        <td className="px-4 py-2">
-          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-            Add Coaches to Team
-          </Link>
-          <p className="mt-2">Total Coaches: {team.totalCoaches}</p>
-        </td>
-        <td className="px-4 py-2">
-          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-            Add Players to Team
-          </Link>
-          <p className="mt-2">Total Players: {team.totalPlayers}</p>
-        </td>
-        <td>
-          <button className="px-4 py-2">{team.status}</button>
-        </td>
-        <td className="px-4 py-2">
-          <div className="flex items-center space-x-2">
-            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team Roster">
-              <FaClipboard />
-            </a>
-            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
-              <FaEdit />
-            </a>
-            <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">
-              <FaArchive />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={8} className="text-center py-4 text-gray-500">No Teams added yet...</td>
-    </tr>
-  )}
-</tbody>
+                        <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
+                        <td className="px-4 py-2">{team.team_type}</td>
+                        <td className="px-4 py-2">
+                          <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Coaches to Team
+                          </Link>
+                          <p className="mt-2">Total Coaches: {team.totalCoaches}</p>
+                        </td>
+                        <td className="px-4 py-2">
+                          <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                            Add Players to Team
+                          </Link>
+                          <p className="mt-2">Total Players: {team.totalPlayers}</p>
+                        </td>
+                        <td>
+                          <button className="px-4 py-2 text-green-500">{team.status}</button>
+                        </td>
+                        <td className="px-4 py-2">
+                          <div className="flex items-center space-x-2">
+                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team Roster">
+                              <FaClipboard />
+                            </a>
+                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
+                              <FaEdit />
+                            </a>
+                            <button className="bg-black-500 text-black px-2 py-1 rounded hover:bg-black-600" onClick={() => handleDelete(team.id)} title="Archive Team">
+                              <FaArchive />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="text-center py-4 text-gray-500">No Teams added yet...</td>
+                    </tr>
+                  )}
+                </tbody>
 
               </table>
             </div>

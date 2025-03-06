@@ -64,6 +64,7 @@ interface CoachData {
   state: string;
   city: string;
   bio: string;
+  league: string;
 }
 
 interface CoachProfileProps {
@@ -234,10 +235,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>Height:</b> {coachData.height ?? "N/A"}</div>
                 <div><b>School Name:</b> {coachData.school_name ?? "N/A"}</div>
                 <div><b>GPA:</b> {coachData.gpa ?? "N/A"}</div>
-                <div><b>Sport(s):</b> {coachData.sport ?? "N/A"}</div>
+                <div><b>Sport:</b> {coachData.sport ?? "N/A"}</div>
                 <div><b>Nationality(ies):</b> {coachData.playingcountries ?? "N/A"}</div>
                 <div><b>Gender:</b> {coachData.gender ?? "N/A"}</div>
-                <div><b>Team Name:</b> {coachData.team ?? "N/A"}</div>
+                <div><b>Team Name(s):</b> {coachData.team ?? "N/A"}</div>
                 <div><b>Level:</b> {coachData.grade_level ?? "N/A"}</div>
                 <div><b>Country:</b> {coachData.countryName ?? "N/A"}</div>
                 <div><b>State:</b> {coachData.state ?? "N/A"}</div>
@@ -245,12 +246,12 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 
               </div>
               <div className="grid grid-cols-3 gap-5 mt-4">
-              <div><b>Team Name:</b> {coachData.city ?? "N/A"}</div>
+            {/*   <div><b>City:</b> {coachData.city ?? "N/A"}</div> */}
               <div><b>Age Group:</b> {coachData.age_group ?? "N/A"}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>League(s):</b> {coachData.city ?? "N/A"}</div>
+              <div><b>League(s):</b> {coachData.league ?? "N/A"}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">

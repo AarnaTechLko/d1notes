@@ -301,54 +301,57 @@ const Home: React.FC = () => {
 
     }
     const handleDelete = async (id: number) => {
-        Swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
-            text: "This action will remove player from Organization!",
+            text: "This will trash this player!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, Remove!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    let clubId; // Declare clubId outside the if block
-
-                    if (session) {
-                        clubId = session.user.id;
-                    }
-
-                    if (!clubId) {
-                        Swal.fire("Error!", "Club ID is missing!", "error");
-                        return;
-                    }
-
-                    const response = await fetch(`/api/enterprise/player/archived`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            id, // Send the player's ID for deletion
-                        }),
-                    });
-
-                    if (response.ok) {
-                        fetchCoaches();
-                        Swal.fire("Archived!", "Player removed successfully!", "success");
-                    } else {
-                        Swal.fire("Failed!", "Failed to remove Player", "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error!", "An error occurred while removing the player", "error");
-                }
-            }
+            cancelButtonText: 'Cancel',
         });
+    
+        // If Cancel is clicked, exit early and do nothing
+        if (!result.isConfirmed) {
+            return;
+        }
+    
+        try {
+            let clubId; // Declare clubId outside the if block
+    
+            if (session) {
+                clubId = session.user.id;
+            }
+    
+            if (!clubId) {
+                Swal.fire("Error!", "Club ID is missing!", "error");
+                return;
+            }
+    
+            const response = await fetch(`/api/enterprise/player/archived`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id, // Send the player's ID for deletion
+                }),
+            });
+    
+            if (response.ok) {
+                fetchCoaches();
+                Swal.fire("Archived!", "Player trash successfully!", "success");
+            } else {
+                Swal.fire("Failed!", "Failed to trash Player", "error");
+            }
+        } catch (error) {
+            Swal.fire("Error!", "An error occurred while removing the player", "error");
+        }
     };
-
-
+    
     const handleRestore = async (id: number) => {
-        Swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
             text: "This action will restore this Player!",
             icon: "warning",
@@ -356,32 +359,37 @@ const Home: React.FC = () => {
             confirmButtonColor: "#28a745",
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, restore it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    console.log("Sending Request with:", { id }); // Debug log
-
-                    const response = await fetch(`/api/enterprise/player/archived`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id }), // Send the player's ID to restore
-                    });
-
-                    const responseData = await response.json();
-                    console.log("Response Data:", responseData); // Debug log
-
-                    if (response.ok) {
-                        fetchCoaches();
-                        Swal.fire("Restored!", "Player restored successfully!", "success");
-                    } else {
-                        Swal.fire("Failed!", responseData.message || "Failed to restore Player", "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error!", "An error occurred while restoring the Player", "error");
-                }
-            }
+            cancelButtonText: 'Cancel',
         });
+    
+        // If Cancel is clicked, exit early and do nothing
+        if (!result.isConfirmed) {
+            return;
+        }
+    
+        try {
+            console.log("Sending Request with:", { id }); // Debug log
+    
+            const response = await fetch(`/api/enterprise/player/archived`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }), // Send the player's ID to restore
+            });
+    
+            const responseData = await response.json();
+            console.log("Response Data:", responseData); // Debug log
+    
+            if (response.ok) {
+                fetchCoaches();
+                Swal.fire("Restored!", "Player restored successfully!", "success");
+            } else {
+                Swal.fire("Failed!", responseData.message || "Failed to restore Player", "error");
+            }
+        } catch (error) {
+            Swal.fire("Error!", "An error occurred while restoring the Player", "error");
+        }
     };
+    
 
 
     const handleAssign = async (e: any) => {
@@ -550,37 +558,14 @@ const Home: React.FC = () => {
                                             <td>{coach.sport}</td>
                                             <td>{coach.team}</td>
                                             <td>{coach.position}</td>
-                                            {/* <td align='center'>
-                                                {Number(coach.totalEvaluations) >= 1 && (<a
-                                                    href={`/players/history/${coach.slug}`}
-                                                    title='History'
-                                                    className=' text-blue-500'
-                                                    target="_blank"
-                                                >
-                                                    View 
-                                                </a>
-                                                )}
-                                                {Number(coach.totalEvaluations) == 0 && (<button
+                                            
 
-                                                    title='History'
-                                                    className=' text-blue-500'
-                                                    onClick={handlePopup}
-                                                >
-                                                    View 
-                                                </button>
-                                                )}
-                                            </td> */}
-
-                                            <td>{coach.status === 'Inactive' ? (
-                                                <button className='bg-red px-4 py-2  text-red-500' onClick={() => handleEnterLicense(coach)}>
+                                            <td>
+                                                <button className='bg-red px-4 py-2 rounded text-red-500'>
                                                     {coach.status}
                                                 </button>
-                                            ) : (
-                                                <button className='bg-red px-4 py-2 rounded text-green-500'>
-                                                    {coach.status}
-                                                </button>
-                                            )
-                                            }</td>
+                                            
+                                            </td>
                                             <td className="px-4 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     {/* Add Back Button */}

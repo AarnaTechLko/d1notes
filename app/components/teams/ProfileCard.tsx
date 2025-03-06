@@ -78,7 +78,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
     {/* Profile Info Section */}
     <div className="text-center mt-4">
         <h3 className="text-lg font-semibold">{teamName}</h3>
-        <p>Sport(s):Soccer</p>
+        <p>Sport:Soccer</p>
         </div>
     
   </div>

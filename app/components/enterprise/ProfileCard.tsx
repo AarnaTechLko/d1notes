@@ -92,7 +92,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     {/* Profile Info Section */}
     <div className="text-center mt-4">
         <h3 className="text-lg font-semibold">{organization}</h3>
-        <p>Sport(s): Soccer</p>
+        <p>Sport: Soccer</p>
         </div>
     
   </div>

@@ -29,7 +29,7 @@ interface Profile {
   weight: number;
   jersey: number;
   id: number;
-  
+
 }
 
 interface CoachData {
@@ -49,7 +49,7 @@ interface CoachData {
   team_type: string;
   team_year: string;
   leage?: string;
-  expectedCharge:string;
+  expectedCharge: string;
   coachSlug: string;
   id: number;
 }
@@ -153,29 +153,29 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
             {/* Team Info */}
             <div>
-               
-              <div>
-              <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
-                {coachData.team_name}
-              </h1>
-              <p className=" text-black p-2"><span><b>Sport: </b> Soccer</span></p>
-              <p className= "text-black p-2">
-                <b>Gender :</b> {coachData.team_type}
-              </p>
-              {coachData.team_year && (
- <p className="bg-blue-700 text-white p-2">
- <span ><b>Birth Year: </b>{coachData.team_year}</span> 
-</p>
-              )}
-                {coachData.age_group && (
- <p className=" text-black p-2">
- <span ><b>Age Group: </b>{coachData.age_group}</span> 
-</p>
 
-              )}
-               <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
-              
-            </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
+                  {coachData.team_name} 
+                </h1>
+                <p className=" text-black p-2"><span><b>Sport: </b> Soccer</span></p>
+                <p className="text-black p-2">
+                  <b>Gender :</b> {coachData.team_type}
+                </p>
+                {coachData.team_year && (
+                  <p className=" text-black p-2">
+                    <span ><b>Birth Year: </b>{coachData.team_year}</span>
+                  </p>
+                )}
+                {coachData.age_group && (
+                  <p className=" text-black p-2">
+                    <span ><b>Age Group: </b>{coachData.age_group}</span>
+                  </p>
+
+                )}
+                <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
+
+              </div>
             </div>
 
             {/* <div>
@@ -227,7 +227,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         </div>
 
- 
+
 
         {/* Header Section */}
 
@@ -241,32 +241,32 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
           </div>
 
-        
+
         </div>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
-  Coaches
-</h2>
+          Coaches
+        </h2>
 
-<section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {Array.isArray(coachList) && coachList.length > 0 ? (
-      coachList.map((item: any) => (
-        <CoachProfileCard
-          key={item?.teamSlug}
-          name={item.firstName}
-          organization={item.clubName} // Ensure this field is correct
-          image={item.image ?? "/default.jpg"}
-          rating={5}
-          slug={item.slug}
-          evaluation_rate={item.expectedCharge}
-        />
-      ))
-    ) : (
-      <p className="col-span-full text-left">No Coaches yet...</p>
-    )}
-  </div>
-</section>
+        <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.isArray(coachList) && coachList.length > 0 ? (
+              coachList.map((item: any) => (
+                <CoachProfileCard
+                  key={item?.teamSlug}
+                  name={item.firstName}
+                  organization={item.clubName} // Ensure this field is correct
+                  image={item.image ?? "/default.jpg"}
+                  rating={5}
+                  slug={item.slug}
+                  evaluation_rate={item.expectedCharge}
+                />
+              ))
+            ) : (
+              <p className="col-span-full text-left">No Coaches yet...</p>
+            )}
+          </div>
+        </section>
 
         <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Players

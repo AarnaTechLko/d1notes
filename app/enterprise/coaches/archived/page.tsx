@@ -107,7 +107,7 @@ const Home: React.FC = () => {
         }
     };
 
-    
+
     const fetchCoaches = async (page = 1, searchQuery = '') => {
         setLoading(true);
 
@@ -183,7 +183,7 @@ const Home: React.FC = () => {
         setCurrentPage(1); // Reset to the first page
     };
 
-   
+
 
     const handleEnterLicense = (coach: Coach) => {
         handleLoadLicense();
@@ -191,47 +191,50 @@ const Home: React.FC = () => {
         setShowLicenseNoModal(true);
     };
 
-   
-    
+
+
     const handleDelete = async (id: number) => {
-        Swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
-            text: "This action will delete this Archived Coach!",
+            text: "This action will delete this coach!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const response = await fetch(`/api/enterprise/coach/archived`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            id, // Send only the id
-                        }),
-                    });
-                    const responseData = await response.json();
-                    
-                    if (response.ok) {
-                        fetchCoaches();
-                        Swal.fire("Deleted!", "Coach deleted successfully!", "success");
-                    } else {
-                        Swal.fire("Failed!", responseData.message || "Failed to delete Coach", "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error!", "An error occurred while deleting the coach", "error");
-                }
-            }
+            cancelButtonText: 'Cancel',
         });
+    
+        // If Cancel is clicked, exit early and do nothing
+        if (!result.isConfirmed) {
+            return;
+        }
+    
+        try {
+            const response = await fetch(`/api/enterprise/coach/archived`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id, // Send only the id
+                }),
+            });
+            const responseData = await response.json();
+    
+            if (response.ok) {
+                fetchCoaches();
+                Swal.fire("Deleted!", "Coach deleted successfully!", "success");
+            } else {
+                Swal.fire("Failed!", responseData.message || "Failed to delete Coach", "error");
+            }
+        } catch (error) {
+            Swal.fire("Error!", "An error occurred while deleting the coach", "error");
+        }
     };
     
-
     const handleRestore = async (id: number) => {
-        Swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
             text: "This action will restore this Coach!",
             icon: "warning",
@@ -239,35 +242,39 @@ const Home: React.FC = () => {
             confirmButtonColor: "#28a745",
             cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, restore it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    console.log("Sending Request with:", { id }); // Debug log
-    
-                    const response = await fetch(`/api/enterprise/coach/archived`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id }), // Send only the id for restore
-                    });
-    
-                    const responseData = await response.json();
-                    console.log("Response Data:", responseData); // Debug log
-    
-                    if (response.ok) {
-                        fetchCoaches();
-                        Swal.fire("Restored!", "Coach restored successfully!", "success");
-                    } else {
-                        Swal.fire("Failed!", responseData.message || "Failed to restore Coach", "error");
-                    }
-                } catch (error) {
-                    Swal.fire("Error!", "An error occurred while restoring the Coach", "error");
-                }
-            }
+            cancelButtonText: 'Cancel',
         });
+    
+        // If Cancel is clicked, exit early and do nothing
+        if (!result.isConfirmed) {
+            return;
+        }
+    
+        try {
+            console.log("Sending Request with:", { id }); // Debug log
+    
+            const response = await fetch(`/api/enterprise/coach/archived`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }), // Send only the id for restore
+            });
+    
+            const responseData = await response.json();
+            console.log("Response Data:", responseData); // Debug log
+    
+            if (response.ok) {
+                fetchCoaches();
+                Swal.fire("Restored!", "Coach restored successfully!", "success");
+            } else {
+                Swal.fire("Failed!", responseData.message || "Failed to restore Coach", "error");
+            }
+        } catch (error) {
+            Swal.fire("Error!", "An error occurred while restoring the Coach", "error");
+        }
     };
     
 
-   
+
     return (
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
@@ -366,39 +373,39 @@ const Home: React.FC = () => {
                                             <td>
                                                 {coach.status === 'Pending' ? (
                                                     <button
-                                                        className="bg-red px-1 py-2 text-xs rounded bg-orange-500 text-white"
+                                                        className=" text-white-orange-500"
                                                         onClick={() => handleEnterLicense(coach)}
                                                     >
                                                         {coach.status}
                                                     </button>
                                                 ) : (
-                                                    <button className="bg-red px-2 text-xs py-2 rounded bg-green-500 text-white">
+                                                    <button className="text-red-500 ">
                                                         {coach.status}
                                                     </button>
                                                 )}
 
                                             </td>
                                             <td className="px-4 py-2">
-                                                    <div className="flex items-center space-x-2">
-                                                        {/* Add Back Button */}
-                                                        {/* <p className="mt-2">Team ID: {team.id}</p> */}
-                                                        <button
-                                                            onClick={() => handleRestore(coach.id)} // Restore functionality
-                                                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700"
-                                                            aria-label="Restore Player"
-                                                        >
-                                                           Restore
-                                                        </button>
+                                                <div className="flex items-center space-x-2">
+                                                    {/* Add Back Button */}
+                                                    {/* <p className="mt-2">Team ID: {team.id}</p> */}
+                                                    <button
+                                                        onClick={() => handleRestore(coach.id)} // Restore functionality
+                                                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700"
+                                                        aria-label="Restore Player"
+                                                    >
+                                                        Restore
+                                                    </button>
 
-                                                        {/* Archive Button */}
-                                                        <button
-                                                            onClick={() => handleDelete(coach.id)}
-                                                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
-                                                            aria-label="Archive Player"
-                                                        > Trash
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                                    {/* Archive Button */}
+                                                    <button
+                                                        onClick={() => handleDelete(coach.id)}
+                                                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+                                                        aria-label="Archive Player"
+                                                    > Trash
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))
                                 ) : (
@@ -437,7 +444,7 @@ const Home: React.FC = () => {
                     )}
                 </div>
 
-                
+
             </main>
         </div>
     );

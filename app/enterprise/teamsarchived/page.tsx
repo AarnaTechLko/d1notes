@@ -124,32 +124,41 @@ export default function TeamsPage() {
     const handleDelete = async (id?: number) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: 'This will delete this team!',
+            text: 'This will trash this team!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
         });
+    
+        // If the user clicks "Cancel", result.isConfirmed will be false, and we stop the delete action.
+        if (!result.isConfirmed) {
+            return;  // exit the function early if the user cancels
+        }
+    
         try {
             const response = await fetch("/api/teams/restore", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),
             });
-
+    
             const responseData = await response.json();
             console.log("Response Data:", responseData); 
+    
             if (response.ok) {
                 fetchTeams();
-                  Swal.fire("Delete!", "Teams deleted successfully!", "success");
-              } else {
-                  Swal.fire("Failed!", responseData.message || "Failed to delete Teams", "error");
-              }
-           
+                Swal.fire("Deleted!", "Team deleted successfully!", "success");
+            } else {
+                Swal.fire("Failed!", responseData.message || "Failed to delete team", "error");
+            }
+    
         } catch (error) {
             console.error("Error deleting team:", error);
+            Swal.fire("Error!", "An error occurred while deleting the team.", "error");
         }
     };
+    
 
     const handleAddPlayers = (teamId: number) => {
         const team = teams.find((t) => t.id === teamId);
@@ -209,40 +218,44 @@ export default function TeamsPage() {
     
     
     const handlecocheRestore = async (id?: number) => {
-         Swal.fire({
-                title: "Are you sure?",
-                text: "This action will restore this Teams!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#28a745",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, restore it!",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        console.log("Sending Request with:", { id: id }); // Debug log
-        
-                        const response = await fetch(`/api/teams/restore`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id }),
-                        });
-        
-                        const responseData = await response.json();
-                        console.log("Response Data:", responseData); // Debug log
-        
-                        if (response.ok) {
-                          fetchTeams();
-                            Swal.fire("Restored!", "Teams restored successfully!", "success");
-                        } else {
-                            Swal.fire("Failed!", responseData.message || "Failed to restore Teams", "error");
-                        }
-                    } catch (error) {
-                        Swal.fire("Error!", "An error occurred while restoring the Teams", "error");
-                    }
-                }
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This action will restore this teams!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, restore it!",
+        });
+    
+        // If the user clicks "Cancel", result.isConfirmed will be false, and we stop the restore action.
+        if (!result.isConfirmed) {
+            return; // Exit early if the user clicked Cancel
+        }
+    
+        try {
+            console.log("Sending Request with:", { id: id }); // Debug log
+    
+            const response = await fetch(`/api/teams/restore`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id }),
             });
-        };
+    
+            const responseData = await response.json();
+            console.log("Response Data:", responseData); // Debug log
+    
+            if (response.ok) {
+                fetchTeams();
+                Swal.fire("Restored!", "Teams restored successfully!", "success");
+            } else {
+                Swal.fire("Failed!", responseData.message || "Failed to restore Teams", "error");
+            }
+        } catch (error) {
+            Swal.fire("Error!", "An error occurred while restoring the Teams", "error");
+        }
+    };
+    
     return (
         <div className="flex h-screen">
             <Sidebar />
@@ -257,23 +270,7 @@ export default function TeamsPage() {
                                 value={search}
                                 onChange={handleSearchChange}
                             />
-                            {/* <div className="flex items-stretch gap-5">
-
-                                <button
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
-                                    onClick={() => setModalOpen(true)}
-                                >
-                                    Manually Add Team
-                                </button>
-
-
-                                <a
-                                    href="/enterprise/massuploadteams"
-                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full flex items-center justify-center"
-                                >
-                                    Mass Team Upload
-                                </a>
-                            </div> */}
+                           
                         </div>
 
 
@@ -330,25 +327,20 @@ export default function TeamsPage() {
                                                 <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
                                                 <td className="px-4 py-2">{team.team_type}</td>
                                                 <td className="px-4 py-2">
-                                                    {/*  <Link href={`/enterprise/addcoaches/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                                                        Add Coaches to Team
-                                                    </Link> */}
+                                                   
                                                     <p className="mt-2">Total Coaches: {team.totalCoaches}</p>
                                                 </td>
                                                 <td className="px-4 py-2">
-                                                    {/*  <Link href={`/enterprise/addplayers/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                                                        Add Players to Team
-                                                    </Link> */}
+                                                  
                                                     <p className="mt-2">Total Players: {team.totalPlayers}</p>
                                                 </td>
                                                 <td>
-                                                    <button className="bg-red px-2 text-xs py-2 rounded bg-red-500 text-white">{team.status}</button>
+                                                    <button className="red-500 text-red-500">{team.status}</button>
                                                    
                                                 </td>
                                                 <td className="px-4 py-2">
                                                     <div className="flex items-center space-x-2">
-                                                        {/* Add Back Button */}
-                                                        {/* <p className="mt-2">Team ID: {team.id}</p> */}
+                                                      
                                                         <button
                                                             onClick={() => handlecocheRestore(team.id)} // Restore functionality
                                                             className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-700"
