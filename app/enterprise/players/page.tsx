@@ -417,13 +417,13 @@ const handleAssign=async(e:any) => {
      href={`/enterprise/invitations/1?mass=0`}
       className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
-     Manual Invitation
+     Add Player Manually
     </a>
     <a
      href={`/enterprise/invitations/1?mass=1`}
       className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
     >
-     Mass Invitation
+     Mass Player Uplaod
     </a>
     {/* <button
       onClick={handleAddCoachClick}

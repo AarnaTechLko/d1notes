@@ -281,13 +281,13 @@ const Home: React.FC = () => {
                 href={`/teampanel/addplayers/${teamId}`}
                 className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-green-700 rounded-lg"
               >
-                Manually Add Players
+                 Add Player Manually
               </a>
               <a
                 href={`/teampanel/addplayers/${teamId}`}
                 className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
               >
-                Mass Players Uplaod
+                Mass Player Uplaod
               </a>
             </div>
           </div>
