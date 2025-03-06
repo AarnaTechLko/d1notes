@@ -344,13 +344,13 @@ const Home: React.FC = () => {
     </button> */}
               <a
                 href={`/teampanel/addcoaches/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-green-700 rounded-lg"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
               >
               Add Coach Manually
               </a>
               <a
                 href={`/teampanel/addcoaches/${teamId}`}
-                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full"
               >
                 Mass Coach Upload
               </a>
@@ -364,7 +364,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full table-auto border-collapse border border-gray-300">
+            <table className="w-full text-sm text-left text-gray-700 mt-4">
               <thead>
                 <tr>
                   <th>Name</th>

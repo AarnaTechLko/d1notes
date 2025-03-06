@@ -457,6 +457,17 @@ const Home: React.FC = () => {
         userId={coachId} />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
+        <h1 className="text-2xl font-bold mb-4">Your Coaches</h1>
+        <div className="flex justify-between items-center">
+  <input
+    type="text"
+    placeholder="Search..."
+    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={search}
+    onChange={handleSearchChange}
+  />
+  <div className="flex space-x-4 gap-5">
+    {/* <button
           <h1 className="text-2xl font-bold mb-4">Your Coaches</h1>
           <div className="flex justify-between items-center">
             <input
@@ -473,6 +484,19 @@ const Home: React.FC = () => {
     >
       Add Coach
     </button> */}
+    <a
+     href={`/enterprise/invitations/0?mass=0`}
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
+    >
+     Add Coach Manually
+    </a>
+    <a
+     href={`/enterprise/invitations/0?mass=1`}
+      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full"
+    >
+     Mass Coach Uplaod
+    </a>
+    {/* <a
               <a
                 href={`/enterprise/invitations/0?mass=0`}
                 className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
@@ -495,6 +519,15 @@ const Home: React.FC = () => {
           </div>
 
           <div className="overflow-x-auto">
+  <table className="w-full text-sm text-left text-gray-700 mt-4">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Sport</th>
+        {/* <th>Available License</th>
             <table className="min-w-full table-auto border-collapse border border-gray-300">
               <thead>
                 <tr>

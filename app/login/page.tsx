@@ -18,7 +18,8 @@ export default function Login() {
   const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: '', teamId: '' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
-  const [referenceId, setReferenceId] = useState<string | null | undefined>();
+  const [referenceId, setReferenceId] = useState<string | null>('');
+
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
   const [registrationType, setRegistrationType] = useState<string | null | undefined>();
   const [isClient, setIsClient] = useState(false);
@@ -99,6 +100,8 @@ export default function Login() {
       return;
     }
     setLoading(true);
+ 
+ 
     try {
       const response = await signIn('credentials', {
         redirect: false,

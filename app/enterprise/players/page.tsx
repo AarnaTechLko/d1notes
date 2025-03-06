@@ -403,29 +403,29 @@ const Home: React.FC = () => {
         userId={coachId} />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-          <h1 className="text-2xl font-bold mb-4">Your Players</h1>
-          <div className="flex justify-between items-center">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={search}
-              onChange={handleSearchChange}
-            />
-            <div className="flex space-x-4">
-              <a
-                href={`/enterprise/invitations/1?mass=0`}
-                className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
-              >
-                Add Player Manually
-              </a>
-              <a
-                href={`/enterprise/invitations/1?mass=1`}
-                className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
-              >
-                Mass Player Uplaod
-              </a>
-              {/* <button
+        <h1 className="text-2xl font-bold mb-4">Your Players</h1>
+        <div className="flex justify-between items-center">
+  <input
+    type="text"
+    placeholder="Search..."
+    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={search}
+    onChange={handleSearchChange}
+  />
+  <div className="flex space-x-4 gap-5">
+  <a
+     href={`/enterprise/invitations/1?mass=0`}
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
+    >
+     Add Player Manually
+    </a>
+    <a
+     href={`/enterprise/invitations/1?mass=1`}
+      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full"
+    >
+     Mass Player Uplaod
+    </a>
+    {/* <button
       onClick={handleAddCoachClick}
       className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
