@@ -199,9 +199,9 @@ const CoachForm: React.FC<CoachFormProps> = ({ onSubmit, teamId }) => {
             errors.email = 'Invalid email format';
         }
 
-        if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Mobile Number Must be of 10 Digits Minimum';
+        if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Mobile Number must be 10 digits minimum';
 
-        if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Mobile Number Must be of 10 Digits Maximum';
+        if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Mobile Number must be 10 digits minimum';
         if (!formValues.gender) errors.gender = 'Gender is required';
 
         if (!formValues.sport) errors.sport = 'Sport is required';

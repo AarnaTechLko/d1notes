@@ -80,12 +80,12 @@ const Contact = () => {
       }
     if (formData.mobile.length < 14)
       {
-        newErrors.mobile = 'Mobile Number Must be of 10 Digits Minimum';
+        newErrors.mobile = 'Mobile Number must be 10 digits minimum';
       } 
 
     if (formData.mobile.length > 14)
       {
-        newErrors.mobile = 'Mobile Number Must be of 10 Digits Maximum';
+        newErrors.mobile = 'Mobile Number must be 10 digits minimum';
       } 
  
 
