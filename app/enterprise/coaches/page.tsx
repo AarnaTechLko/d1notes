@@ -475,7 +475,7 @@ const Home: React.FC = () => {
     </button> */}
     <a
      href={`/enterprise/invitations/0?mass=0`}
-      className="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-700 rounded-lg"
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
      Manual Invitation
     </a>

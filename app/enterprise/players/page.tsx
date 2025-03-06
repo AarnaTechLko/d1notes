@@ -415,7 +415,7 @@ const handleAssign=async(e:any) => {
   <div className="flex space-x-4">
   <a
      href={`/enterprise/invitations/1?mass=0`}
-      className="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-700 rounded-lg"
+      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
     >
      Manual Invitation
     </a>

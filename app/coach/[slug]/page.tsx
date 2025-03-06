@@ -41,6 +41,7 @@ interface CoachData {
   cv: string;
   license: string;
   remarks: string;
+  licenseType:string;
 }
 
 interface CoachProfileProps {
@@ -392,7 +393,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <li><strong>Sport(s) :</strong> {coachData.sport}</li>
                 <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
                 <li><strong>Gender:</strong> {coachData.gender}</li>
-
+                <li><strong>License Type:</strong> {coachData.licenseType}</li>
               </ul>
             </div>
 
@@ -481,7 +482,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           className="flex items-center space-x-2"
         >
           <FaFileAlt className="text-blue-500" />
-          <span>Download License</span>
+          <span>Download Coaching License</span>
         </button>
       </p>
             </div>
