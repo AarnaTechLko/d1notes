@@ -162,7 +162,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                     />
                     <p className="text-sm text-blue-400">
                       <a href="/MassInviteSample.csv" download>
-                      Please Download and Use CSV (Open this File in Excel or Any CSV supported Tool(s))
+                      Please download and use CSV (Open this file in Excel or any CSV supported tool(s)) 
                       </a>
                     </p>
                   </div>
@@ -217,7 +217,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                   <div className="mt-4">
                     <div className="w-full flex items-center justify-between">
                       <div className="flex flex-col">
-                        <h3 className="font-semibold">Preview of the CSV data</h3>
+                        <h3 className="font-semibold"></h3>
                         
                       </div>
                       <div className="flex space-x-4">
