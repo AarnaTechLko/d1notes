@@ -130,15 +130,26 @@ export async function GET(req: NextRequest) {
   const offset = (page - 1) * limit;
 
   const whereClause = search
-    ? and(
-      eq(coaches.enterprise_id, enterprise_id),
+    ? 
+      and(
+        eq(coaches.enterprise_id, enterprise_id),
+        or(
+          eq(coaches.status, 'Active'),
+          eq(coaches.status, 'Inactive')
+        ),
       or(
         ilike(coaches.firstName, `%${search}%`),
         ilike(coaches.email, `%${search}%`),
         ilike(coaches.phoneNumber, `%${search}%`)
       )
     )
-    : eq(coaches.enterprise_id, enterprise_id);
+    : and(
+      eq(coaches.enterprise_id, enterprise_id),
+      or(
+        eq(coaches.status, 'Active'),
+        eq(coaches.status, 'Inactive')
+      )
+    );
 
     const coachesData = await db
     .select(

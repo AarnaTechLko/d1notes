@@ -119,24 +119,15 @@ export default function TeamsPage() {
         }
     };
 
-    const handleEdit = (team: Team) => {
-        if (!team) return;
-        const sanitizedTeam = {
-            ...team,
-            created_by: team.created_by || "",
-            creator_id: team.creator_id,
-        };
-        setEditTeam(sanitizedTeam);
-        setModalOpen(true);
-    };
+   
 
     const handleDelete = async (id?: number) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: 'This will Delete this team!',
+            text: 'This will delete this team!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, Delete it!',
+            confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
         });
         try {
@@ -150,9 +141,9 @@ export default function TeamsPage() {
             console.log("Response Data:", responseData); 
             if (response.ok) {
                 fetchTeams();
-                  Swal.fire("Delete!", "Teams Deleted successfully!", "success");
+                  Swal.fire("Delete!", "Teams deleted successfully!", "success");
               } else {
-                  Swal.fire("Failed!", responseData.message || "Failed to restore Teams", "error");
+                  Swal.fire("Failed!", responseData.message || "Failed to delete Teams", "error");
               }
            
         } catch (error) {
@@ -266,7 +257,7 @@ export default function TeamsPage() {
                                 value={search}
                                 onChange={handleSearchChange}
                             />
-                            <div className="flex items-stretch gap-5">
+                            {/* <div className="flex items-stretch gap-5">
 
                                 <button
                                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
@@ -282,7 +273,7 @@ export default function TeamsPage() {
                                 >
                                     Mass Team Upload
                                 </a>
-                            </div>
+                            </div> */}
                         </div>
 
 
@@ -331,7 +322,7 @@ export default function TeamsPage() {
                                                                 alt={`${team.team_name} logo`}
                                                             />
                                                             <div className="mb-1">{team.team_name}</div> 
-                                                            <div className="mb-1">{team.id}</div>
+                                                            
                                                         </div>
                                                     </a>
                                                 </td>

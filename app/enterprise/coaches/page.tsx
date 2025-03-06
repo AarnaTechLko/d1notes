@@ -377,7 +377,7 @@ const Home: React.FC = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This action will archive this player!",
+      text: "This will archive this coach !",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",

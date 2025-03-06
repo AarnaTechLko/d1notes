@@ -161,6 +161,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
           <label className="block text-gray-700 mb-2 font-bold">Sport(s)</label>
           <select name='sport' className='w-full p-2 border rounded-md' >
            
+            <option value="Soccer">Select</option>
             <option value="Soccer">Soccer</option>
           </select>
          
@@ -181,7 +182,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
           </select>
         </div>
         <div className="space-x-4 mb-4">
-          Age<span className="mandatory">*</span>:
+          Age{/* <span className="mandatory">*</span> */}:
           </div>
                             <div className="space-x-4 mb-4">
         <label className="inline-flex items-center cursor-pointer">

@@ -34,12 +34,13 @@ export async function PUT(req: NextRequest) {
                 .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
         }
 
-        const playerInTeam = await db
+        // Get the list of player IDs associated with the team
+        const playersInTeam = await db
             .select({ playerId: teamPlayers.playerId }) // Use correct select syntax
             .from(teamPlayers)
-            .where(eq(teamPlayers.playerId, id)); // Changed 'team_id' to 'teamId'
+            .where(eq(teamPlayers.teamId, id)); // Corrected to filter by 'teamId' instead of 'playerId'
 
-        const playersIds = playerInTeam.map((entry) => entry.playerId);
+        const playersIds = playersInTeam.map((entry) => entry.playerId);
 
         if (playersIds.length > 0) {
             await db
@@ -54,6 +55,7 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
     }
 }
+
 
 // ---------------------- PERMANENT DELETE TEAM ----------------------
 export async function DELETE(req: NextRequest) {

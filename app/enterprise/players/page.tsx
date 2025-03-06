@@ -303,12 +303,12 @@ const handlePopup=()=>{
 const handleDelete = async (id: number) => {
   Swal.fire({
     title: "Are you sure?",
-    text: "This action will remove player from Organization!",
+    text: "This will archive this player!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#d33",
     cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, Remove!",
+    confirmButtonText: "Yes, archive it! ",
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {

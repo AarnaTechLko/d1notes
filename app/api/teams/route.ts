@@ -43,7 +43,9 @@ export async function GET(req: NextRequest) {
     }
   ).from(teams)
     .leftJoin(coaches, eq(teams.coach_id, coaches.id))
-    .where(eq(teams.club_id, parseInt(enterpriseId)))
+   /// .where(eq(teams.club_id, parseInt(enterpriseId)))
+    .where(and(eq(teams.club_id, parseInt(enterpriseId)),eq(teams.status,'Active')))
+
     .orderBy(desc(teams.id));
   
   const data = await Promise.all(

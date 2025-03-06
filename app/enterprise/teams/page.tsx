@@ -133,10 +133,10 @@ export default function TeamsPage() {
   const handleDelete = async (id?: number) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This will archive this team!',
+      text: 'This will Archive this team! !',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Archive it!',
+      confirmButtonText: 'Yes, archive it!',
       cancelButtonText: 'Cancel',
     });
     try {

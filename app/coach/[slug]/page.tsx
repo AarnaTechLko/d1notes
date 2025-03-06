@@ -390,7 +390,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 )} */}
 
 
-                <li><strong>Sport(s) :</strong> {coachData.sport}</li>
+                <li><strong>Sport :</strong> {coachData.sport}</li>
                 <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
                 <li><strong>Gender:</strong> {coachData.gender}</li>
                 <li><strong>License Type:</strong> {coachData.licenseType}</li>
