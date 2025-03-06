@@ -21,9 +21,7 @@ export async function POST(req: NextRequest) {
       if (isNaN(playerIdNumber)) {
         return NextResponse.json({ message: "Invalid Player ID" }, { status: 400 });
       }
-  
-      
-  
+
       // Restore player by updating status to 'Active'
       const updatedPlayer = await db
         .update(users)

@@ -77,4 +77,5 @@ export interface EvaluationData {
   id: number; // Adjust this type based on your actual image data
   first_name: string; // Adjust this type based on your actual image data
   last_name: string; // Adjust this type based on your actual image data
+  remarks: string; // Adjust this type based on your actual image data
 }

@@ -148,7 +148,7 @@ const Home: React.FC = () => {
                       accept=".csv"
                       ref={fileInputRef}
                     />
-                    <p className="text-sm text-blue-400"><a href="/TeamCsvSample.csv" download>Click Here to Download Sample CSV</a></p>
+                    <p className="text-sm text-blue-400"><a href="/TeamCsvSample.csv" download>Please Download and Use CSV (Open this File in Excel or Any CSV supported Tool(s))</a></p>
                   </div>
                   <div className="mt-5">
                     <button

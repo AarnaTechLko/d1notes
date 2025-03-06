@@ -539,7 +539,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
                                         <th className="px-4 py-2 text-left">Name</th>
-                                        <th className="px-4 py-2 text-center">Remove</th>
+                                        <th className="px-4 py-2 text-center">Archvie</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -589,7 +589,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
                                         <th className="px-4 py-2 text-left">Name</th>
-                                        <th className="px-4 py-2 text-center">Remove</th>
+                                        <th className="px-4 py-2 text-center">Archvie</th>
                                     </tr>
                                 </thead>
                                 <tbody>

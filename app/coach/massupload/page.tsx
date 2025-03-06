@@ -230,7 +230,7 @@ const Home: React.FC = () => {
                                    
                                     ref={fileInputRef}
                                 />
-                                <p className='text-sm text-blue-400'>(<a href='/playercsvsample.csv' download>Click Here to download sample csv file</a>)</p>
+                                <p className='text-sm text-blue-400'>(<a href='/playercsvsample.csv' download>Please Download and Use CSV (Open this File in Excel or Any CSV supported Tool(s))</a>)</p>
                                 
 
                             </div>

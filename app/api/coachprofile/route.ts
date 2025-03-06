@@ -92,7 +92,8 @@ import { SECRET_KEY } from '@/lib/constants';
           rating: playerEvaluation.rating,
           first_name: users.first_name, // Assuming the users table has a `name` field
           last_name: users.last_name, // Assuming the users table has an `image` field
-          image: users.image, // Assuming the users table has an `image` field
+          image: users.image, 
+          remarks: playerEvaluation.remarks, 
         })
         .from(playerEvaluation)
         .innerJoin(users, eq(playerEvaluation.player_id, users.id)) // Join condition

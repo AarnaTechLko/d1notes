@@ -29,6 +29,7 @@ interface Profile {
   xlink: string;
   sport: string;
   age_group: string;
+  birth_year: string;
 
 
 }
@@ -151,7 +152,7 @@ const Home = () => {
                     youtube={profile.youtube}
                     xlink={profile.xlink}
                     sport={profile.sport}
-                  
+                    birth_year={profile.birth_year}
                     age_group={profile.age_group}
                   />
 

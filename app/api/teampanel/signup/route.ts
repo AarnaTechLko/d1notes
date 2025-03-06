@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
             linkedin,
             xlink,
             youtube,
+            visibility:'on',
             password: hashedPassword, 
             slug, // Adding the hashed password
             createdAt: new Date(),

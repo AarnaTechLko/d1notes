@@ -62,12 +62,17 @@ const Dashboard: React.FC = () => {
         <DashboardContent/>
           
         </div>
-        {sessions?.user.buy_evaluation=="true" && (
-        <div className="bg-white shadow-md rounded-lg p-6 ">
+        {( 
+    (sessions?.user.buy_evaluation == "true") || 
+    (sessions?.user.buy_evaluation == null && sessions?.user.view_evaluation == null) 
+) && (
+    <div className="bg-white shadow-md rounded-lg p-6 ">
         {/*<InviteForm usertype="Club"/>*/}
         <PurchaseLicense organizationId={sessions?.user.id || ''}  type={sessions?.user.type || ''}/>
-        </div>
-        )}
+    </div>
+)}
+
+
       </main>
     </div>
   );

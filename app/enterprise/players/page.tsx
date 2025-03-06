@@ -576,6 +576,7 @@ const handleAssign=async(e:any) => {
                     onClick={() => handleRestore(coach.id)} // Pass the banner ID to the delete handler
                     className=" text-green-500 hover:text-green-700"
                     aria-label="Archive Player"
+                    title="Archive Player"
                 >
                     <FaUndo size={24} />
                 </button>
@@ -586,6 +587,7 @@ const handleAssign=async(e:any) => {
                     onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
                     className=" text-red-500 hover:text-red-700"
                     aria-label="Archive Player"
+                    title="Archive Player"
                 >
                     <FaArchive size={24} />
                 </button>

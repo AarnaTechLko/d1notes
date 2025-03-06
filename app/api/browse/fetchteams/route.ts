@@ -17,13 +17,13 @@ export async function GET(req: NextRequest) {
     try {
         let teamQuery: { teamId: number }[] = [];
 
-        if (userId === 'coach') {
+        if (type === 'coach') {
             teamQuery = await db.select({ teamId: teamCoaches.teamId })
                 .from(teamCoaches)
                 .where(eq(teamCoaches.coachId, Number(userId)));
         }
         
-        if (userId === 'player') {
+        if (type === 'player') {
             teamQuery = await db.select({ teamId: teamPlayers.teamId })
                 .from(teamPlayers)
                 .where(eq(teamPlayers.playerId, Number(userId)));

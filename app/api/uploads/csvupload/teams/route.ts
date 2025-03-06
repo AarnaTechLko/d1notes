@@ -16,7 +16,7 @@ const generateRandomPassword = (length = 12) => {
         password += charset[randomIndex];
     }
 
-    return password;
+    return password; 
 };
 export async function POST(req: NextRequest) {
     try {

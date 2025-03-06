@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { countries,Grades,positionOptionsList,states } from '@/lib/constants';
 
 interface FiltersProps {
-  onFilterChange: (filters: { country: string;graduation:string; state: string;birthyear:string; city: string; amount: number; rating: number | null, position:string }) => void;
+  onFilterChange: (filters: { country: string;graduation:string; state: string;birthyear:string; city: string; amount: number; rating: number | null, position:string,ageGroup:string }) => void;
 }
 
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
@@ -14,9 +14,13 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [graduation, setGraduation] = useState<string>('');
   const [position, setPosition] = useState<string>('');
   const [birthyear, setBirthyear] = useState<string>('');
+  const [ageGroup, setAgeGroup] = useState<string>('');
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10","U11","U12","U13","U14","U15","U16","U17","U18","U19","High School","College","Semi Pro","Pro"];
+  const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -39,6 +43,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     setState('');
     setCity('');
     setBirthyear('');
+    setAgeGroup('');
     setPosition('');
     setGraduation('');
     setAmount(0);
@@ -53,6 +58,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       graduation: '',
       amount: 0,
       rating: null,
+      ageGroup
     });
   };
 
@@ -66,6 +72,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     let newRating = rating;
     let newPosition = position;
     let newBirthyear = birthyear;
+    let newageGroup = ageGroup;
 
     if (field === 'country') {
       newCountry = value as string;
@@ -89,6 +96,10 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       newBirthyear = value as string;
       setBirthyear(newBirthyear);
     }
+     else if (field === 'ageGroup') {
+      newageGroup = value as string;
+      setAgeGroup(newageGroup);
+    }
      else if (field === 'position') {
       newPosition = value as string;
       setPosition(newPosition);
@@ -103,6 +114,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       birthyear: newBirthyear,
       graduation: newgraduation,
       position: newPosition,
+      ageGroup: newageGroup,
     });
   };
 
@@ -120,9 +132,10 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       graduation,
       birthyear,
       position,
+      ageGroup
     });
   };
-
+ 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
@@ -152,7 +165,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
           </select>
          
         </div>
-        <div className="mb-4">
+        <div className="mb-4"> 
           <label className="block text-gray-700 font-bold mb-2">High School Graduation Year</label>
           <select
             className="w-full p-2 border rounded-md"
@@ -167,23 +180,75 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
                       ))}
           </select>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2 font-bold">Birth Year</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            value={birthyear}
-            onChange={(e) => handleFilterChange('birthyear', e.target.value)}
+        <div className="space-x-4 mb-4">
+          Age<span className="mandatory">*</span>:
+          </div>
+                            <div className="space-x-4 mb-4">
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="ageGroup"
+            checked={selectedOption === "ageGroup"}
+            onChange={() => setSelectedOption("ageGroup")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "ageGroup"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
           >
-            <option value="">Select</option>
-            {Grades.map((grad) => (
-                        <option key={grad} value={grad}>
-                          {grad}
-                        </option>
-                      ))}
-          </select>
-        </div>
+            Age Group
+          </span>
+        </label>
+
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="option"
+            value="birthYear"
+            checked={selectedOption === "birthYear"}
+            onChange={() => setSelectedOption("birthYear")}
+            className="hidden"
+          />
+          <span
+            className={`px-4 py-2 rounded-full ${
+              selectedOption === "birthYear"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            Birth Year
+          </span>
+        </label>
+      </div>
+
+      {/* Dropdowns */}
+      {selectedOption === "ageGroup" && (
+        <select className="w-full p-2 border rounded-md" name="age_group"  >
+          <option value="">Select Age Group</option>
+          {ageGroups.map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {selectedOption === "birthYear" && (
+        <select className="w-full p-2 border rounded-md" name="team_year" >
+          <option value="">Select Birth Year</option>
+          {birthYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      )}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2 font-bold">Position</label>
+          <label className="block text-gray-700 mb-2 font-bold mt-2">Position</label>
           <select
             className="w-full p-2 border rounded-md"
             value={position}

@@ -170,7 +170,7 @@ const Home: React.FC = () => {
                         {order.status=='Sent' &&(
                          <button
                          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
-                         title="Resend"
+                         title="Resend Email"
                          onClick={() => resendInvitation(order.invitationId)}
                        >
                          <FaRedo />

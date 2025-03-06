@@ -18,6 +18,7 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug, redirect }) => {
   
   const handleRedirect =async (slug: string) => {
+ 
     const session = await getSession();
     if(redirect)
     {

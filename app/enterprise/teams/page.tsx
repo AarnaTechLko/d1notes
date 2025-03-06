@@ -57,7 +57,7 @@ export default function TeamsPage() {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to the first page
   };
-  const fetchTeams =async (page = 1, searchQuery = '') => {
+  const fetchTeams = async (page = 1, searchQuery = '') => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
       return;
@@ -105,7 +105,7 @@ export default function TeamsPage() {
         ...formValues,
         ...(editTeam && { id: editTeam.id }),
       };
- 
+
       await fetch("/api/teams", {
         method,
         headers: { "Content-Type": "application/json" },
@@ -211,33 +211,33 @@ export default function TeamsPage() {
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="container mx-auto p-4"><h1 className="text-2xl font-bold mb-4">Your Teams</h1>
-        <div className="flex items-center justify-between mb-4">
-        <input
-    type="text"
-    placeholder="Search..."
-    className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    value={search}
-    onChange={handleSearchChange}
-  />
-  <div className="flex items-stretch gap-5">
-    
-    <button
-      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
-      onClick={() => setModalOpen(true)}
-    >
-      Manually Add Team
-    </button>
+          <div className="container mx-auto p-4"><h1 className="text-2xl font-bold mb-4">Your Teams</h1>
+            <div className="flex items-center justify-between mb-4">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={search}
+                onChange={handleSearchChange}
+              />
+              <div className="flex items-stretch gap-5">
 
-    
-    <a
-      href="/enterprise/massuploadteams"
-      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full flex items-center justify-center"
-    >
-      Mass Team Upload
-    </a>
-  </div>
-</div>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
+                  onClick={() => setModalOpen(true)}
+                >
+                  Manually Add Team
+                </button>
+
+
+                <a
+                  href="/enterprise/massuploadteams"
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full flex items-center justify-center"
+                >
+                  Mass Team Upload
+                </a>
+              </div>
+            </div>
 
 
 
@@ -258,36 +258,36 @@ export default function TeamsPage() {
                     </th>
                     <th className="text-left px-4 py-2">Coaches</th>
                     <th className="text-left px-4 py-2">Players</th>
-                   
-                   
+
+
                     <th className="text-left px-4 py-2">Status</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-  {loadingData ? (
-    <tr>
-      <td colSpan={8}>
-        <div className="flex justify-center items-center">
-          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
-        </div>
-      </td>
-    </tr>
-  ) : sortedTeams.length > 0 ? (
-    sortedTeams.map((team) => (
-      <tr key={team.id} className="border-b">
-        <td className="px-4 py-2">
-          <a href={`/teams/${team.slug}`} target="_blank" title="Team Roster">
-            <div className="text-center items-center">
-              <img
-                src={team.logo ? team.logo : '/Team.jpg'}
-                className="w-12 h-12 mx-auto rounded-full"
-                alt={`${team.team_name} logo`}
-              />
-              <div className="mb-1">{team.team_name}</div>
-            </div>
-          </a>
-        </td>
+                  {loadingData ? (
+                    <tr>
+                      <td colSpan={8}>
+                        <div className="flex justify-center items-center">
+                          <div className="spinner-border animate-spin border-t-4 border-blue-500 rounded-full w-8 h-8"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : sortedTeams.length > 0 ? (
+                    sortedTeams.map((team) => (
+                      <tr key={team.id} className="border-b">
+                        <td className="px-4 py-2">
+                          <a href={`/teams/${team.slug}`} target="_blank" title="Team Roster">
+                            <div className="text-center items-center">
+                              <img
+                                src={team.logo ? team.logo : '/Team.jpg'}
+                                className="w-12 h-12 mx-auto rounded-full"
+                                alt={`${team.team_name} logo`}
+                              />
+                              <div className="mb-1">{team.team_name}</div>
+                            </div>
+                          </a>
+                        </td>
 
         <td className="px-4 py-2">{team.age_group ? "Age Group: " + team.age_group : "Birth Year: " + team.team_year}</td>
         <td className="px-4 py-2">{team.team_type}</td>
@@ -308,10 +308,10 @@ export default function TeamsPage() {
         </td>
         <td className="px-4 py-2">
           <div className="flex items-center space-x-2">
-            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="Team Roster">
+            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team Roster">
               <FaClipboard />
             </a>
-            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
+            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
               <FaEdit />
             </a>
             <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(team.id)} title="Archive Team">

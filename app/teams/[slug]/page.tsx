@@ -158,7 +158,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
                 {coachData.team_name}
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className=" text-black p-2"><span><b>Sport: </b> Soccer</span></p>
+              <p className= "text-black p-2">
                 <b>Gender :</b> {coachData.team_type}
               </p>
               {coachData.team_year && (
@@ -170,7 +171,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
  <p className=" text-black p-2">
  <span ><b>Age Group: </b>{coachData.age_group}</span> 
 </p>
+
               )}
+               <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
+              
             </div>
             </div>
 
@@ -223,15 +227,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         </div>
 
-
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-            <h2 className="text-xl font-bold text-gray-800 animate-bounce-once teamname">League</h2>
-
-          </div>
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-
-            <p>{coachData.leage}</p>
-          </div>
+ 
 
         {/* Header Section */}
 

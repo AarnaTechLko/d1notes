@@ -523,6 +523,7 @@ const Home: React.FC = () => {
                 >
               <img src={coach.image === 'null' || !coach.image ? '/default.jpg' : coach.image} className="rounded-full w-16 h-16 object-cover m-auto"/>
               {coach.firstName} {coach.lastName}
+              
               </a>
             </td>
             <td>{coach.gender}</td>
@@ -580,6 +581,7 @@ const Home: React.FC = () => {
                     onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
                     className=" text-red-500 hover:text-red-700"
                     aria-label="Archive Player"
+                    title="Archive Coach"
                 >
                     <FaArchive size={24} />
                 </button>
@@ -589,6 +591,7 @@ const Home: React.FC = () => {
                     onClick={() => handleRestore(coach.id)} // Pass the banner ID to the delete handler
                     className=" text-green-500 hover:text-green-700"
                     aria-label="Archive Player"
+                    title="Archive Coach"
                 >
                     <FaUndo size={24} />
                 </button>

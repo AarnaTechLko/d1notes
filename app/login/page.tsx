@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { showSuccess, showError } from '../components/Toastr';
 import ForgotPassword from '../components/ForgotPassword';
 import crypto from 'crypto';
+import Swal from 'sweetalert2';
 interface FormValues {
   email: string;
   password: string;
@@ -106,7 +107,41 @@ export default function Login() {
       });
      
       if (!response || !response.ok) {
-        showError(response?.error || "");
+        if(response?.error=='Your account has been deactivated.')
+        {
+          Swal.fire({
+            title: "Your account is deactivated?",
+            text: "Do you want to activate your account?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // API call on Yes
+              fetch("/api/activate", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: email, type: loginAs }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  Swal.fire("Success!", "Your account has been activated. Login now.", "success");
+                })
+                .catch((error) => {
+                  Swal.fire("Error!", "Something went wrong.", "error");
+                });
+            } else {
+              // No button clicked, alert closes automatically
+            }
+          });
+        }
+        else{
+          showError("Invalid Email or Password.");
+        }
+        
       } else {
         if (teamId) {
           const apiResponse = await fetch('/api/player/assignteam', {

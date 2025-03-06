@@ -54,6 +54,7 @@ const Dashboard: React.FC = () => {
         const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
 
         setIsMiddle(scrollPercentage >= 40);
+        setIsEnd(scrollPercentage >= 80);
       }
     };
 
@@ -76,6 +77,7 @@ const Dashboard: React.FC = () => {
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMiddle, setIsMiddle] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
   //const [clubId, setClubId]=useState<string | undefined>(undefined);
@@ -657,7 +659,7 @@ const Dashboard: React.FC = () => {
               />
               <button
   onClick={scrollLeft}
-  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-blue-500 lg:hidden ${
+  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
     isMiddle ? "bg-green-500" : "bg-blue-500"
   }`}
 >
@@ -738,7 +740,10 @@ const Dashboard: React.FC = () => {
               </table>
               <button
   onClick={scrollRight}
-  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden"
+  className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+  ${
+    isEnd ? "bg-gray-500" : "bg-gray-500"
+  }`}
 >
   <FaArrowRight />
 </button>

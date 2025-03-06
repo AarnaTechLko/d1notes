@@ -63,77 +63,77 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     let organization: any;
     if (position == 'Goalkeeper') {
         technical = [
-            { id: 't1', label: 'Handling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Footwork', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Shot Stopping', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Crosses', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: '1 v 1', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't1', label: 'Handling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Footwork', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Shot Stopping', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Crosses', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: '1 v 1', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Decision Making', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Organization with Back four', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Positioning', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Role in build up', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Role in Counter Attack', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta1', label: 'Decision Making', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Organization with Back four', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Positioning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Role in build up', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Role in Counter Attack', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
         distribution = [
-            { id: 'd1', label: 'With: Hands', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd2', label: 'With: Feet', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd3', label: 'Restarts', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd4', label: 'Open Play', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd5', label: 'Timing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd1', label: 'With: Hands', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd2', label: 'With: Feet', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd3', label: 'Restarts', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd4', label: 'Open Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd5', label: 'Timing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
 
         physical = [
-            { id: 'p1', label: 'Speed', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Flexibility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Agility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Strength / Power', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p6', label: 'Stance', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p7', label: 'Bravery', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Flexibility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Agility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Strength / Power', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p6', label: 'Stance', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p7', label: 'Bravery', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         organization = [
-            { id: 'o1', label: 'Starting Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o2', label: 'Communication', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o3', label: 'Set Plays For', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o4', label: 'Set Playa Against', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o5', label: 'Leadership', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'o1', label: 'Starting Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o2', label: 'Communication', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o3', label: 'Set Plays For', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o4', label: 'Set Playa Against', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o5', label: 'Leadership', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
     }
     else {
         technical = [
-            { id: 't1', label: 'Passing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Receiving', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Dribbling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Shooting', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: 'Finishing', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't6', label: 'Heading', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't7', label: 'Tackling', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't8', label: 'Defending', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 't1', label: 'Passing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Receiving', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Dribbling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Shooting', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: 'Finishing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't6', label: 'Heading', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't7', label: 'Tackling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't8', label: 'Defending', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Reading the Game', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Decisions with Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Decisions without Ball', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Understanding of Team Play', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Understanding of Role and Position', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta6', label: 'Timing of Runs', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta7', label: 'Scanning', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'ta1', label: 'Reading the Game', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Decisions with Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Decisions without Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Understanding of Team Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Understanding of Role and Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta6', label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta7', label: 'Scanning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         physical = [
-            { id: 'p1', label: 'Strength', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Speed', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Stamina', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Aggressiveness', options: ['N/A','0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Strength', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Stamina', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Aggressiveness', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
         distribution = [];
         organization = [];
@@ -495,7 +495,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     <div className="flex flex-wrap gap-4 items-center">
         {/* First select with increased width */}
         <div className="flex flex-col w-1/2 md:w-1/4">
-            <label className="text-sm font-medium mb-1">Select Sport</label>
+            <label className="text-sm font-medium mb-1">Select Sport<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
             <select className="border p-2 rounded w-full" onChange={(e) => setSport(e.target.value)}
             >
                 <option value="">Select</option>
@@ -505,7 +505,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
         {/* Second select */}
         <div className="flex flex-col w-full md:w-1/4">
-            <label className="text-sm font-medium mb-1">Select Position</label>
+            <label className="text-sm font-medium mb-1">Select Position<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
             <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
                 <option value="">Select</option>
                 {positionOptionsList.map((item, index) => (
@@ -522,7 +522,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                                     {/* Technical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h1 className='text-xl mb-4'>Technical</h1>
+                                        <h1 className='text-xl mb-4'>Technical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h1>
                                         <div className="space-y-4 flex-grow">
                                             {technical.map((tech: any) => (
                                                 <div key={tech.id} className="flex items-center space-x-2">
@@ -538,7 +538,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-tech`}
                                             value={technicalRemarks}
@@ -552,12 +552,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 }
                                             }}
                                         />
-                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
+                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
 
                                     {/* Tactical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h2 className='text-xl mb-4'>Tactical</h2>
+                                        <h2 className='text-xl mb-4'>Tactical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h2>
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
@@ -573,7 +573,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-tact`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -588,12 +588,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                             }}
 
                                         />
-                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
+                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
 
                                     {/* Physical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h3 className='text-xl mb-4'>Physical</h3>
+                                        <h3 className='text-xl mb-4'>Physical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {physical.map((phys: any) => (
                                                 <div key={phys.id} className="flex items-center space-x-2">
@@ -609,7 +609,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-phys`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -624,7 +624,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                             }}
 
                                         />
-                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
+                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
                                 </div>
                             )}
@@ -633,7 +633,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
                                     {/* Technical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h1 className='text-xl mb-4'>Technical</h1>
+                                        <h1 className='text-xl mb-4'>Technical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h1>
                                         <div className="space-y-4 flex-grow">
                                             {technical.map((tech: any) => (
                                                 <div key={tech.id} className="flex items-center space-x-2">
@@ -649,7 +649,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-tech`}
                                             value={technicalRemarks}
@@ -663,12 +663,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 }
                                             }}
                                         />
-                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Technical remarks are required.</p>}
+                                        {errors.technicalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
 
                                     {/* Tactical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h2 className='text-xl mb-4'>Tactical</h2>
+                                        <h2 className='text-xl mb-4'>Tactical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h2>
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
@@ -684,7 +684,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-tact`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -699,12 +699,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                             }}
 
                                         />
-                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Tactical remarks are required.</p>}
+                                        {errors.tacticalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
 
                                     {/* Physical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h3 className='text-xl mb-4'>Distribution</h3>
+                                        <h3 className='text-xl mb-4'><span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {distribution.map((dis: any) => (
                                                 <div key={dis.id} className="flex items-center space-x-2">
@@ -720,7 +720,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-dis`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-dis`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-dis`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -738,7 +738,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
                                     </div>
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h3 className='text-xl mb-4'>Physical</h3>
+                                        <h3 className='text-xl mb-4'>Physical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {physical.map((phys: any) => (
                                                 <div key={phys.id} className="flex items-center space-x-2">
@@ -754,7 +754,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-phys`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -769,10 +769,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                             }}
 
                                         />
-                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Physical remarks are required.</p>}
+                                        {errors.physicalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h3 className='text-xl mb-4'>Organization</h3>
+                                        <h3 className='text-xl mb-4'>Organization<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {organization.map((org: any) => (
                                                 <div key={org.id} className="flex items-center space-x-2">
@@ -788,7 +788,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                                 </div>
                                             ))}
                                         </div>
-                                        <label htmlFor={`remarks-org`} className="mt-4 text-sm font-medium">Commentary:</label>
+                                        <label htmlFor={`remarks-org`} className="mt-4 text-sm font-medium">Commentary:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                         <textarea
                                             id={`remarks-org`}
                                             className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -811,7 +811,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
                             {/* Final Remarks Section */}
                             <div className="mt-6">
-                                <label htmlFor="final-remarks" className="text-sm font-medium">Additional Comments:</label>
+                                <label htmlFor="final-remarks" className="text-sm font-medium">Additional Comments:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                 <textarea
                                     value={finalRemarks}
                                     id="final-remarks"
@@ -826,10 +826,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     }}
 
                                 />
-                                {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
+                                {errors.finalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                             </div>
                             <div className="mt-6">
-                                <label htmlFor="final-remarks" className="text-sm font-medium">Things to Work On:</label>
+                                <label htmlFor="final-remarks" className="text-sm font-medium">Things to Work On:<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
                                 <textarea
                                     value={thingsToWork}
                                     id="final-remarks"
@@ -844,7 +844,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     }}
 
                                 />
-                                {errors.finalRemarks && <p className="text-red-500 text-sm">Final remarks are required.</p>}
+                                {errors.finalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                             </div>
                             {/* {session?.user.club_id && ( */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">

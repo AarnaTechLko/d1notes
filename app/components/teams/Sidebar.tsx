@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
               <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
             </div>
           )}
-          <nav className="flex-grow mt-10">
+          <nav className="flex-grow mt-3">
             <ul className="space-y-2 p-4">
 
               <li className="hover:bg-gray-700 rounded transition duration-200">

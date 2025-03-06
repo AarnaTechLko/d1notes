@@ -43,7 +43,13 @@ export async function POST(req: NextRequest) {
         graduation: users.graduation,
         school_name: users.school_name,
         gpa: users.gpa,
-       countryName:countries.name
+       countryName:countries.name,
+       facebook:users.facebook,
+       instagram:users.instagram,
+       linkedin:users.linkedin,
+       xlink:users.xlink,
+       youtube:users.youtube,
+
 
       })
       .from(users)
@@ -83,6 +89,12 @@ export async function POST(req: NextRequest) {
       gpa: user.gpa,
       countryName:user.countryName,
       image: user.image ? `${user.image}` : null,
+      facebook:user.facebook,
+      instagram:user.instagram,
+      linkedin:user.linkedin,
+      xlink:user.xlink,
+      youtube:user.youtube,
+
 
     }));
 
@@ -119,6 +131,11 @@ export async function PUT(req: NextRequest) {
       state,
       city,
       jersey,
+      facebook,
+      instagram,
+      linkedin,
+      xlink,
+      youtube,
 
       countrycode
     } = finalBody;
@@ -142,6 +159,11 @@ export async function PUT(req: NextRequest) {
       state: state || null,
       city: city || null,
       jersey: jersey || null,
+      facebook: facebook||null,
+      instagram: instagram||null,
+      linkedin: linkedin||null,
+      xlink: xlink||null,
+      youtube: youtube||null,
 
       countrycode: countrycode || null
     };
@@ -176,6 +198,11 @@ export async function PUT(req: NextRequest) {
         city: users.city,
         jersey: users.jersey,
         countrycode: users.countrycode,
+        facebook:users.facebook,
+        instagram:users.instagram,
+        linkedin:users.linkedin,
+        xlink:users.xlink,
+        youtube:users.youtube,
 
       }).from(users)
       .where(eq(users.id, playerId))

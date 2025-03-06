@@ -72,6 +72,8 @@ export async function GET(req: NextRequest) {
         facebook: users.facebook,
         instagram: users.instagram,
         linkedin: users.linkedin,
+        birth_year: users.birth_year,
+        age_group: users.age_group,
         xlink: users.xlink,
         youtube: users.youtube,
         coachName: sql`coa."firstName"`.as("coachName"),
@@ -112,7 +114,8 @@ export async function GET(req: NextRequest) {
       linkedin: coach.linkedin,
       xlink: coach.xlink,
       youtube: coach.youtube,
-
+      birth_year: coach.birth_year,
+      age_group: coach.age_group,
     }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList);

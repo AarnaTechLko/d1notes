@@ -87,6 +87,7 @@ export default function TeamsPage({ params }: PageProps) {
 
   useEffect(() => {
     fetchAvailablePlayers();
+    setActiveTab(Number(mass))
   }, [teamId, session?.user?.id]);
 
   return (
@@ -126,12 +127,12 @@ export default function TeamsPage({ params }: PageProps) {
             </div>
  
             <div className="tab-content mt-4">
-              {Number(mass) === 0 && (
+              {activeTab === 0 && (
                 <div className="tab-panel">
                   <InviteForm usertype="Club" teamId={teamId} registrationType={Number(type) === 0 ? "coach" : "player"}/>
                 </div>
               )}
-              {Number(mass) === 1 && (
+              {activeTab === 1 && (
                 <div className="tab-panel active-tab">
                   <MassUploadPlayer usertype="Club" teamId={teamId}/>
                 </div>

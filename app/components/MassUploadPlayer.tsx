@@ -162,7 +162,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
                     />
                     <p className="text-sm text-blue-400">
                       <a href="/MassInviteSample.csv" download>
-                        Click Here to Download Sample CSV
+                      Please Download and Use CSV (Open this File in Excel or Any CSV supported Tool(s))
                       </a>
                     </p>
                   </div>

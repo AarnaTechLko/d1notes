@@ -156,7 +156,7 @@ const handler = NextAuth({
   },
   jwt: { 
 secret:SECRET_KEY,
-////secret: process.env.NEXTAUTH_SECRET, 
+///secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {
     
