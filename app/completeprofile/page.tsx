@@ -780,7 +780,7 @@ export default function Register() {
 
                 {/* Team */}
                 <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"
@@ -842,7 +842,7 @@ export default function Register() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Leagues<span className='mandatory'>*</span></label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League(s)<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."
