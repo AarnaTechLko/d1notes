@@ -52,7 +52,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ searchQuery, setSearchQuery
       type="text"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
-      placeholder="Search by keywords..."
+      placeholder="Search by Keywords..."
       className="w-full px-4 py-2 rounded-full focus:outline-none"
     />
     {/* Search Button */}

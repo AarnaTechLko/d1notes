@@ -260,22 +260,22 @@ const Sidebar: React.FC = () => {
                 </a>
                 {isArchiveListOpen && (
                   <ul className="ml-4 mt-1 space-y-1">
-                    <li className="hover:bg-gray-600 rounded transition duration-200">
-                      <a href="/enterprise/teamsarchived" className="flex items-center space-x-2 p-2">
-                        <span>Teams</span>
-                      </a>
-                    </li>
-                    <li className="hover:bg-gray-600 rounded transition duration-200">
-                      <a href="#" className="flex items-center space-x-2 p-2">
-                        <span>Players</span>
-                      </a>
-                    </li>
-                    <li className="hover:bg-gray-600 rounded transition duration-200">
-                    <a href="#" className="flex items-center space-x-2 p-2">
-                        <span>Coaches</span>
-                      </a>
-                    </li>
-                  </ul>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/enterprise/teamsarchived" className="flex items-center space-x-2 p-2">
+                      <span>Teams</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a href="/enterprise/players/archived" className="flex items-center space-x-2 p-2">
+                      <span>Players</span>
+                    </a>
+                  </li>
+                  <li className="hover:bg-gray-600 rounded transition duration-200">
+                  <a href="/enterprise/coaches/archived" className="flex items-center space-x-2 p-2">
+                      <span>Coaches</span>
+                    </a>
+                  </li>
+                </ul>
                 )}
               </li>
 

@@ -303,12 +303,12 @@ const handlePopup=()=>{
 const handleDelete = async (id: number) => {
   Swal.fire({
     title: "Are you sure?",
-    text: "This action will remove player from Organization!",
+    text: "This will archive this player!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#d33",
     cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, Remove!",
+    confirmButtonText: "Yes, archive it! ",
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
@@ -412,16 +412,16 @@ const handleAssign=async(e:any) => {
     value={search}
     onChange={handleSearchChange}
   />
-  <div className="flex space-x-4">
+  <div className="flex space-x-4 gap-5">
   <a
      href={`/enterprise/invitations/1?mass=0`}
-      className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-700 rounded-lg"
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
     >
      Add Player Manually
     </a>
     <a
      href={`/enterprise/invitations/1?mass=1`}
-      className="px-4 py-2 text-sm text-white bg-green-500 hover:bg-green-700 rounded-lg"
+      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 h-full"
     >
      Mass Player Uplaod
     </a>

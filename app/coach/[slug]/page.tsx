@@ -390,7 +390,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 )} */}
 
 
-                <li><strong>Sport(s) :</strong> {coachData.sport}</li>
+                <li><strong>Sport :</strong> {coachData.sport}</li>
                 <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
                 <li><strong>Gender:</strong> {coachData.gender}</li>
                 <li><strong>License Type:</strong> {coachData.licenseType}</li>
@@ -553,12 +553,12 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
                     {/* Review Title and Other Details */}
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">{evaluation.review_title}</h3>
+                      {/* <h3 className="font-semibold text-gray-800">{evaluation.review_title}</h3> */}
                       <p>{evaluation.first_name} {evaluation.last_name}</p>
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">Remarks</h3>
+                      <h3 className="font-semibold text-gray-800">Testimonial</h3>
                       <p>{evaluation.remarks}</p>
                     </div>
                     {/* Rating Column */}
