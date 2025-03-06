@@ -7,7 +7,7 @@ const LogoutLoader = () => {
     <div className="logout-overlay">
       <div className="logout-loader">
         <div className="spinner"></div>
-        <p>Loging Out...</p>
+        <p>Logging Out...</p>
       </div>
       <style jsx>{`
         .logout-overlay {
