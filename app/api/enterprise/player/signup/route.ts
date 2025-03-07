@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
         eq(users.enterprise_id, enterprise_id),
         or(
           eq(users.status, 'Active'),
-          eq(users.status, 'Inactive')
+          eq(users.status, 'Pending')
         ),
         or(
           ilike(users.first_name, `%${search}%`),
@@ -155,7 +155,7 @@ export async function GET(req: NextRequest) {
         eq(users.enterprise_id, enterprise_id),
         or(
           eq(users.status, 'Active'),
-          eq(users.status, 'Inactive')
+          eq(users.status, 'Pending')
         )
       );
 
