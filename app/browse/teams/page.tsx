@@ -5,16 +5,16 @@ import SearchFilter from '../../components/SearchFilter';
 import Head from 'next/head';
 import Loading from '../../components/Loading';
 import Filters from '../../components/teams/Filters';
-import { getSession } from 'next-auth/react';
-import { sessions } from '@/lib/schema';
+import { useSession } from "next-auth/react";
+
 
 // Define a type for the profile
 interface Profile {
-    creatorName: string;
-    teamName: string;
+  creatorName: string;
+  teamName: string;
   logo: string;
   slug: string;
-  
+
 }
 
 const Home = () => {
@@ -23,8 +23,9 @@ const Home = () => {
   const [teamids, setTeamIds] = useState<number[]>([]);
   const [filteredProfiles, setFilteredProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [redirect, setRedirect] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
- 
+  const { data: session } = useSession();
   const [filters, setFilters] = useState({
     country: '',
     state: '',
@@ -34,19 +35,34 @@ const Home = () => {
     amount: 0,
     rating: null as number | null,
   });
+  const handleRedirect = (profileId: number, clubId:number) => {
+    if (session?.user.type == 'player' ||  session?.user.type == 'coach') {
+      if (teamids.includes(profileId)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    if (session?.user.type == 'enterprise' && Number(session.user.id)==clubId) {
+      return true;
+    }
+    if (session?.user.type == 'team' && Number(session?.user.id) === profileId) {
+      return true;
+    }
 
+  };
 
   const fetchTeamIds = async () => {
     try {
       let type;
       let userId;
-      const session = await getSession();
-      if(session)
-      {
-          type=session.user.type;
-          userId=session.user.id;
+
+      if (session) {
+        type = session.user.type;
+        userId = session.user.id;
       }
-      else{
+      else {
         return "unAuthorized";
       }
 
@@ -55,7 +71,7 @@ const Home = () => {
         throw new Error('Failed to fetch teams');
       }
       const data = await response.json();
-    
+
       setTeamIds(data);
     } catch (err) {
       setError('Some issue occurred.');
@@ -101,19 +117,19 @@ const Home = () => {
 
     setFilteredProfiles(
       profiles.filter((profile) => {
-        
+
         const organizationName = (profile.teamName || '').toLowerCase();
-       
-    
+
+
         return (
           organizationName.includes(searchQuery.toLowerCase())
-          
+
         );
       })
     );
-  }, [searchQuery, profiles, sessions]); // Filter profiles based on search query
+  }, [searchQuery, profiles, session]); // Filter profiles based on search query
 
-  const handleFilterChange = (newFilters: { country: string; state: string; city: string;year:string;gender:string; amount: number; rating: number | null }) => {
+  const handleFilterChange = (newFilters: { country: string; state: string; city: string; year: string; gender: string; amount: number; rating: number | null }) => {
     setFilters(newFilters);
     console.log(newFilters);
   };
@@ -124,7 +140,7 @@ const Home = () => {
 
   return (
     <>
-    <head>
+      <head>
         <title>Profile Directory Teams - D1 NOTES</title>
         <meta name="description" content="This is the home page of my Next.js application." />
       </head>
@@ -138,19 +154,18 @@ const Home = () => {
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
-              {filteredProfiles.map((profile:any) => (
+              {filteredProfiles.map((profile: any) => (
                 <div className="w-full lg:w-auto" key={profile.slug}>
-                  
+
                   <ProfileCard
                     key={profile.slug}
-                   
+
                     creatorname={profile.creatorName}
                     teamName={profile.teamName}
                     logo={profile.logo ?? '/default-image.jpg'}
                     rating={5}
                     slug={profile.slug}
-                    redirect={Array.isArray(teamids) && teamids.length > 0 ? teamids.includes(profile.teamId) : false}
-
+                    redirect={handleRedirect(profile.teamId, profile.club_id)}
                   />
                 </div>
               ))}
