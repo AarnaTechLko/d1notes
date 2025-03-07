@@ -94,9 +94,9 @@ export default function TeamsPage({ params }: PageProps) {
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
-            <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
+            {/* <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
               {teamName} 
-            </span>
+            </span> */}
           </p>
 
           <h2 className="text-xl font-bold w-full text-blue-600">Add Coach(es) To this Team</h2>

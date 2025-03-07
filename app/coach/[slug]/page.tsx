@@ -393,7 +393,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <li><strong>Sport :</strong> {coachData.sport}</li>
                 <li><strong>Title/Organization(s)/Affiliation(s):</strong> {coachData.clubName}</li>
                 <li><strong>Gender:</strong> {coachData.gender}</li>
-                <li><strong>License Type:</strong> {coachData.licenseType}</li>
+                <li><strong>Coaching License Type:</strong> {coachData.licenseType}</li>
               </ul>
             </div>
 
@@ -558,7 +558,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">Testimonial</h3>
+                      {/* <h3 className="font-semibold text-gray-800">Testimonial</h3> */}
                       <p>{evaluation.remarks}</p>
                     </div>
                     {/* Rating Column */}

@@ -374,7 +374,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2"> Sports<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Sport<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                 
                 <select
@@ -389,7 +389,7 @@ const Profile: React.FC = () => {
               </select>
 
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">Soccer</p>
                 )}
               </div>
             

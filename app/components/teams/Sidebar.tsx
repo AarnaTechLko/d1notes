@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
   const handleDeleteAccount = async () => {
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",
-      text: "Deleting an account will casuse you to lose all your informations and you will have to create a new account to use D1 Notes again!",
+      text: "Deleting an account will casuse you to lose all your information and you will have to create a new account to use D1 Notes again!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -196,7 +196,7 @@ const Sidebar: React.FC = () => {
                     </li>
                     <li className="hover:bg-gray-600 rounded transition duration-200">
                     <a href="/teampanel/chochearchive" className="flex items-center space-x-2 p-2">
-                        <span>Choches</span>
+                        <span>Coaches</span>
                       </a>
                     </li>
                   </ul>

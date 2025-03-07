@@ -295,7 +295,7 @@ setLoading(false);
                         ) : (
                             <p>No Technical scores available.</p>
                         )}
-                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Comments:</label>
                         {evaluationData?.technicalRemarks}
                     </div>
 
@@ -313,7 +313,7 @@ setLoading(false);
                         ) : (
                             <p>No Tactical scores available.</p>
                         )}
-                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        <label htmlFor={`remarks-tact`} className="mt-4 text-sm font-medium">Comments:</label>
                         {evaluationData?.tacticalRemarks}
                     </div>
 
@@ -331,7 +331,7 @@ setLoading(false);
                         ) : (
                             <p>No Distribution scores available.</p>
                         )}
-                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Comnents:</label>
                         {evaluationData?.distributionRemarks
                         }
                     </div>
@@ -349,7 +349,7 @@ setLoading(false);
                         ) : (
                             <p>No physical scores available.</p>
                         )}
-                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Comments:</label>
                         {evaluationData?.physicalRemarks}
                     </div>
 
@@ -367,7 +367,7 @@ setLoading(false);
                         ) : (
                             <p>No Organization scores available.</p>
                         )}
-                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Remarks:</label>
+                        <label htmlFor={`remarks-phys`} className="mt-4 text-sm font-medium">Comments:</label>
                         {evaluationData?.organizationalRemarks
                         }
                     </div>
@@ -389,7 +389,7 @@ setLoading(false);
                {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (  
 
                     <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
-                        <h3 className="text-lg text-center font-semibold mb-2">Please Provide a Review</h3>
+                        <h3 className="text-lg text-center font-semibold mb-2">Please Provide a Review<span className='font-red'>*</span></h3>
 
                         {/* Star Rating */}
                         <div className="flex justify-center items-center mb-4">

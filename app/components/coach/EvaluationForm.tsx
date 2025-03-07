@@ -423,7 +423,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
   <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
                                     <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoOneTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoOneTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne} 
                                          <span className="mx-2">|</span>
@@ -441,7 +441,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                    
   <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoTwoTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo} 
                                          <span className="mx-2">|</span>
@@ -460,12 +460,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                    
   <div className="mb-4"> 
                                         <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Lenght:</strong> {evaluationData?.videoThreeTiming} min.
+                                        <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
                                         <span className="mx-2">|</span>
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree} 
                                          <span className="mx-2">|</span>
                                          <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberThree} <span className="mx-2">|</span>
-                                         <strong>Position:</strong> {evaluationData?.positionThree}
+                                         <strong>Position(s):</strong> {evaluationData?.positionThree}
                                     </div>
                                     <div className="mb-4">
 <strong>Description: </strong>{evaluationData?.video_descriptionThree}

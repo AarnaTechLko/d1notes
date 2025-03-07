@@ -123,7 +123,7 @@ const Sidebar: React.FC = () => {
   const handleDeleteAccount = async () => {
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",
-      text: "Deleting an account will casuse you to lose all your informations and you will have to create a new account to use D1 Notes again!",
+      text: "Deleting an account will casuse you to lose all your information and you will have to create a new account to use D1 Notes again!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",

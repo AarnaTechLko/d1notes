@@ -235,7 +235,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                 <div><b>Height:</b> {coachData.height ?? "N/A"}</div>
                 <div><b>School Name:</b> {coachData.school_name ?? "N/A"}</div>
                 <div><b>GPA:</b> {coachData.gpa ?? "N/A"}</div>
-                <div><b>Sport:</b> {coachData.sport ?? "N/A"}</div>
+                <div><b>Sport(s):</b> {coachData.sport ?? "N/A"}</div>
                 <div><b>Nationality(ies):</b> {coachData.playingcountries ?? "N/A"}</div>
                 <div><b>Gender:</b> {coachData.gender ?? "N/A"}</div>
                 <div><b>Team Name(s):</b> {coachData.team ?? "N/A"}</div>

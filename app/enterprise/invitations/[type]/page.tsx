@@ -110,13 +110,24 @@ export default function TeamsPage({ params }: PageProps) {
                 onClick={() => setActiveTab(0)}
                 className={`tab-btn ${activeTab === 0 ? 'active-tab' : ''}`}
               >
-                Manual
+                {type==0 && (
+              <span>Add Coach Manually</span>  
+            )}
+            {type==1 && (
+           <span>Add Player Manually</span> 
+           )}
               </button>
               <button
                 onClick={() => setActiveTab(1)}
                 className={`tab-btn ${activeTab === 1 ? 'active-tab' : ''}`}
               >
-                Mass Invite Upload
+                {type==0 && (
+              <span>Mass Coach Upload</span>  
+            )}
+            {type==1 && (
+           <span>Mass Player Upload</span> 
+           )}
+                
               </button>
               {/* <button
                 onClick={() => setActiveTab(2)}
