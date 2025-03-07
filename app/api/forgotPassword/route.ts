@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         html: `
             <p>Dear ${role},</p>
             <p>Click on the following link to reset your password:</p>
-            <p><b>Reset password Link: </b><a href="${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${token}">Reset your password</a></p>
+            <p><b>Reset password Link: </b><a href="https://d1notesupdated-five.vercel.app/reset-password?token=${token}">Reset your password</a></p>
         `,
     });
 
