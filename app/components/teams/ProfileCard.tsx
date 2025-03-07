@@ -20,6 +20,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
   const handleRedirect =async (slug: string) => {
  
     const session = await getSession();
+<<<<<<< HEAD
     
     if(redirect)
     {
@@ -27,13 +28,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, 
     }
     else{
       Swal.fire({
+=======
+    //window.location.href = `/teams/${slug}`;
+    if(redirect)
+    {
+     window.location.href = `/teams/${slug}`;
+    }
+    else{
+    Swal.fire({
+>>>>>>> f4c9617 (test)
         title: 'Unauthorized!',
         text: 'Only logged in members and administrators of this Organization / Team may view.',
         icon: 'error', // 'success' displays a green checkmark icon
         confirmButtonText: 'OK',
       });
     }
+<<<<<<< HEAD
    
+=======
+  // window.open(`/teams/${slug}`, '_blank');
+>>>>>>> f4c9617 (test)
   };
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>

@@ -169,7 +169,12 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
+<<<<<<< HEAD
     secret: SECRET_KEY ?? process.env.NEXTAUTH_SECRET
+=======
+secret:SECRET_KEY,
+//secret: process.env.NEXTAUTH_SECRET, 
+>>>>>>> f4c9617 (test)
   },
   callbacks: {
     

@@ -124,7 +124,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
           <p className="text-gray-500 mt-2 teampagefont"><b>Sport(s):</b> Soccer</p>
           <p className="text-gray-500 mt-2 teampagefont"><b>Position(s):</b> {positions}</p>
           <p className="text-gray-500 mt-2 teampagefont"><b>Graduation Year:</b> {graduation}</p>
-        { birth_year && (
+        {/* { birth_year && (
           <p className="text-gray-500 teampagefont">
             <b>Birth Year: </b>{birth_year}
           </p>
@@ -133,7 +133,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
           <p className="text-gray-500 teampagefont">
             <b>Age Group: </b>{age_group}
           </p>
-          )}
+          )} */}
 
           {/* <p className="text-gray-500 teampagefont">
      <b>Weight: </b>  {weight} Lbs.

@@ -388,7 +388,7 @@ const Profile: React.FC = () => {
                 </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Height</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -403,7 +403,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Weight(lbs)</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Weight (lbs) <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -441,7 +441,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="school_name" className="block text-gray-700 text-sm font-semibold mb-2">School Name</label>
+                <label htmlFor="school_name" className="block text-gray-700 text-sm font-semibold mb-2">School Name <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -457,7 +457,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="gpa" className="block text-gray-700 text-sm font-semibold mb-2">GPA</label>
+                <label htmlFor="gpa" className="block text-gray-700 text-sm font-semibold mb-2">GPA <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
