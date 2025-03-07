@@ -178,6 +178,12 @@ export const positionOptionsList = [
   // Add more positions as needed
 ];
 
+export const positionOptionsList2 = [
+  { value: "Goalkeeper", label: "Goalkeeper" },
+  { value: "Field Player", label: "Field Player" },
+  // Add more positions as needed
+];
+
 export const genders=[
   { value:"", label:"Select"},
   { value:"Male", label:"Male"},

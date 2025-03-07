@@ -9,6 +9,7 @@ import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { FaPhone } from 'react-icons/fa';
 import { positionOptionsList } from '@/lib/constants';
+import { positionOptionsList2 } from '@/lib/constants';
 import FileUploader from '../FileUploader';
 
 
@@ -508,7 +509,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             <label className="text-sm font-medium mb-1">Select Position<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
             <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
                 <option value="">Select</option>
-                {positionOptionsList.map((item, index) => (
+                {positionOptionsList2.map((item, index) => (
                     <option key={index} value={item.value}>{item.label}</option>
                 ))}
             </select>
