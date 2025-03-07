@@ -159,9 +159,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   {coachData.team_name} 
                 </h1>
                 <p className=" text-black p-2"><span><b>Sport: </b> Soccer</span></p>
-                <p className="text-black p-2">
+                {/* <p className="text-black p-2">
                   <b>Gender :</b> {coachData.team_type}
-                </p>
+                </p> */}
                 {coachData.team_year && (
                   <p className=" text-black p-2">
                     <span ><b>Birth Year: </b>{coachData.team_year}</span>
@@ -173,8 +173,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   </p>
 
                 )}
+                {coachData.leage && (
                 <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
-
+              )}
               </div>
             </div>
 
