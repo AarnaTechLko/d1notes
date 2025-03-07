@@ -58,7 +58,7 @@ export const users = pgTable(
     youtube:text("youtube"),
     age_group:text("age_group"),
     birth_year:text("birth_year"),
-    status: varchar("status").default("Inactive"),
+    status: varchar("status").default("Pending"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -110,7 +110,7 @@ export const coaches = pgTable(
     cv:text("cv"),
     license_type:text("license_type"),
     license:text("license"),
-    status: varchar("status").default("Inactive"),
+    status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (coaches) => {

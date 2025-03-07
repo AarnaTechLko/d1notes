@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { teams, teamPlayers, coaches, teamCoaches, users } from "@/lib/schema";
-import { eq, and, desc,count,sql} from "drizzle-orm";
+import { eq, and, desc,count,sql, or, ilike} from "drizzle-orm";
 import { sendEmail } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/helpers";
 import { hash } from 'bcryptjs';
@@ -16,10 +16,37 @@ export async function GET(req: NextRequest) {
   if (!enterpriseId) {
     return NextResponse.json(
       { error: "Enterprise ID is required" },
-      { status: 400 }
+      { status: 400 } 
     ); 
   }
-  const query = await db.select(
+
+
+  const offset = (page - 1) * limit;
+
+  const whereClause = search
+    ? and(
+      eq(teams.creator_id, Number(enterpriseId)),
+      or(
+        eq(teams.status, 'Active'),
+        eq(teams.status, 'Inactive')
+      ),
+      or(
+        ilike(teams.team_name, `%${search}%`),
+        ilike(teams.manager_email, `%${search}%`),
+        ilike(teams.manager_phone, `%${search}%`)
+      )
+    )
+    :and(
+      eq(teams.creator_id, Number(enterpriseId)),
+      or(
+        eq(teams.status, 'Active'),
+        eq(teams.status, 'Inactive')
+      )
+    );
+
+  let query;
+  let totalCountQuery;
+   query = await db.select(
     {
       id: teams.id,
       team_name: teams.team_name,
@@ -44,7 +71,8 @@ export async function GET(req: NextRequest) {
   ).from(teams)
     .leftJoin(coaches, eq(teams.coach_id, coaches.id))
    /// .where(eq(teams.club_id, parseInt(enterpriseId)))
-    .where(and(eq(teams.club_id, parseInt(enterpriseId)),eq(teams.status,'Active')))
+   .where(whereClause)
+    ///.where(and(eq(teams.club_id, parseInt(enterpriseId)),eq(teams.status,'Active')))
 
     .orderBy(desc(teams.id));
   

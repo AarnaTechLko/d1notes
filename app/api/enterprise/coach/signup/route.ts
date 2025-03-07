@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
         eq(coaches.enterprise_id, enterprise_id),
         or(
           eq(coaches.status, 'Active'),
-          eq(coaches.status, 'Inactive')
+          eq(coaches.status, 'Pending')
         ),
       or(
         ilike(coaches.firstName, `%${search}%`),
@@ -147,7 +147,7 @@ export async function GET(req: NextRequest) {
       eq(coaches.enterprise_id, enterprise_id),
       or(
         eq(coaches.status, 'Active'),
-        eq(coaches.status, 'Inactive')
+        eq(coaches.status, 'Pending')
       )
     );
 

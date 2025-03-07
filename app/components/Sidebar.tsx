@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
       setIsLoggingOut(false);
     }
   };
-
+ 
   const handleDeleteAccount = async () => {
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",

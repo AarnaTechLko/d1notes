@@ -185,9 +185,9 @@ export default function TeamsPage() {
   };
 
   useEffect(() => {
-    fetchTeams();
+    fetchTeams(currentPage, search);
     fetchPlayers();
-  }, [session]);
+  }, [session, search, currentPage]);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Team; direction: 'asc' | 'desc' } | null>(null);
 
   const sortedTeams = [...teams].sort((a, b) => {

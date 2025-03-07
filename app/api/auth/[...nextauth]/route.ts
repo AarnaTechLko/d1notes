@@ -169,7 +169,7 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   jwt: { 
-///xwsecret:SECRET_KEY,
+///secret:SECRET_KEY,
 secret: process.env.NEXTAUTH_SECRET, 
   },
   callbacks: {

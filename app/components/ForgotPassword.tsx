@@ -17,8 +17,17 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+   
+ 
+    if (!email) {
+      showError('Please enter your email.');
+      return;
+    }
+    if (!role) {
+      showError('Select Role.');
+      return;
+    }
     setLoading(true);
-
     // Make API call to reset password
     try {
       const response = await fetch('/api/forgotPassword', {
@@ -33,7 +42,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
       if (response.ok) {
         showSuccess("Password reset Instructions sent on your Email.");
       } else {
-        showError('Error resetting password.');
+        showError(data.message);
       }
     } catch (error) {
       alert('An error occurred.');
@@ -94,7 +103,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+                
                 sx={{ mb: 2 }}
               />
             </div>
