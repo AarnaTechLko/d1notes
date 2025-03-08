@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
           
         </div>
         <div className="bg-white shadow-md rounded-lg p-6 ">
-        <InviteForm usertype="Team"/>
+        
         </div>
       </main>
     </div>

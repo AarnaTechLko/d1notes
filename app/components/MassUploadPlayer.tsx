@@ -9,17 +9,19 @@ import Papa from "papaparse";
 import Swal from "sweetalert2";
 interface InviteFormProps {
     usertype: string;
-    teamId:string;
+    teamId?:string;
+    enterpriseId?:string;
+    registrationType:string;
   }
 type Team = {
   id?: number;
   team_name?: string;
 };
 
-const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
+const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId,registrationType,enterpriseId }) => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [iscsvUploaded, setIscsvUploaded] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<string>(teamId);
+  const [selectedTeam, setSelectedTeam] = useState<string>(teamId || '');
   const [isuploadingcsv, setIsuploadingcsv] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [csvData, setCsvData] = useState<any[]>([]);
@@ -47,7 +49,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
 
   const handleUpload = async () => {
     setFailedData([]);
-    if (selectedTeam === "") {
+    if (selectedTeam === "" && usertype!='Club') {
       showError("Please select a Team.");
       return;
     }
@@ -80,22 +82,25 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
     setCsvData(updatedCsvData);
   };
 
+  let enterprise_id;
+  let team_id;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmit(true);
+ const payload={
+  enterprise_id:enterpriseId,
+  teamId: selectedTeam,
+  csvData,
+  registrationType:registrationType,
+  usertype:usertype
+};
+ 
     try {
       const response = await fetch("/api/sendmassinvite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          enterprise_id: session?.user.id,
-          teamId: selectedTeam,
-          csvData,
-          registrationType:'player',
-          usertype:'Team',
-          userName:session?.user.name,
-          userId:session?.user.id
-        }),
+        body: JSON.stringify(payload),
       });
       if (!response.ok) throw new Error("Failed to submit data");
       const data = await response.json();
@@ -103,7 +108,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId }) => {
         setFailedData(data.duplicates);
         showWarning("Coaches Players. But we have found some duplicate records.");
       } else {
-        router.push("/teampanel/players");
+        ///router.push("/teampanel/players");
         showSuccess("Invitation Sent Successfully.");
       }
       setShowUploadControls(true);

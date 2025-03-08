@@ -20,11 +20,10 @@ interface RequestBody {
 
 export async function POST(req: NextRequest) {
     try {
-        // Read body only once
-        const body: RequestBody & { csvData: any[]; coach_id: string; enterprise_id: string } = await req.json();
+        const body: RequestBody & { csvData: any[]; coach_id: string; enterprise_id: string, teamId: string, registrationType: string, usertype: string } = await req.json();
 
-        const { emails, usertype, registrationType, userName, teamId, csvData, coach_id, enterprise_id } = body;
-        const userId=enterprise_id;
+        const { usertype, registrationType, userName, teamId, csvData, enterprise_id } = body;
+
         const protocol = req.headers.get('x-forwarded-proto') || 'http';
         const host = req.headers.get('host');
         const baseUrl = `${protocol}://${host}`;
@@ -35,21 +34,22 @@ export async function POST(req: NextRequest) {
         }
 
         const emailList = csvData.map((item) => item.Email);
-
-        // Check for existing emails
+       
         const existingCoaches = await db
-            .select()
-            .from(coaches)
-            .where(inArray(coaches.email, emailList));
+        .select()
+        .from(invitations)
+        .where(inArray(invitations.email, emailList));
+       
+
 
         const existingEmails = existingCoaches.map((coach) => coach.email);
         const duplicates = csvData.filter((item) => existingEmails.includes(item.Email));
         const newRecords = csvData.filter((item) => !existingEmails.includes(item.Email));
-
+        
         await Promise.all(newRecords.map(async (item) => {
-            const singleEmail = item.Email; // Make sure it matches the key in csvData
+            const singleEmail = item.Email; // Ensure it matches the key in csvData
 
-            const payload = JSON.stringify({ userId, singleEmail, teamId, registrationType });
+            const payload = JSON.stringify({ enterprise_id, singleEmail, teamId, registrationType });
             const encryptedString = encryptData(payload);
             let urltype = 'register';
 
@@ -62,35 +62,34 @@ export async function POST(req: NextRequest) {
                 else urltype = 'coach/signup';
             }
 
-            inviteUrl = `${baseUrl}/${urltype}?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
+            // Move inside loop
+            const inviteUrl = `${baseUrl}/${urltype}?uid=${encodeURIComponent(encryptedString)}&by=${usertype}`;
+
+            console.log(`Processing email: ${singleEmail}, inviteUrl: ${inviteUrl}`); // Debugging
 
             await db.insert(invitations).values({
                 sender_type: usertype,
-                sender_id: Number(userId),
+                enterprise_id: Number(enterprise_id),
+                team_id: Number(teamId),
                 email: singleEmail,
                 invitation_for: registrationType,
                 invitation_link: inviteUrl,
-                team_id: Number(teamId),
                 status: 'Sent'
-            });
+            }).catch(err => console.error(`Insert Error for ${singleEmail}:`, err));
 
             await sendEmail({
                 to: singleEmail,
                 subject: `D1 NOTES Registration Invitation for ${registrationType} registration`,
                 text: `D1 NOTES Registration Invitation for ${registrationType} registration`,
-                html: `
-                <div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
-            Dear ${registrationType}! You have been invited by ${userName} to take advantage of D1 Note's Enterprises / white label service.  <a href="${inviteUrl}" 
-                     style="font-weight: bold; color: blue;">
-                    Click Here
-                  </a> to login or create a  ${registrationType} profile and your access to the Organization or Team will automatically be activated. 
-
-              <p className="mt-5">Regards, <br/>
-D1 Notes</p>
-            </div>
-                `
-            });
+                html: `<div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
+                    Dear ${registrationType}! You have been invited by ${userName} to take advantage of D1 Note's Enterprises / white label service.  
+                    <a href="${inviteUrl}" style="font-weight: bold; color: blue;">Click Here</a> 
+                    to login or create a ${registrationType} profile and your access to the Organization or Team will automatically be activated. 
+                    <p className="mt-5">Regards, <br/> D1 Notes</p>
+                </div>`
+            }).catch(err => console.error(`Email Sending Error for ${singleEmail}:`, err));
         }));
+
 
         return NextResponse.json({ message: 'Invitations sent successfully' }, { status: 200 });
 

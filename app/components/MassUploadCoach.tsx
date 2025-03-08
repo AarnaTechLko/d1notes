@@ -13,8 +13,10 @@ type Team = {
   team_name?: string;
 };
 interface InviteFormProps {
-    
-    teamId?:string;
+  usertype: string;
+  teamId?:string;
+  enterpriseId?:string;
+  registrationType:string;
   }
 type CSVRow = {
   FirstName: string;

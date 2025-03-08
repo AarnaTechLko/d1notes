@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
                     const user = existingUser[0];
                     if (user.enterprise_id !== enterprise_id) {
                         excludedUsers.push({
-                            first_name: userEmail,
+                            status: 'Pending',
                             email: userEmail,
                             existingEnterprise: user.enterprise_id
                         });
@@ -103,10 +103,10 @@ export async function POST(req: NextRequest) {
                     }
                 } else {
                     const user = await db.insert(users).values({
-                        first_name: userEmail,
+                        
                         email: userEmail,
                         password: hashedPassword,
-                        status: 'Inactive',
+                        status: 'Pending',
                         enterprise_id: enterprise_id
                     }).returning({ userId: users.id });
 
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
                     const coach = existingCoach[0];
                     if (coach.enterprise_id !== enterprise_id) {
                         excludedCoaches.push({
-                            firstName: userEmail,
+                            status: 'Pending',
                             email: userEmail,
                             existingEnterprise: coach.enterprise_id
                         });
@@ -138,10 +138,10 @@ export async function POST(req: NextRequest) {
                     }
                 } else {
                     const user = await db.insert(coaches).values({
-                        firstName: userEmail,
+                       
                         email: userEmail,
                         password: hashedPassword,
-                        status: 'Active',
+                        status: 'Pending',
                         enterprise_id: enterprise_id
                     }).returning({ userId: coaches.id });
 

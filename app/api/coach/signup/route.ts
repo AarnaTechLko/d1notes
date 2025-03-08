@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     
     // Parse the form data
     const body = await req.json();
-    const { email, password, otp,sendedBy, referenceId , teamId} = body;
+    const { email, password, otp,sendedBy, enterprise_id , teamId} = body;
 
     if (!email || !password) 
     {
@@ -51,19 +51,12 @@ export async function POST(req: NextRequest) {
     let userValues: any = {
       email: email,
       password: hashedPassword,
+      enterprise_id:enterprise_id,
       createdAt: new Date(),
       visibility: "on",
       team_id:teamId
     };
-
-    if (sendedBy && referenceId) {
-       if (sendedBy === 'Club') {
-        userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
-      }
-      if (sendedBy === 'Team') {
-        userValues.enterprise_id = referenceId; // Insert referenceId into enterprise_id
-      }
-    }
+ 
     const insertedUser = await db.insert(coaches).values(userValues).returning();
     
     if(teamId)
@@ -73,7 +66,7 @@ export async function POST(req: NextRequest) {
           {
             teamId: Number(teamId),
             coachId: insertedUser[0].id,
-            enterprise_id: Number(referenceId),
+            enterprise_id: Number(enterprise_id),
           }
           
         ).returning();
@@ -83,7 +76,7 @@ export async function POST(req: NextRequest) {
         }).where(and(
           eq(invitations.team_id, Number(teamId)),
           eq(invitations.email, email),
-          eq(invitations.sender_id, Number(userValues.enterprise_id))
+          eq(invitations.enterprise_id, Number(enterprise_id))
         ));
 
       }

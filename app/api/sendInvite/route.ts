@@ -11,22 +11,22 @@ interface RequestBody {
   usertype: string;
   registrationType: string;
   userId: string;
-  userName: string;
+  enterpriseId: string;
   teamId: string;
 }
 
 export async function POST(req: NextRequest) {
-  const { emails, mobiles, usertype, registrationType, userId, userName, teamId }: RequestBody = await req.json();
+  const { emails,enterpriseId, usertype, registrationType, teamId }: RequestBody = await req.json();
   const protocol = req.headers.get('x-forwarded-proto') || 'http';
   const host = req.headers.get('host');
   const baseUrl = `${protocol}://${host}`;
-  const allMobiles = mobiles.join(',');
+   
   let inviteUrl: string;
   // Use a for...of loop to handle the asynchronous email sending
   for (let index = 0; index < emails.length; index++) {
     const singleEmail = emails[index];
 
-    const payload = JSON.stringify({ userId, singleEmail, teamId, registrationType });
+    const payload = JSON.stringify({ enterprise_id:enterpriseId, singleEmail, teamId, registrationType });
     const encryptedString = encryptData(payload);
     let urltype;
     if (registrationType === 'player') {
@@ -53,32 +53,27 @@ export async function POST(req: NextRequest) {
 
     await db.insert(invitations).values({
       sender_type: usertype,
-      sender_id: Number(userId),
+      enterprise_id: Number(enterpriseId),
       email: singleEmail,
       invitation_for: registrationType,
-      mobile: allMobiles,
+      
       invitation_link: inviteUrl,
       team_id: Number(teamId),
       status: 'Sent'
     });
 
-    const emailResult = await sendEmail({
+    await sendEmail({
       to: singleEmail,
-
-      subject: `D1 NOTES Invitation from ${userName}!`,
-      text: `D1 NOTES Invitation from ${userName}!`,
-      html: `
-            <div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
-            Dear ${registrationType}! You have been invited by ${userName} to take advantage of D1 Note's Enterprises / white label service.  <a href="${inviteUrl}" 
-                     style="font-weight: bold; color: blue;">
-                    Click Here
-                  </a> to login or create a  ${registrationType} profile and your access to the Organization or Team will automatically be activated. 
-
-              <p className="mt-5">Regards, <br/>
-D1 Notes</p>
-            </div>
-          `
-    });
+      subject: `D1 NOTES Registration Invitation for ${registrationType} registration`,
+      text: `D1 NOTES Registration Invitation for ${registrationType} registration`,
+      html: `<div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
+          Dear ${registrationType}! You have been invited  to take advantage of D1 Note's Enterprises / white label service.  
+          <a href="${inviteUrl}" style="font-weight: bold; color: blue;">Click Here</a> 
+          to login or create a ${registrationType} profile and your access to the Organization or Team will automatically be activated. 
+          <p className="mt-5">Regards, <br/> D1 Notes</p>
+      </div>`
+  }).catch(err => console.error(`Email Sending Error for ${singleEmail}:`, err));
+ 
   }
 
   return NextResponse.json(

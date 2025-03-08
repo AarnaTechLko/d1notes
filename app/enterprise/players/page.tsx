@@ -555,7 +555,7 @@ const Home: React.FC = () => {
                       <td>{coach.status === 'Pending' ? (
                         <button className='bg-red px-4 py-2  text-orange-500'>
                           {coach.status}
-                        </button>
+                        </button> 
                       ) : (
                         <button className='bg-red px-4 py-2 rounded text-green-500'>
                           {coach.status}

@@ -361,15 +361,21 @@ const Home: React.FC = () => {
                         </button>
                         )}
                       </td>
-                      <td>{coach.status === 'Inactive' ? (
-                        <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
+                      <td>
+                        
+                        
+                        {coach.status === 'Pending' ? (
+                        <div className='bg-red px-4 py-2 rounded text-orange-500 '>
                           {coach.status}
-                        </button>
+                        </div>
                       ) : (
-                        <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+                        <div className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
                           {coach.status}
-                        </button>
-                      )}</td>
+                        </div>
+                      )}
+                      
+                      
+                      </td>
                       <td>
                         <div className="flex items-center space-x-2">
                           {/* <button

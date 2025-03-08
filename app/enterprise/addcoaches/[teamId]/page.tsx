@@ -128,12 +128,12 @@ export default function TeamsPage({ params }: PageProps) {
             <div className="tab-content mt-4">
               {activeTab === 0 && (
                 <div className="tab-panel">
-                  <InviteForm usertype="Club" teamId={teamId}  registrationType="coach"/>
+                  <InviteForm  usertype="Club" teamId={teamId}  enterpriseId={session?.user.id ?? ''} registrationType="coach"/>
                 </div>
               )}
               {activeTab === 1 && (
                 <div className="tab-panel">
-                    <MassUploadCoach teamId={teamId}/>
+                    <MassUploadCoach  usertype="Club"  teamId={teamId}  enterpriseId={session?.user.id ?? ''} registrationType="coach"/>
                   {/* <MassUploadPlayer usertype="Team" teamId={teamId}/> */}
                 </div>
               )}

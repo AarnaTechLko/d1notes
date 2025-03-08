@@ -114,31 +114,22 @@ export default function TeamsPage({ params }: PageProps) {
               >
                 Mass Invite Upload
               </button>
-              {/* <button
-                onClick={() => setActiveTab(2)}
-                className={`tab-btn ${activeTab === 2 ? 'active-tab' : ''}`}
-              >
-                Manual
-              </button> */}
+              
             </div>
 
             {/* Tab Content */}
             <div className="tab-content mt-4">
               {activeTab === 0 && (
                 <div className="tab-panel">
-                  <InviteForm usertype="Team" teamId={teamId} registrationType="player"/>
+                  <InviteForm usertype="Team" teamId={teamId} enterpriseId={''} registrationType="player"/>
                 </div>
               )}
               {activeTab === 1 && (
                 <div className="tab-panel">
-                  <MassUploadPlayer usertype="Team" teamId={teamId}/>
+                  <MassUploadPlayer usertype="Team" teamId={teamId} enterpriseId={''} registrationType="player" />
                 </div>
               )}
-              {activeTab === 2 && (
-                <div className="tab-panel">
-                  <PlayerForm onSubmit={handleSubmitCoachForm} teamId={teamId}/>
-                </div>
-              )}
+             
             </div>
           </div>
         </div>

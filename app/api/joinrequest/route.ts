@@ -68,7 +68,7 @@ export async function GET(req: Request) {
       })
       .from(invitations)
 
-      .where(eq(invitations.sender_id, Number(player_id)));
+      .where(eq(invitations.enterprise_id, Number(player_id)));
 
     // Convert result to plain JavaScript objects
     const plainResult = queryResult.map(row => ({
@@ -92,7 +92,7 @@ export async function GET(req: Request) {
     })
     .from(invitations)
 
-    .where(eq(invitations.sender_id, Number(player_id)));
+    .where(eq(invitations.team_id, Number(player_id)));
 
   // Convert result to plain JavaScript objects
   const plainResult = queryResult.map(row => ({
@@ -122,7 +122,7 @@ export async function GET(req: Request) {
     })
     .from(invitations)
     .leftJoin(teams, eq(teams.id,invitations.team_id))
-    .leftJoin(enterprises, eq(enterprises.id, invitations.sender_id))
+    .leftJoin(enterprises, eq(enterprises.id, invitations.enterprise_id))
     .where(
       and(
         eq(invitations.email, String(query[0].email)),

@@ -133,7 +133,7 @@ export default function TeamsPage({ params }: PageProps) {
               )}
               {activeTab === 1 && (
                 <div className="tab-panel">
-                    <MassUploadCoach teamId={teamId}/>
+                   <MassUploadCoach  usertype="Team"  teamId={teamId}  enterpriseId={session?.user.id ?? ''} registrationType="coach"/>
                   {/* <MassUploadPlayer usertype="Team" teamId={teamId}/> */}
                 </div>
               )}

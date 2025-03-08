@@ -397,13 +397,14 @@ export const teamCoaches = pgTable("teamCoaches", {
 
 export const invitations = pgTable("invitations", {
   id: serial("id").primaryKey(),
-  sender_type: text("sender_type").notNull(),
-  sender_id: integer("sender_id").notNull(),
+  sender_type: text("sender_type"),
+  enterprise_id: integer("enterprise_id"),
+  team_id: integer("team_id"),
   email: text("email"),
   invitation_for: text("invitation_for"),
   mobile: text("mobile"),
   invitation_link:text("invitation_link"),
-  team_id:integer("team_id"),
+ 
   status: text("status"),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });

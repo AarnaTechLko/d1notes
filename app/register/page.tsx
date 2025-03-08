@@ -27,7 +27,7 @@ const formSchema = z
       ),
     confirm_password: z.string(),
     loginAs: z.literal('player'),
-    referenceId: z.string().optional(),
+    enterprise_id: z.string().optional(),
     teamId: z.string().optional(),
     sendedBy: z.string().optional(),
   })
@@ -46,7 +46,7 @@ export default function Register() {
     confirm_password: '',
     //otp: '', // Ensure otp is always a string
     loginAs: 'player',
-    referenceId: '',
+    enterprise_id: '',
     sendedBy: '',
     teamId: '',
   });
@@ -54,7 +54,7 @@ export default function Register() {
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [otpLoading, setOtpLoading] = useState<boolean>(false); // Loader state for OTP
-  const [referenceId, setReferenceId] = useState<string | null | undefined>();
+  const [enterpriseId, setEnterpriseId] = useState<string | null | undefined>();
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
   const [email, setEmail] = useState<string | null | undefined>();
   const [team, setTeam] = useState<string | null | undefined>();
@@ -81,15 +81,15 @@ export default function Register() {
         const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
         const decryptedData = decryptData(encryptedUid, secretKey);
         console.log('Decrypted data:', decryptedData);
-        setReferenceId(decryptedData.userId);
+        setEnterpriseId(decryptedData.enterprise_id);
         setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.singleEmail);
-        setTeam(decryptedData.teamId);
+     
        
         setFormValues((prevValues) => ({
           ...prevValues,
           email: decryptedData.singleEmail || '',
-          team: decryptedData.teamId || '',
+          teamId: decryptedData.teamId || '',
         }));
         
         
@@ -149,17 +149,13 @@ export default function Register() {
     setLoading(true);
     try {
       const payload = { ...formValues };
-      if (referenceId) {
-        payload.referenceId = referenceId;
+     
+        payload.enterprise_id = enterpriseId || '';
         payload.email = referenceEmail || '';
         payload.sendedBy = sendedBy || '';
         payload.teamId = teamId || '';
-      } else {
-        delete payload.referenceId;  
-        delete payload.sendedBy; 
-         
-      }
-  
+      
+ 
    const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

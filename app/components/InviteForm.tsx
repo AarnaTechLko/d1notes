@@ -8,21 +8,22 @@ import { countryCodesList } from "@/lib/constants";
 interface InviteFormProps {
   usertype: string;
   teamId?:string;
-  registrationType?:string;
+  enterpriseId?:string;
+  registrationType:string;
 }
 
 
-const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationType }) => {
+const InviteForm: React.FC<InviteFormProps> = ({ usertype, teamId, registrationType,enterpriseId }) => {
   const [emails, setEmails] = useState<string[]>([""]);
   const [mobiles, setMobiles] = useState<{ code: string; number: string }[]>([
     { code: "+1", number: "" },
   ]);
   const [loadingData, setLoadingData] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [teams, setTeams] = useState<[] | null >([]);
- 
+  const [teams, setTeams] = useState<[] | null>([]);
+
   const { data: session } = useSession();
 
   const validateEmail = (email: string): boolean => {
@@ -49,10 +50,10 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
   const validateMobile = (mobile: { code: string; number: string }): boolean => {
     // Remove all non-numeric characters
     const numericOnly = mobile.number.replace(/[^\d]/g, "");
-    
+
     // Check if the numeric part is exactly 10 digits
     const isTenDigits = numericOnly.length === 10;
-  
+
     return Boolean(mobile.code) && isTenDigits;
   };
 
@@ -68,13 +69,12 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
     try {
       setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${enterpriseID}`);
-      if (!res.ok) 
-        {
-          throw new Error("Failed to fetch teams");
-        }
-      const data=await res.json();
+      if (!res.ok) {
+        throw new Error("Failed to fetch teams");
+      }
+      const data = await res.json();
       console.log(data);
-   
+
       setTeams(data.data);
     } catch (error) {
       console.error("Error fetching teams:", error);
@@ -87,7 +87,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
 
     const isAnyEmailValid = emails.some((email) => email.trim() && validateEmail(email));
     const isAnyMobileValid = mobiles.some((mobile) => validateMobile(mobile));
-    
+
     if (!isAnyEmailValid) {
       setError("Please provide a valid email.");
       setIsSubmitting(false);
@@ -101,7 +101,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
       return;
     }
 
- 
+
 
     setError(null);
 
@@ -113,17 +113,15 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
 
     const userId = session.user.id;
     const userName = session.user.name;
-  
+
     const inviteData = {
       emails,
-      mobiles: mobiles.map((mobile) => `${mobile.code}${mobile.number}`),
-      usertype,
-      userId,
-      userName,
-      registrationType,
+      enterpriseId,
       teamId,
+      registrationType:registrationType,
+      usertype:usertype
     };
- 
+  
     try {
       const response = await fetch("/api/sendInvite", {
         method: "POST",
@@ -157,14 +155,13 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
 
   useEffect(() => {
     fetchTeams();
-   
-   
-    if(session?.user.type==='Team')
-    {
-      
+
+
+    if (session?.user.type === 'Team') {
+
     }
-    else{
-      
+    else {
+
     }
   }, [usertype, session]);
 
@@ -173,52 +170,52 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype,teamId, registrationTy
       onSubmit={handleSubmit}
       className="max-w-3xl p-8 rounded-xl space-y-6"
     >
-      
 
-     
- 
+
+
+
       <div className="mb-6">
-  <label className="block text-xl font-medium text-gray-700 mb-4">
-    Email  
-  </label>
-  {emails.map((email, index) => (
-    <div key={index} className="flex space-x-3 mb-4">
-      <input
-        type="text"
-        value={email}
-        onChange={(e) => {
-          const newEmails = [...emails];
-          newEmails[index] = e.target.value;
-          setEmails(newEmails);
-        }}
-        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-        placeholder="Enter email address"
-      />
-      {/* Remove email button */}
-      {emails.length > 1 && (
+        <label className="block text-xl font-medium text-gray-700 mb-4">
+          Email
+        </label>
+        {emails.map((email, index) => (
+          <div key={index} className="flex space-x-3 mb-4">
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => {
+                const newEmails = [...emails];
+                newEmails[index] = e.target.value;
+                setEmails(newEmails);
+              }}
+              className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+              placeholder="Enter email address"
+            />
+            {/* Remove email button */}
+            {emails.length > 1 && (
+              <button
+                type="button"
+                onClick={() => {
+                  const newEmails = emails.filter((_, idx) => idx !== index);
+                  setEmails(newEmails);
+                }}
+                className="text-red-600 hover:text-red-800 font-medium"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
         <button
           type="button"
-          onClick={() => {
-            const newEmails = emails.filter((_, idx) => idx !== index);
-            setEmails(newEmails);
-          }}
-          className="text-red-600 hover:text-red-800 font-medium"
+          onClick={() => setEmails([...emails, ""])}
+          className="text-blue-600 hover:text-blue-800 font-medium"
         >
-          Remove
+          + Add another email
         </button>
-      )}
-    </div>
-  ))}
-  <button
-    type="button"
-    onClick={() => setEmails([...emails, ""])}
-    className="text-blue-600 hover:text-blue-800 font-medium"
-  >
-    + Add another email
-  </button>
-</div>
+      </div>
 
-      
+
 
       {/* Error Message */}
       {error && <p className="text-red-600 text-center text-lg">{error}</p>}

@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
                 }
             ).where(
                 and(
-                    eq(invitations.sender_id,enterpriseId),
+                    eq(invitations.enterprise_id,enterpriseId),
                     eq(invitations.invitation_for,'player'),
                     eq(invitations.team_id,teamId),
                     eq(invitations.email,email),
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
                     }
                 ).where(
                     and(
-                        eq(invitations.sender_id,enterpriseId),
+                        eq(invitations.enterprise_id,enterpriseId),
                         eq(invitations.invitation_for,'coach'),
                         eq(invitations.team_id,teamId),
                         eq(invitations.email,email),
