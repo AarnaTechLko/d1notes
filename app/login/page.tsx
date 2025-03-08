@@ -18,7 +18,7 @@ export default function Login() {
   const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', loginAs: '', teamId: '' });
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
-  const [referenceId, setReferenceId] = useState<string | null>('');
+  const [enterpriseId, setEnterpriseId] = useState<string | null>('');
 
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
   const [registrationType, setRegistrationType] = useState<string | null | undefined>();
@@ -46,7 +46,7 @@ export default function Login() {
         const secretKey = process.env.SECRET_KEY || '0123456789abcdef0123456789abcdef';
         const decryptedData = decryptData(encryptedUid, secretKey);
         console.log('Decrypted data:', decryptedData);
-        setReferenceId(decryptedData.userId);
+        setEnterpriseId(decryptedData.enterprise_id);
         setRegistrationType(decryptedData.registrationType);
         setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.referenceEmail);
@@ -58,7 +58,7 @@ export default function Login() {
           email: decryptedData.singleEmail || '',
           teamId: decryptedData.teamId || '',
           loginAs: decryptedData.registrationType || 'coach',
-          referenceId: decryptedData.userId || '',
+          enterprise_id: decryptedData.userId || '',
         
         }));
 
@@ -109,7 +109,7 @@ export default function Login() {
         password,
         loginAs: formValues.loginAs,
         teamId: formValues?.teamId,
-        referenceId:referenceId
+        enterprise_id:enterpriseId
       });
      
       if (!response || !response.ok) {

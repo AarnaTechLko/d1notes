@@ -48,6 +48,7 @@ const handler = NextAuth({
 
         const { email, password, loginAs, teamId, enterprise_id } = credentials;
         let club: any;
+        let newEnterpriseID;
         if (loginAs === 'coach') {
           if (enterprise_id) {
             await db.update(coaches)
@@ -60,7 +61,12 @@ const handler = NextAuth({
           }
 
           else {
-
+            if (enterprise_id) {
+              newEnterpriseID=enterprise_id;
+            }
+            else{
+              newEnterpriseID=coach[0]?.enterprise_id;
+            }
             return {
               id: coach[0].id.toString(),
               name: coach[0].firstName,
@@ -70,7 +76,7 @@ const handler = NextAuth({
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id: coach[0].id,
-              club_id: enterprise_id ? enterprise_id : coach[0]?.enterprise_id ?? '',
+              club_id: newEnterpriseID,
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by: null,
               teamId: teamId,
