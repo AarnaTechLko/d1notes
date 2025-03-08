@@ -326,57 +326,62 @@ const ChatBox: React.FC = () => {
                     <>
                     {loggedInUserType=='player' && (
                         <>
- <h2 className="text-xl font-semibold mb-4">Coach Profile</h2>
- <div className="flex flex-col items-center mb-4">
- <img
-   src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-   alt="User Avatar"
-   className="rounded-full mb-2 h-32 w-32"
- />
- <div className="text-center">
-   <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-   {/* <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
-   <p className="text-sm text-gray-500"><b>Qualifications:</b> {selectedUser.qualifications}</p> */}
-  
-   <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
-   
- </div>
- <a
-   href={`/coach/${selectedUser.slug}`}
-   className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
- >
-   <FaEye className="mr-1" /> View Details
- </a>
+ <h2 className="text-xl font-semibold mb-4 hidden md:block">Coach Profile</h2>
+<div className="relative flex flex-col items-center mb-4 hidden md:block">
+  {/* Image Container for Centering */}
+  <div className="relative">
+    <img
+      src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+      alt="User Avatar"
+      className="rounded-full h-32 w-32 mx-auto"
+    />
+    {/* Button Positioned Above the Image */}
+    <a
+      href={`/coach/${selectedUser.slug}`}
+      className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 py-2 px-4 bg-black bg-opacity-50 text-white flex items-center justify-center rounded transition duration-200 hover:bg-opacity-70"
+      target="_blank"
+    >
+      <FaEye className="mr-1" /> View Details
+    </a>
+  </div>
+  {/* Text Below Image */}
+  <div className="text-center mt-6">
+    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+    <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
+  </div>
 </div>
+
+
 </>
                     )}
                    
                    {loggedInUserType=='coach' && (
                         <>
- <h2 className="text-xl font-semibold mb-4">Player Profile</h2>
- <div className="flex flex-col items-center mb-4">
- <img
-   src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-   alt="User Avatar"
-   className="rounded-full mb-2 h-32 w-32"
- />
- <div className="text-center">
-   <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-   {/* <p className="text-sm text-gray-500"><b>Gender:</b> {selectedUser.gender} </p>
-   <p className="text-sm text-gray-500"><b>Location:</b> {selectedUser.location}</p>
-  
-   <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
-   <p className="text-sm text-gray-500"><b>Height:</b> {selectedUser.height}</p>
-   <p className="text-sm text-gray-500"><b>Weight:</b> {selectedUser.weight} Lbs</p> */}
-   
- </div>
- <a
-   href={`/players/${selectedUser.slug}`}
-   className="mt-5 w-100 flex items-center justify-center py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded transition duration-200" target="_blank"
- >
-   <FaEye className="mr-1" /> View Details
- </a>
+ <h2 className="text-xl font-semibold mb-4 hidden md:block">Player Profile</h2>
+<div className="relative flex flex-col items-center mb-4 hidden md:block">
+  {/* Image Container for Centering */}
+  <div className="relative">
+    <img
+      src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+      alt="User Avatar"
+      className="rounded-full h-32 w-32 mx-auto"
+    />
+    {/* Semi-Transparent Black Button Positioned Above the Image */}
+    <a
+      href={`/players/${selectedUser.slug}`}
+      className="absolute bottom-[40px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white flex items-center justify-center px-4 py-2 rounded transition duration-200 hover:bg-opacity-70"
+      target="_blank"
+    >
+      <FaEye className="mr-1" /> View Details
+    </a>
+  </div>
+  {/* Text Below Image */}
+  <div className="text-center mt-6">
+    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+  </div>
 </div>
+
+
 </>
                     )}
 

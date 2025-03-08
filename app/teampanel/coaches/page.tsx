@@ -7,6 +7,8 @@ import { showError, showSuccess } from '@/app/components/Toastr';
 import { FaArchive, FaEye, FaHistory, FaKey, FaShare, FaSpinner } from 'react-icons/fa';
 import ResetPassword from '@/app/components/ResetPassword';
 import Swal from 'sweetalert2';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import  { useRef } from "react";
 
 // Define the type for the coach data
 interface Coach {
@@ -48,6 +50,49 @@ const Home: React.FC = () => {
   const [totalLicenses, setTotalLicenses] = useState<number>(0);
   const limit = 10; // Items per page
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMiddle, setIsMiddle] = useState(false);
+      const [IsStart, setIsStart] = useState(false);
+      const [isEnd, setIsEnd] = useState(false);
+      const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
+      
+        // Scroll handlers
+        const scrollLeft = () => {
+          if (tableContainerRef.current) {
+            tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+          }
+        };
+      
+        const scrollRight = () => {
+          if (tableContainerRef.current) {
+            tableContainerRef.current.scrollLeft += 200;
+          }
+        };
+        
+        useEffect(() => {
+          const handleScroll = () => {
+            if (tableContainerRef.current) {
+              const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+              const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+      
+              
+              setIsStart(scrollLeft === 0);
+            setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+            setIsMiddle(scrollPercentage >= 40);
+      
+            }
+          };
+      
+          const container = tableContainerRef.current;
+          if (container) {
+            container.addEventListener("scroll", handleScroll);
+          }
+      
+          return () => {
+            if (container) {
+              container.removeEventListener("scroll", handleScroll);
+            }
+          };
+        }, []); // Empty dependency array means it runs only once after mount
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -363,7 +408,15 @@ const Home: React.FC = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div ref={tableContainerRef} className="overflow-x-auto">
+            <button
+              onClick={scrollLeft}
+              className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+                IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+              }`}
+            >
+              <FaArrowLeft />
+            </button>
             <table className="w-full text-sm text-left text-gray-700 mt-4">
               <thead>
                 <tr>
@@ -472,6 +525,24 @@ const Home: React.FC = () => {
                 )}
               </tbody>
             </table>
+
+            <button
+              onClick={scrollRight}
+              disabled={isEnd} 
+              style={{
+                backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                color: "white",
+                padding: "10px",
+                border: "none",
+                cursor: isEnd ? "not-allowed" : "pointer",
+              }}
+              className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+              `}
+            >
+              <FaArrowRight />
+            </button>
+            
+                    
           </div>
 
 

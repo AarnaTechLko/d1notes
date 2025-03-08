@@ -5,7 +5,8 @@ import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import  { useRef } from "react";
 import Link from "next/link";
 import { FaArchive, FaClipboard, FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
@@ -39,6 +40,9 @@ type Player = {
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<Team[]>([]);
+     const [isMiddle, setIsMiddle] = useState(false);
+      const [IsStart, setIsStart] = useState(false);
+      const [isEnd, setIsEnd] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [editTeam, setEditTeam] = useState<Team | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
@@ -81,7 +85,46 @@ export default function TeamsPage() {
             console.error("Error fetching teams:", error);
         }
     };
+const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
 
+  // Scroll handlers
+  const scrollLeft = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+    }
+  };
+
+  const scrollRight = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft += 200;
+    }
+  };
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tableContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+        const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+
+        
+        setIsStart(scrollLeft === 0);
+      setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+      setIsMiddle(scrollPercentage >= 40);
+
+      }
+    };
+
+    const container = tableContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []); // Empty dependency array means it runs only once after mount
     const fetchPlayers = async () => {
         if (!session || !session.user?.id) {
             console.error("No user logged in");
@@ -124,7 +167,7 @@ export default function TeamsPage() {
     const handleDelete = async (id?: number) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: 'This will trash this team!',
+            text: 'This will delete this team!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
@@ -276,7 +319,15 @@ export default function TeamsPage() {
 
 
 
-                        <div className="mt-4 overflow-x-auto">
+                        <div ref={tableContainerRef} className="mt-4 overflow-x-auto">
+                            <button
+                              onClick={scrollLeft}
+                              className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+                                IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+                              }`}
+                            >
+                              <FaArrowLeft />
+                            </button>
                             <table className="min-w-full bg-white border border-gray-200">
                                 <thead>
                                     <tr className="bg-gray-100 border-b">
@@ -354,7 +405,7 @@ export default function TeamsPage() {
                                                             onClick={() => handleDelete(team.id)}
                                                             className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
                                                             aria-label="Archive Player"
-                                                        > Trash
+                                                        > Delete
                                                         </button>
                                                     </div>
                                                 </td>
@@ -368,6 +419,22 @@ export default function TeamsPage() {
                                 </tbody>
 
                             </table>
+                            <button
+                              onClick={scrollRight}
+                              disabled={isEnd} 
+                              style={{
+                                backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                                color: "white",
+                                padding: "10px",
+                                border: "none",
+                                cursor: isEnd ? "not-allowed" : "pointer",
+                              }}
+                              className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+                              `}
+                            >
+                              <FaArrowRight />
+                            </button>
+
                         </div>
 
                         {modalOpen && (

@@ -885,7 +885,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     className="mt-2 bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
                                     onClick={onSaveAsDraft}
                                 >
-                                    Save as Draft
+                                    Save Draft
                                 </button>
 
 
