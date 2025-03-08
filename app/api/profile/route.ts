@@ -49,6 +49,8 @@ export async function POST(req: NextRequest) {
        linkedin:users.linkedin,
        xlink:users.xlink,
        youtube:users.youtube,
+       birth_year:users.birth_year,
+       age_group:users.age_group,
 
 
       })
@@ -94,6 +96,8 @@ export async function POST(req: NextRequest) {
       linkedin:user.linkedin,
       xlink:user.xlink,
       youtube:user.youtube,
+      age_group:user.age_group,
+      birth_year:user.birth_year,
 
 
     }));
@@ -136,6 +140,8 @@ export async function PUT(req: NextRequest) {
       linkedin,
       xlink,
       youtube,
+      age_group,
+      birth_year,
 
       countrycode
     } = finalBody;
@@ -164,6 +170,8 @@ export async function PUT(req: NextRequest) {
       linkedin: linkedin||null,
       xlink: xlink||null,
       youtube: youtube||null,
+      age_group: age_group ? age_group : null,
+  birth_year: age_group ? null : birth_year || null,
 
       countrycode: countrycode || null
     };

@@ -19,6 +19,8 @@ const Profile: React.FC = () => {
   const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
   let nationalities;
   let ppositons;
   const [profileData, setProfileData] = useState({
@@ -55,6 +57,8 @@ const Profile: React.FC = () => {
     linkedin: "",
     xlink: "",
     youtube: "",
+    team_year: "",
+    birth_year: "",
   });
 
 
@@ -79,7 +83,16 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
-
+          console.log("Testing:"+data.birth_year);
+          if(data.age_group!='')
+          {
+            setSelectedOption('ageGroup')
+          }
+          if(data.birth_year!='')
+            {
+              setSelectedOption('birthYear')
+            }
+         
           if (data.playingcountries.includes(',')) {
             nationalities = data.playingcountries
               .split(',')
@@ -164,6 +177,7 @@ const Profile: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+    
   };
 
   const handleImageChange = async () => {
@@ -586,7 +600,7 @@ const Profile: React.FC = () => {
               </div>
               </div>
               {/* dob */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
                 <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
                 {isEditMode ? (
@@ -641,29 +655,118 @@ const Profile: React.FC = () => {
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.gender}</p>
                 )}
               </div>
-              {/* age group */}
-              <div>
-                <label htmlFor="age_group" className="block text-gray-700 text-sm font-semibold mb-2">Age Group <span className="mandatory">*</span></label>
-                {isEditMode ? (
-                  <select
-                    name="age_group"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value={profileData.age_group}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    {ageGroups.map((group) => (
-                      <option key={group} value={group}>
-                        {group}
-                      </option>
-                    ))}
+              
+              </div>
 
-                  </select>
-                ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.age_group}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+                <label>Age:<span className='mandatory'>*</span></label>
+                </div>
+                {isEditMode ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+                
+              <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="ageGroup"
+        checked={selectedOption === "ageGroup"}
+        onChange={() => {
+          setSelectedOption("ageGroup");
+          setProfileData((prev) => ({ ...prev, team_year: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "ageGroup"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Age Group
+      </span>
+    </label>
+    </div>
+    <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="birthYear"
+        checked={selectedOption === "birthYear"}
+        
+        onChange={() => {
+          setSelectedOption("birthYear");
+          setProfileData((prev) => ({ ...prev, age_group: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "birthYear"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Birth Year
+      </span>
+    </label>
+  </div>
+
+  {/* Conditional Select Dropdowns (Always in the Same Line) */}
+  {selectedOption === "ageGroup" && (
+    <div>
+    <select
+      className="  p-2 border rounded-md"
+      name="age_group"
+      onChange={handleChange}
+      value={profileData.age_group}
+    >
+      <option value="">Select Age Group</option>
+      {ageGroups.map((group) => (
+        <option key={group} value={group}>
+          {group}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+
+  {selectedOption === "birthYear" && (
+    <div>
+    <select
+      className=" p-2 border rounded-md"
+      name="birth_year"
+      onChange={handleChange}
+      value={profileData.birth_year}
+    >
+      <option value="">Select Birth Year</option>
+      {birthYears.map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+                </div>
+                ):(
+                  <>
+                  <div>
+{profileData.birth_year!='' && (
+  <p className="block text-gray-700 text-sm font-semibold mb-2">Birth Year: {profileData.birth_year}</p>
+
+)}
+
+{profileData.age_group!='' && (
+  <p className="block text-gray-700 text-sm font-semibold mb-2">Age Group: {profileData.age_group}</p>
+
+)}
+
+                  </div>
+                  </>
                 )}
-              </div>
-              </div>
               {/* Team */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
                 <div>
