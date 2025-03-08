@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/enterprise/Sidebar';
 import PlayerForm from '@/app/components/coach/PlayerForm';
@@ -8,6 +8,8 @@ import { FaArchive, FaKey, FaSpinner, FaTeamspeak, FaTrash, FaUndo, FaUsers } fr
 import defaultImage from '../../public/default.jpg';
 import ResetPassword from '@/app/components/ResetPassword';
 import Swal from 'sweetalert2';
+import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
+
 // Define the type for the coach data
 interface Coach {
   id: number;
@@ -49,6 +51,9 @@ type Team = {
 const Home: React.FC = () => {
   const [beingRestored, setBeingRestored] = useState<boolean>(false);
   const [teams, setTeams] = useState<Team[]>([]);
+   const [isMiddle, setIsMiddle] = useState(false);
+    const [IsStart, setIsStart] = useState(false);
+    const [isEnd, setIsEnd] = useState(false);
   const [coaches, setCoaches] = useState<Coach[]>([]);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,6 +78,48 @@ const Home: React.FC = () => {
   const handlePasswordChangeSuccess = () => {
     console.log('Password changed successfully!');
   };
+
+  const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
+  
+    // Scroll handlers
+    const scrollLeft = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+      }
+    };
+  
+    const scrollRight = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft += 200;
+      }
+    };
+    
+    useEffect(() => {
+      const handleScroll = () => {
+        if (tableContainerRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+          const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+  
+          
+          setIsStart(scrollLeft === 0);
+        setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+        setIsMiddle(scrollPercentage >= 40);
+  
+        }
+      };
+  
+      const container = tableContainerRef.current;
+      if (container) {
+        container.addEventListener("scroll", handleScroll);
+      }
+  
+      return () => {
+        if (container) {
+          container.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }, []); // Empty dependency array means it runs only once after mount
+
   useEffect(() => {
     fetchTeams();
 
@@ -439,7 +486,8 @@ const Home: React.FC = () => {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 md:p-8">
               <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md sm:max-w-lg">
                 <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-                  Select Teams for {selectedPlayer?.first_name}
+                  {/* Select Teams for {selectedPlayer?.first_name} */}
+                  Select Team to Join
                 </h2>
                 <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
                   <ul>
@@ -483,7 +531,16 @@ const Home: React.FC = () => {
               </div>
             </div>
           )}
-
+ <div ref={tableContainerRef} className="overflow-x-auto max-h-[400px] overflow-y-auto">
+              
+              <button
+  onClick={scrollLeft}
+  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+    IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+  }`}
+>
+  <FaArrowLeft />
+</button>
           <table className="w-full text-sm text-left text-gray-700 mt-4">
             <thead>
               <tr>
@@ -557,7 +614,7 @@ const Home: React.FC = () => {
                           {coach.status}
                         </button> 
                       ) : (
-                        <button className='bg-red px-4 py-2 rounded text-green-500'>
+                        <button className='bg-red px-4 py-2 rounded text-black-500'>
                           {coach.status}
                         </button>
                       )
@@ -585,7 +642,7 @@ const Home: React.FC = () => {
 
                         <button
                           onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
-                          className=" text-black-500 hover:text-black-700"
+                          className=" bg-black-500 text-white-500 hover:text-white-700"
                           aria-label="Archive Player"
                           title="Archive Player"
                         >
@@ -613,6 +670,22 @@ const Home: React.FC = () => {
               </tbody>
             )}
           </table>
+          <button
+            onClick={scrollRight}
+            disabled={isEnd} 
+            style={{
+              backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+              color: "white",
+              padding: "10px",
+              border: "none",
+              cursor: isEnd ? "not-allowed" : "pointer",
+            }}
+            className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+            `}
+          >
+            <FaArrowRight />
+          </button>
+          </div>
 
 
           {/* Pagination Controls */}

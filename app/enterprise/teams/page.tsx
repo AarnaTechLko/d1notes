@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TeamModal from "@/app/components/enterprise/TeamModal";
 import Sidebar from "@/app/components/enterprise/Sidebar";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import Link from "next/link";
 import { FaArchive, FaClipboard, FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
@@ -39,6 +39,9 @@ type Player = {
 
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isMiddle, setIsMiddle] = useState(false);
+  const [IsStart, setIsStart] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editTeam, setEditTeam] = useState<Team | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -57,6 +60,45 @@ export default function TeamsPage() {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to the first page
   };
+const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
+  // Scroll handlers
+    const scrollLeft = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+      }
+    };
+  
+    const scrollRight = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft += 200;
+      }
+    };
+    
+    useEffect(() => {
+      const handleScroll = () => {
+        if (tableContainerRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+          const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+  
+          
+          setIsStart(scrollLeft === 0);
+        setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+        setIsMiddle(scrollPercentage >= 40);
+  
+        }
+      };
+  
+      const container = tableContainerRef.current;
+      if (container) {
+        container.addEventListener("scroll", handleScroll);
+      }
+  
+      return () => {
+        if (container) {
+          container.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }, []); // Empty dependency array means it runs only once after mount
   const fetchTeams = async (page = 1, searchQuery = '') => {
     if (!session || !session.user?.id) {
       console.error("No user logged in");
@@ -140,12 +182,12 @@ export default function TeamsPage() {
       confirmButtonText: 'Yes, archive it!',
       cancelButtonText: 'Cancel',
     });
-  
+
     // If the user clicks "Cancel", the function will exit early and prevent deletion.
     if (!result.isConfirmed) {
       return; // Exit the function early if Cancel is clicked
     }
-  
+
     try {
       // Proceed with the deletion (archiving the team) if the user confirmed.
       await fetch("/api/teams", {
@@ -153,14 +195,14 @@ export default function TeamsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-  
+
       // Refresh the list of teams after deletion
       fetchTeams();
     } catch (error) {
       console.error("Error deleting team:", error);
     }
   };
-  
+
 
   const handleAddPlayers = (teamId: number) => {
     const team = teams.find((t) => t.id === teamId);
@@ -255,7 +297,15 @@ export default function TeamsPage() {
 
 
 
-            <div className="mt-4 overflow-x-auto">
+            <div ref={tableContainerRef} className="mt-4 overflow-x-auto">
+              <button
+                onClick={scrollLeft}
+                className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+                  IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+                }`}
+              >
+                <FaArrowLeft />
+              </button>
               <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100 border-b">
@@ -318,7 +368,7 @@ export default function TeamsPage() {
                           <p className="mt-2">Total Players: {team.totalPlayers}</p>
                         </td>
                         <td>
-                          <button className="px-4 py-2 text-green-500">{team.status}</button>
+                          <button className="px-4 py-2 text-black-500">{team.status}</button>
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">
@@ -328,7 +378,7 @@ export default function TeamsPage() {
                             <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
                               <FaEdit />
                             </a>
-                            <button className="bg-black-500 text-black px-2 py-1 rounded hover:bg-black-600" onClick={() => handleDelete(team.id)} title="Archive Team">
+                            <button className="bg-black text-white px-2 py-1 rounded" onClick={() => handleDelete(team.id)} title="Archive Team">
                               <FaArchive />
                             </button>
                           </div>
@@ -343,6 +393,21 @@ export default function TeamsPage() {
                 </tbody>
 
               </table>
+              <button
+                onClick={scrollRight}
+                disabled={isEnd} 
+                style={{
+                  backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                  color: "white",
+                  padding: "10px",
+                  border: "none",
+                  cursor: isEnd ? "not-allowed" : "pointer",
+                }}
+                className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+                `}
+              >
+                <FaArrowRight />
+              </button>
             </div>
 
             {modalOpen && (
