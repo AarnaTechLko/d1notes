@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
                 team: users.team,
                 position: users.position,
                 age_group: users.age_group,
+                birth_year: users.birth_year,
                 number: users.number,
                 email: users.email,
                 image: users.image,

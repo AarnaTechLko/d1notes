@@ -60,6 +60,7 @@ interface CoachData {
   playingcountries: string;
   countryName: string;
   age_group: string;
+  birth_year:string;
   gender: string;
   state: string;
   city: string;
@@ -247,8 +248,23 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </div>
               <div className="grid grid-cols-3 gap-5 mt-4">
             {/*   <div><b>City:</b> {coachData.city ?? "N/A"}</div> */}
+            {/* { birth_year && (
+          <p className="text-gray-500 teampagefont">
+            <b>Birth Year: </b>{birth_year}
+          </p>
+        )}
+        { birth_year && (
+          <p className="text-gray-500 teampagefont">
+            <b>Age Group: </b>{age_group}
+          </p>
+          )} */}
+          { coachData.age_group && (
               <div><b>Age Group:</b> {coachData.age_group ?? "N/A"}</div>
-              
+            )}
+            { coachData.birth_year && (
+              <div><b>Birth Year:</b> {coachData.birth_year ?? "N/A"}</div>
+            )}
+            
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
               <div><b>League(s):</b> {coachData.league ?? "N/A"}</div>

@@ -64,77 +64,77 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     let organization: any;
     if (position == 'Goalkeeper') {
         technical = [
-            { id: 't1', label: 'Handling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Footwork', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Shot Stopping', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Crosses', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: '1 v 1', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't1', label: 'Handling', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Footwork', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Shot Stopping', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Crosses', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: '1 v 1', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Decision Making', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Organization with Back four', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Positioning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Role in build up', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Role in Counter Attack', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta1', label: 'Decision Making', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Organization with Back four', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Positioning', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Role in build up', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Role in Counter Attack', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
         distribution = [
-            { id: 'd1', label: 'With: Hands', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd2', label: 'With: Feet', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd3', label: 'Restarts', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd4', label: 'Open Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd5', label: 'Timing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd1', label: 'With: Hands', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd2', label: 'With: Feet', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd3', label: 'Restarts', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd4', label: 'Open Play', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd5', label: 'Timing', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
 
         physical = [
-            { id: 'p1', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Flexibility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Agility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Strength / Power', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p6', label: 'Stance', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p7', label: 'Bravery', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Speed', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Flexibility', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Agility', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Strength / Power', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p6', label: 'Stance', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p7', label: 'Bravery', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
 
         organization = [
-            { id: 'o1', label: 'Starting Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o2', label: 'Communication', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o3', label: 'Set Plays For', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o4', label: 'Set Playa Against', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o5', label: 'Leadership', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'o1', label: 'Starting Position', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o2', label: 'Communication', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o3', label: 'Set Plays For', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o4', label: 'Set Playa Against', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o5', label: 'Leadership', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
     }
     else {
         technical = [
-            { id: 't1', label: 'Passing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't2', label: 'Receiving', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't3', label: 'Dribbling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't4', label: 'Shooting', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't5', label: 'Finishing', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't6', label: 'Heading', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't7', label: 'Tackling', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 't8', label: 'Defending', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 't1', label: 'Passing', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't2', label: 'Receiving', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't3', label: 'Dribbling', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't4', label: 'Shooting', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't5', label: 'Finishing', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't6', label: 'Heading', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't7', label: 'Tackling', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 't8', label: 'Defending', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         tactical = [
-            { id: 'ta1', label: 'Reading the Game', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Decisions with Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta3', label: 'Decisions without Ball', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Understanding of Team Play', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta5', label: 'Understanding of Role and Position', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta6', label: 'Timing of Runs', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta7', label: 'Scanning', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
+            { id: 'ta1', label: 'Reading the Game', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Decisions with Ball', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta3', label: 'Decisions without Ball', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Understanding of Team Play', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta5', label: 'Understanding of Role and Position', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta6', label: 'Timing of Runs', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta7', label: 'Scanning', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
         physical = [
-            { id: 'p1', label: 'Strength', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p2', label: 'Speed', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p3', label: 'Mobility', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p4', label: 'Stamina', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'p5', label: 'Aggressiveness', options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p1', label: 'Strength', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p2', label: 'Speed', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p3', label: 'Mobility', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p4', label: 'Stamina', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'p5', label: 'Aggressiveness', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
         ];
         distribution = [];
         organization = [];

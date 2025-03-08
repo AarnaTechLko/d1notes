@@ -234,7 +234,9 @@ export default function TeamsPage() {
               <div className="flex items-stretch gap-5">
 
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full"
+                  className="bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base rounded-lg 
+                  hover:bg-blue-600 transition duration-200 ease-in-out w-full sm:w-auto 
+                  min-h-[48px] flex items-center justify-center"
                   onClick={() => setModalOpen(true)}
                 >
                   Manually Add Team

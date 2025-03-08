@@ -47,14 +47,24 @@ const Dashboard: React.FC = () => {
       tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
     }
   };
+
+  const scrollRight = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft += 200;
+    }
+  };
+  
   useEffect(() => {
     const handleScroll = () => {
       if (tableContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
         const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
 
-        setIsMiddle(scrollPercentage >= 40);
-        setIsEnd(scrollPercentage >= 80);
+        
+        setIsStart(scrollLeft === 0);
+      setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+      setIsMiddle(scrollPercentage >= 40);
+
       }
     };
 
@@ -70,13 +80,10 @@ const Dashboard: React.FC = () => {
     };
   }, []); // Empty dependency array means it runs only once after mount
 
-  const scrollRight = () => {
-    if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft += 200;
-    }
-  };
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMiddle, setIsMiddle] = useState(false);
+  const [IsStart, setIsStart] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
@@ -660,7 +667,7 @@ const Dashboard: React.FC = () => {
               <button
   onClick={scrollLeft}
   className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
-    isMiddle ? "bg-green-500" : "bg-blue-500"
+    IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
   }`}
 >
   <FaArrowLeft />
@@ -740,10 +747,16 @@ const Dashboard: React.FC = () => {
               </table>
               <button
   onClick={scrollRight}
+  disabled={isEnd} 
+  style={{
+    backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+    color: "white",
+    padding: "10px",
+    border: "none",
+    cursor: isEnd ? "not-allowed" : "pointer",
+  }}
   className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
-  ${
-    isEnd ? "bg-gray-500" : "bg-gray-500"
-  }`}
+  `}
 >
   <FaArrowRight />
 </button>
