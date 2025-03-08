@@ -469,13 +469,13 @@ const Home: React.FC = () => {
                       <td>
                         {coach.status === 'Pending' ? (
                           <div
-                            className="bg-red px-1 py-2 text-xs rounded text-orange-500"
+                            className=" px-1 py-2 text-xs rounded text-black-500"
                             onClick={() => handleEnterLicense(coach)}
                           >
                             {coach.status}
                           </div>
                         ) : (
-                          <div className="bg-red px-2 text-xs py-2 rounded  text-green">
+                          <div className=" px-2 text-xs py-2 rounded  text-black">
                             {coach.status}
                           </div>
                         )}

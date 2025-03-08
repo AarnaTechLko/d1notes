@@ -366,7 +366,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                           <p className="mt-2">Total Players: {team.totalPlayers}</p>
                         </td>
                         <td>
-                          <button className="px-4 py-2 text-black-500">{team.status}</button>
+                          <span className="px-4 py-2 text-black-500">{team.status}</span>
                         </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">

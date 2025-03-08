@@ -417,11 +417,11 @@ const Home: React.FC = () => {
                         
                         
                         {coach.status === 'Pending' ? (
-                        <div className='bg-red px-4 py-2 rounded text-orange-500 '>
+                        <div className='bg-red px-4 py-2 rounded text-black-500 '>
                           {coach.status}
                         </div>
                       ) : (
-                        <div className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+                        <div className='bg-red px-4 py-2 rounded bg-white-500 text-black'>
                           {coach.status}
                         </div>
                       )}

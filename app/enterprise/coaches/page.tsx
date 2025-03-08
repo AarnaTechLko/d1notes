@@ -638,16 +638,16 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                       </td>
                       <td>
                         {coach.status === 'Pending' ? (
-                          <button
+                          <span
                             className=" text-black-500"
                             
                           >
                             {coach.status}
-                          </button>
+                          </span>
                         ) : (
-                          <button className=" text-black-500">
+                          <span className=" text-black-500">
                             {coach.status}
-                          </button>
+                          </span>
                         )}
 
                       </td>

@@ -425,16 +425,16 @@ const Home: React.FC = () => {
                                             </td> */}
                                             <td>
                                                 {coach.status === 'Pending' ? (
-                                                    <button
-                                                        className=" text-white-orange-500"
-                                                        onClick={() => handleEnterLicense(coach)}
+                                                    <span
+                                                        className=" text-black-500"
+                                                        
                                                     >
                                                         {coach.status}
-                                                    </button>
+                                                    </span>
                                                 ) : (
-                                                    <button className="text-red-500 ">
+                                                    <span className="text-black-500 ">
                                                         {coach.status}
-                                                    </button>
+                                                    </span>
                                                 )}
 
                                             </td>

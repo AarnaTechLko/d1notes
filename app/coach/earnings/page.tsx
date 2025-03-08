@@ -4,6 +4,8 @@ import { useSession, getSession } from 'next-auth/react';
 import Sidebar from '../../components/coach/Sidebar';
 import { useRouter } from 'next/navigation';
 import { showSuccess } from '@/app/components/Toastr';
+import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
+import  { useRef } from "react";
 // Define the type for the data
 interface Accounts {
   id: number;
@@ -25,7 +27,49 @@ const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [isMiddle, setIsMiddle] = useState(false);
+    const [IsStart, setIsStart] = useState(false);
+    const [isEnd, setIsEnd] = useState(false);
+  const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
   
+    // Scroll handlers
+    const scrollLeft = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+      }
+    };
+  
+    const scrollRight = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft += 200;
+      }
+    };
+    
+    useEffect(() => {
+      const handleScroll = () => {
+        if (tableContainerRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+          const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+  
+          
+          setIsStart(scrollLeft === 0);
+        setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+        setIsMiddle(scrollPercentage >= 40);
+  
+        }
+      };
+  
+      const container = tableContainerRef.current;
+      if (container) {
+        container.addEventListener("scroll", handleScroll);
+      }
+  
+      return () => {
+        if (container) {
+          container.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }, []); // Empty dependency array means it runs only once after mount
   const router = useRouter();
 
   const limit = 10; // Set the number of items per page
@@ -108,6 +152,15 @@ const Home: React.FC = () => {
   />
   <span className="text-lg font-semibold text-gray-800">Total Earnings: USD ${accountBalance}</span>
 </div>
+<div ref={tableContainerRef} className="overflow-x-auto max-h-[400px] overflow-y-auto">
+<button
+  onClick={scrollLeft}
+  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+    IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+  }`}
+>
+  <FaArrowLeft />
+</button>
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
@@ -160,35 +213,55 @@ const Home: React.FC = () => {
                 )}
               </tbody>
             </table>
+            <button
+  onClick={scrollRight}
+  disabled={isEnd} 
+  style={{
+    backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+    color: "white",
+    padding: "10px",
+    border: "none",
+    cursor: isEnd ? "not-allowed" : "pointer",
+  }}
+  className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+  `}
+>
 
-            {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 1
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
-                  }`}
-              >
-                Previous
-              </button>
+</button>
+</div>
+            {paginatedOrders.length > 0 && (
+  <div className="flex justify-between items-center mt-4">
+    {/* Pagination Controls */}
+    <button
+      onClick={handlePrevPage}
+      disabled={currentPage === 1}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+        currentPage === 1
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-blue-500 text-white hover:bg-blue-600'
+      }`}
+    >
+      Previous
+    </button>
 
-              <span className="text-sm text-gray-600">
-                Page {currentPage} of {totalPages}
-              </span>
+    <span className="text-sm text-gray-600">
+      Page {currentPage} of {totalPages}
+    </span>
 
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === totalPages
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
-                  }`}
-              >
-                Next
-              </button>
-            </div>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+        currentPage === totalPages
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-blue-500 text-white hover:bg-blue-600'
+      }`}
+    >
+      Next
+    </button>
+  </div>
+)}
+
           </div>
         </div>
       </main>
