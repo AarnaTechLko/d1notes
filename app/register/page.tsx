@@ -151,7 +151,7 @@ export default function Register() {
       const payload = { ...formValues };
      
         payload.enterprise_id = enterpriseId || '';
-        payload.email = referenceEmail || '';
+        payload.email = referenceEmail || formValues.email;
         payload.sendedBy = sendedBy || '';
         payload.teamId = teamId || '';
       

@@ -5,7 +5,7 @@ import { coaches, otps, licenses, coachaccount, playerEvaluation, teamCoaches } 
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and, between, lt, ilike, or, count, desc,sql } from 'drizzle-orm';
+import { eq, isNotNull, and, between, lt, ilike, or, count, desc,sql,ne } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
  
 
@@ -137,11 +137,11 @@ export async function GET(req: NextRequest) {
         ilike(coaches.email, `%${search}%`),
         ilike(coaches.phoneNumber, `%${search}%`)
       ),
-      eq(coaches.status, "Active")  // Ensure that we are only getting active coaches
+      ne(coaches.status, "Archived")  // Ensure that we are only getting active coaches
     )
   : and(
       eq(coaches.team_id, team_id),
-      eq(coaches.status, "Active")  // If no search term, still filter by active coaches
+      ne(coaches.status, "Archived")  // If no search term, still filter by active coaches
     );
 
 

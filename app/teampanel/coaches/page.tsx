@@ -467,17 +467,17 @@ const Home: React.FC = () => {
                         )}
                       </td>
                       <td>
-                        {coach.status === 'Inactive' ? (
-                          <button
-                            className="bg-red px-1 py-2 text-xs rounded bg-red-500 text-white"
+                        {coach.status === 'Pending' ? (
+                          <div
+                            className="bg-red px-1 py-2 text-xs rounded text-orange-500"
                             onClick={() => handleEnterLicense(coach)}
                           >
                             {coach.status}
-                          </button>
+                          </div>
                         ) : (
-                          <button className="bg-red px-2 text-xs py-2 rounded bg-green-500 text-white">
+                          <div className="bg-red px-2 text-xs py-2 rounded  text-green">
                             {coach.status}
-                          </button>
+                          </div>
                         )}
 
                       </td>
