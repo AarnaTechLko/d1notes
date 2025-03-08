@@ -261,13 +261,20 @@ const Home: React.FC = () => {
 
                                     {/* {session?.user.coachCurrency}*/}</label> 
                             )}
-                                <input
-                                    type="number"
-                                    className="w-full border rounded px-3 py-2"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    placeholder="Ex. 100"
-                                />
+                               <input
+    type="number"
+    className="w-full border rounded px-3 py-2"
+    value={amount}
+    onChange={(e) => {
+        const value = e.target.value;
+        if (/^\d*$/.test(value)) { // Allow only whole numbers
+            setAmount(value);
+        }
+    }}
+    placeholder="Ex. 100"
+    step="1" // Prevent decimal input
+/>
+
                             </div>
                         </div>
                         <div className="flex justify-end">

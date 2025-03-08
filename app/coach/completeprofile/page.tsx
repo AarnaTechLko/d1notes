@@ -550,7 +550,12 @@ export default function Register() {
                       name="expectedCharge"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.expectedCharge}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) { // Allow only whole numbers (no decimals or non-numeric chars)
+                            handleChange(e);
+                        }
+                    }}
                     />
                     </div>
                     {formErrors.currency && <p className="text-red-600 text-sm">{formErrors.currency}</p>}
