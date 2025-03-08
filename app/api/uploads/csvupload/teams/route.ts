@@ -53,7 +53,9 @@ export async function POST(req: NextRequest) {
             );
 
         const existingTeamsMap = new Map(existingTeams.map(team => [team.slug, team.id]));
-
+        const protocol = req.headers.get('x-forwarded-proto') || 'http';
+        const host = req.headers.get('host');
+        const baseUrl = `${protocol}://${host}`;
         let excludedUsers: any[] = [];
         let excludedCoaches: any[] = [];
 
@@ -115,6 +117,23 @@ export async function POST(req: NextRequest) {
                         password: hashedPassword,
                         email: userEmail,
                     });
+
+
+                    await sendEmail({
+                        to: userEmail,
+                        subject: `D1 NOTES Registration`,
+                        text: `D1 NOTES Registration `,
+                        html: `<div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
+                            Dear Player! You have been added  to take advantage of D1 Note's Enterprises / white label service.  
+                            <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Click Here</a> 
+                            to login and complete your profile. Your login details are as follows:
+                            <p>Email: ${userEmail}</p>
+                            <p>Password: ${password}</p>
+                            After completing your profile and your access to the Organization or Team will automatically be activated. 
+                            <p className="mt-5">Regards, <br/> D1 Notes</p>
+                        </div>`
+                    }).catch(err => console.error(`Email Sending Error for ${userEmail}:`, err));
+
                 }
             }
 
@@ -150,6 +169,22 @@ export async function POST(req: NextRequest) {
                         password: hashedPassword,
                         email: userEmail,
                     });
+
+
+                    await sendEmail({
+                        to: userEmail,
+                        subject: `D1 NOTES Registration`,
+                        text: `D1 NOTES Registration `,
+                        html: `<div style="font-family: 'Arial', sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; max-width: 600px; margin: 0 auto;">
+                            Dear Coach! You have been added  to take advantage of D1 Note's Enterprises / white label service.  
+                            <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Click Here</a> 
+                            to login and complete your profile. Your login details are as follows:
+                            <p>Email: ${userEmail}</p>
+                            <p>Password: ${password}</p>
+                            After completing your profile and your access to the Organization or Team will automatically be activated. 
+                            <p className="mt-5">Regards, <br/> D1 Notes</p>
+                        </div>`
+                    }).catch(err => console.error(`Email Sending Error for ${userEmail}:`, err));
                 }
             }
 
