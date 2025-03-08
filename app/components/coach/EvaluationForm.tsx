@@ -482,11 +482,17 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
                                     <h4 className="text-lg font-semibold mb-3">Key</h4>
                                     <ul className="list-none space-y-2">
-                                        <li>[1] Needs significant improvement</li>
-                                        <li>[2] Needs improvement</li>
-                                        <li>[3] At competition level</li>
-                                        <li>[4] Above competition level</li>
-                                        <li>[5] Excellent competition level</li>
+                                        <li>[1] Significantly below competition level – Needs major improvement</li>
+                                        <li>[2] Far below competition level – Needs substantial improvement</li>
+                                        <li>[3] Below competition level – Needs improvement</li>
+                                        <li>[4] Slightly below competition level – Shows potential but needs significant work</li>
+                                        <li>[5] Approaching competition level – Almost there but still inconsistent</li>
+                                        <li>[6] At competition level – Meets standard expectations</li>
+                                        <li>[7] Slightly above competition level – Consistently performs well</li>
+                                        <li>[8] Above competition level – Strong competitor</li>
+                                        <li>[9] Highly above competition level – Among the top performers</li>
+                                        <li>[10] Elite competition level – Exceptional, top-tier performance</li>
+                                        
                                     </ul>
                                 </div>
                             </div>

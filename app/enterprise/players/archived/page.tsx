@@ -617,9 +617,9 @@ const Home: React.FC = () => {
                                             
 
                                             <td>
-                                                <button className='bg-red px-4 py-2 rounded text-red-500'>
+                                                <span className='bg-white px-4 py-2 rounded text-black-500'>
                                                     {coach.status}
-                                                </button>
+                                                </span>
                                             
                                             </td>
                                             <td className="px-4 py-2">

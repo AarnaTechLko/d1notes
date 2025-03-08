@@ -610,13 +610,13 @@ const Home: React.FC = () => {
                       </td>
 
                       <td>{coach.status === 'Pending' ? (
-                        <button className='bg-red px-4 py-2  text-orange-500'>
+                        <span className='bg-red px-4 py-2  text-black-500'>
                           {coach.status}
-                        </button> 
+                        </span> 
                       ) : (
-                        <button className='bg-red px-4 py-2 rounded text-black-500'>
+                        <span className='bg-red px-4 py-2 rounded text-black-500'>
                           {coach.status}
-                        </button>
+                        </span>
                       )
                       }</td>
                       <td>

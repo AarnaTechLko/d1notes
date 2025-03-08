@@ -371,13 +371,13 @@ const Home: React.FC = () => {
                       <td>{coach.position}</td>
 
                       <td>{coach.status === 'Inactive' ? (
-                        <button className='bg-red px-4 py-2 rounded bg-red-500 text-white' onClick={() => handleEnterLicense(coach)}>
+                        <span className=' px-4 py-2 rounded text-black' onClick={() => handleEnterLicense(coach)}>
                           {coach.status}
-                        </button>
+                        </span>
                       ) : (
-                        <button className='bg-red px-4 py-2 rounded bg-green-500 text-white'>
+                        <span className=' px-4 py-2 rounded  text-black'>
                           {coach.status}
-                        </button>
+                        </span>
                       )}</td>
                       <td>
                         <div className="flex items-center space-x-2">
