@@ -539,7 +539,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
                                         <th className="px-4 py-2 text-left">Name</th>
-                                        <th className="px-4 py-2 text-center">Archvie</th>
+                                        <th className="px-4 py-2 text-center">Archive</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -589,7 +589,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
                                         <th className="px-4 py-2 text-left">Name</th>
-                                        <th className="px-4 py-2 text-center">Archvie</th>
+                                        <th className="px-4 py-2 text-center"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -613,11 +613,13 @@ const EditTeam = ({ params }: TeamProps) => {
 
 
                                             </td>
-                                            <td className="px-4 py-2">{player.first_name} {player.last_name}
-                                            <br/>
-                                            <span className={player.status ? "text-red-600 font-bold" : "text-green-600 font-bold"}>
-  {player.status ? "Inactive" : "Active"}
-</span>
+                                            <td className="px-4 py-2">
+                                            {(!player.first_name || player.first_name === 'null') && (    
+                                            <span>...</span>
+                                            )}
+                                            {(player.first_name) && (    
+                                            <span>{player.first_name} {player.last_name}</span>
+                                            )}
                                             </td>
                                             <td className="px-4 py-2 text-center">
                                                 <button className="text-red-500 hover:text-red-700"

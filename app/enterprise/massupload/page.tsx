@@ -114,7 +114,7 @@ const Home: React.FC = () => {
   const handleDelete = (index: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You won't be able to undo this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -241,9 +241,9 @@ const Home: React.FC = () => {
                         
                       </div>
                       <div className="flex space-x-4">
-                        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
+                        {/* <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600" onClick={handleOpenControl}>
                           Go Back
-                        </button>
+                        </button> */}
 
                         <button
                           type="submit"

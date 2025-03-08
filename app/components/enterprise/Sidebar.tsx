@@ -123,7 +123,7 @@ const Sidebar: React.FC = () => {
   const handleDeleteAccount = async () => {
     const confirmDelete = await Swal.fire({
       title: "Are you sure?",
-      text: "Deleting an account will casuse you to lose all your information and you will have to create a new account to use D1 Notes again!",
+      text: "",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -360,7 +360,7 @@ const Sidebar: React.FC = () => {
                     </li>
                     <li className="hover:bg-gray-600 rounded transition duration-200">
                       <a onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
-                        <span>Sign Out</span>
+                        <span>Log Out</span>
                       </a>
                     </li>
                     <li className="hover:bg-gray-600 rounded transition duration-200 ">
