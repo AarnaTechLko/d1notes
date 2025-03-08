@@ -123,7 +123,7 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId,registrat
   const handleDelete = (index: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You won't be able to undo this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -226,12 +226,12 @@ const MassUploadPlayer: React.FC<InviteFormProps> = ({ usertype,teamId,registrat
                         
                       </div>
                       <div className="flex space-x-4">
-                        <button
+                        {/* <button
                           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-blue-600"
                           onClick={handleOpenControl}
                         >
                           Go Back
-                        </button>
+                        </button> */}
                         <button
                           type="submit"
                           className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""}`}

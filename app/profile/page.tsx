@@ -318,7 +318,8 @@ const Profile: React.FC = () => {
                 {profileData.image != 'null' && profileData.image != null ? (
                   <img
                     src={profileData.image}
-                    alt="Profile"
+                    alt=""
+                    title=""
                     className="h-32 w-32 object-cover rounded-full"
                   />
                 ) : (
@@ -413,7 +414,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.weight} Lbs</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.weight}</p>
                 )}
               </div>
               <div>

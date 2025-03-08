@@ -118,7 +118,7 @@ const Home: React.FC = () => {
             }
           };
         }, []); // Empty dependency array means it runs only once after mount
-        
+
     useEffect(() => {
         fetchTeams();
 
@@ -354,7 +354,7 @@ const Home: React.FC = () => {
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, Remove!",
+            confirmButtonText: "Yes, Delete!",
             cancelButtonText: 'Cancel',
         });
     

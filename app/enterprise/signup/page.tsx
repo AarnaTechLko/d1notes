@@ -371,14 +371,14 @@ export default function Signup() {
                   />
                 </div>
                 <div className="flex-1">
-                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport<span className='mandatory'>*</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value="Soccer"
                     onChange={handleChange}
                   >
-
+                    <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
 
                   </select>

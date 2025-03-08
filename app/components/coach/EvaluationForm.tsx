@@ -73,15 +73,15 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
         tactical = [
             { id: 'ta1', label: 'Decision Making', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta2', label: 'Organization with Back four', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta2', label: 'Organization with Back Four', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'ta3', label: 'Positioning', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'ta4', label: 'Role in build up', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'ta4', label: 'Role in Build Up', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'ta5', label: 'Role in Counter Attack', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
 
         ];
         distribution = [
-            { id: 'd1', label: 'With: Hands', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'd2', label: 'With: Feet', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd1', label: 'With Hands', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'd2', label: 'With Feet', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'd3', label: 'Restarts', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'd4', label: 'Open Play', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'd5', label: 'Timing', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
@@ -102,7 +102,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             { id: 'o1', label: 'Starting Position', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'o2', label: 'Communication', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'o3', label: 'Set Plays For', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-            { id: 'o4', label: 'Set Playa Against', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+            { id: 'o4', label: 'Set Plays Against', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
             { id: 'o5', label: 'Leadership', options: ['Select', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] }
         ];
 
@@ -428,7 +428,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne} 
                                          <span className="mx-2">|</span>
                                          <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
-                                         <strong>Position:</strong> {evaluationData?.positionOne}
+                                         <strong>Position(s):</strong> {evaluationData?.positionOne}
                                     </div>
                                     <div className="mb-4">
 <strong>Description: </strong>{evaluationData?.video_description}

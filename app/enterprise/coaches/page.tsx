@@ -639,8 +639,8 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                       <td>
                         {coach.status === 'Pending' ? (
                           <button
-                            className=" text-orange-500"
-                            onClick={() => handleEnterLicense(coach)}
+                            className=" text-black-500"
+                            
                           >
                             {coach.status}
                           </button>
