@@ -229,7 +229,7 @@ const Sidebar: React.FC = () => {
                     <a href="/enterprise/teams" className="flex items-center space-x-2 p-2">
 
                       <FaCompressAlt className='text-xl' />
-                      <span>Your Teams</span>
+                      <span>Your Team</span>
                     </a>
                   </li>
                 )}
