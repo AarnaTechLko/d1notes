@@ -284,7 +284,7 @@ const Home: React.FC = () => {
       text: 'This action cannot be undone!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Yes, remove it!',
       cancelButtonText: 'Cancel',
     });
     if (result.isConfirmed) {
@@ -391,6 +391,9 @@ const Home: React.FC = () => {
 
 <div className="flex items-center space-x-4">
   {/* Buy Licenses Toggle */}
+  <label className="block text-sm font-medium text-gray-700">
+    Additional Access<span className='mandatory'>*</span>
+    </label>
   <div className="flex items-center space-x-2">
     <span>Purchase Evaluvations</span>
     <label className="relative inline-flex items-center cursor-pointer">
@@ -481,7 +484,7 @@ const Home: React.FC = () => {
                       <button
                         onClick={() => handleDelete(order.id)}
                         className="px-2 ml-4 py-1 bg-red-500 text-white rounded hover:bg-red-700"
-                        title='Delete Sub Adminstrator'
+                        title='Remove Sub Adminstrator'
                       >
                         <FaTrash />
                       </button>

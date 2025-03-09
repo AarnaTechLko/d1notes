@@ -97,7 +97,7 @@ export default function TeamsPage({ params }: PageProps) {
             </span>
           </p>
 
-          <h2 className="text-xl font-bold w-full text-blue-600">Add Player(s) To this Team</h2>
+          <h2 className="text-xl font-bold w-full text-blue-600">Add Player(s) to Team</h2>
 
           <div className="w-full mx-auto px-4 mt-5">
             {/* Tabs Header */}

@@ -548,9 +548,9 @@ const Home: React.FC = () => {
                 <th>Gender</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Sport</th>
+                {/* <th>Sport</th>
                 <th>Team</th>
-                <th>Position(s)</th>
+                <th>Position(s)</th> */}
                 <th>Evaluations</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -585,9 +585,9 @@ const Home: React.FC = () => {
                       <td>{coach.gender}</td>
                       <td>{coach.email}</td>
                       <td>{coach.countrycode}{coach.number}</td>
-                      <td>{coach.sport}</td>
+                      {/* <td>{coach.sport}</td>
                       <td>{coach.team}</td>
-                      <td>{coach.position}</td>
+                      <td>{coach.position}</td> */}
                       <td align='center'>
                         {Number(coach.totalEvaluations) >= 1 && (<a
                           href={`/players/history/${coach.slug}`}

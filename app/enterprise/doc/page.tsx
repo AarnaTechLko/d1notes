@@ -475,7 +475,7 @@ const Home: React.FC = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Mobile Number</th>
-                <th>Access</th>
+                <th>Additional Access</th>
                 <th>Action</th>
               </tr>
             </thead>

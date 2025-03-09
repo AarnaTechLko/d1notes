@@ -279,7 +279,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-full flex items-center justify-center"
                   onClick={() => setModalOpen(true)}
                 >
-                  Manually Add Team
+                  Add Team Manually
                 </button>
 
 

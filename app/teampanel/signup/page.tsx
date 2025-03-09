@@ -354,7 +354,7 @@ const [showPassword, setShowPassword] = useState(false);
             <div className="mb-4 md:flex md:space-x-4">
             <div className="flex-1">
               <label htmlFor="address" className="block text-gray-700 text-sm font-semibold mb-2">
-              Team Address
+              Team Street Address
               </label>
               <input
               placeholder='Ex. 12 Fireside Road Suite 200'

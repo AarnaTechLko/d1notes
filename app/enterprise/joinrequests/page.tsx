@@ -153,10 +153,10 @@ const Home: React.FC = () => {
         <span
                           className={`px-4 py-2 rounded-lg ${
                             order.status === 'Sent'
-                              ? 'text-blue-500'
+                              ? 'text-black-500'
                               : order.status === 'Joined'
-                              ? 'text-green-500'
-                              : 'text-red-500'
+                              ? 'text-black-500'
+                              : 'text-black-500'
                           }`}
                           onClick={() => {
                             if (order.status === 'Requested') {
@@ -184,7 +184,7 @@ const Home: React.FC = () => {
     ))
   ) : (
     <tr>
-      <td colSpan={5}>No Requests found</td>
+      <td colSpan={5}>No Invinations found</td>
     </tr>
   )}
 </tbody>

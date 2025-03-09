@@ -12,22 +12,51 @@ import TeamProfileCard from '@/app/components/teams/ProfileCard';
 import PromptComponent from "../components/Prompt";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import  { useRef } from "react";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const Dashboard: React.FC = () => {
   const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
-
-  // Scroll handlers
-  const scrollLeft = () => {
-    if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
-    }
-  };
-
-  const scrollRight = () => {
-    if (tableContainerRef.current) {
-      tableContainerRef.current.scrollLeft += 200;
-    }
-  };
+   const [isMiddle, setIsMiddle] = useState(false);
+    const [IsStart, setIsStart] = useState(false);
+    const [isEnd, setIsEnd] = useState(false);
+    // Scroll handlers
+    const scrollLeft = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+      }
+    };
+  
+    const scrollRight = () => {
+      if (tableContainerRef.current) {
+        tableContainerRef.current.scrollLeft += 200;
+      }
+    };
+    
+    useEffect(() => {
+      const handleScroll = () => {
+        if (tableContainerRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+          const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+  
+          
+          setIsStart(scrollLeft === 0);
+        setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+        setIsMiddle(scrollPercentage >= 40);
+  
+        }
+      };
+  
+      const container = tableContainerRef.current;
+      if (container) {
+        container.addEventListener("scroll", handleScroll);
+      }
+  
+      return () => {
+        if (container) {
+          container.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }, []); // Empty dependency array means it runs only once after mount
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
     Requested: [],
     Accepted: [],
@@ -529,11 +558,13 @@ const Dashboard: React.FC = () => {
               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
             />
             <button
-        onClick={scrollLeft}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
-      >
-        ⬅
-      </button>
+              onClick={scrollLeft}
+              className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+                IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+              }`}
+            >
+              <FaArrowLeft />
+            </button>
             <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
               <thead>
                 {tableInstance.headerGroups.map((headerGroup) => (
@@ -585,11 +616,21 @@ const Dashboard: React.FC = () => {
               </tbody>
             </table>
             <button
-        onClick={scrollRight}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full shadow-md z-10"
-      >
-        ➡
-      </button>
+              onClick={scrollRight}
+              disabled={isEnd} 
+              style={{
+                backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                color: "white",
+                padding: "10px",
+                border: "none",
+                cursor: isEnd ? "not-allowed" : "pointer",
+              }}
+              className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+              `}
+            >
+              <FaArrowRight />
+            </button>
+            
           </div>
         </div>
 

@@ -577,7 +577,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
         <th>Gender</th>
         <th>Email</th>
         <th>Phone</th>
-        <th>Sport</th>
+        {/* <th>Sport</th> */}
         {/* <th>Available License</th>
             <table className="min-w-full table-auto border-collapse border border-gray-300">
               <thead>
@@ -589,7 +589,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                   <th>Sport</th>
                   {/* <th>Available License</th>
         <th>Used License</th> */}
-                  <th>Evaluations Completed</th>
+                  <th>Evaluations</th>
                   <th>Status</th>
                   <th style={{ width: 225 }}>Action</th>
                 </tr>
@@ -613,7 +613,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                       <td>{coach.gender}</td>
                       <td>{coach.email}</td>
                       <td>{coach.countrycode}{coach.phoneNumber}</td>
-                      <td>{coach.sport}</td>
+                      {/* <td>{coach.sport}</td> */}
                       {/* <td>{coach.assignedLicenseCount}</td>
             <td>{coach.consumeLicenseCount}</td> */}
                       <td align='center'>

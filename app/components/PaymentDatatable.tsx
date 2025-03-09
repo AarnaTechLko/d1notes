@@ -126,7 +126,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
             >
               <FaArrowLeft />
             </button>
-            <table>
+            <table className="w-full text-sm text-left text-gray-700 mt-4">
                 <thead>
                     <tr>
                     <th onClick={() => handleSort('created_at')}>Paid Date</th>

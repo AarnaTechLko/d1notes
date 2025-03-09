@@ -213,7 +213,7 @@ export default function TeamsPage() {
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 onClick={() => setModalOpen(true)}
               >
-                Manually Add Team
+               Add Team Manually
               </button>
 
               {/* Right Column: Mass Upload Button */}
