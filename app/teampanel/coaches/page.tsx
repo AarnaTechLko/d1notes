@@ -450,7 +450,7 @@ const Home: React.FC = () => {
                         {Number(coach.totalEvaluations) >= 1 && (<a
                           href={`/coach/history/${coach.slug}`}
                           title='History'
-                          className='bg-blue text-white-500'
+                          className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
                           target="_blank"
                         >
                           View {/* {coach.totalEvaluations} */}
@@ -459,7 +459,7 @@ const Home: React.FC = () => {
                         {Number(coach.totalEvaluations) == 0 && (<button
 
                           title='History'
-                          className=' bg-blue text-white-500'
+                          className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
                           onClick={handlePopup}
                         >
                           View {/* {coach.totalEvaluations} */}

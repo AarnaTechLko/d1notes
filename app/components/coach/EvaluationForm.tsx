@@ -679,7 +679,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                    <select id={`dropdown-tact-${tact.id}`} className="w-[94px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
                                                         ...prev,
                                                         [tact.label]: e.target.value
                                                     }))}>
