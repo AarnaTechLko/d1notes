@@ -264,7 +264,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
-          <div className="container mx-auto p-4"><h1 className="text-2xl font-bold mb-4">Your Team</h1>
+          <div className="container mx-auto p-4"><h1 className="text-2xl font-bold mb-4">Your Teams</h1>
             <div className="flex items-center justify-between mb-4">
               <input
                 type="text"

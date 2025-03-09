@@ -351,7 +351,7 @@ const Home: React.FC = () => {
 
           {modalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg w-[50%] max-h-[80vh] overflow-y-auto">
+              <div className="bg-white p-6 rounded-lg w-full sm:w-[90%] md:w-[75%] lg:w-[50%] max-h-[80vh] overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4">
                   {selectedRecord ? "Edit Sub Admin" : "Add Sub Admin"}
                 </h2>

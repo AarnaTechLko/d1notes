@@ -70,6 +70,7 @@ const Home: React.FC = () => {
         }
       };
     }, []); // Empty dependency array means it runs only once after mount
+
   const router = useRouter();
 
   const limit = 10; // Set the number of items per page
@@ -214,20 +215,20 @@ const Home: React.FC = () => {
               </tbody>
             </table>
             <button
-  onClick={scrollRight}
-  disabled={isEnd} 
-  style={{
-    backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
-    color: "white",
-    padding: "10px",
-    border: "none",
-    cursor: isEnd ? "not-allowed" : "pointer",
-  }}
-  className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
-  `}
->
-
-</button>
+              onClick={scrollRight}
+              disabled={isEnd} 
+              style={{
+                backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                color: "white",
+                padding: "10px",
+                border: "none",
+                cursor: isEnd ? "not-allowed" : "pointer",
+              }}
+              className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+              `}
+            >
+              <FaArrowRight />
+            </button>
 </div>
             {paginatedOrders.length > 0 && (
   <div className="flex justify-between items-center mt-4">

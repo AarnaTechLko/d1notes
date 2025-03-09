@@ -216,8 +216,7 @@ const ChatBox: React.FC = () => {
                 </div>
 
                 <div
-                    className={`col-span-1 md:col-span-6 flex flex-col ${showUserList && "hidden md:flex"
-                        }`}
+                    className={`col-span-1 md:col-span-6 flex flex-col`}
                 >
                    {selectedUser ? (
     <>

@@ -444,7 +444,7 @@ const Profile: React.FC = () => {
 
               <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
 
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Address<span className='mandatory'>*</span></label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Street Address<span className='mandatory'>*</span></label>
                 {isEditMode ? (
 
                   <textarea name="address" maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'

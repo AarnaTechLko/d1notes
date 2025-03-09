@@ -357,7 +357,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2"> Team Address</label>
+                <label className="block text-gray-700 text-sm font-semibold mb-2"> Team Street Address</label>
                 {isEditMode ? (
                 
                   <input

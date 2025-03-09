@@ -110,7 +110,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
         return date.toLocaleDateString('en-US');
     };
     return (
-        <div ref={tableContainerRef}>
+        <div ref={tableContainerRef} className="overflow-x-auto">
             <input 
                 type="text" 
                 placeholder="Search..." 
@@ -154,7 +154,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
             alt={`${item.firstName} ${item.lastName}`} 
             className="w-10 h-10 rounded-full object-cover"
         />
-        <span>{item.firstName} {item.lastName}</span>
+        <p>{item.firstName} {item.lastName}</p>
     </a>
 </td>
 
