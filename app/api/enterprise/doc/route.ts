@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     subject: "D1 NOTES Sub Administrator Registration",
     text: "D1 NOTES Sub Administrator Registration",
     html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${enterproseQuery[0].organizationName}. </p><p>Please login here https://d1notesupdated-five.vercel.app.</p><p>Here are your login details as an Organization:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,
-
+<br>
 D1 Notes Team</p>`,
   });
 

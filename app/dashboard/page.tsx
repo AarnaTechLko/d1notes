@@ -597,16 +597,16 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <p className="mt-2"> In order to search for a coach to request an individual game film evaluation, click <a href="/browse" className="text-blue-700 " >here</a> or on Coaches in
-            the header. When you receive a completed evaluation, it will look similar to <a href="#" className="text-blue-700 " >this</a>. </p>
+          <h3 className='font-bold text-lg'>Request an Evaluation</h3>
+         <p> In order to search for a coach in the marketplace to request an individual game film evaluation, click here or on Coaches in the header. When you receive a completed evaluation, it will look similar to this [[for now, show a blank field player evaluation form]]]. If your Public Visibility is on, a coach may find you in player marketplace searches and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach. If your Public Visibility is off, you will not show up in the player marketplace.</p>
 
-          <p className="mt-2">If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
-            you can view a summary by clicking <a href="/joinrequests" className="text-blue-700 " >here</a> or on Join Requests in the menu. In order to request an
-            individual game film evaluation from a coach from the organization or single team that added you, find
-            the coach by clicking here or on Your Teams and click on the coach’s profile.
-          </p>
-          <p className="mt-2">The Messages function in the menu allows you to further communicate with any coach that has
-            completed an evaluation for you.</p>
+         <h3 className='font-bold text-lg'>Enterprises / Your Teams Explanation</h3> 
+<p>Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by clicking here [[[check to make sure this link to goes to Your Teams in the menu]]] or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. You will automatically not be charged any rate as your organization / team has already paid for them.</p>
+
+<h3 className='font-bold text-lg'>Sending Messages</h3>
+<p>The Messages function in the menu allows you to communicate with any coach in Your Teams as well as communicate further with any coach in the marketplace that has accepted an evaluation request from you.</p>
+
+
 
 
         </div>

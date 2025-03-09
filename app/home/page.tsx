@@ -128,7 +128,7 @@ export default function Home(): JSX.Element {
 </h1>
 
           <p className="mt-4 text-lg text-gray-500">
-          D1 NOTES is setting the standard for individual game film evaluation that offers young athletes the edge they have been missing.
+          D1 NOTES is setting the standard for individual game film evaluation that offers young athletes the development edge they have been missing.
           </p>
         </div>
 
@@ -181,8 +181,7 @@ export default function Home(): JSX.Element {
         <div className="bg-blue-500 text-white p-6 rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Players</h2>
           <p className="text-lg">
-            How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? 
-            Would you like access to a curated network of top coaches, trainers, and scouts?
+          How are you using all those videos of your games? Are you getting consistent individual game feedback for your development? Would you like access to a curated global network of top coaches, trainers, and scouts?
           </p>
           <a href='/howitworks' className='text-lg font-bold'>How It Works for Players</a>
         </div>
@@ -191,8 +190,7 @@ export default function Home(): JSX.Element {
         <div className="bg-green-500 text-white p-6 rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Coaches</h2>
           <p className="text-lg">
-            Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services? 
-            You are worth more than you know to young athletes today.
+          Are you a respected coach, trainer, or scout interested in a convenient way to expand your audience or services globally? You are worth more than you know to young athletes today.
           </p>
           <a href='/howitworks#coach' className='text-lg font-bold '>How It Works for Coaches</a>
         </div>
@@ -201,8 +199,7 @@ export default function Home(): JSX.Element {
         <div className="bg-red-500 text-white p-6 rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Enterprises</h2>
           <p className="text-lg">
-            Are you an organization or team that can benefit from a turnkey solution which has the potential to increase the 
-            value and level of satisfaction delivered to your participants?
+          Are you an organization or team that can benefit from a turnkey solution which has the potential to increase individual player development and the value / level of satisfaction delivered to your participants?
           </p>
           
           <a href='/howitworks#enterprises' className='text-lg font-bold'>How It Works for Enterprises</a>
