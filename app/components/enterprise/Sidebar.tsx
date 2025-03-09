@@ -280,7 +280,7 @@ const Sidebar: React.FC = () => {
                 <a href="/enterprise/joinrequests" className="flex items-center space-x-2 p-2">
                   <CertificateIcon className='text-xl' />
 
-                  <span>Invitations Logs</span>
+                  <span>Invitation Log</span>
                 </a>
               </li>
               {/* {

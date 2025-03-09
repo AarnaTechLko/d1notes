@@ -375,7 +375,7 @@ export default function Signup() {
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value="Soccer"
+                    
                     onChange={handleChange}
                   >
                     <option value="">Select</option>

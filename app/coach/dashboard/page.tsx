@@ -768,7 +768,7 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <h3 className='font-bold text-lg mt-4'>Visibilityn</h3>
+          <h3 className='font-bold text-lg mt-4'>Visibility</h3>
           <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like this [[[for now, show a blank field player evaluation form]]]. You may search players in the marketplace and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
 
 <h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>

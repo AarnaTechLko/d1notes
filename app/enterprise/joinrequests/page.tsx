@@ -132,6 +132,7 @@ const Home: React.FC = () => {
                   <th>Email</th>
                   <th>User Type</th>
                   <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,7 +150,7 @@ const Home: React.FC = () => {
 
         <td>{order.invitation_for.toUpperCase()	}</td>
         <td>
-        <button
+        <span
                           className={`px-4 py-2 rounded-lg ${
                             order.status === 'Sent'
                               ? 'text-blue-500'
@@ -165,9 +166,11 @@ const Home: React.FC = () => {
                           }}
                         >
                           {order.status.toUpperCase()}
-                        </button>
+                        </span>
 
-                        {order.status=='Sent' &&(
+                        
+        </td>
+        <td>{order.status=='Sent' &&(
                          <button
                          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
                          title="Resend Email"
@@ -175,8 +178,7 @@ const Home: React.FC = () => {
                        >
                          <FaRedo />
                        </button>
-                        )}
-        </td>
+                        )}</td>
      
       </tr>
     ))
