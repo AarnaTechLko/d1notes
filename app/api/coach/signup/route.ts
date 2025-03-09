@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, evaluation_charges, invitations, licenses, otps, teamCoaches } from '../../../../lib/schema';
+import { coaches, evaluation_charges, invitations, licenses, otps, playerEvaluation, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, between, lt,ilike } from 'drizzle-orm';
+import { eq,isNotNull,and, between, lt,ilike,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
@@ -257,33 +257,52 @@ export async function GET(req: NextRequest) {
      
 
 
-    let query =  db
-      .select({
-        firstName: coaches.firstName,
-        lastName: coaches.lastName,
-        image: coaches.image,
-        clubName:coaches.clubName,
-        slug:coaches.slug,
-        rating:coaches.rating,
-        city:coaches.city,
-        country:coaches.country,
-        phoneNumber:coaches.phoneNumber,
-        gender:coaches.gender,
-        sport:coaches.sport,
-        qualifications:coaches.qualifications,
-        facebook:coaches.facebook,
-        linkedin:coaches.linkedin,
-        instagram:coaches.instagram,
-        xlink:coaches.xlink,
-        youtube:coaches.youtube,
-        expectedCharge:coaches.expectedCharge,
-        license_type:coaches.license_type,
-      })
-      .from(coaches)
-      .where(and(...conditions))
-      const coachlist =await query.execute();
+    let query = db
+    .select({
+      id: coaches.id,
+      firstName: coaches.firstName,
+      lastName: coaches.lastName,
+      image: coaches.image,
+      clubName: coaches.clubName,
+      slug: coaches.slug,
+      rating: coaches.rating,
+      city: coaches.city,
+      country: coaches.country,
+      phoneNumber: coaches.phoneNumber,
+      gender: coaches.gender,
+      sport: coaches.sport,
+      qualifications: coaches.qualifications,
+      facebook: coaches.facebook,
+      linkedin: coaches.linkedin,
+      instagram: coaches.instagram,
+      xlink: coaches.xlink,
+      youtube: coaches.youtube,
+      expectedCharge: coaches.expectedCharge,
+      license_type: coaches.license_type,
+      evaluationCount: sql<number>`
+      SUM(
+          CASE 
+              WHEN ${playerEvaluation.status} = 2  -- Assuming status is INT
+              AND CAST(${playerEvaluation.rating} AS TEXT) <> ''  -- Handle rating as string
+              AND ${playerEvaluation.rating} IS NOT NULL -- Ensure it's not NULL
+              THEN 1 
+              ELSE 0 
+          END
+      )`.as("evaluationCount"),
+    })
+    .from(coaches)
+    .leftJoin(playerEvaluation, eq(coaches.id, playerEvaluation.coach_id))
+    .where(and(...conditions))
+    .groupBy(coaches.id);
+
+const coachlist = await query.execute();
+
+
+  
+    
 
       const formattedCoachList = coachlist.map(coach => ({
+        id: coach.id,
         firstName: coach.firstName,
         lastName: coach.lastName,
         clubName:coach.clubName,
@@ -303,6 +322,7 @@ export async function GET(req: NextRequest) {
         youtube:coach.youtube,
         evaluation_rate:coach.expectedCharge,
         license_type:coach.license_type,
+        evaluationCount:coach.evaluationCount,
       }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList);

@@ -27,9 +27,10 @@ interface ProfileCardProps {
   xlink?:string;
   youtube?:string;
   evaluation_rate?:number;
+  evaluationCount?:number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink,evaluation_rate,youtube }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink,evaluation_rate,youtube,evaluationCount }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.open(`/coach/${slug}`, '_blank');
@@ -75,7 +76,7 @@ useEffect(()=>{
       <div className="mt-1">${evaluation_rate}</div>
     </div>
      <div className="mt-2 flex justify-center">
-      <div className="mt-1">{stars}</div>
+      <div className="mt-1">{stars} ({evaluationCount})</div>
     </div>
     {/* Bio Icon Section */}
     <div className="flex space-x-4 justify-center mt-3 mb-3 h-5">

@@ -30,6 +30,7 @@ interface Profile {
   expectedCharge: number;
   license_type?: string;
   evaluation_rate: number;
+  evaluationCount?: number;
 }
 
 const Home = () => {
@@ -147,6 +148,7 @@ const Home = () => {
                     xlink={profile?.xlink}
                     evaluation_rate={profile?.evaluation_rate}
                     youtube={profile?.youtube}
+                    evaluationCount={profile?.evaluationCount}
 
                   />
                 </div>

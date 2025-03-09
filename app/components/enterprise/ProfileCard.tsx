@@ -21,21 +21,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     {
       if(session?.user?.type=='coach' || session?.user?.type=='player')
       {
-        window.location.href = `/enterprise/${slug}`;
+       //// window.location.href = `/enterprise/${slug}`;
       
-      // if(session.user.club_id==id)
-      // {
-      //   window.location.href = `/enterprise/${slug}`;
-      // }
-      // else{
-      //   Swal.fire({
-      //     title: 'Unauthorized!',
-      //     text: 'Only logged in members of this Organization may access.',
-      //     icon: 'error', // 'success' displays a green checkmark icon
-      //     confirmButtonText: 'OK',
-      //   });
+      if(session.user.club_id==id)
+      {
+        window.location.href = `/enterprise/${slug}`;
+      }
+      else{
+        Swal.fire({
+          title: 'Unauthorized!',
+          text: 'Only logged in members of this Organization may access.',
+          icon: 'error', // 'success' displays a green checkmark icon
+          confirmButtonText: 'OK',
+        });
         
-      // }
+      }
     }
     else{
       window.location.href = `/enterprise/${slug}`;

@@ -139,10 +139,25 @@ export default function Login() {
                 .catch((error) => {
                   Swal.fire("Error!", "Something went wrong.", "error");
                 });
-            } else {
-              // No button clicked, alert closes automatically
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              // API call on No
+              fetch("/api/permanent-delete", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email: email, type: loginAs}),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  Swal.fire("Deleted!", "Your Account has been deleted permanently.", "info");
+                })
+                .catch((error) => {
+                  Swal.fire("Error!", "Something went wrong.", "error");
+                });
             }
           });
+          
         }
         else{
           showError("Invalid Email or Password.");

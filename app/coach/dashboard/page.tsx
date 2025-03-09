@@ -420,6 +420,7 @@ const Dashboard: React.FC = () => {
     setCoachId(evaluation.coachId);
     setPlayerId(evaluation.playerId);
     setEvaluationData(evaluation);
+    console.log(evaluation);
     setIsEvFormOpen(true);
   };
 
