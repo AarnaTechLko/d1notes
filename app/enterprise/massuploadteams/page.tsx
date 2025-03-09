@@ -309,11 +309,12 @@ const Home: React.FC = () => {
                             <td>
                               <input
                                 type="text"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
                                 value={row.CoachEmail}
                                 onChange={(e) =>
                                   handleInputChange(index, "CoachEmail", e.target.value)
                                 }
-                                className="w-full"
+                                
                               />
                             </td>
                             <td>
@@ -323,7 +324,7 @@ const Home: React.FC = () => {
                                 onChange={(e) =>
                                   handleInputChange(index, "PlayersEmail", e.target.value)
                                 }
-                                className="w-full"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
                               />
                             </td>
                             <td>
@@ -333,7 +334,7 @@ const Home: React.FC = () => {
                                 onChange={(e) =>
                                   handleInputChange(index, "TeamName", e.target.value)
                                 }
-                                className="w-full"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
                               />
                             </td>
                             <td>
@@ -343,7 +344,7 @@ const Home: React.FC = () => {
                                 onChange={(e) =>
                                   handleInputChange(index, "Gender", e.target.value)
                                 }
-                                className="w-full"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
                               />
                             </td>
                             <td>
@@ -353,7 +354,7 @@ const Home: React.FC = () => {
                                 onChange={(e) =>
                                   handleInputChange(index, "Year", e.target.value)
                                 }
-                                className="w-full"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
                               />
                             </td>
                             
