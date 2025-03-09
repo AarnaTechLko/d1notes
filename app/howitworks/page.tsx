@@ -34,8 +34,7 @@ const About: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Create a free public or private account / profile as a player and search through / review our experienced
-                    coach profiles from around the world for one you desire individual game film feedback from.
+                    Create a free public or private account / profile as a player and continue to search through / review our experienced coaches in our global marketplace.
                     </p>
                   </div>
                 </div>
@@ -53,11 +52,7 @@ const About: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Request Evaluation</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Search for a coach to your liking in our global marketplace of coaches, trainers and scouts. Next, request
-an evaluation which includes sending the coach video links of your games / game highlights. If the coach
-accepts your request, the submission will be reviewed and a comprehensive evaluation form and follow
-up options will be returned shortly thereafter in exchange for payment. Evaluations are automatically
-stored and can be referred to later like a player journal.
+                    Once you find a coach, trainer or scout to your liking, next, request an individual game film evaluation which includes sending the coach video links of your games. If the coach accepts your request, the submission will be reviewed and a comprehensive evaluation form and follow-up options will be returned shortly thereafter in exchange for payment. Evaluations are automatically stored and can be referred to later like a player journal. Take control of your game play!
                     </p>
                   </div>
                 </div>
@@ -131,11 +126,7 @@ to enhance your profile, request an “D1 Verified” badge from D1 Notes.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Complete Evaluation</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Wait to receive an evaluation request from a player which includes video links of their games / game
-highlights. Based on the submission, you may choose to accept or decline the request. If you choose to
-accept, payment is initiated for you to watch the video and complete a standard D1 Notes evaluation
-form customized to the sport / position(s) of the player. Completed evaluations are automatically stored
-and can be referred to later.
+                    Wait to receive an evaluation request from a player which includes video links of their games. Based on the submission, you may choose to accept or decline the request. If you choose to accept, payment is initiated for you to watch the video and complete a standard D1 Notes evaluation form customized to the sport / position(s) of the player. Completed evaluations are automatically stored and can be referred to later.
                     </p>
                   </div>
                 </div>
@@ -197,9 +188,7 @@ players on their respective teams during the year, season or events.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900"> B2B</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Within an enterprise account, an Organization or Team will choose from various per player evaluation
-pricing options / packages to purchase up front for the entire Organization or Team to use. Players are
-not expected to pay for evaluations in the white label.
+                    Within an enterprise account, an Organization or Team will choose from various per player evaluation pricing options / packages to purchase up front for the entire Organization or Team to use. Players are not expected to pay for evaluations within the white label.
                     </p>
                   </div>
                 </div>
@@ -214,10 +203,7 @@ not expected to pay for evaluations in the white label.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Turnkey</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    D1 Notes provides an easy onboarding process for an account administrator by utilizing a simple, mass
-upload function that is automatically organized into turnkey white label site use. Organizations, Teams,
-players and coaches will quickly be able to reference and manage the comprehensive information in
-their respective profiles upon logins.
+                    D1 Notes provides an easy onboarding process for an account administrator by utilizing a simple, mass upload option that automatically organizes into turnkey white label site use. Organization and Team administrators, players and coaches will quickly be able to reference and manage the comprehensive information in their respective profiles upon logins.
                     </p>
                   </div>
                 </div>

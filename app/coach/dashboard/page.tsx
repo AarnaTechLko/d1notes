@@ -768,23 +768,17 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <p className="mt-2">Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations
-can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes
-verification process to enhance your profile with a “D1 Verified” badge, click <a href="mailto:support@d1notes.com" className="text-blue-700 ">here</a> Upon receiving an evaluation request,
-you can either accept or politely decline it with a comment. A completed evaluation will look like <a href="#" className="text-blue-700 ">this</a>. </p>
+          <h3 className='font-bold text-lg mt-4'>Visibilityn</h3>
+          <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like this [[[for now, show a blank field player evaluation form]]]. You may search players in the marketplace and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
 
-          <p className="mt-2">In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation
-turnaround times, click <a href="/coach/charges" className="text-blue-700 ">here</a> or on Time and Rate in the menu. The default rate is your base evaluation
-rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your
-oﬀering is optional. If you would like to modify your base evaluation rate, click <a href="/coach/profile" className="text-blue-700 ">here</a> or on Settings in the
-menu and edit your profile.
-          </p>
-          <p className="mt-2">
-          If you have been added by an organization or single team that is using D1 Notes’ Enterprises capabilities,
-you can view a summary by clicking <a href="/coach/joinrequests" className="text-blue-700 ">here</a> or on Join Requests in the menu. Another way to access any
-organization or single team that has added you to their team is to click <a href="/coach/teams" className="text-blue-700 ">here</a> or on Your Teams in the
-menu where you can view rosters.
-          </p>
+<h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>
+<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
+
+<h3 className='font-bold text-lg mt-4'>Enterprises / Your Teams Explanation</h3>
+<p>Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>
+
+<h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
+<p>The Messages function in the menu allows you to communicate with any player in Your Teams as well as communicate further with any player in the marketplace once you have accepted their evaluation request.</p>
 
 
         </div>
