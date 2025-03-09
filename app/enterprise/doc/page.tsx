@@ -393,6 +393,15 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
           </div>
 
           {modalOpen && (
+            <div ref={tableContainerRef} className="overflow-x-auto">
+            <button
+                          onClick={scrollLeft}
+                          className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
+                            IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+                          }`}
+                        >
+                          <FaArrowLeft />
+                        </button>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white p-6 rounded-lg w-full sm:w-[90%] md:w-[75%] lg:w-[50%] max-h-[80vh] overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4">
@@ -507,6 +516,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                     </button>
                   </div>
                 </form>
+              </div>
               </div>
             </div>
           )}
