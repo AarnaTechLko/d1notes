@@ -87,7 +87,7 @@ export default function Home(): JSX.Element {
         {/* Header Section */}
         <div className="text-center py-10">
         <h1 className="text-4xl font-bold text-gray-900  items-center m-auto">
-  NewGain access to coaches that specialize in{' '}
+  Gain access to coaches that specialize in{' '}
   <div
     className="inline-flex items-center relative border border-gray-500 px-2 py-1 rounded-sm ml-2"
     ref={dropdownRef}
