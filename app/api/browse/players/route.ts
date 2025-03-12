@@ -83,11 +83,11 @@ export async function GET(req: NextRequest) {
       .from(users)
       .leftJoin(
         sql`enterprises AS ent`, // Alias defined here
-        sql`${users.enterprise_id}::integer = ent.id`
+        sql`NULLIF(${users.enterprise_id}, '')::integer = ent.id`
       )
       .leftJoin(
         sql`coaches AS coa`, // Alias defined here
-        sql`${users.coach_id}::integer = coa.id`
+        sql`NULLIF(${users.coach_id}, '')::integer = coa.id`
       )
       .where(and(...conditions)).orderBy(desc(users.id));
 
@@ -121,13 +121,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(formattedCoachList);
 
   } catch (error) {
-    const err = error as any;
-    console.error('Error fetching coaches:', error);
+    if (error instanceof Error) {
+        console.error("Database Query Error:", error);
 
-    // Return an error response if fetching fails
+        return NextResponse.json(
+            { message: "Failed to fetch coaches", error: error.message, stack: error.stack },
+            { status: 500 }
+        );
+    }
+
+    // Handle unknown errors (non-Error objects)
+    console.error("Unknown Error:", error);
     return NextResponse.json(
-      { message: 'Failed to fetch coaches' },
-      { status: 500 }
+        { message: "Failed to fetch coaches", error: "Unknown error occurred" },
+        { status: 500 }
     );
-  }
+}
 }

@@ -125,7 +125,7 @@ useEffect(() => {
       </li>
       <li className="pt-[8px]">
         <Link href="/dashboard" className=" text-black font-bold py-2 px-4 rounded  cursor-default" onClick={closeMenu}>
-          Hello, {session?.user?.name || "Player"}!
+          {session?.user?.name || "Player"}!
         </Link>
       </li>
       {/* <li className="relative" ref={dropdownRef}>
