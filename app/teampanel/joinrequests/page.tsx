@@ -13,7 +13,7 @@ interface Order {
   email: string;
   invitation_for: string;
   status: string;
- 
+  action:string;
 }
 
 const Home: React.FC = () => {
@@ -27,9 +27,9 @@ const Home: React.FC = () => {
   const router = useRouter();
   const limit = 10; // Set the number of items per page
   const { data: session } = useSession();
-  
+
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const resendInvitation=async(id:any)=>{
+  const resendInvitation = async (id: any) => {
     setProcessing(true);
     const response = await fetch(`/api/joinrequest/resend/?invitationId=${id}`, {
       method: 'GET',
@@ -45,8 +45,8 @@ const Home: React.FC = () => {
     const data = await response.json();
     setProcessing(false);
     showSuccess(data.message);
-    
-  
+
+
 
   }
   useEffect(() => {
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search is updated
   }, [search, orders]);
 
- 
+
   const totalPages = filteredOrders.length === 0 ? 1 : Math.ceil(filteredOrders.length / limit);
   // Get the paginated orders
   const paginatedOrders = filteredOrders.slice(
@@ -105,18 +105,18 @@ const Home: React.FC = () => {
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  
 
- 
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-auto">
-        { processing && (
-          <Processing/>
+        {processing && (
+          <Processing />
         )}
         <div className="bg-white shadow-md rounded-lg p-6 h-auto">
-        <h1 className="text-2xl font-bold mb-4">Invitation Log</h1>
+          <h1 className="text-2xl font-bold mb-4">Invitation Log</h1>
           <div>
             <input
               type="text"
@@ -128,7 +128,7 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  
+
                   <th>Email</th>
                   <th>User Type</th>
                   <th>Status</th>
@@ -136,28 +136,27 @@ const Home: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-  {paginatedOrders.length > 0 ? (
-    paginatedOrders.map((order, index) => (
-      <tr key={order.invitationId}>
-        {/* Serial Number Column */}
-       
-       
-        <td>
-  {/* Name on top */}
- {order.email} 
- 
-</td>
+                {paginatedOrders.length > 0 ? (
+                  paginatedOrders.map((order, index) => (
+                    <tr key={order.invitationId}>
+                      {/* Serial Number Column */}
 
-        <td>{order.invitation_for.toUpperCase()	}</td>
-        <td>
-        <span
-                          className={`px-4 py-2 rounded-lg ${
-                            order.status === 'Sent'
+
+                      <td>
+                        {/* Name on top */}
+                        {order.email}
+
+                      </td>
+
+                      <td>{order.invitation_for.toUpperCase()}</td>
+                      <td>
+                        <span
+                          className={`px-4 py-2 rounded-lg ${order.status === 'Sent'
                               ? 'text-black-500'
                               : order.status === 'Joined'
-                              ? 'text-black-500'
-                              : 'text-black-500'
-                          }`}
+                                ? 'text-black-500'
+                                : 'text-black-500'
+                            }`}
                           onClick={() => {
                             if (order.status === 'Requested') {
                               setSelectedOrder(order);
@@ -167,68 +166,65 @@ const Home: React.FC = () => {
                         >
                           {order.status.toUpperCase()}
                         </span>
-
-                        <td>{order.status=='Sent' &&(
-                         <button
-                         className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
-                         title="Resend Email"
-                         onClick={() => resendInvitation(order.invitationId)}
-                       >
-                         <FaRedo />
-                       </button>
+                          </td>
+                        <td>{order.status == 'Sent' && (
+                          <button
+                            className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+                            title="Resend Email"
+                            onClick={() => resendInvitation(order.invitationId)}
+                          >
+                            <FaRedo />
+                          </button>
                         )}</td>
-        </td>
-     
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={5}>No Requests found</td>
-    </tr>
-  )}
-</tbody>
+                     
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5}>No Requests found</td>
+                  </tr>
+                )}
+              </tbody>
             </table>
             {/* Pagination Controls */}
             {paginatedOrders.length > 0 && (
-            <div className="flex justify-between items-center mt-4">
-  {/* Previous Button */}
-  
-  <button
-    onClick={handlePrevPage}
-    disabled={currentPage === 1}
-    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-      currentPage === 1
-        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-        : "bg-blue-500 text-white hover:bg-blue-600"
-    }`}
-  >
-    Previous
-  </button>
+              <div className="flex justify-between items-center mt-4">
+                {/* Previous Button */}
 
-  {/* Page Indicator */}
-  <span className="text-sm text-gray-600">
-    Page {currentPage} of {totalPages}
-  </span>
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 1
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
+                >
+                  Previous
+                </button>
 
-  {/* Next Button */}
-  <button
-    onClick={handleNextPage}
-    disabled={currentPage === totalPages}
-    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-      currentPage === totalPages
-        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-        : "bg-blue-500 text-white hover:bg-blue-600"
-    }`}
-  >
-    Next 
-  </button>
-</div>
+                {/* Page Indicator */}
+                <span className="text-sm text-gray-600">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                {/* Next Button */}
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === totalPages
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
+                >
+                  Next
+                </button>
+              </div>
             )}
           </div>
         </div>
       </main>
 
-     
+
     </div>
   );
 };

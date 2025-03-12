@@ -11,11 +11,112 @@ import next from 'next';
 import {  SECRET_KEY } from '@/lib/constants';
 
 
+// export async function POST(req: NextRequest) {
+//   const { playerId } = await req.json();
+
+//   try {
+//     // Using 'like' with lower case for case-insensitive search
+//     const userslist = await db
+//       .select({
+//         first_name: users.first_name,
+//         last_name: users.last_name,
+//         grade_level: users.grade_level,
+//         location: users.location,
+//         birthday: users.birthday,
+//         gender: users.gender,
+//         sport: users.sport,
+//         team: users.team,
+//         position: users.position,
+//         number: users.number,
+//         email: users.email,
+//         image: users.image,
+//         bio: users.bio,
+//         country: users.country,
+//         state: users.state,
+//         city: users.city,
+//         jersey: users.jersey,
+//         countrycode: users.countrycode,
+//         height: users.height,
+//         weight: users.weight,
+//         playingcountries: users.playingcountries,
+//         league: users.league,
+//         graduation: users.graduation,
+//         school_name: users.school_name,
+//         gpa: users.gpa,
+//        countryName:countries.name,
+//        facebook:users.facebook,
+//        instagram:users.instagram,
+//        linkedin:users.linkedin,
+//        xlink:users.xlink,
+//        youtube:users.youtube,
+//        birth_year:users.birth_year,
+//        age_group:users.age_group,
+
+
+//       })
+//       .from(users)
+//       .leftJoin(
+//         countries, 
+//         eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`) // ✅ Explicit cast using sql
+//       )
+//       .where(
+//         eq(users.id, playerId)
+//       )
+//       .limit(1)
+//       .execute();
+      
+//     const payload = userslist.map(user => ({
+//       first_name: user.first_name,
+//       last_name: user.last_name,
+//       grade_level: user.grade_level,
+//       location: user.location,
+//       birthday: user.birthday,
+//       gender: user.gender,
+//       sport: user.sport,
+//       team: user.team,
+//       position: user.position,
+//       number: user.number,
+//       email: user.email,
+//       bio: user.bio,
+//       country: user.country,
+//       state: user.state,
+//       city: user.city,
+//       jersey: user.jersey,
+//       countrycode: user.countrycode,
+//       height: user.height,
+//       playingcountries: user.playingcountries,
+//       league: user.league,
+//       weight: user.weight,
+//       graduation: user.graduation,
+//       school_name: user.school_name,
+//       gpa: user.gpa,
+//       countryName:user.countryName,
+//       image: user.image ? `${user.image}` : null,
+//       facebook:user.facebook,
+//       instagram:user.instagram,
+//       linkedin:user.linkedin,
+//       xlink:user.xlink,
+//       youtube:user.youtube,
+//       age_group:user.age_group,
+//       birth_year:user.birth_year,
+
+
+//     }));
+//     return NextResponse.json(payload[0]);
+//   } catch (error) {
+//     const err = error as any;
+//     console.error('Error fetching users:', error);
+//     return NextResponse.json({ message: 'Failed to fetch users' }, { status: 500 });
+//   }
+// }
 export async function POST(req: NextRequest) {
   const { playerId } = await req.json();
 
+  if (!playerId) {
+    return NextResponse.json({ message: 'Player ID is required' }, { status: 400 });
+  }
+
   try {
-    // Using 'like' with lower case for case-insensitive search
     const userslist = await db
       .select({
         first_name: users.first_name,
@@ -43,28 +144,27 @@ export async function POST(req: NextRequest) {
         graduation: users.graduation,
         school_name: users.school_name,
         gpa: users.gpa,
-       countryName:countries.name,
-       facebook:users.facebook,
-       instagram:users.instagram,
-       linkedin:users.linkedin,
-       xlink:users.xlink,
-       youtube:users.youtube,
-       birth_year:users.birth_year,
-       age_group:users.age_group,
-
-
+        countryName: countries.name,
+        facebook: users.facebook,
+        instagram: users.instagram,
+        linkedin: users.linkedin,
+        xlink: users.xlink,
+        youtube: users.youtube,
+        birth_year: users.birth_year,
+        age_group: users.age_group,
       })
       .from(users)
-      .leftJoin(
-        countries, 
-        eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`) // ✅ Explicit cast using sql
-      )
-      .where(
-        eq(users.id, playerId)
-      )
+      .leftJoin(countries, eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`))
+      .where(eq(users.id, playerId))
       .limit(1)
       .execute();
-    const payload = userslist.map(user => ({
+
+    if (!userslist || userslist.length === 0) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    const user = userslist[0];
+    const payload = {
       first_name: user.first_name,
       last_name: user.last_name,
       grade_level: user.grade_level,
@@ -89,26 +189,23 @@ export async function POST(req: NextRequest) {
       graduation: user.graduation,
       school_name: user.school_name,
       gpa: user.gpa,
-      countryName:user.countryName,
+      countryName: user.countryName,
       image: user.image ? `${user.image}` : null,
-      facebook:user.facebook,
-      instagram:user.instagram,
-      linkedin:user.linkedin,
-      xlink:user.xlink,
-      youtube:user.youtube,
-      age_group:user.age_group,
-      birth_year:user.birth_year,
+      facebook: user.facebook,
+      instagram: user.instagram,
+      linkedin: user.linkedin,
+      xlink: user.xlink,
+      youtube: user.youtube,
+      age_group: user.age_group,
+      birth_year: user.birth_year,
+    };
 
-
-    }));
-
-
-
-    return NextResponse.json(payload[0]);
-  } catch (error) {
-    const err = error as any;
-    console.error('Error fetching users:', error);
-    return NextResponse.json({ message: 'Failed to fetch users' }, { status: 500 });
+    return NextResponse.json(payload);
+  } catch (error: unknown) {
+    // Type assertion to 'Error'
+    const err = error as Error;
+    console.error('Error fetching users:', err.message);
+    return NextResponse.json({ message: 'Failed to fetch users', error: err.message }, { status: 500 });
   }
 }
 

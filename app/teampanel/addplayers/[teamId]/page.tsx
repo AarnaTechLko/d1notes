@@ -92,9 +92,9 @@ export default function TeamsPage({ params }: PageProps) {
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-center">
-            <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
+            {/* <span className="inline-block bg-blue-500 text-white text-xl font-semibold px-3 py-1 rounded-full mb-5">
               {teamName} 
-            </span>
+            </span> */}
           </p>
 
           <h2 className="text-xl font-bold w-full text-blue-600">Add Player(s) to Team</h2>
@@ -112,7 +112,7 @@ export default function TeamsPage({ params }: PageProps) {
                 onClick={() => setActiveTab(1)}
                 className={`tab-btn ${activeTab === 1 ? 'active-tab' : ''}`}
               >
-                Mass Player Uplaod
+                Mass Player Upload
               </button>
               
             </div>

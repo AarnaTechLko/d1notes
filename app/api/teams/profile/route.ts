@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { teams, playerEvaluation, users, teamPlayers,joinRequest, coaches, teamCoaches, evaluation_charges } from '../../../../lib/schema'
+import { teams, playerEvaluation, users, teamPlayers, joinRequest, coaches, teamCoaches, evaluation_charges } from '../../../../lib/schema'
 import debug from 'debug';
-import { desc, eq, asc,and,ne } from 'drizzle-orm';
+import { desc, eq, asc, and, ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
 import path from 'path';
 import jwt from 'jsonwebtoken';
@@ -12,9 +12,9 @@ import { SECRET_KEY } from '@/lib/constants';
 
 
 export async function POST(req: NextRequest) {
-    const { slug,loggeInUser } = await req.json();
-   
-let coach;
+    const { slug, loggeInUser } = await req.json();
+
+    let coach;
     try {
         // Using 'like' with lower case for case-insensitive search
         const teamList = await db
@@ -48,7 +48,7 @@ let coach;
             .limit(1)
             .execute();
 
-        
+
 
         const payload = teamList.map(club => ({
             team_name: club.team_name,
@@ -100,38 +100,38 @@ let coach;
             .where(and(eq(teamPlayers.teamId, payload[0].id), ne(users.first_name, '')))
 
 
-           
-                const coachesData = await db
-                .selectDistinct({
-                    coachId:coaches.id,
-                    firstName:coaches.firstName,
-                    lastName:coaches.lastName,
-                    image:coaches.image,
-                    slug:coaches.slug,
-                    expectedCharge:coaches.expectedCharge
-                })
-                .from(teamCoaches)
-                .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))
-                .innerJoin(teams, eq(teamCoaches.teamId, teams.id))
-                .where(and(eq(teamCoaches.teamId,payload[0].id), ne(coaches.firstName,'')))
-                .execute();
-          
+
+        const coachesData = await db
+            .selectDistinct({
+                coachId: coaches.id,
+                firstName: coaches.firstName,
+                lastName: coaches.lastName,
+                image: coaches.image,
+                slug: coaches.slug,
+                expectedCharge: coaches.expectedCharge
+            })
+            .from(teamCoaches)
+            .innerJoin(coaches, eq(teamCoaches.coachId, coaches.id))
+            .innerJoin(teams, eq(teamCoaches.teamId, teams.id))
+            .where(and(eq(teamCoaches.teamId, payload[0].id), ne(coaches.firstName, '')))
+            .execute();
 
 
 
-        const requested=await db.select().from(joinRequest).where(
+
+        const requested = await db.select().from(joinRequest).where(
             and(
-              eq(joinRequest.player_id,loggeInUser),
-              eq(joinRequest.requestToID,payload[0].id),
+                eq(joinRequest.player_id, loggeInUser),
+                eq(joinRequest.requestToID, payload[0].id),
             )).execute();
-          
-            const isRequested = requested.length;
+
+        const isRequested = requested.length;
 
 
-        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList,coach:coachesData,isRequested:isRequested });
+        return NextResponse.json({ clubdata: payload[0], teamplayersList: teamplayersList, coach: coachesData, isRequested: isRequested });
     } catch (error) {
         const err = error as any;
         console.error('Error fetching teams:', error);
-        return NextResponse.json({ message:err}, { status: 500 });
+        return NextResponse.json({ message: err }, { status: 500 });
     }
 }

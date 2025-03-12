@@ -263,7 +263,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             .then((data) => {
 
                 onClose();
-               
+
                 window.location.reload();
             })
             .catch((error) => {
@@ -338,7 +338,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
     }, [evaluationData]);
 
     if (!isOpen) return null;
-    const handlePositionChange = (event:any) => {
+    const handlePositionChange = (event: any) => {
         setPosition(event.target.value);
     };
     return (
@@ -418,64 +418,64 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     <div className="mb-4">
                                         <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>
                                     </div>
-                                    
-<fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-  <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
-                                    <div className="mb-4"> 
-                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Length:</strong> {evaluationData?.videoOneTiming} min.
-                                        <span className="mx-2">|</span>
-                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne} 
-                                         <span className="mx-2">|</span>
-                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
-                                         <strong>Position(s):</strong> {evaluationData?.positionOne}
-                                    </div>
-                                    <div className="mb-4">
-<strong>Description: </strong>{evaluationData?.video_description}
+
+                                    <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
+                                        <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
+                                        <div className="mb-4">
+                                            <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
+                                            <strong>Length:</strong> {evaluationData?.videoOneTiming} min.
+                                            <span className="mx-2">|</span>
+                                            <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}
+                                            <span className="mx-2">|</span>
+                                            <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
+                                            <strong>Position(s):</strong> {evaluationData?.positionOne}
+                                        </div>
+                                        <div className="mb-4">
+                                            <strong>Description: </strong>{evaluationData?.video_description}
                                         </div>
                                     </fieldset>
-                                    
+
                                     {evaluationData?.video_link_two && (
                                         <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-  <legend className="text-lg font-semibold text-gray-700">Video 2</legend>
-                                   
-  <div className="mb-4"> 
-                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
-                                        <span className="mx-2">|</span>
-                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo} 
-                                         <span className="mx-2">|</span>
-                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberTwo} <span className="mx-2">|</span>
-                                         <strong>Position:</strong> {evaluationData?.positionTwo}
-                                    </div>
-                                    
-                                    <div className="mb-4">
-<strong>Description: </strong>{evaluationData?.video_descriptionTwo}
-                                        </div>
-                                    </fieldset>
-                                     )}
+                                            <legend className="text-lg font-semibold text-gray-700">Video 2</legend>
+
+                                            <div className="mb-4">
+                                                <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
+                                                <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
+                                                <span className="mx-2">|</span>
+                                                <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo}
+                                                <span className="mx-2">|</span>
+                                                <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberTwo} <span className="mx-2">|</span>
+                                                <strong>Position:</strong> {evaluationData?.positionTwo}
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <strong>Description: </strong>{evaluationData?.video_descriptionTwo}
+                                            </div>
+                                        </fieldset>
+                                    )}
                                     {evaluationData?.video_link_three && (
                                         <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-  <legend className="text-lg font-semibold text-gray-700">Video 3</legend>
-                                   
-  <div className="mb-4"> 
-                                        <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span> 
-                                        <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
-                                        <span className="mx-2">|</span>
-                                         <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree} 
-                                         <span className="mx-2">|</span>
-                                         <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberThree} <span className="mx-2">|</span>
-                                         <strong>Position(s):</strong> {evaluationData?.positionThree}
-                                    </div>
-                                    <div className="mb-4">
-<strong>Description: </strong>{evaluationData?.video_descriptionThree}
-                                        </div>
-                                    </fieldset>
-                                     )}
+                                            <legend className="text-lg font-semibold text-gray-700">Video 3</legend>
+
+                                            <div className="mb-4">
+                                                <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
+                                                <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
+                                                <span className="mx-2">|</span>
+                                                <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree}
+                                                <span className="mx-2">|</span>
+                                                <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberThree} <span className="mx-2">|</span>
+                                                <strong>Position(s):</strong> {evaluationData?.positionThree}
+                                            </div>
+                                            <div className="mb-4">
+                                                <strong>Description: </strong>{evaluationData?.video_descriptionThree}
+                                            </div>
+                                        </fieldset>
+                                    )}
                                     {/* <div className="mb-4">
             <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
         </div> */}
-                                
+
                                 </div>
 
                                 {/* Key Information */}
@@ -492,36 +492,36 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <li>[8] Above competition level – Strong competitor</li>
                                         <li>[9] Highly above competition level – Among the top performers</li>
                                         <li>[10] Elite competition level – Exceptional, top-tier performance</li>
-                                        
+
                                     </ul>
                                 </div>
                             </div>
 
                         </div>
                         <div className="p-4">
-    <div className="flex flex-wrap gap-4 items-center">
-        {/* First select with increased width */}
-        <div className="flex flex-col w-1/2 md:w-1/4">
-            <label className="text-sm font-medium mb-1">Select Sport<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
-            <select className="border p-2 rounded w-full" onChange={(e) => setSport(e.target.value)}
-            >
-                <option value="">Select</option>
-                <option value="Soccer">Soccer</option>
-            </select>
-        </div>
+                            <div className="flex flex-wrap gap-4 items-center">
+                                {/* First select with increased width */}
+                                <div className="flex flex-col w-1/2 md:w-1/4">
+                                    <label className="text-sm font-medium mb-1">Select Sport<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
+                                    <select className="border p-2 rounded w-full" onChange={(e) => setSport(e.target.value)}
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="Soccer">Soccer</option>
+                                    </select>
+                                </div>
 
-        {/* Second select */}
-        <div className="flex flex-col w-full md:w-1/4">
-            <label className="text-sm font-medium mb-1">Select Position<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
-            <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
-                <option value="">Select</option>
-                {positionOptionsList2.map((item, index) => (
-                    <option key={index} value={item.value}>{item.label}</option>
-                ))}
-            </select>
-        </div>
-    </div>
-</div>
+                                {/* Second select */}
+                                <div className="flex flex-col w-full md:w-1/4">
+                                    <label className="text-sm font-medium mb-1">Select Position<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
+                                    <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
+                                        <option value="">Select</option>
+                                        {positionOptionsList2.map((item, index) => (
+                                            <option key={index} value={item.value}>{item.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <div className="p-4">
@@ -679,7 +679,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-tact-${tact.id}`} className="w-[94px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                    <select id={`dropdown-tact-${tact.id}`} className="w-[75px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
                                                         ...prev,
                                                         [tact.label]: e.target.value
                                                     }))}>
@@ -711,7 +711,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
                                     {/* Physical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                                        <h3 className='text-xl mb-4'><span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
+                                        <h3 className='text-xl mb-4'> Distribution<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {distribution.map((dis: any) => (
                                                 <div key={dis.id} className="flex items-center space-x-2">
@@ -824,7 +824,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     id="final-remarks"
                                     className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                                     rows={4}
-                                    
+
                                     onChange={(e) => {
                                         const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
                                         if (words.length <= 1000) {
@@ -842,7 +842,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     id="final-remarks"
                                     className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                                     rows={4}
-                                    
+
                                     onChange={(e) => {
                                         const words = e.target.value.split(/\s+/).filter(word => word.length > 0); // Count non-empty words
                                         if (words.length <= 1000) {
@@ -854,21 +854,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 {errors.finalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                             </div>
                             {/* {session?.user.club_id && ( */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                                    <div className="mt-6">
-                                        <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
-                                        <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef} />
-                                    </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div className="mt-6">
+                                    <label htmlFor="final-remarks" className="text-sm font-medium">Upload Document:</label>
+                                    <input type='file' name='document' className='' onChange={handleDocumentChange} ref={fileInputRef} />
                                 </div>
-                                {fileUploading ? (
-                      <>
-                        <FileUploader />
-                      </>
-                    ) : (
-                      <>
-                        {/* Optional: Placeholder for additional content */}
-                      </>
-                    )}
+                            </div>
+                            {fileUploading ? (
+                                <>
+                                    <FileUploader />
+                                </>
+                            ) : (
+                                <>
+                                    {/* Optional: Placeholder for additional content */}
+                                </>
+                            )}
 
                             {/* )} */}
                             <div className="flex justify-end space-x-2 pt-6">
@@ -877,14 +877,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                     className="mt-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
                                 >
                                     {loadSubmit ? (
-  <div className="flex items-center">
-    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-    <span>Submitting...</span>
-  </div>
-) : (
-  <span>Submit</span>
-)}
- 
+                                        <div className="flex items-center">
+                                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                            <span>Submitting...</span>
+                                        </div>
+                                    ) : (
+                                        <span>Submit</span>
+                                    )}
+
                                 </button>
                                 <button
                                     type="button"

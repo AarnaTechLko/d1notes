@@ -83,16 +83,14 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
-          console.log("Testing:"+data.birth_year);
-          if(data.age_group!='')
-          {
+          console.log("Testing:" + data.birth_year);
+          if (data.age_group != '') {
             setSelectedOption('ageGroup')
           }
-          if(data.birth_year!='')
-            {
-              setSelectedOption('birthYear')
-            }
-         
+          if (data.birth_year != '') {
+            setSelectedOption('birthYear')
+          }
+
           if (data.playingcountries.includes(',')) {
             nationalities = data.playingcountries
               .split(',')
@@ -177,7 +175,7 @@ const Profile: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
-    
+
   };
 
   const handleImageChange = async () => {
@@ -400,7 +398,7 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.last_name}</p>
                 )}
               </div>
-                </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-5">
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
@@ -541,8 +539,8 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                 {isEditMode ? (
@@ -552,8 +550,21 @@ const Profile: React.FC = () => {
                     value={profileData.country}
                     onChange={handleChange}
                   >
-                    <option value="">Select</option>
-                    <option value="USA">USA</option>
+                     {/* <option value="">Select a Country</option>
+                    {countryCodesList 
+                      .map((country) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))} */}
+
+                       <option value="" disabled>Select a Country</option>
+  {countryCodesList.map(({ id, country }) => (
+    <option key={id} value={id}>{country}</option>
+  ))}
+
+                    {/* <option value="">Select</option> */}
+                    {/* <option value="USA">USA</option> */}
 
                   </select>
                 ) : (
@@ -598,16 +609,16 @@ const Profile: React.FC = () => {
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.city}</p>
                 )}
               </div>
-              </div>
-              {/* dob */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+            </div>
+            {/* dob */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
                 <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <DatePicker
                     selected={profileData.birthday ? new Date(profileData.birthday) : null}
                     onChange={handleDateChange}
-                    dateFormat="MM-dd-yyyy" // Correct format
+                    dateFormat="MM-DD-YYYY" // Correct format
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     placeholderText="Select a date"
                   />
@@ -655,41 +666,40 @@ const Profile: React.FC = () => {
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.gender}</p>
                 )}
               </div>
-              
-              </div>
 
+            </div>
+
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+              <label>Age:<span className='mandatory'>*</span></label>
+            </div>
+            {isEditMode ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
-                <label>Age:<span className='mandatory'>*</span></label>
+
+                <div>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="option"
+                      value="ageGroup"
+                      checked={selectedOption === "ageGroup"}
+                      onChange={() => {
+                        setSelectedOption("ageGroup");
+                        setProfileData((prev) => ({ ...prev, team_year: '' })); // Reset age_group
+                      }}
+                      className="hidden"
+                    />
+                    <span
+                      className={`px-4 py-2 rounded-full min-w-[120px] text-center ${selectedOption === "ageGroup"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                        }`}
+                    >
+                      Age Group
+                    </span>
+                  </label>
                 </div>
-                {isEditMode ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
-                
-              <div>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="radio"
-        name="option"
-        value="ageGroup"
-        checked={selectedOption === "ageGroup"}
-        onChange={() => {
-          setSelectedOption("ageGroup");
-          setProfileData((prev) => ({ ...prev, team_year: '' })); // Reset age_group
-        }}
-        className="hidden"
-      />
-      <span
-        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
-          selectedOption === "ageGroup"
-            ? "bg-blue-600 text-white"
-            : "bg-gray-200 text-gray-800"
-        }`}
-      >
-        Age Group
-      </span>
-    </label>
-    </div>
-    <div>
-    <label className="inline-flex items-center cursor-pointer">
+                <div>
+                  <label className="inline-flex items-center cursor-pointer">
       <input
         type="radio"
         name="option"
@@ -712,166 +722,241 @@ const Profile: React.FC = () => {
         Birth Year
       </span>
     </label>
-  </div>
-
-  {/* Conditional Select Dropdowns (Always in the Same Line) */}
-  {selectedOption === "ageGroup" && (
-    <div>
-    <select
-      className="  p-2 border rounded-md"
-      name="age_group"
-      onChange={handleChange}
-      value={profileData.age_group}
-    >
-      <option value="">Select Age Group</option>
-      {ageGroups.map((group) => (
-        <option key={group} value={group}>
-          {group}
-        </option>
-      ))}
-    </select>
-    </div>
-  )}
-
-  {selectedOption === "birthYear" && (
-    <div>
-    <select
-      className=" p-2 border rounded-md"
-      name="birth_year"
-      onChange={handleChange}
-      value={profileData.birth_year}
-    >
-      <option value="">Select Birth Year</option>
-      {birthYears.map((year) => (
-        <option key={year} value={year}>
-          {year}
-        </option>
-      ))}
-    </select>
-    </div>
-  )}
                 </div>
-                ):(
-                  <>
+
+                {/* Conditional Select Dropdowns (Always in the Same Line) */}
+                {/* {selectedOption === "ageGroup" && (
                   <div>
-{profileData.birth_year!='' && (
-  <p className="block text-gray-700 text-sm font-semibold mb-2">Birth Year: {profileData.birth_year}</p>
-
-)}
-
-{profileData.age_group!='' && (
-  <p className="block text-gray-700 text-sm font-semibold mb-2">Age Group: {profileData.age_group}</p>
-
-)}
-
-                  </div>
-                  </>
-                )}
-              {/* Team */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
-                <div>
-                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
-                  {isEditMode ? (
-                    <input
-                      placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
-                      type="text"
-                      name="team"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                      value={profileData.team}
+                    <select
+                      className="  p-2 border rounded-md"
+                      name="age_group"
                       onChange={handleChange}
-                    />
-
-                  ) : (
-                    <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
-                  )}
-                </div>
-                  {/* Position */}
-                  <div>
-                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
-                  {isEditMode ? (
-                      <Select
-                      isMulti
-                      options={positionOptionsList}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      onChange={handlePositionChange}
-                      placeholder="Select"
-                    />
-                      ) : (
-                        <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
-                      )}
+                      value={profileData.age_group}
+                    >
+                      <option value="">Select Age Group</option>
+                      {ageGroups.map((group) => (
+                        <option key={group} value={group}>
+                          {group}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                )} */}
 
-               
-
-
+                {/* {selectedOption === "birthYear" && (
+                  <div>
+                    <select
+                      className=" p-2 border rounded-md"
+                      name="birth_year"
+                      onChange={handleChange}
+                      value={profileData.birth_year}
+                    >
+                      <option value="">Select Birth Year</option>
+                      {birthYears.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )} */}
+              {/* </div>
+            ) : (
+              <>
                 <div>
-                  <label className="block text-gray-700 text-sm font-semibold ">Mobile Number<span className='mandatory'>*</span></label>
-                  {isEditMode ? (
-                    <div className="flex">
-                      <select
-                        name="countrycode"
-                        className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
-                        value={profileData.countrycode}
-                        onChange={handleChange}
-                      >
-                        {countryCodesList.map((item) => (
-                          <option key={item.id} value={item.code}>
-                            {item.code} ({item.country})
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="text"
-                        name="number"
-                        value={profileData.number}
-                        onChange={handlePhoneNumberChange}
-                        className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                      />
-                    </div>
-                  ) : (
-                    <p className="mt-2 text-[12px] font-medium text-gray-800"> {profileData.number}</p>
+                  {profileData.birth_year != '' && (
+                    <p className="block text-gray-700 text-sm font-semibold mb-2">Birth Year: {profileData.birth_year}</p>
+
                   )}
+
+                  {profileData.age_group != '' && (
+                    <p className="block text-gray-700 text-sm font-semibold mb-2">Age Group: {profileData.age_group}</p>
+
+                  )}
+
                 </div>
-              </div>
-              
+              </>
+            )} */} 
+
+<div className="mb-5">
+  <label className="block font-semibold">Age: <span className="text-red-500">*</span></label>
+
+  {isEditMode ? (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+      {/* Age Group Selection */}
+      {["ageGroup", "birthYear"].map((option) => (
+        <label key={option} className="inline-flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="ageOption"
+            value={option}
+            checked={selectedOption === option}
+            onChange={() => {
+              setSelectedOption(option);
+              setProfileData((prev) => ({
+                ...prev,
+                birth_year: option === "ageGroup" ? "" : prev.birth_year,
+                age_group: option === "birthYear" ? "" : prev.age_group,
+              }));
+            }}
+            className="hidden"
+            aria-checked={selectedOption === option}
+          />
+          <span
+            className={`px-4 py-2 rounded-full min-w-[120px] text-center transition ${
+              selectedOption === option ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {option === "ageGroup" ? "Age Group" : "Birth Year"}
+          </span>
+        </label>
+      ))}
+
+      {/* Conditional Select Inputs */}
+      {selectedOption === "ageGroup" && (
+        <select
+          className="p-2 border rounded-md"
+          name="age_group"
+          onChange={handleChange}
+          value={profileData.age_group}
+        >
+          <option value="">Select Age Group</option>
+          {ageGroups.map((group) => (
+            <option key={group} value={group}>{group}</option>
+          ))}
+        </select>
+      )}
+
+      {selectedOption === "birthYear" && (
+        <select
+          className="p-2 border rounded-md"
+          name="birth_year"
+          onChange={handleChange}
+          value={profileData.birth_year}
+        >
+          <option value="">Select Birth Year</option>
+          {birthYears.map((year) => (
+            <option key={year} value={year}>{year}</option>
+          ))}
+        </select>
+      )}
+    </div>
+  ) : (
+    // Display selected value in View Mode
+    <p className="text-gray-700 text-sm font-semibold mt-2">
+      {selectedOption === "ageGroup" && profileData.age_group && `Age Group: ${profileData.age_group}`}
+      {selectedOption === "birthYear" && profileData.birth_year && `Birth Year: ${profileData.birth_year}`}
+    </p>
+  )}
+</div>
 
 
-              <div className="col-span-1 mt-5">
-                <label className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
+
+            {/* Team */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
+              <div>
+                <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
-                    name="league"
-                    placeholder='Pre ECNL, ECNL and ECRL'
-                    value={profileData.league}
+                    placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
+                    type="text"
+                    name="team"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={profileData.team}
                     onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
+                )}
+              </div>
+              {/* Position */}
+              <div>
+                <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <Select
+                    isMulti
+                    options={positionOptionsList}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={handlePositionChange}
+                    placeholder="Select"
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
-                    {profileData.league}
-                  </p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
                 )}
               </div>
 
-              <div className="col-span-1 mt-5">
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
+
+
+
+              <div>
+                <label className="block text-gray-700 text-sm font-semibold ">Mobile Number<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                  <textarea
-                    name="bio"
-                    rows={4}
-                    value={profileData.bio}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
+                  <div className="flex">
+                    <select
+                      name="countrycode"
+                      className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
+                      value={profileData.countrycode}
+                      onChange={handleChange}
+                    >
+                      {countryCodesList.map((item) => (
+                        <option key={item.id} value={item.code}>
+                          {item.code} ({item.country})
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="text"
+                      name="number"
+                      value={profileData.number}
+                      onChange={handlePhoneNumberChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  </div>
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
-                    {profileData.bio}
-                  </p>
+                  <p className="mt-2 text-[12px] font-medium text-gray-800"> {profileData.number}</p>
                 )}
               </div>
-              {/* Facebook */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+            </div>
+
+
+
+            <div className="col-span-1 mt-5">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
+              {isEditMode ? (
+                <input
+                  name="league"
+                  placeholder='Pre ECNL, ECNL and ECRL'
+                  value={profileData.league}
+                  onChange={handleChange}
+                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                />
+              ) : (
+                <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
+                  {profileData.league}
+                </p>
+              )}
+            </div>
+
+            <div className="col-span-1 mt-5">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
+              {isEditMode ? (
+                <textarea
+                  name="bio"
+                  rows={4}
+                  value={profileData.bio}
+                  onChange={handleChange}
+                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                />
+              ) : (
+                <p className="mt-2 text-sm font-medium text-gray-800 whitespace-pre-wrap">
+                  {profileData.bio}
+                </p>
+              )}
+            </div>
+            {/* Facebook */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
                 <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
@@ -881,12 +966,13 @@ const Profile: React.FC = () => {
                     name="facebook"
                     value={profileData.facebook}
                     onChange={handleChange}
-                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.facebook}</p>
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.facebook}</p>
                 )}
               </div>
+
               {/* Instagram */}
               <div>
                 <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -900,7 +986,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.instagram}</p>
                 )}
               </div>
               {/* Linkedin */}
@@ -916,11 +1002,11 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.linkedin}</p>
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.linkedin}</p>
                 )}
               </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               {/* xlink */}
               <div>
                 <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -953,13 +1039,13 @@ const Profile: React.FC = () => {
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
                 )}
               </div>
-              </div>
-
-
-
-              {/* Certificate Image Thumbnail */}
-
             </div>
+
+
+
+            {/* Certificate Image Thumbnail */}
+
+          </div>
         </main>
       </div>
     </>

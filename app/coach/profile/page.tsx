@@ -650,9 +650,9 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-                    {profileData.facebook}
-                  </p>
+                  <p className="mt-2 text-sm font-medium text-gray-500 break-words break-all overflow-hidden whitespace-normal">
+                  {profileData.facebook}
+                </p>
                 )}
               </div>
               <div >
@@ -667,9 +667,9 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium text-gray-500 whitespace-pre-wrap">
-                    {profileData.instagram}
-                  </p>
+                  <p className="mt-2 text-sm font-medium text-gray-500 break-words break-all overflow-hidden whitespace-normal">
+                  {profileData.instagram}
+                </p>
                 )}
               </div>
               <div>
@@ -684,9 +684,9 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-                    {profileData.linkedin}
-                  </p>
+                  <p className="mt-2 text-sm font-medium text-gray-500 break-words break-all overflow-hidden whitespace-normal">
+                  {profileData.linkedin}
+                </p>
                 )}
               </div>
               <div>
@@ -701,9 +701,9 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-                    {profileData.xlink}
-                  </p>
+                  <p className="mt-2 text-sm font-medium text-gray-500 break-words break-all overflow-hidden whitespace-normal">
+                  {profileData.xlink}
+                </p>
                 )}
               </div>
               <div>
@@ -718,9 +718,9 @@ const Profile: React.FC = () => {
                     onChange={handleChange}
                   />
                 ) : (
-                  <p className="mt-2 text-sm font-medium  text-gray-500 whitespace-pre-wrap">
-                    {profileData.youtube}
-                  </p>
+                  <p className="mt-2 text-sm font-medium text-gray-500 break-words break-all overflow-hidden whitespace-normal">
+                  {profileData.youtube}
+                </p>
                 )}
               </div>
 
