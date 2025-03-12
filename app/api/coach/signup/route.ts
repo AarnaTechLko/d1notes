@@ -282,8 +282,7 @@ export async function GET(req: NextRequest) {
       evaluationCount: sql<number>`
       SUM(
           CASE 
-              WHEN ${playerEvaluation.status} = 2  -- Assuming status is INT
-              AND CAST(${playerEvaluation.rating} AS TEXT) <> ''  -- Handle rating as string
+              WHEN CAST(${playerEvaluation.rating} AS TEXT) <> ''  -- Handle rating as string
               AND ${playerEvaluation.rating} IS NOT NULL -- Ensure it's not NULL
               THEN 1 
               ELSE 0 

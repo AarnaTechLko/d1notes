@@ -83,11 +83,11 @@ export async function GET(req: NextRequest) {
       .from(users)
       .leftJoin(
         sql`enterprises AS ent`, // Alias defined here
-        sql`${users.enterprise_id}::integer = ent.id`
+        sql`NULLIF(${users.enterprise_id}, '')::integer = ent.id`
       )
       .leftJoin(
         sql`coaches AS coa`, // Alias defined here
-        sql`${users.coach_id}::integer = coa.id`
+        sql`NULLIF(${users.coach_id}, '')::integer = coa.id`
       )
       .where(and(...conditions)).orderBy(desc(users.id));
 
