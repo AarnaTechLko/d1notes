@@ -121,13 +121,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(formattedCoachList);
 
   } catch (error) {
-    const err = error as any;
-    console.error('Error fetching coaches:', error);
+    if (error instanceof Error) {
+        console.error("Database Query Error:", error);
 
-    // Return an error response if fetching fails
+        return NextResponse.json(
+            { message: "Failed to fetch coaches", error: error.message, stack: error.stack },
+            { status: 500 }
+        );
+    }
+
+    // Handle unknown errors (non-Error objects)
+    console.error("Unknown Error:", error);
     return NextResponse.json(
-      { message: 'Failed to fetch coaches' },
-      { status: 500 }
+        { message: "Failed to fetch coaches", error: "Unknown error occurred" },
+        { status: 500 }
     );
-  }
+}
 }
