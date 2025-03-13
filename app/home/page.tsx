@@ -153,6 +153,7 @@ export default function Home(): JSX.Element {
           xlink={coach?.xlink}
           evaluation_rate={coach?.evaluation_rate}
           youtube={coach?.youtube}
+          evaluationCount={coach?.evaluationCount}
         />
       </div>
     ))}
