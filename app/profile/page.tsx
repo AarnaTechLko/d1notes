@@ -859,7 +859,7 @@ const Profile: React.FC = () => {
             {/* Team */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
               <div>
-                <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className='mandatory'>*</span></label>
+                <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"

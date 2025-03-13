@@ -121,7 +121,7 @@ const Sidebar: React.FC = () => {
             />
             <h2 className="text-lg font-semibold">{session.user.name || ''}</h2>
             <h3>(Player)</h3>
-            <p className="text-sm text-gray-400">{session.user.club_name || ''}</p>
+            {/* <p className="text-sm text-gray-400">{session.user.club_name || ''}</p> */}
           </div>
         )}
         <nav className="flex-grow">

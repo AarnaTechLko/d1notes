@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     to: body.email,
     subject: "D1 NOTES Sub Administrator Registration ",
     text: "D1 NOTES Sub Administrator Registration ",
-    html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${teamsQuery[0].team_name}. </p><p>Please login here https://d1notesupdated-five.vercel.app.</p><p>Here are your login details as a Team:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,
+    html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${teamsQuery[0].team_name}. </p><p>Please login here https://d1notesupdated-five.vercel.app/login.</p><p>Here are your login details as a Team:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,
 <br>
 D1 Notes Team</p>`,
   });

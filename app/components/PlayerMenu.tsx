@@ -128,6 +128,9 @@ useEffect(() => {
           {session?.user?.name || "Player"}!
         </Link>
       </li>
+      <li className="pt-[8px]">
+                <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
+            </li>
       {/* <li className="relative" ref={dropdownRef}>
       <button
                     onClick={handleToggleDropdown}

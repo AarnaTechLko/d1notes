@@ -127,7 +127,10 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                  {session?.user?.name || "Coach"}!
                 </Link>
             </li>
-            {/* <li className="relative" ref={dropdownRef}>
+            <li className="pt-[8px]">
+                <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
+            </li>
+            {/* <a onClick={handleLogout} className="text-black">Log Out</a> <li className="relative" ref={dropdownRef}>
                 <button
                    
                     className="flex items-center mx-auto"
