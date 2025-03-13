@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await hash(password, 10);
     
     let userValues: any = {
-      email: email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       enterprise_id:enterprise_id,
       createdAt: new Date(),

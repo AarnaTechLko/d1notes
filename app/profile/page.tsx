@@ -623,7 +623,11 @@ const Profile: React.FC = () => {
                     placeholderText="Select a date"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.birthday}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.birthday ? new Date(profileData.birthday).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                  }).replace(/\//g, "-") : "N/A"}</p>
                 )}
               </div>
               {/* level */}
@@ -1020,7 +1024,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.xlink}</p>
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.xlink}</p>
                 )}
               </div>
               {/* youtube */}
@@ -1036,7 +1040,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.youtube}</p>
                 )}
               </div>
             </div>

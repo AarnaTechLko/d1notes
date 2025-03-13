@@ -40,56 +40,116 @@ export async function GET(req: NextRequest) {
 return NextResponse.json({result,rolesList}, { status: 200 });
 
 }
-
 export async function POST(req: NextRequest) {
-  const body=await req.json();
-  const enterprise_id=body.enterprise_id;
-  const enterproseQuery=await db.select().from(enterprises).where(eq(enterprises.id,Number(body.enterprise_id)));
+  const body = await req.json();
+  const enterprise_id = body.enterprise_id;
 
- 
+  // Check if email already exists
+  const existingUser = await db
+    .select()
+    .from(enterprises)
+    .where(eq(enterprises.email, body.email));
+
+  if (existingUser.length > 0) {
+    return NextResponse.json(
+      { message: "Email already exists", showPopup: true },
+      { status: 400 }
+    );
+  }
+
+  const enterproseQuery = await db
+    .select()
+    .from(enterprises)
+    .where(eq(enterprises.id, Number(body.enterprise_id)));
+
   const password = generateRandomPassword(10);
   const hashedPassword = await hash(password, 10);
+
+  try {
+    await db.insert(enterprises).values({
+      organizationName: enterproseQuery[0].organizationName,
+      owner_name: enterproseQuery[0].owner_name,
+      address: enterproseQuery[0].address,
+      country: enterproseQuery[0].country,
+      state: enterproseQuery[0].state,
+      city: enterproseQuery[0].city,
+      logo: enterproseQuery[0].logo,
+      slug: enterproseQuery[0].slug,
+      contactPerson: body.name,
+      email: body.email,
+      countryCodes: body.countryCodes,
+      role_id: body.role_id,
+      parent_id: body.enterprise_id,
+      mobileNumber: body.phone,
+      buy_evaluation: body.acceptEvaluations,
+      view_evaluation: body.buyLicenses,
+      password: hashedPassword,
+    });
+
+    const emailResult = await sendEmail({
+      to: body.email,
+      subject: "D1 NOTES Sub Administrator Registration",
+      text: "D1 NOTES Sub Administrator Registration",
+      html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${enterproseQuery[0].organizationName}. </p><p>Please login here https://d1notesupdated-five.vercel.app.</p><p>Here are your login details as an Organization:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,<br>D1 Notes Team</p>`,
+    });
+
+    return NextResponse.json({ body }, { status: 200 });
+  } catch (err: any) {
+    console.error("Error:", err);
+    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
+  }
+}
+
+
+// export async function POST(req: NextRequest) {
+//   const body=await req.json();
+//   const enterprise_id=body.enterprise_id;
+//   const enterproseQuery=await db.select().from(enterprises).where(eq(enterprises.id,Number(body.enterprise_id)));
+
+ 
+//   const password = generateRandomPassword(10);
+//   const hashedPassword = await hash(password, 10);
   
-  try{
-  await db.insert(enterprises).values({
-    organizationName: enterproseQuery[0].organizationName,
-    owner_name: enterproseQuery[0].owner_name,
-    address: enterproseQuery[0].address,
-    country: enterproseQuery[0].country,
-    state: enterproseQuery[0].state,
-    city: enterproseQuery[0].city,
-    logo: enterproseQuery[0].logo,
-    slug: enterproseQuery[0].slug,
-    contactPerson: body.name,
-    email: body.email,
-    countryCodes: body.countryCodes,
-    role_id: body.role_id,
-    parent_id: body.enterprise_id,
-    mobileNumber: body.phone,
-    buy_evaluation: body.acceptEvaluations,
-    view_evaluation: body.buyLicenses,
-    password:hashedPassword,
+//   try{
+//   await db.insert(enterprises).values({
+//     organizationName: enterproseQuery[0].organizationName,
+//     owner_name: enterproseQuery[0].owner_name,
+//     address: enterproseQuery[0].address,
+//     country: enterproseQuery[0].country,
+//     state: enterproseQuery[0].state,
+//     city: enterproseQuery[0].city,
+//     logo: enterproseQuery[0].logo,
+//     slug: enterproseQuery[0].slug,
+//     contactPerson: body.name,
+//     email: body.email,
+//     countryCodes: body.countryCodes,
+//     role_id: body.role_id,
+//     parent_id: body.enterprise_id,
+//     mobileNumber: body.phone,
+//     buy_evaluation: body.acceptEvaluations,
+//     view_evaluation: body.buyLicenses,
+//     password:hashedPassword,
     
-  });
+//   });
 
-  const emailResult = await sendEmail({
-    to: body.email,
-    subject: "D1 NOTES Sub Administrator Registration",
-    text: "D1 NOTES Sub Administrator Registration",
-    html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${enterproseQuery[0].organizationName}. </p><p>Please login here https://d1notesupdated-five.vercel.app.</p><p>Here are your login details as an Organization:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,
-<br>
-D1 Notes Team</p>`,
-  });
+//   const emailResult = await sendEmail({
+//     to: body.email,
+//     subject: "D1 NOTES Sub Administrator Registration",
+//     text: "D1 NOTES Sub Administrator Registration",
+//     html: `<p>Dear ${body.name}! You have been added as a Sub Administrator by ${enterproseQuery[0].organizationName}. </p><p>Please login here https://d1notesupdated-five.vercel.app.</p><p>Here are your login details as an Organization:</p><p>Email: ${body.email}</p><p>Password: ${password}</p><p>Please change your password upon login</p><br><p>Regards,
+// <br>
+// D1 Notes Team</p>`,
+//   });
 
 
-  return NextResponse.json({body}, { status: 200 });
-}
-catch(err:any){
-  console.error("Error:", err); // Log the full error
-  return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
-}
+//   return NextResponse.json({body}, { status: 200 });
+// }
+// catch(err:any){
+//   console.error("Error:", err); // Log the full error
+//   return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
+// }
 
-}
+// }
 
 
 

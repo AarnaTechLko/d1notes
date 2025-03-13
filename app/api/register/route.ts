@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       team: null,
       position: null,
       number: null,
-      email: email,
+      email: email.toLowerCase(),
       image: null,
       bio: null,
       country: null,

@@ -190,6 +190,12 @@ const Header: React.FC = () => {
       </div>
       {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
        <Link href="/coach/dashboard" className="text-black">Dashboard</Link> 
+       <a onClick={handleLogout} className="text-black">Log Out</a> 
+       {/* <li className="hover:bg-gray-600 rounded transition duration-200">
+                    <a  onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
+                      <span>Log Out</span>
+                    </a>
+                  </li> */}
 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -297,7 +303,7 @@ const Header: React.FC = () => {
       </div>
 
       <Link href="/dashboard" className="text-black">Dashboard</Link>
-      {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
+       <a onClick={handleLogout} className="text-black">Log Out</a> 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>
@@ -344,6 +350,7 @@ const Header: React.FC = () => {
       </div>
 
        <Link href="/enterprise/dashboard" className="text-black">Dashboard</Link> 
+       <a onClick={handleLogout} className="text-black">Log Out</a> 
       {/* <a onClick={handleLogout} className="text-black">Signout</a>  */}
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
@@ -389,7 +396,7 @@ const Header: React.FC = () => {
       </div>
       {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
       <Link href="/teampanel/dashboard" className="text-black">Dashboard</Link> 
-
+      <a onClick={handleLogout} className="text-black">Log Out</a> 
       <button onClick={toggleHelp} className="ml-2">
         <MdHelpOutline className="text-black w-86 h-6" />
       </button>

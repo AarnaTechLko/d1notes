@@ -36,6 +36,8 @@ const Home: React.FC = () => {
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
   const [selectedRole, setSelectedRole] = useState<number>(0);
 const [isMiddle, setIsMiddle] = useState(false);
+const [isLoading, setIsLoading] = useState(false); // Track loading state
+
 const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
 
   // Scroll handlers
@@ -128,6 +130,11 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return; // Prevent multiple clicks
+  
+    setIsLoading(true); // Start loader
+    
+    //e.preventDefault();
     if (!validateForm()) {
       return;
     }
@@ -164,8 +171,13 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
         },
         body: JSON.stringify(data),
       });
-
+      
       if (response.ok) {
+        // if (response.showPopup) {
+        //   alert("Email already exists. Please use a different email.");
+        //   return;
+        // }
+        closeModal();
         const successMessage = selectedRecord
           ? "Sub Admin updated successfully!"
           : "Sub Admin added successfully!";
@@ -405,7 +417,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white p-6 rounded-lg w-full sm:w-[90%] md:w-[75%] lg:w-[50%] max-h-[80vh] overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4">
-                  {selectedRecord ? "Edit Sub Admin" : "Add Sub Admin"}
+                  {selectedRecord ? "Edit Sub Admin" : "Add Sub Administrator"}
                 </h2>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">

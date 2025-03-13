@@ -728,13 +728,26 @@ export default function Register() {
                 <div>
                   <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
 
-                  <DatePicker
+                  {/* <DatePicker
                     selected={formValues.birthday ? new Date(formValues.birthday) : null}
                     onChange={handleDateChange}
                     dateFormat="MM-dd-yyyy" // Correct format
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     placeholderText="Select a date"
-                  />
+                  /> */}
+                  <DatePicker
+  selected={formValues.birthday ? new Date(formValues.birthday) : null}
+  onChange={handleDateChange}
+  dateFormat="MM-dd-yyyy"
+  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+  placeholderText="Select a date"
+  showYearDropdown
+  scrollableYearDropdown
+  showMonthDropdown
+  minDate={new Date(1985, 0, 1)} // Set minimum selectable date
+  maxDate={new Date(2025, 11, 31)} // Set maximum selectable date
+  yearDropdownItemNumber={41} // Ensures dropdown includes years from 1985 to 2025
+/>
 
                 </div>
                 <div>

@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       .values({
         first_name: first_name,
         last_name: last_name,
-        email: email,
+        email: email.toLowerCase(),
         coach_id: coach_id,
         enterprise_id: enterprise_id,
         grade_level: grade_level,

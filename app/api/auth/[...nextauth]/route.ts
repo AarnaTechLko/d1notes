@@ -16,6 +16,7 @@ interface ExtendedUser {
   name: string | null;
   email: string | null;
   image: string | null;
+  teamName: string | null;
   coach_id?: string | null;
   package_id?: string | null;
   club_id?: string | null;
@@ -90,7 +91,7 @@ const handler = NextAuth({
               .where(eq(users.email, email));
           }
           // Condition
-          const user = await db.select().from(users).where(eq(users.email, email)).execute();
+          const user = await db.select().from(users).where(eq(users.email, email.toLowerCase())).execute();
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
           }
@@ -110,7 +111,8 @@ const handler = NextAuth({
               expectedCharge: 0,
               coach_id: user[0].coach_id,
               club_id: enterprise_id ? enterprise_id : user[0]?.enterprise_id ?? '',
-              club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
+              club_name: user[0].team,
+              teamName:user[0].team,
               added_by: null,
               teamId: teamId,
               visibility: user[0].visibility

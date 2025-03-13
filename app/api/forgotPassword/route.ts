@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         const user = await db
             .select()
             .from(users)
-            .where(eq(users.email, email))
+            .where(eq(users.email, email.toLowerCase()))
             .limit(1);
         userExists = user.length > 0;
     } 
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
         subject: "D1 NOTES Reset Password.",
         text: "D1 NOTES Reset Password.",
         html: `
-            <p>Dear ${role},</p>
+            <p>Dear ${role.charAt(0).toUpperCase() + role.slice(1)},</p>
             <p>Click on the following link to reset your password:</p>
             <p><b>Reset password Link: </b><a href="https://d1notesupdated-five.vercel.app/reset-password?token=${token}">Reset your password</a></p>
         `,

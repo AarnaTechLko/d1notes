@@ -17,7 +17,10 @@ export async function POST(req: NextRequest) {
     const team_name = formData.get('organizationName') as string;
     const contactPerson = formData.get('contactPerson') as string;
     const manager_name = formData.get('owner_name') as string;
-    const manager_email = formData.get('email') as string;
+    //const manager_email = formData.get('email') as string;
+    const em = formData.get('email') as string;
+    const emai = formData.get("email");
+    const manager_email = typeof em === "string" ? em.toLowerCase() : "";
     const manager_phone = formData.get('mobileNumber') as string;
     const address = formData.get('address') as string;
     const country = formData.get('country') as string;
