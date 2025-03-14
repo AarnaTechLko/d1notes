@@ -349,7 +349,8 @@ export default function Login() {
                 href={
                   formValues.loginAs === 'coach' ? '/coach/signup' :
                     formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
-                      '/register'
+                      formValues.loginAs === 'team' ? '/teampanel/signup':
+                        '/register'
                 }
                 className="text-blue-500"
               >
