@@ -476,7 +476,7 @@ const Home: React.FC = () => {
 
 
 
-                  <div className="flex justify-end gap-4">
+                  <div className="flex justify-end gap-4 mt-4">
                     <button
                       type="button"
                       onClick={closeModal}
