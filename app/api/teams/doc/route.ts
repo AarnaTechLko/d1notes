@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import {enterprises,roles, teams} from '../../../../lib/schema';
+import {coaches, enterprises,roles, teams, users} from '../../../../lib/schema';
 
 import { eq, and, gt,desc,or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -42,9 +42,24 @@ return NextResponse.json({result}, { status: 200 });
 export async function POST(req: NextRequest) {
   const body=await req.json();
   const team_id=body.team_id;
-  const teamsQuery=await db.select().from(teams).where(eq(teams.id,Number(body.team_id)));
+  const teamsQuery = await db.select().from(teams).where(eq(teams.id, Number(body.team_id)));
+  
 
- 
+  // check email already exists. - Harsh - 15-03-2025
+  const checkCoaches = await db.select().from(coaches).where(eq(coaches.email, body.email)).execute(); 
+  
+  const checkEnterprises = await db
+    .select()
+    .from(enterprises)
+    .where(eq(enterprises.email, body.email));
+  
+  const checkUsers = await db.select().from(users).where(eq(users.email, body.email)).execute();
+  const checkManager = await db.select().from(teams).where(eq(teams.manager_email, body.email));
+
+  if(checkCoaches.length>0 || checkUsers.length > 0 || checkEnterprises.length > 0 || checkManager.length > 0) {
+        return NextResponse.json({ message: "Email already exists" }, { status: 500 });
+    }
+// end
   const password = generateRandomPassword(10);
   const hashedPassword = await hash(password, 10);
   
