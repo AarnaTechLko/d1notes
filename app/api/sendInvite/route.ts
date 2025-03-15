@@ -13,6 +13,7 @@ interface RequestBody {
 }
 
 export async function POST(req: NextRequest) {
+
   const { emails, enterpriseId, usertype, registrationType, teamId }: RequestBody = await req.json();
   const protocol = req.headers.get('x-forwarded-proto') || 'http';
   const host = req.headers.get('host');
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest) {
       .select()
       .from(invitations)
       .where(and(eq(invitations.email, singleEmail), eq(invitations.invitation_for, registrationType)));
+
 
     if (existingInvite.length > 0) {
       console.log(`User ${singleEmail} has already been invited. Skipping.`);
@@ -57,7 +59,6 @@ export async function POST(req: NextRequest) {
       status: 'Sent',
     });
 
-    
     // **Send the email invitation**
     await sendEmail({
       to: singleEmail,
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
     }).catch(err => console.error(`Email Sending Error for ${singleEmail}:`, err));
   }
 
+    
   return NextResponse.json(
     { message: "Invitation(s) sent successfully." },
     { status: 200 }
