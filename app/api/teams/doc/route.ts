@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const checkManager = await db.select().from(teams).where(eq(teams.manager_email, body.email));
 
   if(checkCoaches.length>0 || checkUsers.length > 0 || checkEnterprises.length > 0 || checkManager.length > 0) {
-        return NextResponse.json({ message: "Email already exists" }, { status: 500 });
+        return NextResponse.json({ message: "This email is already being in used by another organization or team." }, { status: 500 });
     }
 // end
   const password = generateRandomPassword(10);
