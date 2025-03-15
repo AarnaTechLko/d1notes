@@ -164,6 +164,9 @@ const Dashboard: React.FC = () => {
     }
 
     const evaluationsData = await response.json();
+
+    console.log("Evaluation Data: ", evaluationData)
+
     setEvaluations(evaluationsData);
 
     setData(evaluationsData);
@@ -420,7 +423,7 @@ const Dashboard: React.FC = () => {
     setCoachId(evaluation.coachId);
     setPlayerId(evaluation.playerId);
     setEvaluationData(evaluation);
-    console.log(evaluation);
+    console.log("evaluation: ", evaluation);
     setIsEvFormOpen(true);
   };
 
@@ -772,7 +775,7 @@ const Dashboard: React.FC = () => {
           <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like this [[[for now, show a blank field player evaluation form]]]. You may search players in the marketplace and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
 
 <h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>
-<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
+<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
 
 <h3 className='font-bold text-lg mt-4'>Enterprises / Your Teams Explanation</h3>
 <p>Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>

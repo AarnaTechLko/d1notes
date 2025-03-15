@@ -309,6 +309,79 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
     //     }
     // };
+
+
+    const fetchEvaluationResultData = async () => {
+
+        try {
+                const response = await fetch(`/api/evaluationdetails?evaluationId=${evaluationId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (!response.ok) {
+    
+                    throw new Error('Failed to fetch evaluation data');
+                }
+    
+                const data = await response.json();
+
+                console.log("results: ", data.result);
+
+                const datas = data.result;
+                const technicalScoresJson = JSON.parse(datas.technicalScores)
+                console.log(technicalScoresJson)
+
+                console.log("Checking data: ", datas);
+
+                // console.log("technicalScoresJson keys:", Object.keys(technicalScoresJson));
+                // console.log("technical labels:", technical.map((t: any) => t.label));
+
+
+                const newScores = Object.fromEntries(
+                    technical.map((tech: any) => [tech.label, technicalScoresJson?.[tech.label] || '0'])
+                );
+                
+                console.log("New Mapped Scores:", newScores);
+
+                setTechnicalScores(newScores);
+
+                // setTechnicalScores({
+                //     ...Object.fromEntries(technical.map((tech: any) => [tech.label, technicalScoresJson?.[tech.label] || '0'])),
+                // });
+                // setTechnicalScores(() => ({}));
+                
+
+                setTacticalScores({
+                    ...Object.fromEntries(tactical.map((tact: any) => [tact.label, datas.tacticalScores?.[tact.label] || '0'])),
+                });
+                setPhysicalScores({
+                    ...Object.fromEntries(physical.map((phys: any) => [phys.label, datas.physicalScores?.[phys.label] || '0'])),
+                });
+                setTechnicalRemarks(datas.technicalRemarks || '');
+                setTacticalRemarks(datas.tacticalRemarks || '');
+                setPhysicalRemarks(datas.physicalRemarks || '');
+                setFinalRemarks(datas.finalRemarks || '');
+                // Set the fetched evaluation data
+
+                console.log("technical scores: ", technicalScores)
+                console.log("tactical scores: ", tacticalScores)
+                console.log("physical scores: ", physicalScores)
+                console.log("technical remarks: ", technicalRemarks)
+                console.log("tactical remarks: ", tacticalRemarks)
+                console.log("physical remarks: ", physicalRemarks)
+                console.log("final remarks: ", finalRemarks)
+
+        } catch (error) {
+            console.error('Error fetching evaluation data:', error);
+
+        }
+    };
+
+
+
     const handleDocumentChange = async () => {
         if (!fileInputRef.current?.files) {
             throw new Error('No file selected');
@@ -332,9 +405,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         }
     };
     useEffect(() => {
-        ///fetchEvaluationResultData();
-
-
+        evaluationData?.evaluationId != null ? fetchEvaluationResultData() : ''
     }, [evaluationData]);
 
     if (!isOpen) return null;
