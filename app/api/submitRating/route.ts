@@ -45,19 +45,26 @@ export async function PUT(req: NextRequest) {
 
     const averageRating = result[0]?.averageRating || 0;
 
+    // const updateCoaches = await db
+    // .update(coaches)
+    // .set({
+    //   rating: parseFloat(Number(averageRating).toFixed()), // Ensure averageRating is a number
+    // })
+    // .where(eq(coaches.id, coach_id))
+    // .returning();
+
     const updateCoaches = await db
     .update(coaches)
     .set({
-      rating: parseFloat(Number(averageRating).toFixed()), // Ensure averageRating is a number
+      // rating: parseFloat(Math.round(Number(averageRating)).toFixed(1)),
+      rating: 2.5,
     })
     .where(eq(coaches.id, coach_id))
     .returning();
-
-
+    // console.log(updateCoaches);
+    // console.log(parseFloat((Math.round(Number(averageRating) * 2) / 2).toFixed(1)));
     return NextResponse.json({ message: true }, { status: 200 });
-
   } catch (error:any) {
-    
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

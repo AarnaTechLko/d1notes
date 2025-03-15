@@ -40,10 +40,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
   const { data: session } = useSession();
 useEffect(()=>{
   setPlayerId(session?.user?.id || '');
-},[session])
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
-  ));
+}, [session])
+  const stars = Array.from({ length: 5 }, (_, i) => {
+    if (i < Math.floor(rating)) {
+      return <span key={i} className="text-yellow-500">★</span>; // Full star
+    } else if (i === Math.floor(rating) && rating % 1 !== 0) {
+      return <span key={i} className="text-yellow-500">☆</span>; // Half star (empty star for visual effect)
+    } else {
+      return <span key={i} className="text-gray-300">★</span>; // Empty star
+    }
+  });
 
   return (
     <>
