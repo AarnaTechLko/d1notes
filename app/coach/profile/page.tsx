@@ -737,7 +737,7 @@ const Profile: React.FC = () => {
                     placeholder=' '
                     type="file"
                     name="youtube"
-                    accept=".doc,.docx,application/msword,application/pdf,image/jpeg,image/png,.jpg"
+                    accept=".doc,.docx,application/msword,application/pdf,image/*,"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     onChange={handleCVChange}
 
