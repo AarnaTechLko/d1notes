@@ -14,7 +14,7 @@ import Email from 'next-auth/providers/email';
 // Zod schema for validation - Removed .optional() to make 'otp' a required string
 const formSchema = z
   .object({
-    email: z.string().email('Invalid email format.'),
+    email: z.string().toLowerCase().email('Invalid email format.'),
     password: z
       .string()
       .refine(
@@ -167,9 +167,11 @@ export default function Register() {
         throw new Error(errorData.message || 'Something went wrong!');
       }
       else {
+        const lowerCaseEmail = formValues.email.toLowerCase();
+
         const res = await signIn('credentials', {
           redirect: false,
-          email: formValues.email,
+          email: lowerCaseEmail,
           password: formValues.password,
           loginAs: formValues.loginAs,
         });
