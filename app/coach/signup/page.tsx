@@ -13,7 +13,7 @@ import { useSearchParams } from 'next/navigation';
 // Zod schema for validation
 const formSchema = z
   .object({
-    email: z.string().email('Invalid email format.'),
+    email: z.string().toLowerCase().email('Invalid email format.'),
     password: z
       .string()
       .refine(
@@ -159,9 +159,11 @@ export default function Register() {
         setError(errorData.message || 'Something went wrong!');
       }
 
+      const lowerCaseEmail = formValues.email.toLowerCase();
+      console.log(lowerCaseEmail);
       const res = await signIn('credentials', {
         redirect: false,
-        email: formValues.email,
+        email: lowerCaseEmail,
         password: formValues.password,
         loginAs: formValues.loginAs,
       });

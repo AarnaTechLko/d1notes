@@ -18,7 +18,7 @@ const formSchema = z.object({
   organizationName: z.string().min(1, 'Organization Name is required.'),
   ////contactPerson: z.string().min(1, 'Contact Person is required.'),
   owner_name: z.string().min(1, 'Administrator Name is required.'),
-  email: z.string().email('Invalid email format.'),
+  email: z.string().toLowerCase().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
   address: z.string().min(1, 'Address is required.'),
   country: z.string().min(1, 'Country is required.'),
@@ -181,10 +181,11 @@ export default function Signup() {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Something went wrong!');
       }
+      const lowerCaseEmail = formValues.email.toLowerCase();
 
       await signIn('credentials', {
         redirect: false,
-        email: formValues.email,
+        email: lowerCaseEmail,
         password: formValues.password,
         loginAs: formValues.loginAs,
       });
