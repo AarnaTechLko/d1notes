@@ -237,13 +237,11 @@ export async function GET(req: NextRequest) {
     if (rating) {
       if(rating=='0')
       {
-        
-        conditions.push(between(coaches.rating, 0, 5));
+        conditions.push(between(coaches.rating, '0', '5'));
       }
       else{
-        conditions.push(eq(coaches.rating, Number(rating)));
+        conditions.push(between(coaches.rating, rating, '5'));
       }
-      
     }
       
     if (amount) {
