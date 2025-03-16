@@ -1,4 +1,8 @@
-const Star = ({ filled }) => (
+interface StarProps {
+    filled: number
+}
+
+const Star: React.FC<StarProps> = ({ filled }) => (
     <span
         className="relative inline-block text-gray-300"
         style={{
