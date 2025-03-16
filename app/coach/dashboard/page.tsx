@@ -149,6 +149,9 @@ const Dashboard: React.FC = () => {
   const fetchEvaluations = async (status: string) => {
     const session = await getSession();
     const coachId = session?.user.id;
+
+    console.log("coachId: ", coachId, " status: ", status)
+
     setLoading(true);
     const response = await fetch('/api/coach/evaluations', {
       method: 'POST',
@@ -165,7 +168,7 @@ const Dashboard: React.FC = () => {
 
     const evaluationsData = await response.json();
 
-    console.log("Evaluation Data: ", evaluationData)
+    console.log("Evaluation Data: ", evaluationsData)
 
     setEvaluations(evaluationsData);
 

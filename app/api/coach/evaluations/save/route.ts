@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
 
     if (existingData.length > 0) {
-      const insertedData = await db.update(evaluationResults).set({
+      const updatedData = await db.update(evaluationResults).set({
         evaluationId: evaluationId,
         playerId: playerId,
         coachId: coachId,
@@ -85,6 +85,7 @@ export async function POST(req: NextRequest) {
 
 
     if (status) {
+
 
       const updateEvaluation = await db
         .update(playerEvaluation)

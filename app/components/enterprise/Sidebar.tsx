@@ -358,11 +358,6 @@ const Sidebar: React.FC = () => {
                         <span>Change Password</span>
                       </a>
                     </li>
-                    <li className="hover:bg-gray-600 rounded transition duration-200">
-                      <a onClick={handleLogout} className="flex items-center space-x-2 p-2 cursor-pointer">
-                        <span>Log Out</span>
-                      </a>
-                    </li>
                     <li className="hover:bg-gray-600 rounded transition duration-200 ">
                     <a  onClick={handleDeleteAccount} className="flex text-sm text-red-300 mt-10 items-center space-x-2 p-2 cursor-pointer">
                       <span>Delete Account</span>

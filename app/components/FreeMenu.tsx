@@ -105,7 +105,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   Organizations
                 </Link>
               </li>
-              <li className="pt-[8px]">
+              {/* <li className="pt-[8px]">
                 <Link
                   href="/browse/teams"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
@@ -113,7 +113,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                 >
                   Teams
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         )}
@@ -160,7 +160,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   Organization  
                 </Link>
               </li>
-              <li className="pt-[8px]">
+              {/* <li className="pt-[8px]">
                 <Link
                   href="/teampanel/signup"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
@@ -168,7 +168,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                 >
                   Team  
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         )}

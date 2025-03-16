@@ -105,13 +105,13 @@ useEffect(() => {
                 </Link>
               </li>
               <li className="pt-[8px]">
-                <Link
+                {/* <Link
                   href="/browse/teams"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
                   onClick={handleOptionClick}
                 >
                   Teams
-                </Link>
+                </Link> */}
               </li>
             </ul>
           </div>
