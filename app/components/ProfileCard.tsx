@@ -6,6 +6,7 @@ import { FaUser, FaFacebook, FaInstagram, FaLinkedin, FaXTwitter } from "react-i
 import EvaluationModal from './EvaluationModal';
 import { useSession } from 'next-auth/react';
 import { FaYoutube } from 'react-icons/fa';
+import Star from './Stars';
  
 
 interface ProfileCardProps {
@@ -40,10 +41,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
   const { data: session } = useSession();
 useEffect(()=>{
   setPlayerId(session?.user?.id || '');
-},[session])
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
-  ));
+}, [session])
+
+  // const stars = Array.from({ length: 5 }, (_, i) => (
+  //   <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
+  // ));
+
+  const stars = Array.from({ length: 5 }, (_, i) => {
+    const fillPercent = Math.min(Math.max((rating - i) * 100, 0), 100); 
+    return <Star key={i} filled={fillPercent} />;
+});
+
+
 
   return (
     <>
