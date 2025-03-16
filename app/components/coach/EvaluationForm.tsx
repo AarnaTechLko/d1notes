@@ -480,7 +480,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
                                 {/* Key Information */}
                                 <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
-                                    <h4 className="text-lg font-semibold mb-3">Key</h4>
+                                    <h4 className="text-lg font-semibold mb-3">Evaluation Rating Guide</h4>
                                     <ul className="list-none space-y-2">
                                         <li>[1] Significantly below competition level – Needs major improvement</li>
                                         <li>[2] Far below competition level – Needs substantial improvement</li>
