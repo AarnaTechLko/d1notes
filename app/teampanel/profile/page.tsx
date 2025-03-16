@@ -272,6 +272,29 @@ const Profile: React.FC = () => {
 
             {/* Profile Information Form */}
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5 mb-2">
+
+
+              <div>
+                    <label className="block text-gray-700 text-sm font-semibold mb-2"> Sport<span className='mandatory'>*</span></label>
+                    {isEditMode ? (
+                    
+                    <select
+                    name="sport"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
+                    value="Soccer"
+                    onChange={handleChange}
+                  >
+
+                    <option value="Soccer">Soccer</option>
+
+                  </select>
+
+                    ) : (
+                      <p className="mt-2 text-[12px] font-medium text-gray-800">Soccer</p>
+                    )}
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
               {/* First Name */}
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Team Name<span className="mandatory">*</span></label>
@@ -288,22 +311,6 @@ const Profile: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5">
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name<span className="mandatory">*</span></label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="owner_name"
-                    value={profileData.manager_name}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.manager_name}</p>
-                )}
-              </div>
-              </div>
 
 
 
@@ -332,7 +339,7 @@ const Profile: React.FC = () => {
                   <div className="flex">
                     <select
                       name="countryCodes"
-                      className="mt-2 block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
+                      className="block  border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500 w-1/3 mr-1" // Added mr-4 for margin-right
                       value={profileData.countryCodes}
                       onChange={handleChange}
                     >
@@ -347,7 +354,7 @@ const Profile: React.FC = () => {
                       name="number"
                       value={profileData.manager_phone}
                       onChange={handlePhoneNumberChange}
-                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                      className="block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                     />
                   </div>
                 ) : (
@@ -356,6 +363,22 @@ const Profile: React.FC = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+
+              <div>
+                  <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name<span className="mandatory">*</span></label>
+                  {isEditMode ? (
+                    <input
+                      type="text"
+                      name="owner_name"
+                      value={profileData.manager_name}
+                      onChange={handleChange}
+                      className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                    />
+                  ) : (
+                    <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.manager_name}</p>
+                  )}
+                </div>
+
               <div>
                 <label className="block text-gray-700 text-sm font-semibold mb-2"> Team Street Address</label>
                 {isEditMode ? (
@@ -366,33 +389,13 @@ const Profile: React.FC = () => {
                     name="address"
                     value={profileData.address}
                     onChange={handleChange}
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full focus:ring-indigo-500"
                   />
 
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
                 )}
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2"> Sport<span className='mandatory'>*</span></label>
-                {isEditMode ? (
-                
-                <select
-                name="sport"
-                className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                value="Soccer"
-                onChange={handleChange}
-              >
-
-                <option value="Soccer">Soccer</option>
-
-              </select>
-
-                ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">Soccer</p>
-                )}
-              </div>
-            
+              </div>  
           
               
             </div>
@@ -409,7 +412,7 @@ const Profile: React.FC = () => {
                   // />
                   <select
                   name="country"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  className="border border-gray-300 rounded-md py-2 px-4 w-full"
                   value={profileData.country}
                   onChange={handleChange}
                 >
@@ -445,7 +448,7 @@ const Profile: React.FC = () => {
                     id="state"
                     value={profileData.state}
                     onChange={handleChange}
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                   >
                     <option value="">Select</option>
                     {statesList.map((state: any, index) => (
@@ -480,7 +483,7 @@ const Profile: React.FC = () => {
               <div>
               <label  htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Team Description<span className='mandatory'>*</span></label>
               {isEditMode ? (
-                 <textarea name="description"   maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+                 <textarea name="description"   maxLength={1500} className='w-full border border-gray-300 rounded-md py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
                  placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
                  value={profileData.description}
                  onChange={handleChange}

@@ -114,6 +114,9 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype, teamId, registrationT
     const userId = session.user.id;
     const userName = session.user.name;
 
+    // console.log("Quick test: ", emails, " enterprise: ", enterpriseId, " teamdId: " ,teamId, " registrationType: " ,registrationType, " usertype " ,usertype)
+
+
     const inviteData = {
       emails,
       enterpriseId,
@@ -123,11 +126,16 @@ const InviteForm: React.FC<InviteFormProps> = ({ usertype, teamId, registrationT
     };
   
     try {
+
+      console.log("The data: ", inviteData)
+
       const response = await fetch("/api/sendInvite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(inviteData),
       });
+
+      // console.log("response: ", response)
 
       if (response.ok) {
         showSuccess("Invitation sent successfully!");
