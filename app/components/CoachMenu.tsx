@@ -95,7 +95,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                                     Organizations
                                 </Link>
                             </li>
-                            <li className="pt-[8px]">
+                            {/* <li className="pt-[8px]">
                                 <Link
                                     href="/browse/teams"
                                     className={`${isActiveLink("/browse/teams")} block w-full text-left px-4 py-2 text-black hover:bg-blue-300`}
@@ -103,7 +103,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                                 >
                                     Teams
                                 </Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 )}

@@ -222,10 +222,10 @@ export default function Login() {
 
         window.location.href = '/enterprise/dashboard';
       }
-      else if (session.user.type === 'team') {
+      // else if (session.user.type === 'team') {
 
-        window.location.href = '/teampanel/dashboard'; 
-      }
+      //   window.location.href = '/teampanel/dashboard'; 
+      // }
       else if (!session.user.name && session.user.type == 'player') {
         window.location.href = '/completeprofile';
       }
@@ -284,7 +284,7 @@ export default function Login() {
                     <span className="ml-2">Organization </span>
                   </label>
 
-                  <label className="inline-flex items-center ">
+                  {/* <label className="inline-flex items-center ">
                     <input
                       type="radio"
                       name="loginAs"
@@ -295,7 +295,7 @@ export default function Login() {
                       className="form-radio"
                     />
                     <span className="ml-2">Team</span>
-                  </label>
+                  </label> */}
                 </div>
               )}
               <div className="mb-4">

@@ -117,7 +117,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
   <FormControlLabel value="coach" control={<Radio checked={role === 'coach'} />} label="Coach" />
   <FormControlLabel value="player" control={<Radio checked={role === 'player'} />} label="Player" />
   <FormControlLabel value="enterprise" control={<Radio checked={role === 'enterprise'} />} label="Organization" />
-  <FormControlLabel value="team" control={<Radio checked={role === 'team'} />} label="Team" />
+  {/* <FormControlLabel value="team" control={<Radio checked={role === 'team'} />} label="Team" /> */}
 </RadioGroup>
             </FormControl>
 
