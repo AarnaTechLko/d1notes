@@ -40,7 +40,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
 
       const data = await response.json();
       if (response.ok) {
-        showSuccess("Password reset Instructions sent on your Email.");
+        showSuccess("Password reset instructions sent to your email.");
       } else {
         showError(data.message);
       }
