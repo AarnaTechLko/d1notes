@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                             defaultSort={defaultSort} 
                         />
                     ) : (
-                        <p>No Payment History Found.</p> // Render something else when playerId is null
+                        <p>No Payment History yet...</p> // Render something else when playerId is null
                     )}
                 </div>
             </main>

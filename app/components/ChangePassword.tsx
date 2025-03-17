@@ -32,12 +32,12 @@ const ChangePassword: React.FC = () => {
         return;
       }
       
-      const { id: user_id, type: user_type } = session.user;
+      const { id: user_id, type: user_type, email: user_email, name: user_name } = session.user;
     try {
       const response = await fetch('/api/changepassword', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword, newPassword,user_id, user_type}),
+        body: JSON.stringify({ currentPassword, newPassword,user_id, user_type, user_email, user_name}),
       });
 
       const data = await response.json();
