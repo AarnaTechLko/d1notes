@@ -32,18 +32,24 @@ export async function POST(req: NextRequest) {
       thingsToWork
     } = data;
 
-    console.log("Let's take a look at the data: ", data)
+    console.log("Let's take a look at the data: ", thingsToWork)
 
-    const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId));
+    const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId)).execute();
     const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId, evaluationId)).limit(1)  // Limit to 1 record
       .execute();
 
 
     if (existingData.length > 0) {
+
+
+      // console.log("Do we see results: ", evaluationResults)
+
       const updatedData = await db.update(evaluationResults).set({
         evaluationId: evaluationId,
         playerId: playerId,
         coachId: coachId,
+        sport: sport,
+        position: position,
         technicalScores: technicalScores,
         tacticalScores: tacticalScores,
         physicalScores: physicalScores,
