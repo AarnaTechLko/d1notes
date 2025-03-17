@@ -184,7 +184,7 @@ const Home: React.FC = () => {
     ))
   ) : (
     <tr>
-      <td colSpan={5}>No Invinations found</td>
+      <td colSpan={5}>No Invinations sent yet</td>
     </tr>
   )}
 </tbody>

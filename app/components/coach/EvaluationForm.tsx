@@ -248,7 +248,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             document,
             position,
             sport,
-            thingsToWork
+            thingsToWork,
         };
 
 

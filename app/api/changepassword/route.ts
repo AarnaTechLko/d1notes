@@ -91,7 +91,7 @@ export async function POST(request: Request) {
             to: user_email,
             subject: "D1 NOTES Player Registration",
             text: "D1 NOTES Player Registration",
-            html: `<p>Dear ${user_name}! Your password for account ${user_type} on D1 NOTES has been changed.>`,
+            html: `<p>Dear ${user_name}! Your password for ${user_type} account on D1 NOTES has been changed.`,
           });
 
 

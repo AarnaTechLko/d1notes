@@ -714,7 +714,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8}>No Coaches found yet...</td>
+                    <td colSpan={8}>No Coaches added yet...</td>
                   </tr>
                 )}
               </tbody>

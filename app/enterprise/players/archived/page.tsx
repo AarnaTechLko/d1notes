@@ -576,7 +576,6 @@ const Home: React.FC = () => {
                                 <th>Phone</th>
                                 {/* <th>Sport</th>
                                 <th>Team</th> */}
-                                <th>Position(s)</th>
                                 {/* <th>Evaluations</th> */}
                                 <th>Status</th>
                                 <th>Action</th>
@@ -613,7 +612,7 @@ const Home: React.FC = () => {
                                             <td>{coach.countrycode}{coach.number}</td>
                                             {/* <td>{coach.sport}</td>
                                             <td>{coach.team}</td> */}
-                                            <td>{coach.position}</td>
+                                            {/* <td>{coach.position}</td> */}
                                             
 
                                             <td>
