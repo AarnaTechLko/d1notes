@@ -158,7 +158,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
         {/* Filter Fields */}
         {/* Country */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2 font-bold">Sport(s)</label>
+          <label className="block text-gray-700 mb-2 font-bold">Sport</label>
           <select name='sport' className='w-full p-2 border rounded-md' >
            
             <option value="Soccer">Select</option>
