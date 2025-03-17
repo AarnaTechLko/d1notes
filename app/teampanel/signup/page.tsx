@@ -18,7 +18,7 @@ const formSchema = z.object({
   organizationName: z.string().min(1, 'Team Name is required.'),
   ////contactPerson: z.string().min(1, 'Contact Person is required.'),
   owner_name: z.string().min(1, 'Administrator Name is required.'),
-  email: z.string().email('Invalid email format.'),
+  email: z.string().toLowerCase().email('Invalid email format.'),
   mobileNumber: z.string().min(14, 'Mobile Number must be at least 10 digits.'),
   address: z.string().min(1, 'Address is required.'),
   country: z.string().min(1, 'Country is required.'),

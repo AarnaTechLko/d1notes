@@ -48,7 +48,8 @@ export async function PUT(req: NextRequest) {
     const updateCoaches = await db
     .update(coaches)
     .set({
-      rating: parseFloat(Number(averageRating).toFixed()), // Ensure averageRating is a number
+      // rating: parseFloat(Number(averageRating).toFixed()), // Ensure averageRating is a number
+      rating: (Math.round(Number(averageRating) * 2) / 2).toFixed(1)
     })
     .where(eq(coaches.id, coach_id))
     .returning();
@@ -57,7 +58,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ message: true }, { status: 200 });
 
   } catch (error:any) {
-    
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
