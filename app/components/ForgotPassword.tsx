@@ -40,7 +40,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
 
       const data = await response.json();
       if (response.ok) {
-        showSuccess("Password reset Instructions sent on your Email.");
+        showSuccess("Password reset instructions sent to your email.");
       } else {
         showError(data.message);
       }
@@ -117,7 +117,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
   <FormControlLabel value="coach" control={<Radio checked={role === 'coach'} />} label="Coach" />
   <FormControlLabel value="player" control={<Radio checked={role === 'player'} />} label="Player" />
   <FormControlLabel value="enterprise" control={<Radio checked={role === 'enterprise'} />} label="Organization" />
-  <FormControlLabel value="team" control={<Radio checked={role === 'team'} />} label="Team" />
+  {/* <FormControlLabel value="team" control={<Radio checked={role === 'team'} />} label="Team" /> */}
 </RadioGroup>
             </FormControl>
 

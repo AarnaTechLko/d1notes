@@ -30,7 +30,9 @@ interface Coach {
   totalEvaluations: string;
 }
 type Team = {
-  id?: number;
+  //In order to allow the id numbers to be inserted into selectedTeams number array
+  //we can't allow id to be undefined
+  id: number;
   team_name?: string;
   status?: string | undefined;
   description?: string;
@@ -140,6 +142,9 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
     }
 
     try {
+
+      // console.log("Does the session id exists :", session.user.id)
+
       setLoadingData(true);
       const res = await fetch(`/api/teams?enterprise_id=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch teams");
@@ -152,6 +157,9 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
           .map((player) => player.playerId),
       }));
       setLoadingData(false);
+
+      // console.log("Let's see the teams: ", updatedTeams)
+
       setTeams(updatedTeams);
     } catch (error) {
       console.error("Error fetching teams:", error);
@@ -160,6 +168,8 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
 
   const handleCheckboxChange = (teamId: number) => {
     setSelectedTeams((prev) =>
+      //filter removes the team id that has been unchecked, else when a new team id
+      //is checked it will be added to the array
       prev.includes(teamId) ? prev.filter((id) => id !== teamId) : [...prev, teamId]
     );
   };
@@ -704,7 +714,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8}>No Coaches found yet...</td>
+                    <td colSpan={8}>No Coaches added yet...</td>
                   </tr>
                 )}
               </tbody>
@@ -861,7 +871,9 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                       <input
                         type="checkbox"
                         checked={selectedTeams.includes(team.id!)}
-                        onChange={() => setSelectedTeam(team.id?.toString() || '')}
+                        // handleCheckboxChange
+                        onChange={() => handleCheckboxChange(team.id)}
+                        // onChange={() => setSelectedTeams(...selectedTeams, team.id)}
                         className="w-5 h-5 text-green-600 focus:ring focus:ring-green-300"
                       />
                       <a href={`/teams/${team.slug}`} target='_blank' className="flex items-center gap-3 w-full">

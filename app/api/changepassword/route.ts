@@ -5,10 +5,12 @@ import { getSession } from 'next-auth/react';
 import { coaches, enterprises, teams, users } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { useId } from 'react';
+import { sendEmail } from '@/lib/helpers';
+
 
 export async function POST(request: Request) {
     try {
-        const { currentPassword, newPassword, user_type, user_id } = await request.json();
+        const { currentPassword, newPassword, user_type, user_id, user_email, user_name } = await request.json();
      
 
         let query;
@@ -84,6 +86,13 @@ export async function POST(request: Request) {
             );
         }
 
+
+        const emailResult = await sendEmail({
+            to: user_email,
+            subject: "D1 NOTES Player Registration",
+            text: "D1 NOTES Player Registration",
+            html: `<p>Dear ${user_name}! Your password for ${user_type} account on D1 NOTES has been changed.`,
+          });
 
 
         return NextResponse.json(

@@ -63,7 +63,7 @@ const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus 
 
   return (
     <div className="flex flex-col items-center">
-      <span className="text-white mb-2">Marketplace Visibility</span>
+      <span className="text-white mb-2">Public Visibility</span>
       <label className="relative inline-flex items-center cursor-pointer">
         <input
           type="checkbox"

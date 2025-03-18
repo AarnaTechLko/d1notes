@@ -181,6 +181,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             physicalRemarks,
             finalRemarks,
             distributionRemarks,
+            distributionScores,
             organizationalRemarks,
             thingsToWork,
 
@@ -247,7 +248,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
             document,
             position,
             sport,
-            thingsToWork
+            thingsToWork,
         };
 
 
@@ -309,6 +310,88 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
     //     }
     // };
+
+
+    const fetchEvaluationResultData = async () => {
+
+        try {
+                const response = await fetch(`/api/evaluationdetails?evaluationId=${evaluationId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (!response.ok) {
+    
+                    throw new Error('Failed to fetch evaluation data');
+                }
+    
+                const data = await response.json();
+
+                console.log("results: ", data.result);
+
+                const datas = data.result;
+
+                console.log("datas: ", datas)
+
+                const technicalScoresJson = JSON.parse(datas.technicalScores)
+                console.log(technicalScoresJson)
+
+                const tacticalScoresJson = JSON.parse(datas.tacticalScores)
+                console.log(tacticalScoresJson)
+
+                const physicalScoresJson = JSON.parse(datas.physicalScores)
+                console.log(physicalScoresJson)
+
+                const distributionScoresJson = JSON.parse(datas.distributionScores)
+                // console.log("distribution: ", distributionScoresJson)
+
+                setDistributionScores({
+                    ...Object.fromEntries(distribution.map((dis: any) => [dis.label, distributionScoresJson?.[dis.label] || '0'])),
+                }); 
+
+                setTechnicalScores({
+                    ...Object.fromEntries(technical.map((tech: any) => [tech.label, technicalScoresJson?.[tech.label] || '0'])),
+                });                
+
+                setTacticalScores({
+                    ...Object.fromEntries(tactical.map((tact: any) => [tact.label, tacticalScoresJson?.[tact.label] || '0'])),
+                });
+                
+                setPhysicalScores({
+                    ...Object.fromEntries(physical.map((phys: any) => [phys.label, physicalScoresJson?.[phys.label] || '0'])),
+                });
+
+                setTechnicalRemarks(datas.technicalRemarks || '');
+                setTacticalRemarks(datas.tacticalRemarks || '');
+                setPhysicalRemarks(datas.physicalRemarks || '');
+                setFinalRemarks(datas.finalRemarks || '');
+                setSport(datas.sport)
+                setPosition(datas.position)
+                setDistributionRemarks(datas.distributionRemarks || '');
+                // Set the fetched evaluation data
+
+
+                // console.log("Sport: ", sport)
+                // console.log("Position: ", position)
+                // console.log("technical scores: ", technicalScores)
+                // console.log("tactical scores: ", tacticalScores)
+                // console.log("physical scores: ", physicalScores)
+                // console.log("technical remarks: ", technicalRemarks)
+                // console.log("tactical remarks: ", tacticalRemarks)
+                // console.log("physical remarks: ", physicalRemarks)
+                // console.log("final remarks: ", finalRemarks)
+
+
+        } catch (error) {
+            console.error('Error fetching evaluation data:', error);
+
+        }
+    };
+
+
+
     const handleDocumentChange = async () => {
         if (!fileInputRef.current?.files) {
             throw new Error('No file selected');
@@ -332,9 +415,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
         }
     };
     useEffect(() => {
-        ///fetchEvaluationResultData();
-
-
+        evaluationData?.evaluationId != null ? fetchEvaluationResultData() : ''
     }, [evaluationData]);
 
     if (!isOpen) return null;
@@ -480,7 +561,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
 
                                 {/* Key Information */}
                                 <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
-                                    <h4 className="text-lg font-semibold mb-3">Key</h4>
+                                    <h4 className="text-lg font-semibold mb-3">Evaluation Rating Guide</h4>
                                     <ul className="list-none space-y-2">
                                         <li>[1] Significantly below competition level – Needs major improvement</li>
                                         <li>[2] Far below competition level – Needs substantial improvement</li>
@@ -503,7 +584,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 {/* First select with increased width */}
                                 <div className="flex flex-col w-1/2 md:w-1/4">
                                     <label className="text-sm font-medium mb-1">Select Sport<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
-                                    <select className="border p-2 rounded w-full" onChange={(e) => setSport(e.target.value)}
+                                    <select className="border p-2 rounded w-full" value={sport} onChange={(e) => setSport(e.target.value)}
                                     >
                                         <option value="">Select</option>
                                         <option value="Soccer">Soccer</option>
@@ -513,7 +594,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                 {/* Second select */}
                                 <div className="flex flex-col w-full md:w-1/4">
                                     <label className="text-sm font-medium mb-1">Select Position<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></label>
-                                    <select className="border p-2 rounded w-full" onChange={handlePositionChange}>
+                                    <select className="border p-2 rounded w-full" value={position} onChange={handlePositionChange}>
                                         <option value="">Select</option>
                                         {positionOptionsList2.map((item, index) => (
                                             <option key={index} value={item.value}>{item.label}</option>
@@ -568,7 +649,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                    <select id={`dropdown-tact-${tact.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={tacticalScores[tact.label]} onChange={(e) => setTacticalScores((prev) => ({
                                                         ...prev,
                                                         [tact.label]: e.target.value
                                                     }))}>
@@ -604,7 +685,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {physical.map((phys: any) => (
                                                 <div key={phys.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setPhysicalScores((prev) => ({
+                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={physicalScores[phys.label]} onChange={(e) => setPhysicalScores((prev) => ({
                                                         ...prev,
                                                         [phys.label]: e.target.value
                                                     }))}>
@@ -679,7 +760,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {tactical.map((tact: any) => (
                                                 <div key={tact.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-tact-${tact.id}`} className="w-[75px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setTacticalScores((prev) => ({
+                                                    <select id={`dropdown-tact-${tact.id}`} className="w-[75px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={tacticalScores[tact.label]} onChange={(e) => setTacticalScores((prev) => ({
                                                         ...prev,
                                                         [tact.label]: e.target.value
                                                     }))}>
@@ -709,13 +790,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         {errors.tacticalRemarks && <p className="text-red-500 text-sm">Required.</p>}
                                     </div>
 
-                                    {/* Physical Section */}
+                                    {/* Distribution Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                                         <h3 className='text-xl mb-4'> Distribution<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {distribution.map((dis: any) => (
                                                 <div key={dis.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-dis-${dis.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setDistributionScores((prev) => ({
+                                                    <select id={`dropdown-dis-${dis.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={distributionScores[dis.label]} onChange={(e) => setDistributionScores((prev) => ({
                                                         ...prev,
                                                         [dis.label]: e.target.value
                                                     }))}>
@@ -744,12 +825,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         />
 
                                     </div>
+
+                                    {/* Physical Section */}
                                     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                                         <h3 className='text-xl mb-4'>Physical<span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span></h3>
                                         <div className="space-y-4 flex-grow">
                                             {physical.map((phys: any) => (
                                                 <div key={phys.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setPhysicalScores((prev) => ({
+                                                    <select id={`dropdown-phys-${phys.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={physicalScores[phys.label]} onChange={(e) => setPhysicalScores((prev) => ({
                                                         ...prev,
                                                         [phys.label]: e.target.value
                                                     }))}>
@@ -783,7 +866,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({ evaluationId,
                                         <div className="space-y-4 flex-grow">
                                             {organization.map((org: any) => (
                                                 <div key={org.id} className="flex items-center space-x-2">
-                                                    <select id={`dropdown-org-${org.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" onChange={(e) => setOrganizationScores((prev) => ({
+                                                    <select id={`dropdown-org-${org.id}`} className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20" value={organizationScores[org.label]} onChange={(e) => setOrganizationScores((prev) => ({
                                                         ...prev,
                                                         [org.label]: e.target.value
                                                     }))}>

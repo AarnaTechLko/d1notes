@@ -95,7 +95,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                                     Organizations
                                 </Link>
                             </li>
-                            <li className="pt-[8px]">
+                            {/* <li className="pt-[8px]">
                                 <Link
                                     href="/browse/teams"
                                     className={`${isActiveLink("/browse/teams")} block w-full text-left px-4 py-2 text-black hover:bg-blue-300`}
@@ -103,7 +103,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                                 >
                                     Teams
                                 </Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 )}
@@ -118,7 +118,9 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     Dashboard
                 </Link>
             </li>
-            <li className="pt-[8px]">
+
+            {/* commented by Harsh 14-03-2025 */}
+            {/* <li className="pt-[8px]">
                 <Link
                     href="/coach/dashboard"
                     className="text-black font-bold py-2 px-4 rounded  cursor-default"
@@ -126,7 +128,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                 >
                  {session?.user?.name || "Coach"}!
                 </Link>
-            </li>
+            </li> */}
             <li className="pt-[8px]">
                 <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
             </li>

@@ -9,6 +9,9 @@ export async function POST(req: NextRequest) {
     try {
         const { playerId, teamIds,type,enterpriseId } = await req.json();
     
+        // console.log("In the API, playerId: ", playerId, " next is the teamIds: ", teamIds, " now the type: ", type, " and finally the: ", enterpriseId)
+
+
         if (!playerId || !Array.isArray(teamIds)) {
           return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
         }

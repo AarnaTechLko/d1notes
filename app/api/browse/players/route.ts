@@ -26,13 +26,15 @@ export async function GET(req: NextRequest) {
 
    /// conditions.push(isNull(users.parent_id));
 
-
+    //eq means that the country attribute equals the users input for country
     if (country) {
       conditions.push(eq(users.country, country));
     }
     if (state) {
       conditions.push(eq(users.state, state));
     }
+
+    //ilike is used to say that the attribute isn't case sensitive
     if (city) {
       conditions.push(ilike(users.city, city));
     }

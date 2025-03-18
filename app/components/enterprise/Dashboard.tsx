@@ -86,10 +86,10 @@ const Dashboard: React.FC = () => {
       {statsArray.map((stat, index) => (
         <div
           key={index}
-          className={`${stat.bgColor} text-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center`}
+          className={`${stat.bgColor} text-white rounded-lg shadow-md p-6 flex flex-col whitespace-nowrap items-center justify-center`}
         >
           <div className="text-4xl mb-2">{stat.icon}</div>
-          <h3 className="text-[13px] font-semibold">{stat.label}</h3>
+          <h3 className="text-[12px] font-semibold">{stat.label}</h3>
           <p className="text-[18px] font-bold">{stat.value}</p>
         </div>
       ))}

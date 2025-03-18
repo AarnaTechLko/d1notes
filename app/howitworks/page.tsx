@@ -8,6 +8,7 @@ import { faMapMarkerAlt, faEnvelope, faPhone, faCheckCircle, faShieldAlt, faChar
 import { FaArrowLeft, FaCheckCircle, FaCreditCard, FaPaperPlane, FaSearch, FaUserPlus } from 'react-icons/fa';
 import Ground from '../public/ground.jpg';
 
+//React.FC is used in TypeScript to define the type of functional components it is along with any props it needs
 const About: React.FC = () => {
   return (
     <>
