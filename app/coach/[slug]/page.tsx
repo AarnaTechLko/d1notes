@@ -1,5 +1,10 @@
 "use client"; // Ensure this is a client component
 
+//We [slug] when we have a page that uses dyanmic data that is routed to it, for example when it
+//comes to this specific component we want to display the profile of a coach we selected,
+//however instead of making a page for every coach we just pass in there id through the url
+// and use slig to render the page based on the data retrieved from it
+
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';

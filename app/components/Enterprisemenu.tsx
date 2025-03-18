@@ -131,12 +131,12 @@ useEffect(() => {
         </Link>
       </li>
       
-      
-      <li className="pt-[8px]">
+      {/* commented by Harsh 14-03-2025 */}
+      {/* <li className="pt-[8px]">
         <Link href="/enterprise/dashboard" className=" text-black font-bold py-2 px-4 rounded  cursor-default" onClick={closeMenu}>
            {session?.user?.name || "Enterprise"}!
         </Link>
-      </li>
+      </li> */}
 
       <li className="pt-[8px]">
                 <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>

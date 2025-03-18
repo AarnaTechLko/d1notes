@@ -12,6 +12,7 @@ import { FaArrowLeft, FaCheckCircle, FaCreditCard, FaList, FaPaperPlane, FaSearc
 
 // Define the types for the coaches' data
 
+//JSX.Element is Used for debugging Typescript since it can only return valid JSX to react for rendering
 export default function Home(): JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [profiles, setProfiles] = useState<any[]>([]); // Initialize as an empty array
@@ -19,6 +20,8 @@ export default function Home(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('Soccer');
+
+  //Creates a reference variable to an HTML Div tag
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -26,12 +29,16 @@ export default function Home(): JSX.Element {
         setIsDropdownOpen(false);
       }
     };
+
+    //we use mousedown so that the dropdown doesn't pull back up when click on it
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  //we use current.scrolleft to scroll through the profile cards without needing to rerender the page
   const handleScrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft -= 300;
@@ -88,6 +95,8 @@ export default function Home(): JSX.Element {
         <div className="text-center py-10">
         <h1 className="text-4xl font-bold text-gray-900  items-center m-auto">
   Gain access to coaches that specialize in{' '}
+
+  {/*Dropdown for sports */}
   <div
     className="inline-flex items-center relative border border-gray-500 px-2 py-1 rounded-sm ml-2"
     ref={dropdownRef}

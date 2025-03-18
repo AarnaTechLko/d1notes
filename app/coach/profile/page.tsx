@@ -93,6 +93,7 @@ const Profile: React.FC = () => {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    // console.log("Looking at values: ", e.target)
     const { name, value } = e.target;
     setProfileData((prevData) => ({
       ...prevData,
@@ -532,7 +533,7 @@ const Profile: React.FC = () => {
                 <label className="block text-gray-700 text-sm font-semibold mb-2">Coaching License Type<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
-                    name="sport"
+                    name="license_type"
                     value={profileData.license_type}
                     onChange={handleChange}
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"

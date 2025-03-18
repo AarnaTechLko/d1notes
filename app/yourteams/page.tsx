@@ -262,7 +262,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                     ) : (
                       <tr>
                         <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                          You have not been added to any Teams yet...
+                          You have not been added to any Teams by an Enterprise yet...
                         </td>
                       </tr>
                     )}

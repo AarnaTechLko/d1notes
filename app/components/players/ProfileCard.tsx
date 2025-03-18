@@ -71,7 +71,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
   const formattedDate = formatDate(birthdate);
   return (
     <>
-      <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group">
+      <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group h-full">
         {/* Profile Image Container */}
         <div className="relative w-full h-64">
 

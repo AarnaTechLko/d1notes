@@ -22,6 +22,8 @@ const Contact = () => {
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null); // Track submission status
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
+  //React.ChangeEvent is basically saying that the values inserted can only be ones related to the input tag,
+  //text area tag, and select tag
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -45,6 +47,11 @@ const Contact = () => {
 
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
   };
+
+//...formData essentially makes sure that the useState doesn't get mutated/updated by making a copy of it
+//and only change the value of mobile, we due this because when a state is updated in react it could
+//lead to unexpected behavior
+
   const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formattedNumber = formatPhoneNumber(event.target.value);
     setFormData({ ...formData, mobile: formattedNumber });
