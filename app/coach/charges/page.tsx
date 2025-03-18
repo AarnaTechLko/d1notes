@@ -175,7 +175,7 @@ const Home: React.FC = () => {
                                    
                                     <th>Turnaround Time</th>
                                     <th>Evaluation Rate</th>
-                                    <th>Action</th>
+                                    <th>Action(s)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,6 +189,7 @@ const Home: React.FC = () => {
                                                 <button
                                                     className="bg-blue-500 text-white p-2 rounded"
                                                     onClick={() => handleEdit(charge)}
+                                                    title="Edit"
                                                 >
                                                     <FaEdit />
                                                 </button>
@@ -196,6 +197,7 @@ const Home: React.FC = () => {
  <button
  className="bg-red-500 text-white p-2 rounded ml-3"
  onClick={() => handleDelete(charge.id)}
+ title="Delete"
 >
  <FaTrash />
 </button>
@@ -229,7 +231,7 @@ const Home: React.FC = () => {
                         )}
                         {Number(turnaroundtime)!=120 &&(
                         <div className="mb-4">
-                            <label className="block text-sm font-medium mb-1">Turnaround Time</label>
+                            <label className="block text-sm font-medium mb-1">Turnaround Time<span className='mandatory'>*</span></label>
 
                             <select
                                 name="turnaroundtime"
@@ -257,7 +259,8 @@ const Home: React.FC = () => {
                                     {/* {session?.user.coachCurrency}*/}</label> 
                             )}
                             {Number(turnaroundtime)!=120 &&(
-                                <label className="block text-sm font-medium mb-1">Evaluation Rate $
+                                    <label className="block text-sm font-medium mb-1">Evaluation Rate $
+                                    <span className='mandatory'>*</span>
 
                                     {/* {session?.user.coachCurrency}*/}</label> 
                             )}

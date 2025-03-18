@@ -54,6 +54,7 @@ const Profile: React.FC = () => {
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
   const [countriesList, setCountriesList] = useState([]);
+  const [statesList, setStatesList] = useState([]);
   useEffect(() => {
     fetch('/api/masters/countries')
       .then((response) => response.json())
@@ -79,6 +80,7 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
+          fetchStates(data.country);
           setLoadingprofile(false)
         } else {
           setLoadingprofile(false)
@@ -91,6 +93,14 @@ const Profile: React.FC = () => {
 
     fetchProfileData();
   }, []);
+
+
+  const fetchStates = async (country : string) => {
+    const response = await fetch(`/api/masters/states?country=${country}`)
+      .then((response) => response.json())
+      .then((data) => setStatesList(data || []))
+      .catch((error) => console.error('Error fetching states:', error));
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     // console.log("Looking at values: ", e.target)
@@ -592,8 +602,8 @@ const Profile: React.FC = () => {
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                   >
                     <option value="">Select</option>
-                    {states.map((state) => (
-                      <option key={state.abbreviation} value={state.abbreviation}>
+                    {statesList.map((state: any) => (
+                      <option key={state.id} value={state.name}>
                         {state.name}
                       </option>
                     ))}
