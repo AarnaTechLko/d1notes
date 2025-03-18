@@ -16,7 +16,7 @@ const CropEasy: React.FC<CropEasyProps> = ({ photoUrl, setOpenCrop, handleCropIm
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState<number>(1)
   const [rotation, setRotation] = useState(0)
-  const [croppedAreaPixel, setCroppedAreaPixel] = useState({x: 0, y:0, width: 0, height: 0})
+  const [croppedAreaPixel, setCroppedAreaPixel] = useState(null)
 
 
   const cropComplete = (croppedArea: any, croppedAreaPixel: any) => {
@@ -37,17 +37,11 @@ const CropEasy: React.FC<CropEasyProps> = ({ photoUrl, setOpenCrop, handleCropIm
       setRotation(newRotation);
     }
   };
-
-  
   const cropImage = async () => {
     //get cropped image file
-    if(photoUrl){
-      const { file }: any = await getCroppedImg(photoUrl, croppedAreaPixel, rotation)
-      
-      //pass the image file to a function prop that will upload and update formValues
-      handleCropImage(file)
-    }
-    
+    const { file } = await getCroppedImg(photoUrl, croppedAreaPixel, rotation)
+    //pass the image file to a function prop that will upload and update formValues
+    handleCropImage(file)
   }
   return (
     <>

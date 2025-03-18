@@ -11,11 +11,9 @@ import { upload } from '@vercel/blob/client';
 import { profile } from 'console';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CropEasy from '../components/crop/CropEasy';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [openCrop, setOpenCrop] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const [countriesArray, setCountriesArray] = useState([]);
   const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
@@ -195,40 +193,12 @@ const Profile: React.FC = () => {
       setPhotoUpoading(false);
       const imageUrl = newBlob.url;
       setProfileData({ ...profileData, image: imageUrl });
-      setOpenCrop(true)
 
     } catch (error) {
       setPhotoUpoading(false);
       console.error('Error uploading file:', error);
     }
   };
-
-  const handleCropImage = async (file: File) => {
-      if (!file) {
-        throw new Error('No file selected');
-      }
-      
-      const imageUrl = await uploadImage(file)
-  
-      if (imageUrl) {
-        setProfileData({...profileData, image: imageUrl});
-        setOpenCrop(false)
-      }
-      
-    }
-    const uploadImage = async (file: File): Promise<string> => {
-      try {
-        const newBlob = await upload(file.name, file, {
-          access: 'public',
-          handleUploadUrl: '/api/uploads',
-        });
-        return newBlob.url;
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        return ''
-      }
-    }
-
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -384,15 +354,6 @@ const Profile: React.FC = () => {
                   onChange={handleImageChange}
                   className="hidden"
                 />
-              )}
-              {openCrop && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                  <CropEasy
-                    photoUrl={profileData.image}
-                    setOpenCrop={setOpenCrop}
-                    handleCropImage={handleCropImage}
-                  />
-                </div>
               )}
             </div>
             {photoUpoading ? (
