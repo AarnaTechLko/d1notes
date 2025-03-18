@@ -24,9 +24,8 @@ import {
 import { showError } from "../components/Toastr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CropEasy from "../components/crop/CropEasy";
 const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
-export interface FormValues {
+interface FormValues {
   first_name: string;
   last_name: string;
   grade_level: string;
@@ -57,7 +56,7 @@ export interface FormValues {
   age_group?: string;
   xlink?: string;
   team_year?: string;
-  image: string | undefined; // Updated to store Base64 string
+  image: string | null; // Updated to store Base64 string
 }
 
 export default function Register() {
@@ -93,9 +92,9 @@ export default function Register() {
     team_year: "",
     xlink: "",
     gpa: undefined,
-    image: undefined,
+    image: null,
   });
-  
+
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -110,9 +109,26 @@ export default function Register() {
   const [height, setHeight] = useState("");
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-  const [openCrop, setOpenCrop] = useState<boolean>(false);
-
-  const ageGroups = ["U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18", "U19", "High School", "College", "Semi Pro", "Pro"];
+  const ageGroups = [
+    "U6",
+    "U7",
+    "U8",
+    "U9",
+    "U10",
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U18",
+    "U19",
+    "High School",
+    "College",
+    "Semi Pro",
+    "Pro",
+  ];
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -308,41 +324,19 @@ export default function Register() {
     setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
 
-    const imageUrl = await uploadImage(file);
-    setPhotoUpoading(false);
-
-    if(imageUrl) {
-      setFormValues({ ...formValues, image: imageUrl });
-      setOpenCrop(true)
-    }
-  };
-  
-  const handleCropImage = async (file: File) => {
-    if (!file) {
-      throw new Error('No file selected');
-    }
-    
-    const imageUrl = await uploadImage(file)
-
-    if (imageUrl) {
-      setFormValues({...formValues, image: imageUrl});
-      setOpenCrop(false)
-    }
-    
-  }
-  const uploadImage = async (file: File): Promise<string> => {
     try {
       const newBlob = await upload(file.name, file, {
         access: "public",
         handleUploadUrl: "/api/uploads",
       });
-      return newBlob.url;
+      setPhotoUpoading(false);
+      const imageUrl = newBlob.url;
+      setFormValues({ ...formValues, image: imageUrl });
     } catch (error) {
-      console.error('Error uploading file:', error);
-      return ''
-
+      setPhotoUpoading(false);
+      console.error("Error uploading file:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetch("/api/masters/countries")
@@ -459,15 +453,6 @@ export default function Register() {
                     <>{/* Optional: Placeholder for additional content */}</>
                   )}
                 </div>
-                {openCrop && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                    <CropEasy
-                      photoUrl={formValues.image}
-                      setOpenCrop={setOpenCrop}
-                      handleCropImage={handleCropImage}
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
