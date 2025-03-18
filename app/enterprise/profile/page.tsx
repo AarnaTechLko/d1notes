@@ -238,7 +238,7 @@ const Profile: React.FC = () => {
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
         <Sidebar />
         <main className="flex-grow p-8">
-          <div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-6xl">
+          <div className="bg-white shadow-lg rounded-md p-8 mx-auto max-w-6xl">
             {/* Profile Header */}
             <div className="flex justify-between items-center mb-6">
 
@@ -249,7 +249,7 @@ const Profile: React.FC = () => {
                   }
                   setIsEditMode(!isEditMode);
                 }}
-                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
+                className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
               >
                 {isEditMode ? 'Save Profile' : 'Edit Profile'}
@@ -258,7 +258,15 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image<span className='mandatory'>*</span></label>
+              {isEditMode ? (
+                  <>
+                    <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+
+                    <span className='text-xs text-gray-500'>(.jpg, .png, .gif)</span>
+                  </>
+                ): (
+                    <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+                )}
               <div
                 onClick={handleImageClick}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
@@ -290,7 +298,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5 mb-2">
               {/* First Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -300,13 +308,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border mb-2 border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.organizationName}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.organizationName}</p>
                 )}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -316,13 +324,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.owner_name}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.owner_name}</p>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Email<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Email<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -332,18 +340,18 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.email}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.email}</p>
                 )}
               </div>
 
               {/* Sports */}
 
               <div className="flex-1">
-                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="sport"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.sport}
                     onChange={handleChange}
                   >
@@ -351,12 +359,12 @@ const Profile: React.FC = () => {
 
                   </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">Soccer</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">Soccer</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Administrator Mobile Number<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Mobile Number<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -380,18 +388,18 @@ const Profile: React.FC = () => {
                     />
                   </div>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryCodes} {profileData.mobileNumber}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.countryCodes} {profileData.mobileNumber}</p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Country<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Country<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="country"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.country}
                     onChange={handleChange}
                   >
@@ -404,12 +412,12 @@ const Profile: React.FC = () => {
                       ))}
                   </select>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.countryName}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.countryName}</p>
                 )}
 
               </div>
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization State/Province<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization State/Province<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <Select
                   options={statesList.map((state) => ({ label: state.name, value: state.id }))}
@@ -420,7 +428,7 @@ const Profile: React.FC = () => {
                 />
                 
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.stateName}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.stateName}</p>
                 )}
 
 
@@ -428,7 +436,7 @@ const Profile: React.FC = () => {
 
               {/* Location */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization City<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization City<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -438,43 +446,43 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.city}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.city}</p>
                 )}
               </div>
 
               <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
 
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Organization Street Address<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Street Address<span className='mandatory'>*</span></label>
                 {isEditMode ? (
 
-                  <textarea name="address" maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  <textarea name="address" maxLength={1500} className='w-full border border-gray-300 rounded-md py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
                     placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
                     value={profileData.address}
                     onChange={handleChange}
                   ></textarea>
 
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.address}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.address}</p>
                 )}
 
               </div>
 
               <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
-                <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">Organization Description<span className='mandatory'>*</span></label>
+                <label htmlFor="city" className="block text-base font-bold mb-2">Organization Description<span className='mandatory'>*</span></label>
 
                 {isEditMode ? (
-                  <textarea name="description" maxLength={1500} className='w-full border border-gray-300 rounded-lg py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  <textarea name="description" maxLength={1500} className='w-full border border-gray-300 rounded-md py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
                     placeholder='Ex. LA Storm FC is a boys and girls soccer club based in Los Angeles.'
                     value={profileData.description}
                     onChange={handleChange}
                   ></textarea>
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.description}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.description}</p>
                 )}
               </div>
               {/* facebook */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -484,13 +492,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.facebook}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.facebook}</p>
                 )}
               </div>
 
               {/* Instagram Link */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -500,13 +508,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.instagram}</p>
                 )}
               </div>
 
               {/* LinkedIn */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">LinkedIn Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">LinkedIn Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -516,13 +524,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.linkedin}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.linkedin}</p>
                 )}
               </div>
 
               {/* Instagram */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -532,13 +540,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.instagram}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.instagram}</p>
                 )}
               </div>
 
               {/* X (Twitter) */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">X (Twitter) Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">X (Twitter) Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -548,13 +556,13 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.xlink}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.xlink}</p>
                 )}
               </div>
 
               {/* YouTube */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label className="block text-base font-bold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -564,7 +572,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.youtube}</p>
                 )}
               </div>
             </div>

@@ -11,15 +11,11 @@ const PaymentCancelled: React.FC = () => {
         <p className="text-gray-700 mb-6">
           Unfortunately, your payment could not be processed at this time. Please try again or contact support if you need assistance.
         </p>
-        <Link href="/">
-          <a className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-500 transition">
+        <Link className="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-500 transition" href="/browse">
             Go to Home
-          </a>
         </Link>
-        <Link href="/contact-support">
-          <a className="inline-block ml-4 bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition">
+        <Link className="inline-block ml-4 bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition" href="/contact-support">
             Contact Support
-          </a>
         </Link>
       </div>
     </div>

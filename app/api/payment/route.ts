@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       ],
       mode: 'payment',
       success_url: `${req.headers.get('origin')}/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/PaymentCancel`,
+      cancel_url: `${req.headers.get('origin')}/paymentCancel`,
     });
 
     const paymentdone = await db.insert(payments).values({

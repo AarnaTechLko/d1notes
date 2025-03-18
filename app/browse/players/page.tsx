@@ -89,7 +89,7 @@ const Home = () => {
     setFilteredProfiles(
       profiles.filter((profile) => {
 
-        const organizationName = (profile.firstName).toLowerCase();
+        const organizationName =  `${profile.firstName} ${profile.lastName} ${profile.sport} ${profile.position} ${profile.graduation} ${profile.grade_level}`.toLowerCase();
 
 
         return (
