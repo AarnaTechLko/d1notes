@@ -35,10 +35,10 @@ const Home: React.FC = () => {
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
   const [selectedRole, setSelectedRole] = useState<number>(0);
   const [isMiddle, setIsMiddle] = useState(false);
-        const [IsStart, setIsStart] = useState(false);
-        const [isEnd, setIsEnd] = useState(false);
-        const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
-        
+  const [IsStart, setIsStart] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
+  const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
+  const clickCountRef = useRef(0);      
           // Scroll handlers
           const scrollLeft = () => {
             if (tableContainerRef.current) {
@@ -128,62 +128,69 @@ const Home: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    let team_id = session?.user?.id;
 
-    if (!team_id) {
-      showError("Enterprise ID is not available.");
-      return;
-    }
-
-    const data = {
-      email,
-      team_id,
-      name,
-      phone,
-      countryCodes,
-      buyLicenses,
-      acceptEvaluations,
-      role_id: selectedRole,
-      ...(selectedRecord ? { id: selectedRecord.id } : {})
-    };
-
-    const endpoint = selectedRecord
-      ? `/api/teams/doc`
-      : "/api/teams/doc";
-
-    const method = selectedRecord ? "PUT" : "POST";
-
-    try {
-      const response = await fetch(endpoint, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        const successMessage = selectedRecord
-          ? "Sub Admin updated successfully!"
-          : "Sub Admin added successfully!";
-        showSuccess(successMessage);
-        setModalOpen(false);
-        setName("");
-        setEmail("");
-        setPhone("");
-        setRole("");
-        fetchOrders(); // Refresh the list after submission
-      } else {
-        const error = await response.json();
-        showError(`Error: ${error.message}`);
+    if (clickCountRef.current === 0) {
+      clickCountRef.current += 1;
+      console.log(clickCountRef.current);
+      if (!validateForm()) {
+        return;
       }
-    } catch (error) {
-      console.error("Failed to submit data:", error);
-      showError("Failed to save data. Please try again.");
+      let team_id = session?.user?.id;
+
+      if (!team_id) {
+        showError("Enterprise ID is not available.");
+        return;
+      }
+
+      const data = {
+        email,
+        team_id,
+        name,
+        phone,
+        countryCodes,
+        buyLicenses,
+        acceptEvaluations,
+        role_id: selectedRole,
+        ...(selectedRecord ? { id: selectedRecord.id } : {})
+      };
+
+      const endpoint = selectedRecord
+        ? `/api/teams/doc`
+        : "/api/teams/doc";
+
+      const method = selectedRecord ? "PUT" : "POST";
+
+      try {
+        const response = await fetch(endpoint, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          const successMessage = selectedRecord
+            ? "Sub Admin updated successfully!"
+            : "Sub Admin added successfully!";
+          showSuccess(successMessage);
+          setModalOpen(false);
+          setName("");
+          setEmail("");
+          setPhone("");
+          setRole("");
+          fetchOrders(); // Refresh the list after submission
+        } else {
+          const error = await response.json();
+          showError(`Error: ${error.message}`);
+        }
+      } catch (error) {
+        console.error("Failed to submit data:", error);
+        showError("Failed to save data. Please try again.");
+      }
     }
+    clickCountRef.current = 0;
+
   };
 
   const fetchOrders = async () => {

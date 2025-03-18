@@ -845,7 +845,7 @@ export default function Register() {
                     placeholder=' '
                       type="file"
                       name="youtube"
-                      accept="image/*,application/pdf"
+                      accept=".doc,.docx,application/msword,application/pdf,image/*"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleCVChange}
                      
