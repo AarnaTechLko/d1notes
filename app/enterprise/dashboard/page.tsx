@@ -90,7 +90,8 @@ const Dashboard: React.FC = () => {
 <p>By <a href="enterprise/joinrequests" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Invitation Log in the menu, you can view all of the manually added or mass uploaded coach and player email / invitation statuses and resend email invitations if needed.</p>
 
 <h3 className='font-bold text-lg mt-4'>Sub Administrators</h3> 
-<p>As the main administrator, if you would like to add additional administrators, <a href="/enterprise/doc" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Sub Administrators in order to give access to someone other than you to have full access to the organization profile; however, you can choose to block anyone’s purchasing and/or viewing of evaluations if desired. These administrators will never have the ability to add other administrators and you can remove any administrator at any time.</p>
+
+<p>As the main administrator, if you would like to add additional administrators, <a href="/enterprise/doc" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Sub Administrators in order to give access to someone other than you to the organization profile; however, you must add purchasing and/or viewing of evaluations access if desired. These administrators will never have the ability to add other administrators and you can remove any administrator at any time</p>
 
 <h3 className='font-bold text-lg mt-4'>Archives</h3> 
 <p>By clicking on Archives in the menu, you can view all of your Teams, Coaches and Players that you have archived. From here, you may choose to add a Team, Coach or Player back to Your Teams, or you remove a Team, Coach or Player from your organization completely. If you choose to remove a Team, your coach(es) and players of that team will still be part of your organization individually in the coach and player archives.  

@@ -15,7 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
-  const [countriesArray, setCountriesArray] = useState([]);
+  // const [countriesArray, setCountriesArray] = useState([]);
   const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
@@ -94,14 +94,17 @@ const Profile: React.FC = () => {
           if (data.playingcountries.includes(',')) {
             nationalities = data.playingcountries
               .split(',')
-              .map((country: string) =>
-                countries.find(option => option.value.trim() === country.trim())
-              )
-              .filter(Boolean);
+              // .map((country: string) =>
+              //   countries.find(option => option.value.trim() === country.trim())
+              // )
+              // .filter(Boolean);
           } else {
 
             nationalities = [data.playingcountries.trim()];
           }
+
+          console.log("nation: ", nationalities)
+
 
           setNationality({ label: nationalities, value: nationalities });
 
@@ -220,7 +223,7 @@ const Profile: React.FC = () => {
   };
   const handleSubmit = async () => {
     try {
-      console.log(profileData);
+      console.log("Profile baby:", profileData);
       const session = await getSession();
       const playerId = session?.user.id;
       const response = await fetch('/api/profile', {
@@ -254,7 +257,7 @@ const Profile: React.FC = () => {
         }
 
         setIsEditMode(false);
-        window.location.reload(); // Exit edit mode after saving
+        window.location.reload(); //Exit edit mode after saving
       } else {
         console.error("Failed to update profile:", response.statusText);
       }
@@ -302,7 +305,7 @@ const Profile: React.FC = () => {
       <div className="flex  bg-gradient-to-r from-blue-50 to-indigo-100">
         <Sidebar />
         <main className="flex-grow p-8">
-          <div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-6xl">
+          <div className="bg-white shadow-lg rounded-md p-8 mx-auto max-w-6xl">
             {/* Profile Header */}
             <div className="flex justify-between items-center mb-6">
 
@@ -313,7 +316,7 @@ const Profile: React.FC = () => {
                   }
                   setIsEditMode(!isEditMode);
                 }}
-                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
+                className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
               >
                 {isEditMode ? 'Save Profile' : 'Edit Profile'}
@@ -322,7 +325,18 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-              <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+
+              {isEditMode ? (
+                <>
+                  <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+
+                  <span className='text-xs text-gray-500'>(.jpg, .png, .gif)</span>
+
+                </>
+              ): (
+                <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+              )}
+
               <div
                 onClick={triggerImageUpload}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
@@ -434,7 +448,7 @@ const Profile: React.FC = () => {
                 {isEditMode ? (
                   <select
                     name="graduation"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.graduation}
                     onChange={handleChange}
                   >
@@ -489,7 +503,7 @@ const Profile: React.FC = () => {
                   <input
                     type="text"
                     name="jersey"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.jersey}
                     onChange={handleChange}
                   />
@@ -504,7 +518,7 @@ const Profile: React.FC = () => {
                 {isEditMode ? (
                   <select
                     name="sport"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.sport}
                     onChange={handleChange}
                   >
@@ -522,7 +536,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="playingcountries" className="block text-base font-bold mb-2">{nationalities}Nationality(ies)<span className='mandatory'>*</span></label>
+                <label htmlFor="playingcountries" className="block text-base font-bold mb-2">Nationality(ies)<span className='mandatory'>*</span></label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -531,7 +545,7 @@ const Profile: React.FC = () => {
                   classNamePrefix="select"
                   onChange={handleCountryChange}
                   placeholder="Select Country(s)"
-                  value={nationality}
+                  // defaultValue={nationality}
 
                 />
                 ) : (
@@ -619,7 +633,7 @@ const Profile: React.FC = () => {
                     selected={profileData.birthday ? new Date(profileData.birthday) : null}
                     onChange={handleDateChange}
                     dateFormat="MM-DD-YYYY" // Correct format
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     placeholderText="Select a date"
                   />
                 ) : (
@@ -634,7 +648,7 @@ const Profile: React.FC = () => {
               <div>
                 <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={profileData.grade_level}>
+                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-4 w-full" value={profileData.grade_level}>
                     {playingLevels.map((level) => (
 
 
@@ -655,7 +669,7 @@ const Profile: React.FC = () => {
                 {isEditMode ? (
                   <select
                     name="gender"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.gender}
                     onChange={handleChange}
                   >
@@ -848,6 +862,9 @@ const Profile: React.FC = () => {
   ) : (
     // Display selected value in View Mode
     <p className="text-gray-700 text-sm font-semibold mt-2">
+
+      {/* <p>Testing selected option {selectedOption} {profileData.age_group} {profileData.birth_year}</p> */}
+
       {selectedOption === "ageGroup" && profileData.age_group && `Age Group: ${profileData.age_group}`}
       {selectedOption === "birthYear" && profileData.birth_year && `Birth Year: ${profileData.birth_year}`}
     </p>
@@ -865,7 +882,7 @@ const Profile: React.FC = () => {
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"
                     name="team"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.team}
                     onChange={handleChange}
                   />
@@ -885,13 +902,21 @@ const Profile: React.FC = () => {
                     classNamePrefix="select"
                     onChange={handlePositionChange}
                     placeholder="Select"
+                    // value={position}
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.position}</p>
                 )}
               </div>
 
-
+              {/* isMulti
+                  name='playingcountries'
+                  options={countries}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  onChange={handleCountryChange}
+                  placeholder="Select Country(s)"
+                  value={nationality} */}
 
 
               <div>

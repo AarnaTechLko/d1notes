@@ -9,6 +9,7 @@ import { FaEye } from "react-icons/fa";
 import ProfileCard from "../components/ProfileCard";
 import { calculateHoursFromNow } from "@/lib/clientHelpers";
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
+import EvaluationForm from '@/app/components/coach/EvaluationForm';
 import PromptComponent from "../components/Prompt";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import  { useRef } from "react";
@@ -19,6 +20,9 @@ const Dashboard: React.FC = () => {
    const [isMiddle, setIsMiddle] = useState(false);
     const [IsStart, setIsStart] = useState(false);
     const [isEnd, setIsEnd] = useState(false);
+    const [evFormOpen, setEvFormOpen] = useState(false);
+
+
     // Scroll handlers
     const scrollLeft = () => {
       if (tableContainerRef.current) {
@@ -478,6 +482,16 @@ const Dashboard: React.FC = () => {
     // You could navigate to another page, open a modal, etc.
   };
 
+const openEvalModal = () => {
+    console.log("Going to open")
+    setEvFormOpen(true);
+  };
+
+const closeEvform = () => {
+  console.log("Going to close")
+  setEvFormOpen(false);
+}
+
   // Create table instance
   const tableInstance = useTable({ columns, data });
   const filteredRows = tableInstance.rows.filter((row) =>
@@ -632,14 +646,23 @@ const Dashboard: React.FC = () => {
             </button>
             
           </div>
+
+          <EvaluationForm
+            evaluationId={null}
+            evaluationData={null}
+            coachId={null}
+            playerId={null}
+            isOpen={evFormOpen}
+            onClose={closeEvform}
+          />
+
+
         </div>
-
-
         <div className="grid grid-cols-1 bg-white  mt-4 p-6">
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
           <h3 className='font-bold text-lg mt-4'>Request an Evaluation</h3>
-         <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive a completed evaluation, it will look like <a href="/evaluationdetails" target="_blank" className="text-blue-600 hover:text-blue-800 ">this</a>. If your Public Visibility is on, a coach may find you in player marketplace searches and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach. If your Public Visibility is off, you will not show up in the player marketplace.</p>
+         <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive a completed evaluation, it will look like <button onClick={() => openEvalModal()} className="text-blue-600 hover:text-blue-800 ">this</button>. If your Public Visibility is on, a coach may find you in player marketplace searches and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach. If your Public Visibility is off, you will not show up in the player marketplace.</p>
 
          <h3 className='font-bold text-lg mt-4'>Enterprises / Your Teams Explanation</h3> 
 <p className="text-justify">Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/yourteams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. You will automatically not be charged any rate as your organization / team has already paid for them.</p>

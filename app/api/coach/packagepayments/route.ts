@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/enterprise/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/enterprise/PaymentCancel`,
+      success_url: `${req.headers.get('origin')}/coach/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get('origin')}/coach/paymentCancel`,
     });
 
     try {

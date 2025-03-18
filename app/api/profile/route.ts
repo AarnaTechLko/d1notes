@@ -239,7 +239,7 @@ export async function PUT(req: NextRequest) {
       youtube,
       age_group,
       birth_year,
-
+      playingcountries,
       countrycode
     } = finalBody;
 
@@ -262,6 +262,7 @@ export async function PUT(req: NextRequest) {
       state: state || null,
       city: city || null,
       jersey: jersey || null,
+      playingcountries: playingcountries || null,
       facebook: facebook||null,
       instagram: instagram||null,
       linkedin: linkedin||null,
