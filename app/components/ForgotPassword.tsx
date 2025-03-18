@@ -94,7 +94,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <h2 id="forgot-password-modal">Enter Registered Email</h2>
+          <h2 id="forgot-password-modal">Enter Registered Email <span className='mandatory'>*</span></h2>
           <form onSubmit={handleSubmit}>
             <div>
               <TextField
@@ -109,7 +109,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ type }) => {
             </div>
 
             <FormControl component="fieldset" sx={{ mb: 2 }}>
-              <FormLabel component="legend">Select Your Role</FormLabel>
+              <FormLabel component="legend">Select Your Role
+                <span className='mandatory'>*</span>
+              </FormLabel>
               <RadioGroup
   value={role}
   onChange={(e) => setRole(e.target.value)}
