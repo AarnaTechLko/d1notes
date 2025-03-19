@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
                 instagram: users.instagram,
                 linkedin: users.linkedin,
                 youtube: users.youtube,
+                website: users.website,
                 xlink: users.xlink,
                 id: users.id,
             })

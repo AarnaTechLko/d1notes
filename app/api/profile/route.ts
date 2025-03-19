@@ -148,6 +148,7 @@ export async function POST(req: NextRequest) {
         facebook: users.facebook,
         instagram: users.instagram,
         linkedin: users.linkedin,
+        website: users.website,
         xlink: users.xlink,
         youtube: users.youtube,
         birth_year: users.birth_year,
@@ -196,6 +197,7 @@ export async function POST(req: NextRequest) {
       linkedin: user.linkedin,
       xlink: user.xlink,
       youtube: user.youtube,
+      website: user.website,
       age_group: user.age_group,
       birth_year: user.birth_year,
     };
@@ -237,6 +239,7 @@ export async function PUT(req: NextRequest) {
       linkedin,
       xlink,
       youtube,
+      website,
       age_group,
       birth_year,
       playingcountries,
@@ -267,7 +270,8 @@ export async function PUT(req: NextRequest) {
       instagram: instagram||null,
       linkedin: linkedin||null,
       xlink: xlink||null,
-      youtube: youtube||null,
+      youtube: youtube || null,
+      website: website || null,
       age_group: age_group ? age_group : null,
   birth_year: age_group ? null : birth_year || null,
 
@@ -308,8 +312,8 @@ export async function PUT(req: NextRequest) {
         instagram:users.instagram,
         linkedin:users.linkedin,
         xlink:users.xlink,
-        youtube:users.youtube,
-
+        youtube: users.youtube,
+        website: users.website
       }).from(users)
       .where(eq(users.id, playerId))
       .execute();

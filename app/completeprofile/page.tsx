@@ -53,6 +53,7 @@ interface FormValues {
   instagram?: string;
   linkedin?: string;
   youtube?: string;
+  website?: string;
   age_group?: string;
   xlink?: string;
   team_year?: string;
@@ -88,6 +89,7 @@ export default function Register() {
     instagram: "",
     linkedin: "",
     youtube: "",
+    website: "",
     age_group: "",
     team_year: "",
     xlink: "",
@@ -1045,7 +1047,7 @@ export default function Register() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
                   <label
                     htmlFor="xlink"
@@ -1077,6 +1079,23 @@ export default function Register() {
                     name="youtube"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.youtube}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="website"
+                    className="block text-gray-700 text-sm font-semibold mb-2"
+                  >
+                    Website Link{" "}
+                    <span className="text-xs text-gray-500">(Optional)</span>
+                  </label>
+                  <input
+                    placeholder=""
+                    type="text"
+                    name="website"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.website}
                     onChange={handleChange}
                   />
                 </div>

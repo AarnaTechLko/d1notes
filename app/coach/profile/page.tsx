@@ -40,6 +40,7 @@ const Profile: React.FC = () => {
     facebook: "",
     instagram: "",
     linkedin: "",
+    website: "",
     xlink: "",
     youtube: "",
     city: "",
@@ -657,7 +658,7 @@ const Profile: React.FC = () => {
             </div>
 
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5 mt-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5 mt-5">
 
               <div>
                 <label htmlFor="facebook" className="block text-base font-bold mb-2">Facebook Link<span className='mandatory'>*</span></label>
@@ -710,6 +711,9 @@ const Profile: React.FC = () => {
                 </p>
                 )}
               </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5 mt-5">
+
               <div>
                 <label htmlFor="xlink" className="block text-base font-bold mb-2">X Link <span className='mandatory'>*</span></label>
                 {isEditMode ? (
@@ -744,9 +748,23 @@ const Profile: React.FC = () => {
                 </p>
                 )}
               </div>
-
-
-
+              <div>
+                <label htmlFor="website" className="block text-base font-bold mb-2">Website Link <span className='mandatory'>*</span></label>
+                {isEditMode ? (
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="website"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
+                    value={profileData.website}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">
+                  {profileData.website}
+                </p>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
