@@ -19,8 +19,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     const session = await getSession();
     if(session)
     {
-      if(session?.user?.type=='coach' || session?.user?.type=='player')
-      {
+      // if(session?.user?.type=='coach' || session?.user?.type=='player')
+      // {
        //// window.location.href = `/enterprise/${slug}`;
       
       if(session.user.club_id==id)
@@ -36,10 +36,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
         });
         
       }
-    }
-    else{
-      window.location.href = `/enterprise/${slug}`;
-    }
+    // }
+    // else{
+    //   window.location.href = `/enterprise/${slug}`;
+    // }
     }
     else{
       Swal.fire({
