@@ -35,8 +35,7 @@ const Profile: React.FC = () => {
     linkedin: "",
     xlink: "",
     youtube: "",
-
-
+    website: ""
   });
 
 
@@ -576,6 +575,21 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.youtube}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="website" className="block text-gray-700 text-sm font-semibold mb-2">Website Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="website"
+                    value={profileData.website}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.website}</p>
                 )}
               </div>
               </div>

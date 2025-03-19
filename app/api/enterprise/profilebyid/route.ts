@@ -43,7 +43,8 @@ export async function POST(req: NextRequest) {
              instagram: enterprises.instagram,
              linkedin: enterprises.linkedin,
              xlink: enterprises.xlink,
-             youtube:enterprises.youtube,
+             youtube: enterprises.youtube,
+             website: enterprises.website
 
     }).from(enterprises).leftJoin( 
               countries,
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-const {organizationName, id, contactPerson, owner_name,address, affiliationDocs, city ,country,countryCodes,email,logo,mobileNumber,state,facebook,linkedin,instagram,xlink,youtube} =await req.json();
+const {organizationName, id, contactPerson, owner_name,address, affiliationDocs, city ,country,countryCodes,email,logo,mobileNumber,state,facebook,linkedin,instagram,xlink,youtube, website} =await req.json();
  
 try{
     await db.update(enterprises).set(
@@ -90,6 +91,7 @@ try{
             instagram: instagram,
             xlink: xlink,
             youtube: youtube,
+            website: website
         
         }).where(eq(enterprises.id,id));
         return NextResponse.json({ message: 'Club updated' }, { status: 200 });
