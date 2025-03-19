@@ -17,6 +17,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
   
   const handleRedirect =async (slug: string, id:string) => {
     const session = await getSession();
+
+    // console.log("club id: ", session?.user.club_id)
+
     if(session)
     {
       // if(session?.user?.type=='coach' || session?.user?.type=='player')

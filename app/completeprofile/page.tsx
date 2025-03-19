@@ -7,25 +7,18 @@ import Brand from "../public/images/brand.jpg";
 import Image from "next/image";
 import DefaultPic from "../public/default.jpg";
 import { getSession, signIn, useSession } from "next-auth/react";
-import { type PutBlobResult } from "@vercel/blob";
-import { upload } from "@vercel/blob/client";
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
 import Select from "react-select";
 import { FaCheck, FaSpinner } from "react-icons/fa";
 import FileUploader from "../components/FileUploader";
-import {
-  countryCodesList,
-  states,
-  positionOptionsList,
-  genders,
-  playingLevels,
-  Grades,
-  countries,
-} from "@/lib/constants";
+import { countryCodesList, states, positionOptionsList, genders, playingLevels, Grades, countries } from "@/lib/constants";
 import { showError } from "../components/Toastr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CropEasy from "../components/crop/CropEasy";
 const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
-interface FormValues {
+export interface FormValues {
   first_name: string;
   last_name: string;
   grade_level: string;
@@ -57,7 +50,7 @@ interface FormValues {
   age_group?: string;
   xlink?: string;
   team_year?: string;
-  image: string | null; // Updated to store Base64 string
+  image: string | undefined; // Updated to store Base64 string
 }
 
 export default function Register() {
@@ -94,50 +87,31 @@ export default function Register() {
     team_year: "",
     xlink: "",
     gpa: undefined,
-    image: null,
+    image: undefined,
   });
-
+  
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>(
-    {}
-  );
+  const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
-  const [maxDate, setMaxDate] = useState("");
+  const [maxDate, setMaxDate] = useState('');
   const [height, setHeight] = useState("");
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
-  const ageGroups = [
-    "U6",
-    "U7",
-    "U8",
-    "U9",
-    "U10",
-    "U11",
-    "U12",
-    "U13",
-    "U14",
-    "U15",
-    "U16",
-    "U17",
-    "U18",
-    "U19",
-    "High School",
-    "College",
-    "Semi Pro",
-    "Pro",
-  ];
+  const [openCrop, setOpenCrop] = useState<boolean>(false);
+
+  const ageGroups = ["U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16", "U17", "U18", "U19", "High School", "College", "Semi Pro", "Pro"];
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
       const data = await response.json();
       setStatesList(data); // Adjust key if necessary based on your API response structure
     } catch (error) {
-      console.error("Failed to fetch states:", error);
+      console.error('Failed to fetch states:', error);
     }
   };
   const formatHeight = (value: string) => {
@@ -166,16 +140,20 @@ export default function Register() {
     }
   };
 
+
+
   const handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const formattedValue = formatHeight(value);
     setFormValues((prevValues) => ({ ...prevValues, height: formattedValue }));
   };
 
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setSuccessMessage(null);
+
 
     // Validation
     const newErrors: Partial<FormValues> = {};
@@ -188,69 +166,53 @@ export default function Register() {
     //         newErrors.image = "Image size must be less than 5MB";
     //     }
     // }
-    if (!formValues.first_name.trim())
-      newErrors.first_name = "First name is required.";
-    if (!formValues.last_name.trim())
-      newErrors.last_name = "Last name is required.";
+    if (!formValues.first_name.trim()) newErrors.first_name = "First name is required.";
+    if (!formValues.last_name.trim()) newErrors.last_name = "Last name is required.";
+
 
     const heightRegex = /^(\d{1,2})'(\d{1,2}(?:\.\d{1,2})?)?"$/;
 
-    if (
-      formValues.height.trim() &&
-      !heightRegex.test(formValues.height.trim())
-    ) {
+    if (formValues.height.trim() && !heightRegex.test(formValues.height.trim())) {
       newErrors.height = "Height must be in the format X'Y\" (e.g., 5'6\").";
     }
     const weightRegex = /^\d+(\.\d{1,2})?$/;
-    if (
-      formValues.weight.trim() &&
-      !weightRegex.test(formValues.weight.trim())
-    ) {
+    if (formValues.weight.trim() && !weightRegex.test(formValues.weight.trim())) {
       newErrors.weight = "Weight must be a valid decimal number (e.g., 70.5).";
     }
 
-    if (!formValues.graduation.trim())
-      newErrors.graduation = "Graduation is required.";
+
+
+    if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
-    if (!formValues.grade_level)
-      newErrors.grade_level = "Level is required.";
+    if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
     /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sports is required.";
     //if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
-    if (!formValues.playingcountries)
-      newErrors.playingcountries = "Nationaly is required.";
+    if (!formValues.playingcountries) newErrors.playingcountries = "Nationaly is required.";
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
-    if (!formValues.position.trim())
-      newErrors.position = "Position is required.";
-    if (!formValues.countrycode.trim())
-      newErrors.countrycode = "Country code is required.";
+    if (!formValues.position.trim()) newErrors.position = "Position is required.";
+    if (!formValues.countrycode.trim()) newErrors.countrycode = "Country code is required.";
 
-    if (!formValues.number.trim())
-      newErrors.number = "Mobile Number is required.";
-    if (formValues.number.length < 14)
-      newErrors.number = "Mobile Number Must be of 14 Digits Minimum";
+    if (!formValues.number.trim()) newErrors.number = "Mobile Number is required.";
+    if (formValues.number.length < 14) newErrors.number = 'Mobile Number Must be of 14 Digits Minimum';
     if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(formValues.number)) {
-      newErrors.number = "Mobile Number must be in the format (XXX) XXX-XXXX";
+      newErrors.number = 'Mobile Number must be in the format (XXX) XXX-XXXX';
     }
-    if (formValues.number.length > 14)
-      newErrors.number = "Mobile Number Must be of 14 Digits Maximum";
+    if (formValues.number.length > 14) newErrors.number = 'Mobile Number Must be of 14 Digits Maximum';
 
-    if (!formValues.bio.trim())
-      newErrors.bio = "Experience/Accolades is required.";
+
+    if (!formValues.bio.trim()) newErrors.bio = "Experience/Accolades is required.";
     if (!formValues.country.trim()) newErrors.country = "Country is required.";
-    if (!formValues.state.trim())
-      newErrors.state = "State/Province is required.";
+    if (!formValues.state.trim()) newErrors.state = "State/Province is required.";
     if (!formValues.city.trim()) newErrors.city = "City is required.";
-    if (!formValues.league.trim())
-      newErrors.age_group = "Age Group is required.";
-    if (!formValues.league.trim())
-      newErrors.league = "League details is required.";
+    if (!formValues.league.trim()) newErrors.age_group = "Age Group is required.";
+    if (!formValues.league.trim()) newErrors.league = "League details is required.";
 
     // Set validation errors if any
     if (Object.keys(newErrors).length > 0) {
       const orderedErrors = Object.keys(newErrors)
         .reverse() // Reverse the keys array
-        .map((key) => newErrors[key as keyof Partial<FormValues>]); // Cast key to keyof Partial<FormValues>
+        .map((key) => newErrors[key as keyof Partial<FormValues>]);  // Cast key to keyof Partial<FormValues>
 
       orderedErrors.forEach((error) => {
         if (error) {
@@ -298,54 +260,73 @@ export default function Register() {
         const email = session?.user?.email;
       }
 
-      router.push("/dashboard");
-      // window.location.href = "/dashboard"; // Redirect after successful registration
+     router.push("/dashboard");
+     // window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
     }
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
     setValidationErrors({ ...validationErrors, [name]: "" }); // Clear error when input is changed
-    if (name === "country") {
+    if (name === 'country') {
       fetchStates(Number(value));
     }
   };
 
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
-      throw new Error("No file selected");
+      throw new Error('No file selected');
     }
     setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
 
-    try {
-      const newBlob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/uploads",
-      });
-      setPhotoUpoading(false);
-      const imageUrl = newBlob.url;
+    const imageUrl = await uploadImage(file);
+    setPhotoUpoading(false);
+
+    if(imageUrl) {
       setFormValues({ ...formValues, image: imageUrl });
-    } catch (error) {
-      setPhotoUpoading(false);
-      console.error("Error uploading file:", error);
+      setOpenCrop(true)
     }
   };
+  
+  const handleCropImage = async (file: File) => {
+    if (!file) {
+      throw new Error('No file selected');
+    }
+    
+    const imageUrl = await uploadImage(file)
+
+    if (imageUrl) {
+      setFormValues({...formValues, image: imageUrl});
+      setOpenCrop(false)
+    }
+    
+  }
+  const uploadImage = async (file: File): Promise<string> => {
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/uploads',
+      });
+      return newBlob.url;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return ''
+    }
+  }
 
   useEffect(() => {
-    fetch("/api/masters/countries")
+    fetch('/api/masters/countries')
       .then((response) => response.json())
       .then((data) => setCountriesList(data || []))
-      .catch((error) => console.error("Error fetching countries:", error));
+      .catch((error) => console.error('Error fetching countries:', error));
   }, []);
+
+
 
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
@@ -360,14 +341,9 @@ export default function Register() {
       return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
     }
 
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6
-    )}-${phoneNumber.slice(6, 10)}`;
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
   };
-  const handlePhoneNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formattedNumber = formatPhoneNumber(event.target.value);
     setFormValues({ ...formValues, number: formattedNumber });
   };
@@ -378,52 +354,35 @@ export default function Register() {
   };
 
   const handleDateChange = (date: Date | null) => {
-    setFormValues({
-      ...formValues,
-      birthday: date ? date.toISOString().split("T")[0] : "",
-    });
+    setFormValues({ ...formValues, birthday: date ? date.toISOString().split("T")[0] : "" });
   };
 
   const handlePositionChange = (selectedOptions: any) => {
     // Convert selected options into a comma-separated string
-    const positions = selectedOptions
-      ? selectedOptions.map((option: any) => option.value).join(", ")
-      : "";
+    const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
     setFormValues({ ...formValues, position: positions });
   };
 
   const handleCountryChange = (selectedOptions: any) => {
-    const playingcountries = selectedOptions
-      ? selectedOptions.map((option: any) => option.label).join(", ")
-      : "";
+    const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
     setFormValues({ ...formValues, playingcountries: playingcountries });
   };
+
 
   return (
     <>
       <div className="container mx-auto p-4">
         <div className="flex flex-col justify-center bg-white p-4 w-full">
           <div className="bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">
-              Add Your Personal Information
-            </h2>
+            <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
             {/* <p className="text-red-500">( Fields marked with * are mandatory.)</p> */}
             {error && <p style={{ color: "red" }}>{error}</p>}
-            {successMessage && (
-              <p style={{ color: "green" }}>{successMessage}</p>
-            )}
-            <form onSubmit={handleSubmit}>
+            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+            <form onSubmit={handleSubmit} >
+
               <div className="mb-4">
-                <label
-                  htmlFor="image"
-                  className="block text-gray-700 text-sm text-center font-semibold mb-2"
-                >
-                  Player Image
-                </label>
-                <div
-                  className="relative items-center cursor-pointer"
-                  onClick={handleImageClick}
-                >
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Player Image</label>
+                <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image
                       src={formValues.image ? formValues.image : DefaultPic}
@@ -434,9 +393,7 @@ export default function Register() {
                     />
                     {!formValues.image && (
                       <div className="absolute top-8 left-0 w-full h-8 bg-black bg-opacity-60 flex items-center justify-center">
-                        <p className="text-white text-xs font-medium">
-                          Click to Upload
-                        </p>
+                        <p className="text-white text-xs font-medium">Click to Upload</p>
                       </div>
                     )}
                   </div>
@@ -452,43 +409,51 @@ export default function Register() {
                       <FileUploader />
                     </>
                   ) : (
-                    <>{/* Optional: Placeholder for additional content */}</>
+                    <>
+                      {/* Optional: Placeholder for additional content */}
+                    </>
                   )}
+
                 </div>
+                {openCrop && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+                    <CropEasy
+                      photoUrl={formValues.image}
+                      setOpenCrop={setOpenCrop}
+                      handleCropImage={handleCropImage}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="first_name"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Player First Name<span className="mandatory">*</span>
+                  <label htmlFor="first_name" className="block text-gray-700 text-sm font-semibold mb-2">
+                    Player First Name<span className='mandatory'>*</span>
                   </label>
                   <input
+
                     type="text"
                     name="first_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.first_name}
                     onChange={handleChange}
                   />
+
                 </div>
 
                 {/* Last Name */}
                 <div>
-                  <label
-                    htmlFor="last_name"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Player Last Name<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="last_name" className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                   <input
+
                     type="text"
                     name="last_name"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.last_name}
                     onChange={handleChange}
                   />
+
                 </div>
 
                 {/* Location */}
@@ -506,13 +471,7 @@ export default function Register() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="height"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Height{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="height" className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="height"
@@ -521,16 +480,11 @@ export default function Register() {
                     onChange={handleHeightChange}
                     placeholder="Feet' Inches&quot;"
                   />
+
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="weight"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Weight (lbs){" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">Weight (lbs)  <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     name="weight"
@@ -538,16 +492,12 @@ export default function Register() {
                     value={formValues.weight}
                     onChange={handleChange}
                   />
+
                 </div>
 
+
                 <div>
-                  <label
-                    htmlFor="weight"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    High School Graduation Year
-                    <span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="weight" className="block text-gray-700 text-sm font-semibold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
                   <select
                     name="graduation"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -555,21 +505,18 @@ export default function Register() {
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
-                    {Grades.map((grade) => (
-                      <option key={grade} value={grade}>
-                        {grade}
-                      </option>
-                    ))}
+                    {Grades
+                      .map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+
                   </select>
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="bio"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    School Name
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">School Name<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="text"
                     placeholder="Ex: St. Thomas International School"
@@ -578,33 +525,25 @@ export default function Register() {
                     value={formValues.school_name}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="bio"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    GPA<span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">GPA<span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
                     type="number"
                     placeholder=""
                     name="gpa"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    // min="0"
-                    // step=".01"
+                    min="0"
+                    step="any"
                     value={formValues.gpa}
                     onChange={handleChange}
                   />
+
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="jersey"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Jersey Number (Optional)
-                  </label>
+                  <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number (Optional)</label>
                   <input
                     type="text"
                     name="jersey"
@@ -612,14 +551,10 @@ export default function Register() {
                     value={formValues.jersey}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="sport"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Sport(s)<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -628,16 +563,14 @@ export default function Register() {
                   >
                     <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
+
                   </select>
+
+
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="nationality"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Nationalit(ies) <span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="nationality" className="block text-gray-700 text-sm font-semibold mb-2">Nationalit(ies) <span className="mandatory">*</span></label>
                   <Select
                     isMulti
                     options={countries}
@@ -646,113 +579,130 @@ export default function Register() {
                     onChange={handleCountryChange}
                     placeholder="Select"
                   />
-                </div>
-              </div>
 
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span>
-                    Age<span className="text-red-500">*</span>:
-                  </span>
+                </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-6 pb-5">
-                  {/* Radio Buttons */}
-                  <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="radio"
-                        name="option"
-                        value="ageGroup"
-                        checked={selectedOption === "ageGroup"}
-                        onChange={() => {
-                          setSelectedOption("ageGroup");
-                          setFormValues((prev) => ({ ...prev, team_year: "" })); // Reset age_group
-                        }}
-                        className="hidden"
-                      />
-                      <span
-                        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
-                          selectedOption === "ageGroup"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-gray-800"
-                        }`}
-                      >
-                        Age Group
-                      </span>
-                    </label>
-                  </div>
-                  <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="radio"
-                        name="option"
-                        value="birthYear"
-                        checked={selectedOption === "birthYear"}
-                        onChange={() => {
-                          setSelectedOption("birthYear");
-                          setFormValues((prev) => ({ ...prev, age_group: "" })); // Reset age_group
-                        }}
-                        className="hidden"
-                      />
-                      <span
-                        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
-                          selectedOption === "birthYear"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-gray-800"
-                        }`}
-                      >
-                        Birth Year
-                      </span>
-                    </label>
-                  </div>
 
-                  {/* Conditional Select Dropdowns (Always in the Same Line) */}
-                  {selectedOption === "ageGroup" && (
-                    <div>
-                      <select
-                        className="  p-2 border rounded-md"
-                        name="age_group"
-                        onChange={handleChange}
-                        value={formValues.age_group}
-                      >
-                        <option value="">Select Age Group</option>
-                        {ageGroups.map((group) => (
-                          <option key={group} value={group}>
-                            {group}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
+                <div>
+  <div className="flex items-center space-x-2 mb-2">
+    <span>Age<span className="text-red-500">*</span>:</span>
+  </div>
 
-                  {selectedOption === "birthYear" && (
-                    <div>
-                      <select
-                        className=" p-2 border rounded-md"
-                        name="team_year"
-                        onChange={handleChange}
-                        value={formValues.team_year}
-                      >
-                        <option value="">Select Birth Year</option>
-                        {birthYears.map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                </div>
+
+ 
+
+
+<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-6 pb-5">
+
+  
+  {/* Radio Buttons */}
+  <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="ageGroup"
+        checked={selectedOption === "ageGroup"}
+        onChange={() => {
+          setSelectedOption("ageGroup");
+          setFormValues((prev) => ({ ...prev, team_year: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "ageGroup"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Age Group
+      </span>
+    </label>
+    </div>
+    <div>
+    <label className="inline-flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="option"
+        value="birthYear"
+        checked={selectedOption === "birthYear"}
+        
+        onChange={() => {
+          setSelectedOption("birthYear");
+          setFormValues((prev) => ({ ...prev, age_group: '' })); // Reset age_group
+        }}
+        className="hidden"
+      />
+      <span
+        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
+          selectedOption === "birthYear"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        Birth Year
+      </span>
+    </label>
+  </div>
+
+  {/* Conditional Select Dropdowns (Always in the Same Line) */}
+  {selectedOption === "ageGroup" && (
+    <div>
+    <select
+      className="  p-2 border rounded-md"
+      name="age_group"
+      onChange={handleChange}
+      value={formValues.age_group}
+    >
+      <option value="">Select Age Group</option>
+      {ageGroups.map((group) => (
+        <option key={group} value={group}>
+          {group}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+
+  {selectedOption === "birthYear" && (
+    <div>
+    <select
+      className=" p-2 border rounded-md"
+      name="team_year"
+      onChange={handleChange}
+      value={formValues.team_year}
+    >
+      <option value="">Select Birth Year</option>
+      {birthYears.map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </select>
+    </div>
+  )}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="country"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Country<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="country" className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
                   <select
                     name="country"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -760,20 +710,20 @@ export default function Register() {
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
-                    {countriesList.map((country: any) => (
-                      <option key={country.id} value={country.id}>
-                        {country.name}
-                      </option>
-                    ))}
+                    {countriesList
+                      .map((country: any) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name}
+                        </option>
+                      ))}
+
                   </select>
+
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="state"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    State/Province<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="state" className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
+
 
                   <select
                     name="state"
@@ -789,14 +739,10 @@ export default function Register() {
                       </option>
                     ))}
                   </select>
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    City<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                   <input
                     placeholder="Ex: Austin"
                     type="text"
@@ -805,16 +751,15 @@ export default function Register() {
                     value={formValues.city}
                     onChange={handleChange}
                   />
+
                 </div>
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+
+
                 <div>
-                  <label
-                    htmlFor="birthday"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Birth Date<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
 
                   {/* <DatePicker
                     selected={formValues.birthday ? new Date(formValues.birthday) : null}
@@ -824,52 +769,40 @@ export default function Register() {
                     placeholderText="Select a date"
                   /> */}
                   <DatePicker
-                    selected={
-                      formValues.birthday ? new Date(formValues.birthday) : null
-                    }
-                    onChange={handleDateChange}
-                    dateFormat="MM-dd-yyyy"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    showYearDropdown
-                    scrollableYearDropdown
-                    showMonthDropdown
-                    minDate={new Date(1985, 0, 1)} // Set minimum selectable date
-                    maxDate={new Date(2025, 11, 31)} // Set maximum selectable date
-                    yearDropdownItemNumber={41} // Ensures dropdown includes years from 1985 to 2025
-                  />
+  selected={formValues.birthday ? new Date(formValues.birthday) : null}
+  onChange={handleDateChange}
+  dateFormat="MM-dd-yyyy"
+  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+  placeholderText="Select a date"
+  showYearDropdown
+  scrollableYearDropdown
+  showMonthDropdown
+  minDate={new Date(1985, 0, 1)} // Set minimum selectable date
+  maxDate={new Date(2025, 11, 31)} // Set maximum selectable date
+  yearDropdownItemNumber={41} // Ensures dropdown includes years from 1985 to 2025
+/>
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="grade_level"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    {" "}
-                    Level<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level<span className='mandatory'>*</span></label>
 
-                  <select
-                    name="grade_level"
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    value={formValues.grade_level}
-                  >
+                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={formValues.grade_level}>
                     {playingLevels.map((level) => (
-                      <option value={level.value} key={level.value}>
-                        {level.label}
-                      </option>
+
+
+                      <option value={level.value} key={level.value}>{level.label}</option>
                     ))}
+
+
                   </select>
+
+
+
                 </div>
 
                 {/* Gender */}
                 <div>
-                  <label
-                    htmlFor="gender"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Gender{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                   <select
                     name="gender"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -877,22 +810,23 @@ export default function Register() {
                     onChange={handleChange}
                   >
                     {genders.map((gender) => (
-                      <option value={gender.value} key={gender.value}>
-                        {gender.label}
-                      </option>
+
+
+                      <option value={gender.value} key={gender.value}>{gender.label}</option>
                     ))}
+
                   </select>
+
                 </div>
+
+               
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+
+
                 {/* Team */}
                 <div>
-                  <label
-                    htmlFor="team"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Team Name(s)<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"
@@ -901,16 +835,12 @@ export default function Register() {
                     value={formValues.team}
                     onChange={handleChange}
                   />
+
                 </div>
 
                 {/* Position */}
                 <div>
-                  <label
-                    htmlFor="position"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Position(s)<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
                   <Select
                     isMulti
                     options={positionOptionsList}
@@ -919,16 +849,12 @@ export default function Register() {
                     onChange={handlePositionChange}
                     placeholder="Select"
                   />
+
                 </div>
 
                 {/* Number */}
                 <div>
-                  <label
-                    htmlFor="number"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Mobile Number<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="number" className="block text-gray-700 text-sm font-semibold mb-2">Mobile Number<span className='mandatory'>*</span></label>
 
                   <div className="flex">
                     <select
@@ -955,16 +881,14 @@ export default function Register() {
                       maxLength={14} // (123) 456-7890 is 14 characters long
                     />
                   </div>
+
+
                 </div>
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="bio"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    League(s)<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">League(s)<span className='mandatory'>*</span></label>
                   <input
                     type="text"
                     placeholder="Ex. MLS, ECNL, NPL, AYSO, etc..."
@@ -973,16 +897,13 @@ export default function Register() {
                     value={formValues.league}
                     onChange={handleChange}
                   />
+
                 </div>
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="bio"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Experience/Accolades<span className="mandatory">*</span>
-                  </label>
+                  <label htmlFor="bio" className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
                   <textarea
                     placeholder="Tell us about your experience/competition level, any accolades and aspirations."
                     name="bio"
@@ -990,97 +911,78 @@ export default function Register() {
                     value={formValues.bio}
                     onChange={handleChange}
                   ></textarea>
+
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
+
                 <div>
-                  <label
-                    htmlFor="facebook"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Facebook Link
-                    <span className="text-xs text-gray-500"> (Optional)</span>
-                  </label>
+                  <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                   <input
-                    placeholder=""
+                    placeholder=''
                     type="text"
                     name="facebook"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.facebook}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="instagram"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Instagram Link{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
-                    placeholder=""
+                    placeholder=''
                     type="text"
                     name="instagram"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.instagram}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="linkedin"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    Linkedin Link{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
-                    placeholder=""
+                    placeholder=''
                     type="text"
                     name="linkedin"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.linkedin}
                     onChange={handleChange}
                   />
+
                 </div>
+
+
+
+
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                 <div>
-                  <label
-                    htmlFor="xlink"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    X Link{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
-                    placeholder=""
+                    placeholder=''
                     type="text"
                     name="xlink"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.xlink}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
-                  <label
-                    htmlFor="youtube"
-                    className="block text-gray-700 text-sm font-semibold mb-2"
-                  >
-                    YouTube Link{" "}
-                    <span className="text-xs text-gray-500">(Optional)</span>
-                  </label>
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
                   <input
-                    placeholder=""
+                    placeholder=''
                     type="text"
                     name="youtube"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                     value={formValues.youtube}
                     onChange={handleChange}
                   />
+
                 </div>
                 <div>
                   <label
@@ -1121,6 +1023,8 @@ export default function Register() {
           </div>
         </div>
       </div>
+
+
     </>
   );
 }

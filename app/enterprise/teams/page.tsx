@@ -268,7 +268,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
             <div className="flex items-center justify-between mb-4">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search By Name..."
                 className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={search}
                 onChange={handleSearchChange}
@@ -385,7 +385,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={8} className="text-center py-4 text-gray-500">No Teams added yet...</td>
+                      <td colSpan={8}>No Teams added yet...</td>
                     </tr>
                   )}
                 </tbody>

@@ -120,7 +120,7 @@ const Home: React.FC = () => {
           <div>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search By Email..."
               className="w-1/3 mb-2 px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -184,7 +184,7 @@ const Home: React.FC = () => {
     ))
   ) : (
     <tr>
-      <td colSpan={5}>No Invinations sent yet</td>
+      <td colSpan={5}>No Invitations sent yet...</td>
     </tr>
   )}
 </tbody>
