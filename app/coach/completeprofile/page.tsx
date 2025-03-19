@@ -13,6 +13,7 @@ import FileUploader from '@/app/components/FileUploader';
 import { countryCodesList, states, currencies } from '@/lib/constants';
 import { useRouter } from "next/navigation";
 import { showError } from '@/app/components/Toastr';
+import CropEasy from '@/app/components/crop/CropEasy';
 interface FormValues {
   firstName: string;
   lastName: string;
@@ -129,12 +130,14 @@ export default function Register() {
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const { data: session } = useSession();
   const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
-  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
   const [cvUpoading, setCvUpoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
+  const [openCrop, setOpenCrop] = useState<boolean>(false);
+
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -172,14 +175,14 @@ export default function Register() {
       image: null, // Ensure this property is included
     };
 
-      if (!formValues.image) {
-        errors.image = "Profile image is required";
+    if (!formValues.image) {
+      errors.image = "Profile image is required";
     } else {
-        // Calculate the approximate size of the base64 string
-        const imageSizeInBytes = (formValues.image.length * 3) / 4;
-        if (imageSizeInBytes > 5 * 1024 * 1024) {
-          errors.image = "Image size must be less than 5MB";
-        }
+      // Calculate the approximate size of the base64 string
+      const imageSizeInBytes = (formValues.image.length * 3) / 4;
+      if (imageSizeInBytes > 5 * 1024 * 1024) {
+        errors.image = "Image size must be less than 5MB";
+      }
     }
     if (!formValues.firstName) errors.firstName = 'First Name is required';
     if (!formValues.lastName) errors.lastName = 'Last Name is required';
@@ -188,7 +191,7 @@ export default function Register() {
     if (formValues.phoneNumber.length < 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Minimum';
 
     if (formValues.phoneNumber.length > 14) errors.phoneNumber = 'Phone Number Must be of 10 Digits Maximum';
-   /// if (!formValues.gender) errors.gender = 'Gender is required';
+    /// if (!formValues.gender) errors.gender = 'Gender is required';
 
     if (!formValues.sport) errors.sport = 'Sport is required';
     if (!formValues.clubName) errors.clubName = 'Club Name is required';
@@ -209,17 +212,17 @@ export default function Register() {
     ///setFormErrors(errors); // Set errors once validation is done
 
     // Collect errors to display in SweetAlert
-    Object.entries(errors) .reverse()
-    .filter(([_, value]) => value !== undefined && value !== null)
-    .forEach(([field, message]) => {
-      showError(message); // Display each error in a separate toastr
-    });
-  
-  // Return false if there are any errors
-  if (Object.values(errors).some(value => value !== undefined && value !== null)) {
-    return false; // Validation failed
-  }
-  
+    Object.entries(errors).reverse()
+      .filter(([_, value]) => value !== undefined && value !== null)
+      .forEach(([field, message]) => {
+        showError(message); // Display each error in a separate toastr
+      });
+
+    // Return false if there are any errors
+    if (Object.values(errors).some(value => value !== undefined && value !== null)) {
+      return false; // Validation failed
+    }
+
     return true;
   };
 
@@ -240,15 +243,15 @@ export default function Register() {
       formData.append(key, value as string | Blob);
     }
     if (session && session.user.id) {
-      formData.append("coachId", session.user.id); 
-      
+      formData.append("coachId", session.user.id);
+
     } else {
       setError("User is not authenticated");
       return;
     }
- 
+
     try {
- 
+
 
       const response = await fetch('/api/coach/signup', {
         method: 'PUT',
@@ -265,21 +268,21 @@ export default function Register() {
       session.user.image = formValues.image;
       session.user.expectedCharge = formValues.expectedCharge;
 
-     console.log(session.user.expectedCharge);
+      console.log(session.user.expectedCharge);
 
       const res = await signIn('credentials', {
         redirect: false,
-        email:  localStorage.getItem('email'),
+        email: localStorage.getItem('email'),
         password: localStorage.getItem('key'),
-        loginAs:'coach',
+        loginAs: 'coach',
       });
       if (response.ok) {
         localStorage.clear();
         router.push("/coach/dashboard");
 
       }
-   
-     //window.location.href = '/coach/dashboard';
+
+      //window.location.href = '/coach/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong!');
     } finally {
@@ -307,7 +310,7 @@ export default function Register() {
     if (!CvInputRef.current?.files) {
       throw new Error('No file selected');
     }
- 
+
     setCvUpoading(true);
     const file = CvInputRef.current.files[0];
 
@@ -320,20 +323,20 @@ export default function Register() {
       const imageUrl = newBlob.url;
       setFormValues({ ...formValues, cv: imageUrl });
 
-    } catch (error:any) {
+    } catch (error: any) {
       setCvUpoading(false);
       showError('Only JPG and PNG Images Allowed.');
     }
   }
-  
-  
-  
+
+
+
   const handleLicenseChange = async () => {
 
     if (!LisenseInputRef.current?.files) {
       throw new Error('No file selected');
     }
- 
+
     setLicenseUpoading(true);
     const file = LisenseInputRef.current.files[0];
 
@@ -346,36 +349,53 @@ export default function Register() {
       const imageUrl = newBlob.url;
       setFormValues({ ...formValues, license: imageUrl });
 
-    } catch (error:any) {
+    } catch (error: any) {
       setLicenseUpoading(false);
       showError('Error While Uplading File.');
     }
   }
- 
 
- 
+
+
+  const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
+    if (!file) throw new Error('No file selected');
+
+    setPhotoUploading(true);
+    const imageUrl = await uploadImage(file);
+    setPhotoUploading(false);
+
+    if (imageUrl) {
+      setFormValues(prev => ({ ...prev, image: imageUrl }));
+      if (closeCrop) setOpenCrop(false);
+      else setOpenCrop(true);
+    }
+  };
+
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error('No file selected');
     }
- 
-    setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
+    await handleImageUpload(file)
 
+  };
+
+  const handleCropImage = async (file: File) => {
+    handleImageUpload(file, true)
+  }
+  const uploadImage = async (file: File, options?: object): Promise<string> => {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/uploads',
+        ...options,
       });
-      setPhotoUpoading(false);
-      const imageUrl = newBlob.url;
-      setFormValues({ ...formValues, image: imageUrl });
-
+      return newBlob.url;
     } catch (error) {
-      setPhotoUpoading(false);
       console.error('Error uploading file:', error);
+      return ''
     }
-  };
+  }
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -454,13 +474,12 @@ export default function Register() {
       <div className="container mx-auto p-4">
         <div className="flex flex-col justify-center bg-white p-4 w-full">
           <div className="flex-1 bg-white p-1 md:p-8">
-            <div className="bg-white rounded-lg p-4  mx-auto">
+            {/* <div className="bg-white rounded-lg p-4  mx-auto"> */}
+            <div className='bg-white rounded-lg p-0 w-full md:max-w-3xl lg:max-w-5xl m-auto'>
               <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-left">Add Your Personal Information</h2>
               {/* <p className="text-red-500">( Fields marked with * are mandatory.)</p> */}
-              {error && <p className="text-red-600">{error}</p>}
-              {successMessage && <p className="text-green-600">{successMessage}</p>}
-
-
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
               <form onSubmit={handleSubmit}>
                 {/* Profile Image */}
 
@@ -488,7 +507,7 @@ export default function Register() {
                       className="hidden"
                       ref={fileInputRef}
                     />
-                    {photoUpoading ? (
+                    {photoUploading ? (
                       <>
                         <FileUploader />
                       </>
@@ -497,16 +516,23 @@ export default function Register() {
                         {/* Optional: Placeholder for additional content */}
                       </>
                     )}
+
                     {formErrors.image && <p className="text-red-600 text-sm text-center">{formErrors.image}</p>}
                   </div>
-
+                  {openCrop && (
+                    <CropEasy
+                      photoUrl={formValues.image}
+                      setOpenCrop={setOpenCrop}
+                      handleCropImage={handleCropImage}
+                    />
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
                   <div>
                     <label htmlFor="firstName" className="block text-gray-700 text-sm font-semibold mb-2">Coach First Name<span className='mandatory'>*</span></label>
                     <input
-                    
+
                       type="text"
                       name="firstName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -519,7 +545,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="lastName" className="block text-gray-700 text-sm font-semibold mb-2">Coach Last Name<span className='mandatory'>*</span></label>
                     <input
-                   
+
                       type="text"
                       name="lastName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -529,10 +555,10 @@ export default function Register() {
                     {formErrors.lastName && <p className="text-red-600 text-sm">{formErrors.lastName}</p>}
                   </div>
                   <div >
-                  <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Base Evaluation Rate $<span className='mandatory'>*</span></label>
-                  <div className="flex">
+                    <label htmlFor="expectedCharge" className="block text-gray-700 text-sm font-semibold mb-2">Base Evaluation Rate $<span className='mandatory'>*</span></label>
+                    <div className="flex">
                       <select
-                        name="currency" 
+                        name="currency"
                         className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 mr-1 hidden" // Added mr-4 for margin-right
                         value={formValues.currency}
                         onChange={handleChange}
@@ -545,18 +571,18 @@ export default function Register() {
                         ))}
                       </select>
                       <input
-                      placeholder='Ex: 100'
-                      type="text"
-                      name="expectedCharge"
-                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                      value={formValues.expectedCharge}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (/^\d*$/.test(value)) { // Allow only whole numbers (no decimals or non-numeric chars)
+                        placeholder='Ex: 100'
+                        type="text"
+                        name="expectedCharge"
+                        className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                        value={formValues.expectedCharge}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (/^\d*$/.test(value)) { // Allow only whole numbers (no decimals or non-numeric chars)
                             handleChange(e);
-                        }
-                    }}
-                    />
+                          }
+                        }}
+                      />
                     </div>
                     {formErrors.currency && <p className="text-red-600 text-sm">{formErrors.currency}</p>}
                     {formErrors.expectedCharge && <p className="text-red-600 text-sm">{formErrors.expectedCharge}</p>}
@@ -633,7 +659,7 @@ export default function Register() {
                   <div>
                     <label htmlFor="clubName" className="block text-gray-700 text-sm font-semibold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
                     <input
-                    placeholder='Ex. Director/LA Stars or Trainer/Elite Performance'
+                      placeholder='Ex. Director/LA Stars or Trainer/Elite Performance'
                       type="text"
                       name="clubName"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -659,7 +685,7 @@ export default function Register() {
                       <option value="C">C</option>
                       <option value="D">D</option>
                       <option value="E">E</option>
-                      
+
 
                     </select>
                     {formErrors.license_type && <p className="text-red-600 text-sm">{formErrors.license_type}</p>}
@@ -676,11 +702,11 @@ export default function Register() {
                     >
                       <option value="">Select</option>
                       {countriesList
-                      .map((country:any) => (
-                        <option key={country.id} value={country.id}>
-                          {country.name}
-                        </option>
-                      ))}
+                        .map((country: any) => (
+                          <option key={country.id} value={country.id}>
+                            {country.name}
+                          </option>
+                        ))}
 
                     </select>
 
@@ -699,17 +725,17 @@ export default function Register() {
                     >
                       <option value="">Select</option>
                       {statesList.map((state: any, index) => (
-    <option key={index} value={state.name}>
-      {state.name}
-    </option>
-  ))}
+                        <option key={index} value={state.name}>
+                          {state.name}
+                        </option>
+                      ))}
                     </select>
                     {formErrors.state && <p className="text-red-500 text-sm">{formErrors.state}</p>}
                   </div>
                   <div>
                     <label htmlFor="city" className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="city"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
@@ -772,86 +798,86 @@ export default function Register() {
                     )}
                   </div>
                 </div> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5">
 
                   <div>
                     <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="facebook"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.facebook}
                       onChange={handleChange}
                     />
-                  
+
                   </div>
                   <div>
                     <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="instagram"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.instagram}
                       onChange={handleChange}
                     />
-                    
+
                   </div>
                   <div>
                     <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="linkedin"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.linkedin}
                       onChange={handleChange}
                     />
-                     
+
                   </div>
                   <div>
                     <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="xlink"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.xlink}
                       onChange={handleChange}
                     />
-                    
+
                   </div>
                   <div>
                     <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder=''
+                      placeholder=''
                       type="text"
                       name="youtube"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       value={formValues.youtube}
                       onChange={handleChange}
                     />
-                    
+
                   </div>
 
-                 
-                 
+
+
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
-                <div>
+                  <div>
                     <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder=' '
+                      placeholder=' '
                       type="file"
                       name="youtube"
                       accept="image/*,application/pdf"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleCVChange}
-                     
+
                       ref={CvInputRef}
                     />
-                         {cvUpoading ? (
+                    {cvUpoading ? (
                       <>
                         <FileUploader />
                       </>
@@ -861,19 +887,19 @@ export default function Register() {
                       </>
                     )}
                   </div>
-                <div>
+                  <div>
                     <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
-                    placeholder='Ex: https://youtube.com/username'
+                      placeholder='Ex: https://youtube.com/username'
                       type="file"
                       name="license"
                       accept="image/*,application/pdf"
                       className="border border-gray-300 rounded-lg py-2 px-4 w-full"
                       onChange={handleLicenseChange}
-                     
+
                       ref={LisenseInputRef}
                     />
-                         {licenseUpoading ? (
+                    {licenseUpoading ? (
                       <>
                         <FileUploader />
                       </>
@@ -883,8 +909,8 @@ export default function Register() {
                       </>
                     )}
                   </div>
-             
-</div>
+
+                </div>
                 <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                   <button
                     type="submit"

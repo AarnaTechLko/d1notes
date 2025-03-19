@@ -9,6 +9,7 @@ import { upload } from '@vercel/blob/client';
 import FileUploader from '@/app/components/FileUploader';
 import { showError } from '@/app/components/Toastr';
 import { FaFileAlt } from 'react-icons/fa';
+import CropEasy from '@/app/components/crop/CropEasy';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -19,6 +20,7 @@ const Profile: React.FC = () => {
   const [loadingProfile, setLoadingprofile] = useState<boolean>(false);
   const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
   const [cvUpoading, setCvUpoading] = useState<boolean>(false);
+  const [openCrop, setOpenCrop] = useState<boolean>(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -52,7 +54,7 @@ const Profile: React.FC = () => {
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
-  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
   useEffect(() => {
@@ -95,7 +97,7 @@ const Profile: React.FC = () => {
   }, []);
 
 
-  const fetchStates = async (country : string) => {
+  const fetchStates = async (country: string) => {
     const response = await fetch(`/api/masters/states?country=${country}`)
       .then((response) => response.json())
       .then((data) => setStatesList(data || []))
@@ -111,28 +113,45 @@ const Profile: React.FC = () => {
     }));
   };
 
+  const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
+    if (!file) throw new Error('No file selected');
+  
+    setPhotoUploading(true);
+    const imageUrl = await uploadImage(file);
+    setPhotoUploading(false);
+  
+    if (imageUrl) {
+      setProfileData(prev => ({ ...prev, image: imageUrl }));
+      if (closeCrop) setOpenCrop(false);
+      else setOpenCrop(true);
+    }
+  };
+
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error('No file selected');
     }
-    setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
+    await handleImageUpload(file)
 
+  };
+
+  const handleCropImage = async (file: File) => {
+    handleImageUpload(file, true)
+  }
+  const uploadImage = async (file: File, options?: object): Promise<string> => {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/uploads',
+        ...options,
       });
-      setPhotoUpoading(false);
-      const imageUrl = newBlob.url;
-      setProfileData({ ...profileData, image: imageUrl });
-
+      return newBlob.url;
     } catch (error) {
-      setPhotoUpoading(false);
       console.error('Error uploading file:', error);
+      return ''
     }
-  };
-
+  }
 
   const handleSubmit = async () => {
     try {
@@ -341,8 +360,8 @@ const Profile: React.FC = () => {
 
                   <span className='text-xs text-gray-500'>(.jpg, .png, .gif)</span>
                 </>
-              ): (
-                  <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+              ) : (
+                <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
               )}
               <div
                 onClick={triggerImageUpload}
@@ -374,10 +393,18 @@ const Profile: React.FC = () => {
                   className="hidden"
                 />
               )}
-
+              {openCrop && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+                  <CropEasy
+                    photoUrl={profileData.image}
+                    setOpenCrop={setOpenCrop}
+                    handleCropImage={handleCropImage}
+                  />
+                </div>
+              )}
 
             </div>
-            {photoUpoading ? (
+            {photoUploading ? (
               <>
                 <FileUploader />
               </>
@@ -672,8 +699,8 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">
-                  {profileData.facebook}
-                </p>
+                    {profileData.facebook}
+                  </p>
                 )}
               </div>
               <div >
@@ -689,8 +716,8 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">
-                  {profileData.instagram}
-                </p>
+                    {profileData.instagram}
+                  </p>
                 )}
               </div>
               <div>
@@ -706,8 +733,8 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">
-                  {profileData.linkedin}
-                </p>
+                    {profileData.linkedin}
+                  </p>
                 )}
               </div>
               <div>
@@ -723,8 +750,8 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">
-                  {profileData.xlink}
-                </p>
+                    {profileData.xlink}
+                  </p>
                 )}
               </div>
               <div>
@@ -740,8 +767,8 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">
-                  {profileData.youtube}
-                </p>
+                    {profileData.youtube}
+                  </p>
                 )}
               </div>
 
