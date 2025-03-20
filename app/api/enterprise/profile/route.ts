@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
             facebook: enterprises.facebook,
             linkedin: enterprises.linkedin,
             youtube: enterprises.youtube,
+            website: enterprises.website,
             xlink: enterprises.xlink,
         })
         .from(enterprises)
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
             facebook: club.facebook,
             linkedin: club.linkedin,
             youtube: club.youtube,
+            website: club.website,
             xlink: club.xlink,
             logo: club.logo ? `${club.logo}` : null,
         }));

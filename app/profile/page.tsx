@@ -59,6 +59,7 @@ const Profile: React.FC = () => {
     linkedin: "",
     xlink: "",
     youtube: "",
+    website: "",
     team_year: "",
     birth_year: "",
   });
@@ -1049,7 +1050,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               {/* xlink */}
               <div>
                 <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -1080,6 +1081,21 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.youtube}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="website" className="block text-base font-bold mb-2">Website Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="website"
+                    value={profileData.website}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="mt-2 text-[12px] font-medium break-words text-gray-800">{profileData.website}</p>
                 )}
               </div>
             </div>

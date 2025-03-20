@@ -38,6 +38,7 @@ interface FormValues {
   linkedin: string;
   xlink: string;
   youtube: string;
+  website: string;
   license: string;
   cv: string;
   license_type: string;
@@ -93,6 +94,7 @@ export default function Register() {
     linkedin: '',
     xlink: '',
     youtube: '',
+    website: '',
     license: '',
     cv: '',
     license_type: '',
@@ -798,8 +800,8 @@ export default function Register() {
                     )}
                   </div>
                 </div> */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 pb-5">
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                   <div>
                     <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                     <input
@@ -836,6 +838,8 @@ export default function Register() {
                     />
 
                   </div>
+                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
                   <div>
                     <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
                     <input
@@ -861,9 +865,19 @@ export default function Register() {
 
                   </div>
 
-
-
-                </div>
+                  <div>
+                    <label htmlFor="website" className="block text-gray-700 text-sm font-semibold mb-2">Website Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                    <input
+                    placeholder=''
+                      type="text"
+                      name="website"
+                      className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                      value={formValues.website}
+                      onChange={handleChange}
+                    />
+                    
+                  </div>
+              </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
                   <div>
                     <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className="text-xs text-gray-500">(Optional)</span></label>

@@ -39,6 +39,7 @@ const Profile: React.FC = () => {
     instagram: "",
     xlink: "",
     youtube: "",
+    website: "",
   });
 
 
@@ -534,6 +535,8 @@ const Profile: React.FC = () => {
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.description}</p>
                 )}
               </div>
+            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               {/* facebook */}
               <div>
                 <label className="block text-base font-bold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -580,24 +583,9 @@ const Profile: React.FC = () => {
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.linkedin}</p>
                 )}
+                </div>
               </div>
-
-              {/* Instagram */}
-              <div>
-                <label className="block text-base font-bold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    name="instagram"
-                    value={profileData.instagram}
-                    onChange={handleChange}
-                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
-                  />
-                ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.instagram}</p>
-                )}
-              </div>
-
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               {/* X (Twitter) */}
               <div>
                 <label className="block text-base font-bold mb-2">X (Twitter) Link<span className="text-xs text-gray-500"> (Optional)</span></label>
@@ -628,8 +616,24 @@ const Profile: React.FC = () => {
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.youtube}</p>
                 )}
+                </div>
+              
+                <div>
+                <label className="block text-base font-bold mb-2">Website Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                {isEditMode ? (
+                  <input
+                    type="text"
+                    name="website"
+                    value={profileData.website}
+                    onChange={handleChange}
+                    className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                  />
+                ) : (
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.website}</p>
+                )}
+                </div>
               </div>
-            </div>
+
           </div>
         </main>
       </div>

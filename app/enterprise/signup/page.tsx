@@ -31,6 +31,7 @@ const formSchema = z.object({
   xlink: z.string().optional(),
   instagram: z.string().optional(),
   youtube: z.string().optional(),
+  website: z.string().optional(),
   password: z
     .string()
     .refine(
@@ -80,6 +81,7 @@ export default function Signup() {
     linkedin: '',
     xlink: '',
     youtube: '',
+    website: ''
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -480,7 +482,6 @@ export default function Signup() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
-
                 <div>
                   <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
                   <input
@@ -517,13 +518,9 @@ export default function Signup() {
                   />
 
                 </div>
-
-
-
-
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
 
                 <div>
                   <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">X Link <span className="text-xs text-gray-500">(Optional)</span></label>
@@ -547,11 +544,19 @@ export default function Signup() {
                     value={formValues.youtube}
                     onChange={handleChange}
                   />
+                </div>
+                <div>
+                  <label htmlFor="website" className="block text-gray-700 text-sm font-semibold mb-2">Website Link <span className="text-xs text-gray-500">(Optional)</span></label>
+                  <input
+                    placeholder=''
+                    type="text"
+                    name="website"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    value={formValues.website}
+                    onChange={handleChange}
+                  />
 
                 </div>
-
-
-
               </div>
               <div className="mb-4">
                 <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Organization Logo<span className='mandatory'>*</span></label>

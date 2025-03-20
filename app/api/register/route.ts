@@ -164,6 +164,7 @@ export async function PUT(req: NextRequest) {
   const instagram = formData.get('instagram') as string | null;
   const linkedin = formData.get('linkedin') as string | null;
   const youtube = formData.get('youtube') as string | null;
+  const website = formData.get('website') as string | null;
   const xlink = formData.get('xlink') as string | null;
   const age_group = formData.get('age_group') as string | null;
   const birth_year = formData.get('team_year') as string | null;
@@ -204,12 +205,11 @@ export async function PUT(req: NextRequest) {
         linkedin: linkedin || null,
         youtube: youtube || null,
         xlink: xlink || null,
+        website: website || null,
         age_group: age_group || null,
         birth_year: birth_year || null,
         gpa: gpa || '0.00',
-        status: "Active",
-      
-
+        status: "Active"
       })
       .where(eq(users.id, playerIDAsNumber))
 

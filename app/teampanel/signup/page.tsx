@@ -30,6 +30,7 @@ const formSchema = z.object({
   xlink: z.string().optional(),
   instagram: z.string().optional(),
   youtube: z.string().optional(),
+  website: z.string().optional(),
   password: z
       .string()
       .refine(
@@ -518,7 +519,18 @@ const [showPassword, setShowPassword] = useState(false);
   />
   
 </div>
-
+<div>
+  <label htmlFor="website" className="block text-gray-700 text-sm font-semibold mb-2">Website Link <span className="text-xs text-gray-500">(Optional)</span></label>
+  <input
+  placeholder=''
+    type="text"
+    name="website"
+    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+    value={formValues.website}
+    onChange={handleChange}
+  />
+  
+</div>
 
 
 </div>
