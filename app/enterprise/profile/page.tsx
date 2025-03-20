@@ -7,12 +7,14 @@ import { getSession } from "next-auth/react";
 import Select from "react-select";
 import { countryCodesList, countries, states, positionOptionsList } from '@/lib/constants';
 import { upload } from '@vercel/blob/client';
+import CropEasy from '@/app/components/crop/CropEasy';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const [countriesArray, setCountriesArray] = useState([]);
-  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [openCrop, setOpenCrop] = useState<boolean>(false);
+  const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [profileData, setProfileData] = useState({
     id: "",
@@ -134,27 +136,72 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleImageChange = async () => {
-    if (fileInputRef.current?.files?.length) {
-      const file = fileInputRef.current.files[0];
-      setPhotoUpoading(true);
+  // const handleImageChange = async () => {
+  //   if (fileInputRef.current?.files?.length) {
+  //     const file = fileInputRef.current.files[0];
+  //     setPhotoUploading(true);
 
+  //     try {
+  //       const newBlob = await upload(file.name, file, {
+  //         access: 'public',
+  //         handleUploadUrl: '/api/uploads',
+  //       });
+  //       setPhotoUploading(false);
+  //       const imageUrl = newBlob.url;
+  //       setProfileData({ ...profileData, logo: imageUrl });
+  //     } catch (error) {
+  //       setPhotoUploading(false);
+  //       console.error('Error uploading file:', error);
+  //     }
+  //   } else {
+  //     console.error('No file selected');
+  //   }
+  // };
+
+  const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
+      if (!file) throw new Error('No file selected');
+    
+      setPhotoUploading(true);
+      const imageUrl = await uploadImage(file);
+      setPhotoUploading(false);
+    
+      if (imageUrl) {
+        setProfileData({ ...profileData, logo: imageUrl });
+        if (closeCrop) {
+          setOpenCrop(false)
+        }
+        else {
+          setOpenCrop(true)
+        }
+      }
+    };
+  
+    const handleImageChange = async () => {
+      if (!fileInputRef.current?.files) {
+        throw new Error('No file selected');
+      }
+      const file = fileInputRef.current.files[0];
+      await handleImageUpload(file)
+  
+    };
+  
+    const handleCropImage = async (file: File) => {
+      handleImageUpload(file, true)
+    }
+    const uploadImage = async (file: File, options?: object): Promise<string> => {
       try {
         const newBlob = await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/uploads',
+          ...options,
         });
-        setPhotoUpoading(false);
-        const imageUrl = newBlob.url;
-        setProfileData((prevData) => ({ ...prevData, logo: imageUrl }));
+        return newBlob.url;
       } catch (error) {
-        setPhotoUpoading(false);
         console.error('Error uploading file:', error);
+        return ''
       }
-    } else {
-      console.error('No file selected');
     }
-  };
+  
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;
 
@@ -290,6 +337,13 @@ const Profile: React.FC = () => {
                   onChange={handleImageChange}
                   className="hidden"
                   ref={fileInputRef}
+                />
+              )}
+              {openCrop && (
+                <CropEasy
+                  photoUrl={profileData.logo}
+                  setOpenCrop={setOpenCrop}
+                  handleCropImage={handleCropImage}
                 />
               )}
             </div>

@@ -214,6 +214,7 @@ export default function Signup() {
       fetchStates(Number(value));
     }
   };
+
   const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
     if (!file) throw new Error('No file selected');
   
@@ -222,9 +223,13 @@ export default function Signup() {
     setPhotoUploading(false);
   
     if (imageUrl) {
-      setFormValues(prev => ({ ...prev, image: imageUrl }));
-      if (closeCrop) setOpenCrop(false);
-      else setOpenCrop(true);
+      setFormValues({ ...formValues, logo: imageUrl });
+      if (closeCrop) {
+        setOpenCrop(false)
+      }
+      else {
+        setOpenCrop(true)
+      }
     }
   };
 

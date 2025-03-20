@@ -394,13 +394,11 @@ const Profile: React.FC = () => {
                 />
               )}
               {openCrop && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                  <CropEasy
-                    photoUrl={profileData.image}
-                    setOpenCrop={setOpenCrop}
-                    handleCropImage={handleCropImage}
-                  />
-                </div>
+                <CropEasy
+                  photoUrl={profileData.image}
+                  setOpenCrop={setOpenCrop}
+                  handleCropImage={handleCropImage}
+                />
               )}
 
             </div>
