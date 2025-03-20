@@ -202,7 +202,14 @@ const Header: React.FC = () => {
               </Link>
 
               {/* Enterprises Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <Link
+                      href="/browse/clubs"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      // onClick={() => setEnterpriseOpen(false)}
+                    >
+                      Organizations
+              </Link>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleEnterprise}
                   className="flex items-center text-black"
@@ -218,10 +225,10 @@ const Header: React.FC = () => {
                     >
                       Organizations
                     </Link>
-                    {/* <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link> */}
+                    <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
                   </div>
                 )}
-              </div>
+              </div> */}
               {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
               <Link href="/coach/dashboard" className="text-black">
                 Dashboard
@@ -267,7 +274,14 @@ const Header: React.FC = () => {
               </Link>
 
               {/* Enterprises Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <Link
+                      href="/browse/clubs"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      // onClick={() => setEnterpriseOpen(false)}
+                    >
+                      Organizations
+              </Link>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleEnterprise}
                   className="flex items-center text-black"
@@ -283,10 +297,10 @@ const Header: React.FC = () => {
                     >
                       Organizations
                     </Link>
-                    {/* <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link> */}
+                    <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* <Link href="/dashboard" className="text-black">Dashboard</Link> */}
 
@@ -367,7 +381,14 @@ const Header: React.FC = () => {
               </Link>
 
               {/* Enterprises Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <Link
+                      href="/browse/clubs"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      // onClick={() => setEnterpriseOpen(false)}
+                    >
+                      Organizations
+              </Link>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleEnterprise}
                   className="flex items-center text-black"
@@ -383,10 +404,10 @@ const Header: React.FC = () => {
                     >
                       Organizations
                     </Link>
-                    {/* <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link> */}
+                    <Link href="/browse/teams" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setEnterpriseOpen(false)}>Teams</Link>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <Link href="/dashboard" className="text-black">
                 Dashboard
@@ -429,7 +450,14 @@ const Header: React.FC = () => {
               </Link>
 
               {/* Enterprises Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <Link
+                      href="/browse/clubs"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      // onClick={() => setEnterpriseOpen(false)}
+                    >
+                      Organizations
+              </Link>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleEnterprise}
                   className="flex items-center text-black"
@@ -454,7 +482,7 @@ const Header: React.FC = () => {
                     </Link>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <Link href="/enterprise/dashboard" className="text-black">
                 Dashboard
@@ -501,7 +529,14 @@ const Header: React.FC = () => {
               </Link>
 
               {/* Enterprises Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <Link
+                      href="/browse/clubs"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      // onClick={() => setEnterpriseOpen(false)}
+                    >
+                      Organizations
+              </Link>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={toggleEnterprise}
                   className="flex items-center text-black"
@@ -526,7 +561,7 @@ const Header: React.FC = () => {
                     </Link>
                   </div>
                 )}
-              </div>
+              </div> */}
               {/* <a onClick={handleLogout} className="text-black">Signout</a> */}
               <Link href="/teampanel/dashboard" className="text-black">
                 Dashboard
