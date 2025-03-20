@@ -90,7 +90,7 @@ useEffect(() => {
                     Players
                 </Link>
             </li>
-            <li ref={enterpriseRef} className="relative pt-[8px]">
+            {/* <li ref={enterpriseRef} className="relative pt-[8px]">
         <button
           onClick={handleEnterpriseToggle}
           className="flex items-center text-black hover:text-blue-300"
@@ -122,9 +122,17 @@ useEffect(() => {
             </ul>
           </div>
         )}
-      </li>
+      </li> */}
             
-        
+      <li className="pt-[8px]">
+                <Link
+                  href="/browse/clubs"
+                  // className="block px-4 py-2 text-black hover:text-blue-300"
+                  className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
+                  onClick={handleOptionClick}>
+                  Organizations
+                </Link>
+      </li> 
       <li className="pt-[8px]">
         <Link href="/enterprise/dashboard" className={`${isActiveLink("/enterprise/dashboard")} hover:text-blue-300`} onClick={closeMenu}>
           Dashboard

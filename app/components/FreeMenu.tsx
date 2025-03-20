@@ -121,7 +121,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
       <li className="relative">
           <Link
               href="/browse/clubs"
-              className={`${isActiveLink("/browse/clubs")} w-full text-left px-4 py-2 text-black hover:text-blue-300`}
+              className={`${isActiveLink("/browse/clubs")} w-full text-left py-2 text-black hover:text-blue-300`}
               onClick={closeMenu}
           >
               Organizations
