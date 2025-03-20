@@ -85,7 +85,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           Players
         </Link>
       </li> 
-      <li ref={enterpriseRef} className="relative">
+      {/* <li ref={enterpriseRef} className="relative">
         <button
           onClick={handleEnterpriseToggle}
           className="flex items-center text-black hover:text-blue-300"
@@ -105,7 +105,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                   Organizations
                 </Link>
               </li>
-              {/* <li className="pt-[8px]">
+              <li className="pt-[8px]">
                 <Link
                   href="/browse/teams"
                   className="block px-4 py-2 text-black hover:bg-blue-300"
@@ -113,12 +113,20 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
                 >
                   Teams
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
         )}
+      </li> */}
+      <li className="relative">
+          <Link
+              href="/browse/clubs"
+              className={`${isActiveLink("/browse/clubs")} w-full text-left px-4 py-2 text-black hover:text-blue-300`}
+              onClick={closeMenu}
+          >
+              Organizations
+          </Link>
       </li>
-    
       <li ref={createAccountRef} className="relative">
         <button
           onClick={handleCreateAccountToggle}
