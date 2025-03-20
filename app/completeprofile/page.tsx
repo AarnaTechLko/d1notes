@@ -50,7 +50,7 @@ export interface FormValues {
   age_group?: string;
   xlink?: string;
   team_year?: string;
-  image: string | undefined; // Updated to store Base64 string
+  image: string | null; // Updated to store Base64 string
 }
 
 export default function Register() {
@@ -87,9 +87,9 @@ export default function Register() {
     team_year: "",
     xlink: "",
     gpa: undefined,
-    image: undefined,
+    image: null,
   });
-  
+
   const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -97,7 +97,7 @@ export default function Register() {
   const [validationErrors, setValidationErrors] = useState<Partial<FormValues>>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
+  const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const [maxDate, setMaxDate] = useState('');
   const [height, setHeight] = useState("");
   const [countriesList, setCountriesList] = useState([]);
@@ -260,8 +260,8 @@ export default function Register() {
         const email = session?.user?.email;
       }
 
-     router.push("/dashboard");
-     // window.location.href = "/dashboard"; // Redirect after successful registration
+      router.push("/dashboard");
+      // window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
@@ -277,40 +277,38 @@ export default function Register() {
     }
   };
 
+  const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
+    if (!file) throw new Error('No file selected');
+  
+    setPhotoUploading(true);
+    const imageUrl = await uploadImage(file);
+    setPhotoUploading(false);
+  
+    if (imageUrl) {
+      setFormValues(prev => ({ ...prev, image: imageUrl }));
+      if (closeCrop) setOpenCrop(false);
+      else setOpenCrop(true);
+    }
+  };
+
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error('No file selected');
     }
-    setPhotoUpoading(true);
     const file = fileInputRef.current.files[0];
+    await handleImageUpload(file)
 
-    const imageUrl = await uploadImage(file);
-    setPhotoUpoading(false);
-
-    if(imageUrl) {
-      setFormValues({ ...formValues, image: imageUrl });
-      setOpenCrop(true)
-    }
   };
-  
-  const handleCropImage = async (file: File) => {
-    if (!file) {
-      throw new Error('No file selected');
-    }
-    
-    const imageUrl = await uploadImage(file)
 
-    if (imageUrl) {
-      setFormValues({...formValues, image: imageUrl});
-      setOpenCrop(false)
-    }
-    
+  const handleCropImage = async (file: File) => {
+    handleImageUpload(file, true)
   }
-  const uploadImage = async (file: File): Promise<string> => {
+  const uploadImage = async (file: File, options?: object): Promise<string> => {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/uploads',
+        ...options,
       });
       return newBlob.url;
     } catch (error) {
@@ -381,7 +379,7 @@ export default function Register() {
             <form onSubmit={handleSubmit} >
 
               <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Player Image</label>
+                <label htmlFor="image" className="block text-gray-700 text-sm text-center font-semibold mb-2">Player Image<span className='mandatory'>*</span></label>
                 <div className="relative items-center cursor-pointer" onClick={handleImageClick}>
                   <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 m-auto">
                     <Image
@@ -404,9 +402,9 @@ export default function Register() {
                     className="hidden"
                     ref={fileInputRef}
                   />
-                  {photoUpoading ? (
+                  {photoUploading ? (
                     <>
-                      <FileUploader />
+                      <FileUploader/>
                     </>
                   ) : (
                     <>
@@ -416,13 +414,11 @@ export default function Register() {
 
                 </div>
                 {openCrop && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                    <CropEasy
-                      photoUrl={formValues.image}
-                      setOpenCrop={setOpenCrop}
-                      handleCropImage={handleCropImage}
-                    />
-                  </div>
+                  <CropEasy
+                    photoUrl={formValues.image}
+                    setOpenCrop={setOpenCrop}
+                    handleCropImage={handleCropImage}
+                  />
                 )}
               </div>
 
@@ -581,109 +577,106 @@ export default function Register() {
                   />
 
                 </div>
+              </div>
+
+
+              <div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <span>Age<span className="text-red-500">*</span>:</span>
                 </div>
 
 
-                <div>
-  <div className="flex items-center space-x-2 mb-2">
-    <span>Age<span className="text-red-500">*</span>:</span>
-  </div>
 
 
- 
+
+                <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-6 pb-5">
 
 
-<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-6 gap-6 pb-5">
+                  {/* Radio Buttons */}
+                  <div>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="option"
+                        value="ageGroup"
+                        checked={selectedOption === "ageGroup"}
+                        onChange={() => {
+                          setSelectedOption("ageGroup");
+                          setFormValues((prev) => ({ ...prev, team_year: '' })); // Reset age_group
+                        }}
+                        className="hidden"
+                      />
+                      <span
+                        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${selectedOption === "ageGroup"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                          }`}
+                      >
+                        Age Group
+                      </span>
+                    </label>
+                  </div>
+                  <div>
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="option"
+                        value="birthYear"
+                        checked={selectedOption === "birthYear"}
 
-  
-  {/* Radio Buttons */}
-  <div>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="radio"
-        name="option"
-        value="ageGroup"
-        checked={selectedOption === "ageGroup"}
-        onChange={() => {
-          setSelectedOption("ageGroup");
-          setFormValues((prev) => ({ ...prev, team_year: '' })); // Reset age_group
-        }}
-        className="hidden"
-      />
-      <span
-        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
-          selectedOption === "ageGroup"
-            ? "bg-blue-600 text-white"
-            : "bg-gray-200 text-gray-800"
-        }`}
-      >
-        Age Group
-      </span>
-    </label>
-    </div>
-    <div>
-    <label className="inline-flex items-center cursor-pointer">
-      <input
-        type="radio"
-        name="option"
-        value="birthYear"
-        checked={selectedOption === "birthYear"}
-        
-        onChange={() => {
-          setSelectedOption("birthYear");
-          setFormValues((prev) => ({ ...prev, age_group: '' })); // Reset age_group
-        }}
-        className="hidden"
-      />
-      <span
-        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${
-          selectedOption === "birthYear"
-            ? "bg-blue-600 text-white"
-            : "bg-gray-200 text-gray-800"
-        }`}
-      >
-        Birth Year
-      </span>
-    </label>
-  </div>
+                        onChange={() => {
+                          setSelectedOption("birthYear");
+                          setFormValues((prev) => ({ ...prev, age_group: '' })); // Reset age_group
+                        }}
+                        className="hidden"
+                      />
+                      <span
+                        className={`px-4 py-2 rounded-full min-w-[120px] text-center ${selectedOption === "birthYear"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                          }`}
+                      >
+                        Birth Year
+                      </span>
+                    </label>
+                  </div>
 
-  {/* Conditional Select Dropdowns (Always in the Same Line) */}
-  {selectedOption === "ageGroup" && (
-    <div>
-    <select
-      className="  p-2 border rounded-md"
-      name="age_group"
-      onChange={handleChange}
-      value={formValues.age_group}
-    >
-      <option value="">Select Age Group</option>
-      {ageGroups.map((group) => (
-        <option key={group} value={group}>
-          {group}
-        </option>
-      ))}
-    </select>
-    </div>
-  )}
+                  {/* Conditional Select Dropdowns (Always in the Same Line) */}
+                  {selectedOption === "ageGroup" && (
+                    <div>
+                      <select
+                        className="  p-2 border rounded-md"
+                        name="age_group"
+                        onChange={handleChange}
+                        value={formValues.age_group}
+                      >
+                        <option value="">Select Age Group</option>
+                        {ageGroups.map((group) => (
+                          <option key={group} value={group}>
+                            {group}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
-  {selectedOption === "birthYear" && (
-    <div>
-    <select
-      className=" p-2 border rounded-md"
-      name="team_year"
-      onChange={handleChange}
-      value={formValues.team_year}
-    >
-      <option value="">Select Birth Year</option>
-      {birthYears.map((year) => (
-        <option key={year} value={year}>
-          {year}
-        </option>
-      ))}
-    </select>
-    </div>
-  )}
- 
+                  {selectedOption === "birthYear" && (
+                    <div>
+                      <select
+                        className=" p-2 border rounded-md"
+                        name="team_year"
+                        onChange={handleChange}
+                        value={formValues.team_year}
+                      >
+                        <option value="">Select Birth Year</option>
+                        {birthYears.map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
 
 
@@ -696,8 +689,9 @@ export default function Register() {
 
 
 
-  
-</div>
+
+
+                </div>
 
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
@@ -769,18 +763,18 @@ export default function Register() {
                     placeholderText="Select a date"
                   /> */}
                   <DatePicker
-  selected={formValues.birthday ? new Date(formValues.birthday) : null}
-  onChange={handleDateChange}
-  dateFormat="MM-dd-yyyy"
-  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-  placeholderText="Select a date"
-  showYearDropdown
-  scrollableYearDropdown
-  showMonthDropdown
-  minDate={new Date(1985, 0, 1)} // Set minimum selectable date
-  maxDate={new Date(2025, 11, 31)} // Set maximum selectable date
-  yearDropdownItemNumber={41} // Ensures dropdown includes years from 1985 to 2025
-/>
+                    selected={formValues.birthday ? new Date(formValues.birthday) : null}
+                    onChange={handleDateChange}
+                    dateFormat="MM-dd-yyyy"
+                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    placeholderText="Select a date"
+                    showYearDropdown
+                    scrollableYearDropdown
+                    showMonthDropdown
+                    minDate={new Date(1985, 0, 1)} // Set minimum selectable date
+                    maxDate={new Date(2025, 11, 31)} // Set maximum selectable date
+                    yearDropdownItemNumber={41} // Ensures dropdown includes years from 1985 to 2025
+                  />
 
                 </div>
                 <div>
@@ -819,7 +813,7 @@ export default function Register() {
 
                 </div>
 
-               
+
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
 

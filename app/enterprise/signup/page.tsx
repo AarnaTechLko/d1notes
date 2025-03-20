@@ -12,6 +12,7 @@ import { FaCheck, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 import { countryCodesList } from '@/lib/constants';
 import TermsAndConditions from '@/app/components/TermsAndConditions';
 import FileUploader from '@/app/components/FileUploader';
+import CropEasy from '@/app/components/crop/CropEasy';
 
 // Zod schema for validation
 const formSchema = z.object({
@@ -94,6 +95,8 @@ export default function Signup() {
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
+  const [openCrop, setOpenCrop] = useState<boolean>(false);
+
   const fetchStates = async (country: number) => {
     try {
       const response = await fetch(`/api/masters/states?country=${country}`);
@@ -213,27 +216,50 @@ export default function Signup() {
       fetchStates(Number(value));
     }
   };
+
+  const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
+    if (!file) throw new Error('No file selected');
+  
+    setPhotoUploading(true);
+    const imageUrl = await uploadImage(file);
+    setPhotoUploading(false);
+  
+    if (imageUrl) {
+      setFormValues({ ...formValues, logo: imageUrl });
+      if (closeCrop) {
+        setOpenCrop(false)
+      }
+      else {
+        setOpenCrop(true)
+      }
+    }
+  };
+
   const handleImageChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error('No file selected');
     }
-    setPhotoUploading(true);
     const file = fileInputRef.current.files[0];
+    await handleImageUpload(file)
 
+  };
+
+  const handleCropImage = async (file: File) => {
+    handleImageUpload(file, true)
+  }
+  const uploadImage = async (file: File, options?: object): Promise<string> => {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/uploads',
+        ...options,
       });
-      setPhotoUploading(false);
-      const imageUrl = newBlob.url;
-      setFormValues({ ...formValues, logo: imageUrl });
-
+      return newBlob.url;
     } catch (error) {
-      setPhotoUploading(false);
       console.error('Error uploading file:', error);
+      return ''
     }
-  };
+  }
 
   const handleFileChange = async () => {
     if (!pdfInputRef.current?.files) {
@@ -378,7 +404,7 @@ export default function Signup() {
                   <select
                     name="sport"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    
+
                     onChange={handleChange}
                   >
                     <option value="">Select</option>
@@ -567,7 +593,13 @@ export default function Signup() {
                   )}
 
                 </div>
-
+                {openCrop && (
+                  <CropEasy
+                    photoUrl={formValues.logo}
+                    setOpenCrop={setOpenCrop}
+                    handleCropImage={handleCropImage}
+                  />
+                )}
               </div>
 
               {/* Affiliation Documents */}
