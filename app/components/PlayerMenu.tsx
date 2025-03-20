@@ -120,7 +120,7 @@ useEffect(() => {
       <li className="relative">
           <Link
               href="/browse/clubs"
-              className={`${isActiveLink("/browse/clubs")} w-full block text-left px-2 py-2 text-black hover:text-blue-300`}
+              className={`${isActiveLink("/browse/clubs")} w-full block text-left py-2 text-black hover:text-blue-300`}
               onClick={closeMenu}
           >
               Organizations
