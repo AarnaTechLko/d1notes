@@ -11,6 +11,9 @@ import { FaPhone } from "react-icons/fa";
 import { positionOptionsList } from "@/lib/constants";
 import { positionOptionsList2 } from "@/lib/constants";
 import FileUploader from "../FileUploader";
+import ReactQuill from "react-quill";
+import sanitizeHtml from "sanitize-html";
+import 'react-quill/dist/quill.snow.css';
 
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
@@ -401,6 +404,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoadSubmit(true);
+    
     if (evaluationData) {
       setPlayerID(evaluationData.playerId);
       setCoachID(evaluationData.coachId);
@@ -431,7 +435,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       distributionScores,
       organizationScores,
       physicalScores,
-      technicalRemarks,
+      technicalRemarks: cleanHtml(technicalRemarks),
       tacticalRemarks,
       physicalRemarks,
       organizationalRemarks,
@@ -442,6 +446,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       sport,
       thingsToWork,
     };
+
 
     // Send the data to an API
     fetch("/api/coach/evaluations/save", {
@@ -625,6 +630,28 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const handlePositionChange = (event: any) => {
     setPosition(event.target.value);
   };
+  const cleanHtml = (html: string) => {
+    return sanitizeHtml(html, {
+      allowedTags: [
+        "b", "i", "u", "s", "p", "h1", "h2", "h3", "h4", "h5", "h6",
+        "blockquote", "code", "pre", "ul", "ol", "li", "a", "img", "span", "strong","br","em"
+      ],
+      allowedAttributes: {
+        "a": ["href", "target", "rel"],
+        "img": ["src", "alt"],
+        "span": ["style"],
+        "*": ["class", "className"]
+      },
+      allowedStyles: {
+        "*": {
+          // Allow color and background-color
+          "color": [/^#(0-9a-fA-F){3,6}$/],
+          "background-color": [/^#(0-9a-fA-F){3,6}$/]
+        }
+      }
+    });
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -969,6 +996,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
+                    {/* {<ReactQuill 
+                      theme="snow" 
+                      value={technicalRemarks} 
+                      onChange={(e) => {
+                        console.log(e)
+                        setTechnicalRemarks(e)
+                      }}
+                    />} */}
                     {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
