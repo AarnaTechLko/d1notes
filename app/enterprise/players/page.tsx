@@ -350,47 +350,45 @@ const Home: React.FC = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This will archive this player!",
+      text: "This will remove the player from the organization!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, archive it! ",
+      confirmButtonText: "Yes, delete it! ",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        
         try {
-          let clubId; // Declare clubId outside the if block
-
-          if (session) {
-            clubId = session.user.id;
-          }
-
-          if (!clubId) {
-            Swal.fire("Error!", "Club ID is missing!", "error");
-            return;
-          }
-
-          const response = await fetch(`/api/player/archived`, {
-            method: "POST",
+          const response = await fetch(`/api/enterprise/player/remove`, {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              id,
-              type: "player",
-              club_id: clubId, // Now clubId is properly assigned
+              id, // Send only the id
             }),
           });
+          const responseData = await response.json();
 
           if (response.ok) {
             fetchCoaches();
-            Swal.fire("Archived!", "Player archived successfully!", "success");
+            Swal.fire("Deleted!", "Player deleted successfully!", "success");
           } else {
-            Swal.fire("Failed!", "Failed to archive Player", "error");
+            Swal.fire(
+              "Failed!",
+              responseData.message || "Failed to delete Coach",
+              "error"
+            );
           }
         } catch (error) {
-          Swal.fire("Error!", "An error occurred while archiving the player", "error");
+          Swal.fire(
+            "Error!",
+            "An error occurred while deleting the coach",
+            "error"
+          );
         }
+
       }
     });
   };
@@ -643,10 +641,10 @@ const Home: React.FC = () => {
                         <button
                           onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
                           className=" bg-black-500 text-white-500 hover:text-white-700"
-                          aria-label="Archive Player"
-                          title="Archive Player"
+                          aria-label="Delete Player"
+                          title="Delete Player"
                         >
-                          <FaArchive size={24} />
+                          <FaTrash size={24} />
                         </button>
                         <div className="flex items-center space-x-2">
                           {/* <button

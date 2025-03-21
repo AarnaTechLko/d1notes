@@ -189,7 +189,7 @@ const Home: React.FC = () => {
         //   alert("Email already exists. Please use a different email.");
         //   return;
         // }
-        closeModal();
+        // closeModal();
         const successMessage = selectedRecord
           ? "Sub Admin updated successfully!"
           : "Sub Admin added successfully!";

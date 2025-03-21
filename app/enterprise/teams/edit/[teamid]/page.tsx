@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import Swal from "sweetalert2";
 import DefaultPic from "../../../../public/default.jpg";
 import Link from "next/link";
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
+import { FaEdit, FaEye, FaArchive } from "react-icons/fa";
 import CoverImage from '../../../../../public/coverImage.jpg';
 import { showError, showSuccess } from "@/app/components/Toastr";
 import { upload } from "@vercel/blob/client";
@@ -257,6 +257,7 @@ const EditTeam = ({ params }: TeamProps) => {
             const enterprise_id = session?.user?.id;
             const response = await fetch(`/api/enterprise/teams?team_id=${teamId}`);
             const data = await response.json();
+            // console.log("teams: ", data.teamData[0])
             setFormValues(data.teamData[0]);
             setPlayerList(data.playersData);
             setCoachList(data.coachesData);
@@ -284,41 +285,43 @@ const EditTeam = ({ params }: TeamProps) => {
 
 
 
-    const handleDelete = async (teamId: any, id: any, type: any) => {
+    const handleDelete = async (teamId: any, id: any, club_id: any, type: any) => {
         // Show SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: `This will remove this ${type} from this team!`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Yes, archive it!',
             cancelButtonText: 'No, keep it',
         });
 
         // If the user confirms, proceed with the deletion
+        
         if (result.isConfirmed) {
             try {
-                const res = await fetch(`/api/teams/removal`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id, type, teamid: teamId }), // Pass the necessary parameters
-                });
-
-                if (res.ok) {
-                    showSuccess('Coach deleted successfully!');
-                    fetchTeam(teamId);
-                } else {
-                    const data = await res.json();
-                    showError(data.message || 'Failed to delete coach');
-                }
+            const response = await fetch(`/api/player/archived`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                id,
+                club_id,
+                type
+                }),
+            });
+            if (response.ok) {
+                fetchTeam(teamId);
+                Swal.fire("Archived!", "Coach archived successfully!", "success");
+            } else {
+                Swal.fire("Failed!", "Failed to archive Coach", "error");
+            }
             } catch (error) {
-                showError('An error occurred while deleting the coach');
-            } finally {
-                //setLoading(false);
+            Swal.fire("Error!", "An error occurred while archiving the Coach", "error");
             }
         }
+    
     };
 
     return (
@@ -568,8 +571,8 @@ const EditTeam = ({ params }: TeamProps) => {
   {coach.status ? "Active" : "Inactive"}
 </span></td>
                                             <td className="px-4 py-2 text-center">
-                                                <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(teamid, coach.coachId, "coach")}>
-                                                    <FaTrash />
+                                                <button className="text-zinc-500 hover:text-zinc-700" onClick={() => handleDelete(teamid, coach.coachId, formValues.club_id,"coach")}>
+                                                    <FaArchive />
                                                 </button>
                                             </td>
                                         </tr>
@@ -589,7 +592,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
                                         <th className="px-4 py-2 text-left">Name</th>
-                                        <th className="px-4 py-2 text-center"></th>
+                                        <th className="px-4 py-2 text-center">Archive</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -622,9 +625,9 @@ const EditTeam = ({ params }: TeamProps) => {
                                             )}
                                             </td>
                                             <td className="px-4 py-2 text-center">
-                                                <button className="text-red-500 hover:text-red-700"
-                                                    onClick={() => handleDelete(teamid, player.playerId, "player")}>
-                                                    <FaTrash />
+                                                <button className="text-zinc-500 hover:text-zinc-700"
+                                                    onClick={() => handleDelete(teamid, player.playerId, formValues.club_id, "player")}>
+                                                    <FaArchive />
                                                 </button>
                                             </td>
                                         </tr>

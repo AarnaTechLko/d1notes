@@ -164,16 +164,20 @@ export async function GET(req: NextRequest) {
   /* restore */
   export async function PUT(req: NextRequest) {
     try {
-        const { id } = await req.json(); // Getting the player ID from the request body
+        const { id, whatToDo } = await req.json(); // Getting the player ID from the request body
 
         if (!id) {
             return NextResponse.json({ success: false, message: 'Player ID is required' }, { status: 400 });
         }
 
-        // Update the player's status to 'Active' to restore the player
-        await db.update(users)
-            .set({ status: 'Active' }) // Restoring the player
-            .where(eq(users.id, id));
+        if (whatToDo === "restorePlayerToOrg")
+                // Update the player's status to 'Active' to restore the player
+                await db.update(users)
+                    .set({ status: 'Active' }) // Restoring the player
+                    .where(eq(users.id, id));
+
+        else
+            await db.update(users).set({enterprise_id: '', status: 'Active'}).where(eq(users.id, id));
 
         return NextResponse.json({ success: true, message: 'Player restored successfully' });
     } catch (error) {
@@ -181,7 +185,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
     }
 }
-
 
   
   

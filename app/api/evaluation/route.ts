@@ -85,6 +85,8 @@ export async function POST(req: NextRequest) {
         const coachData=await db.select().from(coaches).where(eq(coaches.id,coachId));
         const playerData=await db.select().from(users).where(eq(users.id,player_id));
 
+        console.log("coachData: ", coachData)
+
         let chatFriend:any={
             playerId: playerId,
             coachId: coachId,

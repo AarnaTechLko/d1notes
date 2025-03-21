@@ -412,7 +412,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       console.error("evaluationData is null or undefined");
       setLoadSubmit(false);
       onClose();
-      // Handle the case where evaluationData is not available
     }
 
     const validationErrors = {

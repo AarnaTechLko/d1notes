@@ -344,7 +344,7 @@ const Profile: React.FC = () => {
                   }
                   setIsEditMode(!isEditMode);
                 }}
-                className={`px-5 py-2 rounded-lg transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
+                className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
               >
                 {isEditMode ? 'Save Profile' : 'Edit Profile'}
@@ -353,7 +353,15 @@ const Profile: React.FC = () => {
 
             {/* Profile Image Section */}
             <div className="flex flex-col items-center mb-8">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Profile Image</label>
+              {isEditMode ? (
+                  <>
+                    <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+
+                    <span className='text-xs text-gray-500'>(.jpg, .png, .gif)</span>
+                  </>
+                ) : (
+                  <label className="block lg:text-3xl font-bold mb-2">Profile Image</label>
+                )}
               <div
                 onClick={triggerImageUpload}
                 className="mt-4 cursor-pointer rounded-full border-4 border-indigo-300 p-2 hover:shadow-lg transition-all"
@@ -385,6 +393,7 @@ const Profile: React.FC = () => {
                   onChange={handleImageChange}
                   className="hidden"
                 />
+
               )}
               {openCrop && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
@@ -409,7 +418,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Player First Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player First Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -425,7 +434,7 @@ const Profile: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Player Last Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player Last Name<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -441,7 +450,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label className="block text-base font-bold mb-2">Height <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -456,7 +465,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Weight (lbs) <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label className="block text-base font-bold mb-2">Weight (lbs) <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -470,11 +479,11 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="graduation" className="block text-gray-700 text-sm font-semibold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
+                <label htmlFor="graduation" className="block text-base font-bold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="graduation"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.graduation}
                     onChange={handleChange}
                   >
@@ -494,7 +503,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="school_name" className="block text-gray-700 text-sm font-semibold mb-2">School Name <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label htmlFor="school_name" className="block text-base font-bold mb-2">School Name <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -510,7 +519,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="gpa" className="block text-gray-700 text-sm font-semibold mb-2">GPA <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label htmlFor="gpa" className="block text-base font-bold mb-2">GPA <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -524,12 +533,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="jersey" className="block text-gray-700 text-sm font-semibold mb-2">Jersey Number (Optional)</label>
+                <label htmlFor="jersey" className="block text-base font-bold mb-2">Jersey Number (Optional)</label>
                 {isEditMode ? (
                   <input
                     type="text"
                     name="jersey"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.jersey}
                     onChange={handleChange}
                   />
@@ -540,11 +549,11 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="sport" className="block text-gray-700 text-sm font-semibold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="sport"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.sport}
                     onChange={handleChange}
                   >
@@ -562,7 +571,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(ies)<span className='mandatory'>*</span></label>
+                <label htmlFor="playingcountries" className="block text-base font-bold mb-2">Nationality(ies)<span className='mandatory'>*</span></label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -582,7 +591,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">Country<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Country<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -613,7 +622,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div >
-                <label className="block text-gray-700 text-sm font-semibold mb-2">State/Province<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">State/Province<span className='mandatory'>*</span></label>
                 {isEditMode ? (
 
                   <select
@@ -636,7 +645,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold mb-2">City<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">City<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -653,14 +662,13 @@ const Profile: React.FC = () => {
             {/* dob */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label htmlFor="birthday" className="block text-gray-700 text-sm font-semibold mb-2">Birth Date<span className='mandatory'>*</span></label>
+                <label htmlFor="birthday" className="block text-base font-bold mb-2">Birth Date<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <DatePicker
                     selected={profileData.birthday ? new Date(profileData.birthday) : null}
                     onChange={handleDateChange}
                     dateFormat="MM-DD-YYYY" // Correct format
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    placeholderText="Select a date"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                   />
                 ) : (
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.birthday ? new Date(profileData.birthday).toLocaleDateString("en-US", {
@@ -672,9 +680,9 @@ const Profile: React.FC = () => {
               </div>
               {/* level */}
               <div>
-                <label htmlFor="grade_level" className="block text-gray-700 text-sm font-semibold mb-2"> Level<span className='mandatory'>*</span></label>
+                <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level<span className='mandatory'>*</span></label>
                 {isEditMode ? (
-                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-lg py-2 px-4 w-full" value={profileData.grade_level}>
+                  <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-4 w-full" value={profileData.grade_level}>
                     {playingLevels.map((level) => (
 
 
@@ -691,11 +699,11 @@ const Profile: React.FC = () => {
               </div>
               {/* gender */}
               <div>
-                <label htmlFor="gender" className="block text-gray-700 text-sm font-semibold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label htmlFor="gender" className="block text-base font-bold mb-2">Gender <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <select
                     name="gender"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.gender}
                     onChange={handleChange}
                   >
@@ -823,7 +831,7 @@ const Profile: React.FC = () => {
             )} */} 
 
 <div className="mb-5">
-  <label className="block font-semibold">Age: <span className="text-red-500">*</span></label>
+  <label className="block text-base font-bold mb-2">Age: <span className="text-red-500">*</span></label>
 
   {isEditMode ? (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
@@ -899,13 +907,13 @@ const Profile: React.FC = () => {
             {/* Team */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
               <div>
-                <label htmlFor="team" className="block text-gray-700 text-sm font-semibold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="team" className="block text-base font-bold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
                     type="text"
                     name="team"
-                    className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                    className="border border-gray-300 rounded-md py-2 px-4 w-full"
                     value={profileData.team}
                     onChange={handleChange}
                   />
@@ -916,7 +924,7 @@ const Profile: React.FC = () => {
               </div>
               {/* Position */}
               <div>
-                <label htmlFor="position" className="block text-gray-700 text-sm font-semibold mb-2">Position(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="position" className="block text-base font-bold mb-2">Position(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <Select
                     isMulti
@@ -935,7 +943,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-gray-700 text-sm font-semibold ">Mobile Number<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold">Mobile Number<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -967,7 +975,7 @@ const Profile: React.FC = () => {
 
 
             <div className="col-span-1 mt-5">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">League<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">League<span className='mandatory'>*</span></label>
               {isEditMode ? (
                 <input
                   name="league"
@@ -984,7 +992,7 @@ const Profile: React.FC = () => {
             </div>
 
             <div className="col-span-1 mt-5">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
               {isEditMode ? (
                 <textarea
                   name="bio"
@@ -1002,7 +1010,7 @@ const Profile: React.FC = () => {
             {/* Facebook */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
-                <label htmlFor="facebook" className="block text-gray-700 text-sm font-semibold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label htmlFor="facebook" className="block text-base font-bold mb-2">Facebook Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
                 {isEditMode ? (
                   <input
@@ -1019,7 +1027,7 @@ const Profile: React.FC = () => {
 
               {/* Instagram */}
               <div>
-                <label htmlFor="instagram" className="block text-gray-700 text-sm font-semibold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label htmlFor="instagram" className="block text-base font-bold mb-2">Instagram Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
                 {isEditMode ? (
                   <input
@@ -1035,7 +1043,7 @@ const Profile: React.FC = () => {
               </div>
               {/* Linkedin */}
               <div>
-                <label htmlFor="linkedin" className="block text-gray-700 text-sm font-semibold mb-2">Linkedin Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label htmlFor="linkedin" className="block text-base font-bold mb-2">Linkedin Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
                 {isEditMode ? (
                   <input
@@ -1053,7 +1061,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               {/* xlink */}
               <div>
-                <label htmlFor="xlink" className="block text-gray-700 text-sm font-semibold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label htmlFor="xlink" className="block text-base font-bold mb-2">XLink <span className="text-xs text-gray-500"> (Optional)</span></label>
 
                 {isEditMode ? (
                   <input
@@ -1069,7 +1077,7 @@ const Profile: React.FC = () => {
               </div>
               {/* youtube */}
               <div>
-                <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
+                <label htmlFor="youtube" className="block text-base font-bold mb-2">YouTube Link<span className="text-xs text-gray-500"> (Optional)</span></label>
 
                 {isEditMode ? (
                   <input

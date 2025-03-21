@@ -269,23 +269,6 @@ const Home: React.FC = () => {
                           Go Back
                         </button> */}
 
-                        <button
-                          type="submit"
-                          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmit ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                          disabled={isSubmit}
-                        >
-                          {isSubmit ? (
-                            <>
-                             <div className="flex items-center">
-    {isSubmit && <FaSpinner className="animate-spin mr-2" />}
-    <span>{isSubmit ? "Submitting..." : "Final Submit"}</span>
-  </div>
-                            </>
-                          ) : (
-                            "Final Submit"
-                          )}
-                        </button>
                       </div>
                     </div>
   
