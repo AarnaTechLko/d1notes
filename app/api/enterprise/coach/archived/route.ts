@@ -122,15 +122,23 @@ export async function GET(req: NextRequest) {
   /* restore */
   export async function PUT(req: NextRequest) {
     try {
-        const { id } = await req.json();
+        const { id, whatToDo } = await req.json();
         if (!id) {
             return NextResponse.json({ success: false, message: 'Coach ID is required' }, { status: 400 });
         }
 
-        // Update the coach's status to 'Active'
-        await db.update(coaches).set({ status: 'Active' }).where(eq(coaches.id, id));
+        if (whatToDo === "restoreCoachToOrg")
+
+          // Update the coach's status to 'Active'
+          await db.update(coaches).set({ status: 'Active' }).where(eq(coaches.id, id));
+
+        else
+          await db.update(coaches).set({ enterprise_id: '', status: 'Active' }).where(eq(coaches.id, id));
 
         return NextResponse.json({ success: true, message: 'Coach restored successfully' });
+
+
+
     } catch (error) {
         console.error('Error restoring coach:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });

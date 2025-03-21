@@ -376,12 +376,13 @@ const Home: React.FC = () => {
             }
     
             const response = await fetch(`/api/enterprise/player/archived`, {
-                method: "DELETE",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     id, // Send the player's ID for deletion
+                    whatToDo : "removePlayerFromOrg"
                 }),
             });
     
@@ -419,7 +420,11 @@ const Home: React.FC = () => {
             const response = await fetch(`/api/enterprise/player/archived`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id }), // Send the player's ID to restore
+                body: JSON.stringify({ 
+                    id,
+                    whatToDo : "restorePlayerToOrg"
+ 
+                }), // Send the player's ID to restore
             });
     
             const responseData = await response.json();

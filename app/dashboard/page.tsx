@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "../globals.css";
 import Sidebar from "../components/Sidebar";
-import { getSession } from "next-auth/react";
+import { getSession } from "next-auth/react"; //session is used for users
 import { useTable, Column, CellProps } from "react-table"; // Import Column type
 import { Evaluation, EvaluationsByStatus } from "../types/types"; // Import the correct types
 import { FaEye } from "react-icons/fa";
@@ -98,6 +98,10 @@ const Dashboard: React.FC = () => {
   const [freeEvaluations, setFreeEvaluations] = useState(0);
   const [allowedFreeRequests, setAllowedFreeRequests] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+
+
+
+
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
     if (!isOpen) return null;
@@ -114,6 +118,31 @@ const Dashboard: React.FC = () => {
       </div>
     );
   };
+
+
+  const refund = async (evaluationId: number) =>{
+
+    // console.log("evaluation: ", evaluationId)
+
+    try {
+
+        // console.log("Hi")
+      const response = await fetch(`/api/player/refund?evaluation_id=${evaluationId}`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to refund player`);
+      }
+      
+      const result = await response.json()
+      console.log("Refund complete")
+
+    }
+    catch (error){
+      console.error("Failed to refund customer:", error);
+    }
+
+  }
+
 
   const fetchRequests = async () => {
     const session = await getSession();
@@ -336,6 +365,7 @@ const Dashboard: React.FC = () => {
                   : 'bg-red-600 text-white px-2 py-1 rounded';
                 return (
                   <span >
+                    {/* flag for later */}
                     {remainingTime.toFixed(2)} Hours
                   </span>
                 );
@@ -453,6 +483,25 @@ const Dashboard: React.FC = () => {
         },
       },
       { Header: "Payment Status", accessor: "payment_status" },
+
+        ...(selectedTab === "0"
+        ? [
+          {
+            Header: "Cancel Request",
+
+            Cell: ({row}: CellProps<Evaluation>) => {
+
+              return(
+                <div>
+                    <button onClick={() => {retrieveEvaluationIdForRefund(row.original)}}>
+                        Get Refund
+                    </button>
+                    {/* <p>{row.evaluation.evaluationId}</p> */}
+                </div>
+              )
+            }
+          }
+        ]: []),
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
           {
@@ -471,6 +520,10 @@ const Dashboard: React.FC = () => {
     ],
     [selectedTab]
   );
+
+  const retrieveEvaluationIdForRefund = (evaluation: Evaluation) =>{
+    refund(evaluation.evaluationId)
+  }
 
   const handleEvaluationDetails = (evaluation: Evaluation) => {
     window.open(`/evaluationdetails?evaluationId=${evaluation.evaluationId}`, "_blank");

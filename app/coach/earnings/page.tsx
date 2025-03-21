@@ -94,8 +94,17 @@ const Home: React.FC = () => {
     const data = await response.json();
     setAccounts(data.earnings);
     
+    // console.log(data?.accounts?.reduce(accumulate, currentAmount) => accumulate + currentAmount.amount ?? 0);
+
+    // console.log(data?.accounts?.[0]?.amount ?? 0)
+
+
     setAccountBalance(data?.accounts?.[0]?.amount ?? 0);
     setFilterAccounts(data.earnings);  
+
+
+    console.log("Here is the data: ", data)
+
   };
   useEffect(() => {
    

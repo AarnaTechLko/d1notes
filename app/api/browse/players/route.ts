@@ -5,7 +5,7 @@ import { teams, enterprises, coaches, otps, users } from '../../../../lib/schema
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq, isNotNull, and, not, between, lt, ilike, sql, ne, isNull, or,desc } from 'drizzle-orm';
+import { eq, isNotNull, and, not, between, lt, ilike, sql, inArray , ne, isNull, or,desc } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const conditions = [and(
-      eq(users.status, 'Active'),
+      inArray(users.status, ['Active', 'Archived']),
       not(eq(users.first_name, '')),
       eq(users.visibility, 'on')
     )];

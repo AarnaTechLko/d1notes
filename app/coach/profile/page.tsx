@@ -560,8 +560,9 @@ const Profile: React.FC = () => {
               </div>
 
               {/* Club Name */}
+              {/*Issue with text needs to be discussed, specifically with styling */}
               <div>
-                <label className="block text-base font-bold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
+                <label className="block text-sm font-bold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -574,6 +575,9 @@ const Profile: React.FC = () => {
                   <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.clubName}</p>
                 )}
               </div>
+
+              
+
 
               <div>
                 <label className="block text-base font-bold mb-2">Coaching License Type<span className='mandatory'>*</span></label>

@@ -128,6 +128,8 @@ export async function GET(req: NextRequest) {
   const enterprise_id = url.searchParams.get('enterprise_id');
   const teamId = url.searchParams.get('teamId');
 
+  console.log("Do I even get this far?")
+
   try {
     if (!enterprise_id) {
       return NextResponse.json(

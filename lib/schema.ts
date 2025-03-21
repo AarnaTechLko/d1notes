@@ -296,6 +296,7 @@ export const enterprises=pgTable('enterprises', {
   createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
 
+//What is this for?
 export const packages=pgTable('packages', {
   id: serial('id').primaryKey(),
   packageName: text('packageName').notNull(),

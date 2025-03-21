@@ -256,12 +256,13 @@ const Home: React.FC = () => {
     
         try {
             const response = await fetch(`/api/enterprise/coach/archived`, {
-                method: 'DELETE',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     id, // Send only the id
+                    whatToDo: "removeCoachFromOrg",
                 }),
             });
             const responseData = await response.json();
@@ -300,7 +301,10 @@ const Home: React.FC = () => {
             const response = await fetch(`/api/enterprise/coach/archived`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id }), // Send only the id for restore
+                body: JSON.stringify({ 
+                    id,
+                    whatToDo: "restoreCoachToOrg",
+                }), // Send only the id for restore
             });
     
             const responseData = await response.json();

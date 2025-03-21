@@ -50,6 +50,10 @@ const ChatBox: React.FC = () => {
     const [loggedInUserType, setLoggedInUserType] = useState<string>();
     const chatBoxRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
+    //esentially makes it a global vairable
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+
     const handleGoBack = () => {
         router.back(); // This goes back to the previous page
       };
@@ -104,12 +108,40 @@ const ChatBox: React.FC = () => {
         return () => clearInterval(intervalId);
     }, [selectedUser]);
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setUploadedFile(file);
+
+    const handleFileUpload = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+          }
+    }
+
+    // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = e.target.files?.[0];
+    //     if (file) {
+    //         setMessage((prevMessage) => prevMessage + file)
+    //         // setUploadedFile(file);
+    //     }
+    // };
+
+    const handleImageChange = () =>{
+
+        if(fileInputRef.current?.files){
+
+
+            const file = fileInputRef.current.files[0];
+            
+            try {
+
+                console.log(file.name)
+
+                setUploadedFile(file);
+            } catch (error) {
+                console.error('Error getting the file:', error);
+            }
         }
-    };
+
+
+    }
 
     const handleEmojiClick = () => setShowEmojiPicker((prev) => !prev);
 
@@ -282,6 +314,20 @@ const ChatBox: React.FC = () => {
                 >
                     <FaSmile />
                 </button>
+
+                <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                      ref={fileInputRef}
+                />
+
+
+                <button onClick={handleFileUpload}>
+                    <FaPaperclip />
+                </button>
+
 
                 <textarea
                     className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
