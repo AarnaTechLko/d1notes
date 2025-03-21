@@ -184,7 +184,7 @@ export default function Register() {
 
     if (!formValues.graduation.trim()) newErrors.graduation = "Graduation is required.";
     if (!formValues.birthday) newErrors.birthday = "Birthday is required.";
-    if (!formValues.grade_level) newErrors.grade_level = "Grade level is required.";
+    if (!formValues.grade_level) newErrors.grade_level = "Level is required.";
     /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sports is required.";
     //if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
@@ -767,7 +767,6 @@ export default function Register() {
                     onChange={handleDateChange}
                     dateFormat="MM-dd-yyyy"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    placeholderText="Select a date"
                     showYearDropdown
                     scrollableYearDropdown
                     showMonthDropdown
