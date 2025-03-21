@@ -18,10 +18,11 @@ const Profile: React.FC = () => {
   const [openCrop, setOpenCrop] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const [countriesArray, setCountriesArray] = useState([]);
-  const [nationality, setNationality] = useState<{ label: string; value: string }>({ label: '', value: '' });
-  const [position, setPosition] = useState<{ label: string; value: string }>({ label: '', value: '' });
+  const [nationality, setNationality] = useState<{ label: string; value: string }[]>([]);
+  const [position, setPosition] = useState<{ label: string; value: string }[]>([]);
+  // const [appliedPosition, setAppliedPosition] = useState<{ label: string; value: string}[]>([])
   const [photoUpoading, setPhotoUpoading] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedDOBOption, setSelectedDOBOption] = useState<string | null>(null);
   const birthYears = Array.from({ length: 36 }, (_, i) => 1985 + i);
   let nationalities;
   let ppositons;
@@ -86,27 +87,30 @@ const Profile: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setProfileData(data);
-          console.log("Testing:" + data.birth_year);
+          console.log(data);
+          // console.log("Testing:" + data.birth_year);
           if (data.age_group != '') {
-            setSelectedOption('ageGroup')
+            setSelectedDOBOption('ageGroup')
           }
           if (data.birth_year != '') {
-            setSelectedOption('birthYear')
+            setSelectedDOBOption('birthYear')
           }
 
           if (data.playingcountries.includes(',')) {
             nationalities = data.playingcountries
               .split(',')
               .map((country: string) =>
-                countries.find(option => option.value.trim() === country.trim())
+                countries.find(option => option.label.trim() === country.trim())
               )
               .filter(Boolean);
           } else {
 
-            nationalities = [data.playingcountries.trim()];
+            // nationalities = [data.playingcountries.trim()];
+            nationalities = countries.find(option => option.label.trim() === data.playingcountries)
           }
-
-          setNationality({ label: nationalities, value: nationalities });
+          console.log(data.playingcountries)
+          console.log(nationalities);
+          setNationality(nationalities);
 
 
           if (data.position.includes(',')) {
@@ -118,9 +122,10 @@ const Profile: React.FC = () => {
               .filter(Boolean);
           } else {
 
-            ppositons = [data.position.trim()];
+            // ppositons = [data.position.trim()];
+            ppositons = positionOptionsList.find(option => option.value.trim() === data.position)
           }
-          console.log(ppositons);
+          // console.log(ppositons);
           setPosition(ppositons);
 
 
@@ -167,11 +172,11 @@ const Profile: React.FC = () => {
     const formattedValue = formatHeight(value);
     setProfileData((prevValues) => ({ ...prevValues, height: formattedValue }));
   };
-  const mapCountriesToOptions = (playingCountries: any) => {
-    return playingCountries
-      .split(',')
-      .map((country: string) => ({ label: country.trim(), value: country.trim() }));
-  };
+  // const mapCountriesToOptions = (playingCountries: any) => {
+  //   return playingCountries
+  //     .split(',')
+  //     .map((country: string) => ({ label: country.trim(), value: country.trim() }));
+  // };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProfileData((prevData) => ({
@@ -294,8 +299,11 @@ const Profile: React.FC = () => {
     }
   };
   const handleCountryChange = (selectedOptions: any) => {
+    console.log(selectedOptions);
     const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
+    setNationality(selectedOptions);
     setProfileData({ ...profileData, playingcountries: playingcountries });
+    // console.log(nationality);
 
   };
   const formatDate = (dateString: string) => {
@@ -318,8 +326,10 @@ const Profile: React.FC = () => {
     certificateInputRef.current?.click();
   };
   const handlePositionChange = (selectedOptions: any) => {
+    // console.log(selectedOptions)
     // Convert selected options into a comma-separated string
     const positions = selectedOptions ? selectedOptions.map((option: any) => option.value).join(", ") : "";
+    setPosition(selectedOptions);
     setProfileData({ ...profileData, position: positions });
   };
 
@@ -562,7 +572,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">{nationalities}Nationality(ies)<span className='mandatory'>*</span></label>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies)<span className='mandatory'>*</span></label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -834,9 +844,9 @@ const Profile: React.FC = () => {
             type="radio"
             name="ageOption"
             value={option}
-            checked={selectedOption === option}
+            checked={selectedDOBOption === option}
             onChange={() => {
-              setSelectedOption(option);
+              setSelectedDOBOption(option);
               setProfileData((prev) => ({
                 ...prev,
                 birth_year: option === "ageGroup" ? "" : prev.birth_year,
@@ -844,11 +854,11 @@ const Profile: React.FC = () => {
               }));
             }}
             className="hidden"
-            aria-checked={selectedOption === option}
+            aria-checked={selectedDOBOption === option}
           />
           <span
             className={`px-4 py-2 rounded-full min-w-[120px] text-center transition ${
-              selectedOption === option ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"
+              selectedDOBOption === option ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"
             }`}
           >
             {option === "ageGroup" ? "Age Group" : "Birth Year"}
@@ -857,7 +867,7 @@ const Profile: React.FC = () => {
       ))}
 
       {/* Conditional Select Inputs */}
-      {selectedOption === "ageGroup" && (
+      {selectedDOBOption === "ageGroup" && (
         <select
           className="p-2 border rounded-md"
           name="age_group"
@@ -871,7 +881,7 @@ const Profile: React.FC = () => {
         </select>
       )}
 
-      {selectedOption === "birthYear" && (
+      {selectedDOBOption === "birthYear" && (
         <select
           className="p-2 border rounded-md"
           name="birth_year"
@@ -888,8 +898,8 @@ const Profile: React.FC = () => {
   ) : (
     // Display selected value in View Mode
     <p className="text-gray-700 text-sm font-semibold mt-2">
-      {selectedOption === "ageGroup" && profileData.age_group && `Age Group: ${profileData.age_group}`}
-      {selectedOption === "birthYear" && profileData.birth_year && `Birth Year: ${profileData.birth_year}`}
+      {selectedDOBOption === "ageGroup" && profileData.age_group && `Age Group: ${profileData.age_group}`}
+      {selectedDOBOption === "birthYear" && profileData.birth_year && `Birth Year: ${profileData.birth_year}`}
     </p>
   )}
 </div>
@@ -925,9 +935,10 @@ const Profile: React.FC = () => {
                     classNamePrefix="select"
                     onChange={handlePositionChange}
                     placeholder="Select"
+                    value={position}
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.team}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.position}</p>
                 )}
               </div>
 
