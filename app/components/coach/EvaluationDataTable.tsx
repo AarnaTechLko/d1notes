@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FaEye } from 'react-icons/fa';
 import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import EvaluationForm from './EvaluationForm';

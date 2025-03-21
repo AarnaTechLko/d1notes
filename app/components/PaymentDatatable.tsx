@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
 import  { useRef } from "react";
 interface Item {
@@ -132,7 +131,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                     <th onClick={() => handleSort('created_at')}>Paid Date</th>
                         <th onClick={() => handleSort('firstName')}>Coach Name</th>
                         <th onClick={() => handleSort('review_title')}>Review Title</th>
-                        <th onClick={() => handleSort('amount')}>Amount</th>
+                        <th onClick={() => handleSort('amount')}>Amount (USD)</th>
                         <th onClick={() => handleSort('status')}>Payment Status</th>
                         
                          
