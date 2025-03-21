@@ -981,7 +981,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-tech`}
                       value={technicalRemarks}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -995,15 +995,15 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setTechnicalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    {<ReactQuill 
+                    />
+                    {/* {<ReactQuill 
                       theme="snow" 
                       value={technicalRemarks} 
                       onChange={(e) => {
                         console.log(e)
                         setTechnicalRemarks(e)
                       }}
-                    />}
+                    />} */}
                     {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}

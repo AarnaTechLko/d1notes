@@ -302,9 +302,9 @@ setLoading(false);
                             <p>No Technical scores available.</p>
                         )}
                         <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Comments:</label>
-                        {/* {evaluationData?.technicalRemarks} */}
+                        {evaluationData?.technicalRemarks}
                         {/* {console.log(evaluationData?.technicalRemarks)} */}
-                        <div className='prose' dangerouslySetInnerHTML={{__html: evaluationData?.technicalRemarks || "<p></p>"}} />
+                        {/* <div className='prose' dangerouslySetInnerHTML={{__html: evaluationData?.technicalRemarks || "<p></p>"}} /> */}
                         
                         {/* <div>{parse(evaluationData?.technicalRemarks || "")}</div> */}
                     </div>
