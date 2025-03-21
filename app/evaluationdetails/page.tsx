@@ -12,6 +12,7 @@ import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react
 import { showError } from '../components/Toastr';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import parse from "html-react-parser"
 type EvaluationPageProps = {
     searchParams: {
         evaluationId: string; // Assuming evaluationId is a string
@@ -301,7 +302,11 @@ setLoading(false);
                             <p>No Technical scores available.</p>
                         )}
                         <label htmlFor={`remarks-tech`} className="mt-4 text-sm font-medium">Comments:</label>
-                        {evaluationData?.technicalRemarks}
+                        {/* {evaluationData?.technicalRemarks} */}
+                        {/* {console.log(evaluationData?.technicalRemarks)} */}
+                        <div className='prose' dangerouslySetInnerHTML={{__html: evaluationData?.technicalRemarks || "<p></p>"}} />
+                        
+                        {/* <div>{parse(evaluationData?.technicalRemarks || "")}</div> */}
                     </div>
 
                     {/* Tactical Section */}
