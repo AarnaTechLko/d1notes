@@ -686,7 +686,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5 mt-5">
 
               <div>
-                <label htmlFor="facebook" className="block text-base font-bold mb-2">Facebook Link<span className='mandatory'>*</span></label>
+                <label htmlFor="facebook" className="block text-base font-bold mb-2">Facebook Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
@@ -703,7 +703,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div >
-                <label htmlFor="instagram" className="block text-base font-bold mb-2">Instagram Link <span className='mandatory'>*</span></label>
+                <label htmlFor="instagram" className="block text-base font-bold mb-2">Instagram Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
@@ -720,7 +720,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="linkedin" className="block text-base font-bold mb-2">Linkedin Link<span className='mandatory'>*</span></label>
+                <label htmlFor="linkedin" className="block text-base font-bold mb-2">Linkedin Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
@@ -740,7 +740,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5 mt-5">
 
               <div>
-                <label htmlFor="xlink" className="block text-base font-bold mb-2">X Link <span className='mandatory'>*</span></label>
+                <label htmlFor="xlink" className="block text-base font-bold mb-2">X Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
@@ -757,7 +757,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="youtube" className="block text-base font-bold mb-2">YouTube Link <span className='mandatory'>*</span></label>
+                <label htmlFor="youtube" className="block text-base font-bold mb-2">YouTube Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
@@ -774,7 +774,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="website" className="block text-base font-bold mb-2">Website Link <span className='mandatory'>*</span></label>
+                <label htmlFor="website" className="block text-base font-bold mb-2">Website Link</label>
                 {isEditMode ? (
                   <input
                     placeholder=''
