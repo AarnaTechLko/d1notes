@@ -241,7 +241,7 @@ const EditTeam = ({ params }: TeamProps) => {
             showError(errorData.message || "Something went wrong!");
         }
         else {
-            showSuccess("Team Updated Successfully.");
+            showSuccess("Team Saved Successfully.");
         }
 
 
@@ -520,8 +520,11 @@ const EditTeam = ({ params }: TeamProps) => {
                             <div className="flex justify-center space-x-4 mt-4">
                                 <button
                                     type="button"
-
                                     className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.location.href="/enterprise/teams"
+                                    }}
                                 >
                                     Cancel
                                 </button>
@@ -529,7 +532,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     type="submit"
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
-                                    Update
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -537,7 +540,7 @@ const EditTeam = ({ params }: TeamProps) => {
                         <div className="space-y-4 shadow p-8">
                         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Coaches</h3>
                         <div className="overflow-x-auto">
-                            <table className="w-full table-auto">
+                            {coachList.length > 0 ? (<table className="w-full table-auto">
                                 <thead>
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
@@ -580,14 +583,14 @@ const EditTeam = ({ params }: TeamProps) => {
                                     ))}
                                     {/* Repeat rows as needed */}
                                 </tbody>
-                            </table>
+                            </table>): "No Coaches added yet..."}
                         </div>
                     </div>
 
                     <div className="space-y-4 shadow p-8">
                         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Players</h3>
                         <div className="overflow-x-auto">
-                            <table className="w-full table-auto">
+                            {coachList.length > 0 ? (<table className="w-full table-auto">
                                 <thead>
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>
@@ -635,7 +638,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                     ))}
                                     {/* Repeat rows as needed */}
                                 </tbody>
-                            </table>
+                            </table>): "No Players added yet..."}
                         </div>
                     </div>
 
