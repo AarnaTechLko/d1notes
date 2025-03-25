@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       thingsToWork
     } = data;
 
-    console.log("Let's take a look at the data: ", thingsToWork)
+    // console.log("Let's take a look at the data: ", data)
 
     const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId)).execute();
     const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId, evaluationId)).limit(1)  // Limit to 1 record
@@ -63,7 +63,9 @@ export async function POST(req: NextRequest) {
         organizationalRemarks: organizationalRemarks,
         distributionRemarks: distributionRemarks,
         thingsToWork: thingsToWork
-      }).returning();
+      })
+      .where(eq(evaluationResults.evaluationId, evaluationId))
+      .returning();
     }
     else {
       const insertedData = await db.insert(evaluationResults).values({
@@ -92,6 +94,7 @@ export async function POST(req: NextRequest) {
 
     if (status) {
 
+      // console.log("status: ", status)
 
       const updateEvaluation = await db
         .update(playerEvaluation)

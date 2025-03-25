@@ -263,7 +263,7 @@ export default function Register() {
                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                   {otpLoading && (
                     <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />
@@ -293,7 +293,7 @@ export default function Register() {
                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                   {otpLoading && (
                     <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />
