@@ -632,7 +632,7 @@ const Dashboard: React.FC = () => {
                       <button
                         onClick={() => handleTabChange(tab)}
 
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                        className="w-full px-4 py-2 hover:bg-gray-100"
                       >
                         {tab.name}
                       </button>

@@ -69,54 +69,126 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     technical = [
       {
         id: "t1",
-        label: "Handling",
+        label: "Passing",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "t2",
-        label: "Footwork",
+        label: "Receiving",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "t3",
-        label: "Shot Stopping",
+        label: "Dribbling",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "t4",
-        label: "Crosses",
+        label: "Shooting",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "t5",
+        label: "Finishing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t6",
+        label: "Heading",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t7",
+        label: "Tackling",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t8",
+        label: "Defending",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t9",
+        label: "Footwork",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t10",
+        label: "Shot Stopping",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t11",
+        label: "Crosses",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t12",
         label: "1 v 1",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
     ];
 
     tactical = [
+
+
       {
         id: "ta1",
-        label: "Decision Making",
+        label: "Reading the Game",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "ta2",
-        label: "Organization with Back Four",
+        label: "Decisions with Ball",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "ta3",
-        label: "Positioning",
+        label: "Decisions without Ball",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "ta4",
-        label: "Role in Build Up",
+        label: "Understanding of Team Play",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
         id: "ta5",
+        label: "Understanding of Role and Position",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta6",
+        label: "Timing of Runs",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta7",
+        label: "Scanning",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta8",
+        label: "Decision Making",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta9",
+        label: "Organization with Back Four",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta10",
+        label: "Positioning",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta11",
+        label: "Role in Build Up",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta12",
         label: "Role in Counter Attack",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
@@ -150,14 +222,16 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     ];
 
     physical = [
+
       {
         id: "p1",
-        label: "Speed",
+        label: "Strength",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
+
       {
         id: "p2",
-        label: "Flexibility",
+        label: "Speed",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
@@ -165,23 +239,42 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         label: "Mobility",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
+
       {
         id: "p4",
+        label: "Stamina",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p5",
+        label: "Aggressiveness",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p6",
+        label: "Flexibility",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p7",
         label: "Agility",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
-        id: "p5",
+        id: "p8",
         label: "Strength / Power",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
-        id: "p6",
+        id: "p9",
         label: "Stance",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       {
-        id: "p7",
+        id: "p10",
         label: "Bravery",
         options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
@@ -352,7 +445,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const [organizationScores, setOrganizationScores] = useState<{
     [key: string]: string;
   }>(() =>
-    Object.fromEntries(organization.map((dis: any) => [dis.label, "N/A"]))
+    Object.fromEntries(organization.map((org: any) => [org.label, "N/A"]))
   );
   const formattedDate = evaluationData?.created_at
     ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
@@ -368,20 +461,44 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     }
 
     const evaluationDatas = {
+
+
       evaluationId,
       coachId,
       playerId,
       technicalScores,
       tacticalScores,
+      distributionScores,
+      organizationScores,
       physicalScores,
-      technicalRemarks,
+      technicalRemarks: cleanHtml(technicalRemarks),
       tacticalRemarks,
       physicalRemarks,
-      finalRemarks,
-      distributionRemarks,
-      distributionScores,
       organizationalRemarks,
+      distributionRemarks,
+      finalRemarks,
+      document,
+      position,
+      sport,
       thingsToWork,
+
+      // evaluationId,
+      // coachId,
+      // playerId,
+      // technicalScores,
+      // tacticalScores,
+      // physicalScores,
+      // technicalRemarks,
+      // tacticalRemarks,
+      // physicalRemarks,
+      // finalRemarks,
+      // distributionRemarks,
+      // distributionScores,
+      // organizationalRemarks,
+      // thingsToWork,
+      // position,
+      // sport,
+
     };
 
     fetch("/api/coach/evaluations/save?status=4", {
@@ -523,11 +640,11 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
       const data = await response.json();
 
-      console.log("results: ", data.result);
+      // console.log("results: ", data.result);
 
       const datas = data.result;
 
-      console.log("datas: ", datas);
+      // console.log("datas: ", datas);
 
       const technicalScoresJson = JSON.parse(datas.technicalScores);
       console.log(technicalScoresJson);
@@ -581,6 +698,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       setTacticalRemarks(datas.tacticalRemarks || "");
       setPhysicalRemarks(datas.physicalRemarks || "");
       setFinalRemarks(datas.finalRemarks || "");
+      setThingsToWork(datas.thingsToWork || "")
       setSport(datas.sport);
       setPosition(datas.position);
       setDistributionRemarks(datas.distributionRemarks || "");

@@ -627,7 +627,7 @@ export default function Signup() {
                       className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
                   </div>
                 </div>
@@ -642,7 +642,7 @@ export default function Signup() {
                       className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
                   </div>
                 </div>

@@ -1,16 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession} from "next-auth";
 import { getSession } from "next-auth/react";
+
 import { db } from '../../../lib/db';
 import { users, coaches, teams } from '../../../lib/schema';
 import { eq } from 'drizzle-orm';
 
 export async function PUT(req: NextRequest) {
     try {
+
         const session = await getSession({ req: req as any });
+
+        // console.log("req: ", req)
+
+        // const session = await getServerSession({ req });
         const body = await req.json();
         const playerId = body.playerId;
         const state = body.state;
         const type = body.type;
+
+        // console.log("session: ", session)
+
+        // console.log("body: ", body)
 
         let updateData: any = {
             id: playerId || null,
@@ -28,11 +39,17 @@ export async function PUT(req: NextRequest) {
             await db.update(teams).set(updateData).where(eq(teams.id, playerId));
         }
 
+        // await fetch(process.env.NEXTAUTH_URL + '/api/auth/session', { method: 'GET' });
+
         if (session?.user) {
+
+            // console.log("I'm heres")
+
             // Update session visibility manually
             session.user.visibility = state || session.user.visibility;
             // You can manually update session using `next-auth`'s `updateSession` function.
             await fetch('/api/auth/session', { method: 'GET' });
+            // console.log("session: ", session)
         }
 
         return NextResponse.json({ success: true, message: 'Visibility Status Updated' }, { status: 200 });
