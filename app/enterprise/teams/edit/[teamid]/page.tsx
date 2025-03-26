@@ -289,7 +289,7 @@ const EditTeam = ({ params }: TeamProps) => {
         // Show SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: `This will remove this ${type} from this team!`,
+            text: `This will remove ${type} from this team!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, archive it!',
@@ -313,9 +313,23 @@ const EditTeam = ({ params }: TeamProps) => {
             });
             if (response.ok) {
                 fetchTeam(teamId);
-                Swal.fire("Archived!", "Coach archived successfully!", "success");
+
+
+                if(type == 'player'){
+                    Swal.fire("Archived!", "Player archived successfully!", "success");
+                }
+                else{
+                    Swal.fire("Archived!", "Coach archived successfully!", "success");
+                }
+            
             } else {
-                Swal.fire("Failed!", "Failed to archive Coach", "error");
+
+                if(type == 'player'){
+                    Swal.fire("Failed!", "Failed to archive Player", "error");
+                }
+                else{
+                    Swal.fire("Failed!", "Failed to archive Coach", "error");
+                }
             }
             } catch (error) {
             Swal.fire("Error!", "An error occurred while archiving the Coach", "error");
@@ -616,13 +630,22 @@ const EditTeam = ({ params }: TeamProps) => {
 
 
                                             </td>
+                                    
+                                            
+                                            
                                             <td className="px-4 py-2">
                                             {(!player.first_name || player.first_name === 'null') && (    
                                             <span>...</span>
                                             )}
                                             {(player.first_name) && (    
-                                            <span>{player.first_name} {player.last_name}</span>
+                                            <span>{player.first_name} {player.last_name} <br/>
+                                            </span>
                                             )}
+
+                                            <span className={player.status ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                                                {player.status ? "Active" : "Inactive"}
+                                            </span>
+
                                             </td>
                                             <td className="px-4 py-2 text-center">
                                                 <button className="text-zinc-500 hover:text-zinc-700"

@@ -31,7 +31,9 @@ export async function PUT(req: NextRequest) {
             await db
                 .update(coaches)
                 .set({ status: 'Active' } as any)
-                .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
+                .where(sql`${coaches.id} IN (${sql.join(coachesIds, sql`, `)})`);
+
+                // .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
         }
 
         // Get the list of player IDs associated with the team
@@ -67,37 +69,37 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ success: false, message: 'Team ID is required' }, { status: 400 });
         }
 
-        const coachesInTeam = await db
-            .select({ coachId: teamCoaches.coachId }) // Use correct select syntax
-            .from(teamCoaches)
-            .where(eq(teamCoaches.teamId, id)); // Changed 'team_id' to 'teamId'
+        // const coachesInTeam = await db
+        //     .select({ coachId: teamCoaches.coachId }) // Use correct select syntax
+        //     .from(teamCoaches)
+        //     .where(eq(teamCoaches.teamId, id)); // Changed 'team_id' to 'teamId'
 
-        const coachesIds = coachesInTeam.map((entry) => entry.coachId);
+        // const coachesIds = coachesInTeam.map((entry) => entry.coachId);
 
-        if (coachesIds.length > 0) {
-            await db
-                .delete(coaches)
-                .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
-        }
+        // if (coachesIds.length > 0) {
+        //     await db
+        //         .update(coaches).set({status:'Archived'})
+        //         .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
+        // }
 
-        // Get the list of player IDs associated with the team (corrected filtering by teamId)
-        const playerInTeam = await db
-            .select({ playerId: teamPlayers.playerId }) // Selecting playerId
-            .from(teamPlayers)
-            .where(eq(teamPlayers.teamId, id)); // Filtering by teamId
+        // // Get the list of player IDs associated with the team (corrected filtering by teamId)
+        // const playerInTeam = await db
+        //     .select({ playerId: teamPlayers.playerId }) // Selecting playerId
+        //     .from(teamPlayers)
+        //     .where(eq(teamPlayers.teamId, id)); // Filtering by teamId
 
-        const playersIds = playerInTeam.map((entry) => entry.playerId);
+        // const playersIds = playerInTeam.map((entry) => entry.playerId);
 
-        if (playersIds.length > 0) {
-            await db
-                .delete(users)
-                .where(sql`${users.id} IN (${sql.join(playersIds)})`); // Corrected delete query for users
-        }
+        // if (playersIds.length > 0) {
+        //     await db
+        //         .update(users).set({status:'Archived'})
+        //         .where(sql`${users.id} IN (${sql.join(playersIds)})`); // Corrected delete query for users
+        // }
 
 
         await db.delete(teams).where(eq(teams.id, id));
 
-        return NextResponse.json({ success: true, message: 'Team and related players and coaches archived successfully' });
+        return NextResponse.json({ success: true, message: 'Team has been removed successfully' });
     } catch (error) {
         console.error('Error archiving team:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });

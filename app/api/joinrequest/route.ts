@@ -141,8 +141,51 @@ export async function GET(req: Request) {
       clubSlug: row.clubSlug,
       createdAt: row.createdAt,
     }));
+
+    
     return NextResponse.json({ data: plainResult }, { status: 200 });
   }
 
-}
 
+  else if(type=='coach'){
+    const query = await db.select().from(coaches).where(eq(coaches.id, Number(player_id))).execute();
+    
+    const queryResult = await db
+    .select({
+      invitationId: invitations.id,
+      email: invitations.email,
+      invitation_for: invitations.invitation_for,
+      status: invitations.status,
+      createdAt: invitations.createdAt,
+      team_name: teams.team_name, // Removed optional chaining
+      club_name: enterprises.organizationName, // Ensure correct column name
+      clubSlug: enterprises.slug, // Ensure correct column name
+      teamSlug: teams.slug, // Ensure correct column name
+      clubLogo: enterprises.logo, // Ensure correct column name
+      teamLogo: teams.logo, // Ensure correct column name
+    })
+    .from(invitations)
+    .leftJoin(teams, eq(teams.id,invitations.team_id))
+    .leftJoin(enterprises, eq(enterprises.id, invitations.enterprise_id))
+    .where(
+      and(
+        eq(invitations.email, String(query[0].email)),
+        eq(invitations.invitation_for,type.toString())
+      ));
+
+    const plainResult = queryResult.map(row => ({
+      invitationId: row.invitationId,
+      email: row.email,
+      team_name: row.team_name,
+      club_name: row.club_name,
+      status: row.status,
+      clubLogo: row.clubLogo,
+      teamLogo: row.teamLogo,
+      teamSlug: row.teamSlug,
+      clubSlug: row.clubSlug,
+      createdAt: row.createdAt,
+    }));
+
+    return NextResponse.json({ data: plainResult }, { status: 200 });
+  }
+}

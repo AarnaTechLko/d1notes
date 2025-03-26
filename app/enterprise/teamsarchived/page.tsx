@@ -167,10 +167,10 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
     const handleDelete = async (id?: number) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: 'This will delete this team!',
+            text: 'This will remove the team!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Yes, remove it!',
             cancelButtonText: 'Cancel',
         });
     
@@ -191,14 +191,14 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
     
             if (response.ok) {
                 fetchTeams();
-                Swal.fire("Deleted!", "Team deleted successfully!", "success");
+                Swal.fire("Removed!", "Team removed successfully!", "success");
             } else {
-                Swal.fire("Failed!", responseData.message || "Failed to delete team", "error");
+                Swal.fire("Failed!", responseData.message || "Failed to remove team", "error");
             }
     
         } catch (error) {
             console.error("Error deleting team:", error);
-            Swal.fire("Error!", "An error occurred while deleting the team.", "error");
+            Swal.fire("Error!", "An error occurred while removing the team.", "error");
         }
     };
     
@@ -263,7 +263,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
     const handlecocheRestore = async (id?: number) => {
         const result = await Swal.fire({
             title: "Are you sure?",
-            text: "This action will restore this teams!",
+            text: "This action will restore this team!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#28a745",
@@ -290,9 +290,9 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
     
             if (response.ok) {
                 fetchTeams();
-                Swal.fire("Restored!", "Teams restored successfully!", "success");
+                Swal.fire("Restored!", "Team restored successfully!", "success");
             } else {
-                Swal.fire("Failed!", responseData.message || "Failed to restore Teams", "error");
+                Swal.fire("Failed!", responseData.message || "Failed to restore Team", "error");
             }
         } catch (error) {
             Swal.fire("Error!", "An error occurred while restoring the Teams", "error");
@@ -405,7 +405,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                                                             onClick={() => handleDelete(team.id)}
                                                             className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
                                                             aria-label="Archive Player"
-                                                        > Delete
+                                                        > Remove
                                                         </button>
                                                     </div>
                                                 </td>
@@ -413,7 +413,7 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={8} >No Teams added yet...</td>
+                                            <td colSpan={8} >No Teams archived yet...</td>
                                         </tr>
                                     )}
                                 </tbody>
