@@ -442,40 +442,41 @@ const Home: React.FC = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This will remove the coach from the organization!",
+      text: "This will archive the coach!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, archive it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`/api/enterprise/coach/remove`, {
-            method: "PUT",
+          const response = await fetch(`/api/player/archived`, {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               id, // Send only the id
+              type: 'coach'
             }),
           });
           const responseData = await response.json();
 
           if (response.ok) {
             fetchCoaches();
-            Swal.fire("Deleted!", "Coach deleted successfully!", "success");
+            Swal.fire("Archived!", "Coach archived successfully!", "success");
           } else {
             Swal.fire(
               "Failed!",
-              responseData.message || "Failed to delete Coach",
+              responseData.message || "Failed to archive Coach",
               "error"
             );
           }
         } catch (error) {
           Swal.fire(
             "Error!",
-            "An error occurred while deleting the coach",
+            "An error occurred while archiving the coach",
             "error"
           );
         }
@@ -654,7 +655,7 @@ const Home: React.FC = () => {
         <th>Used License</th> */}
                   <th>Evaluations</th>
                   <th>Status</th>
-                  <th style={{ width: 225 }}>Action</th>
+                  <th style={{ width: 225 }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -733,10 +734,10 @@ const Home: React.FC = () => {
                           <button
                             onClick={() => handleDelete(coach.id)} // Pass the banner ID to the delete handler
                             className="bg-black-500 text-white-500 hover:text-white-700"
-                            aria-label="Delete Player"
-                            title="Delete Coach"
+                            aria-label="Archive Coach"
+                            title="Archive Coach"
                           >
-                            <FaTrash size={24} />
+                            <FaArchive size={24} />
                           </button>
 
                           {coach.status == "Archived" && (

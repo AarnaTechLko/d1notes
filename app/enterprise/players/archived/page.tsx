@@ -349,12 +349,12 @@ const Home: React.FC = () => {
     const handleDelete = async (id: number) => {
         const result = await Swal.fire({
             title: "Are you sure?",
-            text: "This will delete this player!",
+            text: "This will remove this player!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, Delete!",
+            confirmButtonText: "Yes, Remove!",
             cancelButtonText: 'Cancel',
         });
     
@@ -388,9 +388,9 @@ const Home: React.FC = () => {
     
             if (response.ok) {
                 fetchCoaches();
-                Swal.fire("Archived!", "Player delete successfully!", "success");
+                Swal.fire("Removed!", "Player removed successfully!", "success");
             } else {
-                Swal.fire("Failed!", "Failed to delete Player", "error");
+                Swal.fire("Failed!", "Failed to removed Player", "error");
             }
         } catch (error) {
             Swal.fire("Error!", "An error occurred while removing the player", "error");
@@ -583,7 +583,7 @@ const Home: React.FC = () => {
                                 <th>Team</th> */}
                                 {/* <th>Evaluations</th> */}
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         {loading ? (
@@ -643,7 +643,7 @@ const Home: React.FC = () => {
                                                         onClick={() => handleDelete(coach.id)}
                                                         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
                                                         aria-label="Archive Player"
-                                                    > Delete
+                                                    > Remove
                                                     </button>
                                                 </div>
                                             </td>
