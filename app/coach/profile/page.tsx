@@ -10,6 +10,7 @@ import FileUploader from '@/app/components/FileUploader';
 import { showError } from '@/app/components/Toastr';
 import { FaFileAlt } from 'react-icons/fa';
 import CropEasy from '@/app/components/crop/CropEasy';
+import ViewLicenseModal from '@/app/components/LicenseModal';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -824,13 +825,8 @@ const Profile: React.FC = () => {
               ) : (
                 <div>
                   <p className="text-gray-700">
-                    <button
-                      onClick={() => handleDownload(profileData.cv)}
-                      className="flex items-center space-x-2"
-                    >
                       <FaFileAlt className="text-blue-500" />
-                      <span>Download CV</span>
-                    </button>
+                      <span><ViewLicenseModal fileurl={profileData.cv} /></span>
                   </p></div>
               )}
               {isEditMode ? (

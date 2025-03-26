@@ -137,6 +137,7 @@ export async function PUT(req: NextRequest) {
   const linkedin = formData.get('linkedin') as string | null;
   const xlink = formData.get('xlink') as string | null;
   const youtube = formData.get('youtube') as string | null;
+  const website = formData.get('website') as string | null;
   const license_type = formData.get('license_type') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
 
@@ -152,6 +153,7 @@ export async function PUT(req: NextRequest) {
     linkedin: linkedin || null,
     xlink: xlink || null,
     youtube: youtube || null,
+    website: website || null,
     lastName: lastName || null,
     phoneNumber: phoneNumber || null,
     location: location || null,
@@ -275,6 +277,7 @@ export async function GET(req: NextRequest) {
       instagram: coaches.instagram,
       xlink: coaches.xlink,
       youtube: coaches.youtube,
+      website: coaches.website,
       expectedCharge: coaches.expectedCharge,
       license_type: coaches.license_type,
       evaluationCount: sql<number>`
@@ -317,6 +320,7 @@ const coachlist = await query.execute();
         instagram:coach.instagram,
         xlink:coach.xlink,
         youtube:coach.youtube,
+        website: coach.website,
         evaluation_rate:coach.expectedCharge,
         license_type:coach.license_type,
         evaluationCount:coach.evaluationCount,
