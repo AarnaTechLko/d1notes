@@ -3,10 +3,11 @@ import { Modal, Box, Button } from '@mui/material';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import "@cyntler/react-doc-viewer/dist/index.css";
 interface LicenseProps {
-  fileurl:string; // Define the prop for the role
+  fileurl: string; // Define the prop for the role
+  controlName: string;
 }
 
-const ViewLicenseModal: React.FC<LicenseProps> = ({ fileurl }) => {
+const ViewLicenseModal: React.FC<LicenseProps> = ({ fileurl, controlName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +31,7 @@ const ViewLicenseModal: React.FC<LicenseProps> = ({ fileurl }) => {
             backgroundColor: 'transparent',
           },
         }}
-      >View CV
+      >{controlName}
       </Button>
 
       <Modal
