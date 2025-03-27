@@ -419,7 +419,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     distribution = [];
     organization = [];
   }
-  
+
   const [technicalScores, setTechnicalScores] = useState<{
     [key: string]: string;
   }>(() =>
@@ -1098,7 +1098,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-tech`}
                       value={technicalRemarks}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -1112,25 +1112,22 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setTechnicalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    {/* <div className="react-quill flex-1 overflow-auto"> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={technicalRemarks}
-                        onChange={(e) => {
-                          setTechnicalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
+                    {/* {<ReactQuill 
+                      theme="snow" 
+                      value={technicalRemarks} 
+                      onChange={(e) => {
+                        console.log(e)
+                        setTechnicalRemarks(e)
+                      }}
+                    />} */}
                     {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
                   </div>
 
                   {/* Tactical Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-lg flex flex-col">
+                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                     <h2 className="text-xl mb-4">
                       Tactical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
@@ -1174,7 +1171,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-tact`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1188,17 +1185,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setTacticalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={tacticalRemarks}
-                        onChange={(e) => {
-                          setTacticalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                     {errors.tacticalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
@@ -1249,7 +1236,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-phys`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1263,17 +1250,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setPhysicalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={physicalRemarks}
-                        onChange={(e) => {
-                          setPhysicalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                     {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
@@ -1328,7 +1305,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-tech`}
                       value={technicalRemarks}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -1342,17 +1319,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setTechnicalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={technicalRemarks}
-                        onChange={(e) => {
-                          setTechnicalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                     {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
@@ -1403,7 +1370,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-tact`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1417,17 +1384,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setTacticalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={tacticalRemarks}
-                        onChange={(e) => {
-                          setTacticalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                     {errors.tacticalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
@@ -1479,7 +1436,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-dis`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1493,17 +1450,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setDistributionRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={distributionRemarks}
-                        onChange={(e) => {
-                          setDistributionRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                   </div>
 
                   {/* Physical Section */}
@@ -1551,7 +1498,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-phys`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1565,17 +1512,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setPhysicalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={physicalRemarks}
-                        onChange={(e) => {
-                          setPhysicalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                     {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
                     )}
@@ -1624,7 +1561,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Commentary:
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </label>
-                    {/* <textarea
+                    <textarea
                       id={`remarks-org`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
@@ -1638,17 +1575,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           setOrganizationalRemarks(e.target.value); // Update the value if within limit
                         }
                       }}
-                    /> */}
-                    <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={organizationalRemarks}
-                        onChange={(e) => {
-                          setOrganizationalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                    />
                   </div>
                 </div>
               )}
@@ -1659,7 +1586,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                   Additional Comments:
                   <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                 </label>
-                {/* <textarea
+                <textarea
                   value={finalRemarks}
                   id="final-remarks"
                   className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -1672,17 +1599,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       setFinalRemarks(e.target.value); // Update the value if within limit
                     }
                   }}
-                /> */}
-                <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={finalRemarks}
-                        onChange={(e) => {
-                          setFinalRemarks(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                />
                 {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
                 )}
@@ -1692,7 +1609,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                   Things to Work On:
                   <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                 </label>
-                {/* <textarea
+                <textarea
                   value={thingsToWork}
                   id="final-remarks"
                   className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
@@ -1705,17 +1622,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       setThingsToWork(e.target.value); // Update the value if within limit
                     }
                   }}
-                /> */}
-                <div className="overflow-auto">
-                      {<ReactQuill
-                        theme="snow"
-                        value={thingsToWork}
-                        onChange={(e) => {
-                          setThingsToWork(e)
-                        }}
-                        className="relative bottom-auto"
-                      />}
-                    </div>
+                />
                 {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
                 )}
