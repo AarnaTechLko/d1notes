@@ -10,6 +10,7 @@ import FileUploader from '@/app/components/FileUploader';
 import { showError } from '@/app/components/Toastr';
 import { FaFileAlt } from 'react-icons/fa';
 import CropEasy from '@/app/components/crop/CropEasy';
+import ViewLicenseModal from '@/app/components/LicenseModal';
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -823,15 +824,17 @@ const Profile: React.FC = () => {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-700">
-                    <button
-                      onClick={() => handleDownload(profileData.cv)}
-                      className="flex items-center space-x-2"
-                    >
-                      <FaFileAlt className="text-blue-500" />
-                      <span>Download CV</span>
-                    </button>
-                  </p></div>
+                  <p className="flex items-center">
+                    <FaFileAlt className="text-blue-500 mr-2" /> {/* Add margin to the right of the icon */}
+                    {profileData.cv ? (
+                      <span>
+                        <ViewLicenseModal fileurl={profileData.cv} controlName="View CV" />
+                      </span>
+                    ) : (
+                      <span>No CV Uploaded</span>
+                    )}
+                  </p>
+                </div>
               )}
               {isEditMode ? (
                 <div>
@@ -857,16 +860,18 @@ const Profile: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <div>
-                  <p className="text-gray-700">
-                    <button
-                      onClick={() => handleDownload(profileData.license)}
-                      className="flex items-center space-x-2"
-                    >
-                      <FaFileAlt className="text-blue-500" />
-                      <span>Download License</span>
-                    </button>
-                  </p></div>
+              <div>
+                <p className="flex items-center">
+                  <FaFileAlt className="text-blue-500 mr-2" /> {/* Add margin to the right of the icon */}
+                  {profileData.license ? (
+                    <span>
+                      <ViewLicenseModal fileurl={profileData.license} controlName="View License" />
+                    </span>
+                  ) : (
+                    <span>No License Uploaded</span>
+                  )}
+                </p>
+              </div>
               )}
             </div>
           </div>
