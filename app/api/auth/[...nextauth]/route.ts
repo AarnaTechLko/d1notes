@@ -158,7 +158,7 @@ const handler = NextAuth({
               view_evaluation: enterprise[0].view_evaluation,
               buy_evaluation: enterprise[0].buy_evaluation,
               coach_id: null,
-              club_id: null,
+              club_id: enterprise[0].id.toString(),
               visibility: 'on',
               added_by: null
             };

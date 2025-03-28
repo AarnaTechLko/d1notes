@@ -73,7 +73,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           className={`border-b-1 md:border-b-0 ${isActiveLink("/browse")} hover:text-blue-300`}
           onClick={closeMenu}
         >
-          Coaches
+          Find a Coach
         </Link>
       </li>
       <li>
@@ -82,7 +82,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
           onClick={closeMenu}
         >
-          Players
+          Player Profiles
         </Link>
       </li> 
       {/* <li ref={enterpriseRef} className="relative">
@@ -124,7 +124,7 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
               className={`${isActiveLink("/browse/clubs")} w-full text-left py-2 text-black hover:text-blue-300`}
               onClick={closeMenu}
           >
-              Organizations
+              Organization Profiles
           </Link>
       </li>
       <li ref={createAccountRef} className="relative">

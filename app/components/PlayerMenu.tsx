@@ -74,14 +74,14 @@ useEffect(() => {
                     <Link href="/browse"  className={`${isActiveLink(
                             "/browse"
                           )} hover:text-blue-300`} onClick={closeMenu}>
-                       Coaches
+                       Find a Coach
                     </Link>
                   </li>
                   <li  className="pt-[8px]">
                     <Link href="/browse/players" className={`${isActiveLink(
                             "/browse/players"
                           )} hover:text-blue-300`} onClick={closeMenu}>
-                       Players
+                       Player Profiles
                     </Link>
                   </li>
                   {/* <li ref={enterpriseRef} className="relative pt-[8px]">
@@ -123,7 +123,7 @@ useEffect(() => {
               className={`${isActiveLink("/browse/clubs")} w-full block text-left py-2 text-black hover:text-blue-300`}
               onClick={closeMenu}
           >
-              Organizations
+              Organization Profiles
           </Link>
       </li>    
       <li className="pt-[8px]">

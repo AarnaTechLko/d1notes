@@ -127,7 +127,7 @@ to enhance your profile, request an “D1 Verified” badge from D1 Notes.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Complete Evaluation</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Wait to receive an evaluation request from a player which includes video links of their games. Based on the submission, you may choose to accept or decline the request. If you choose to accept, payment is initiated for you to watch the video and complete a standard D1 Notes evaluation form customized to the sport / position(s) of the player. Completed evaluations are automatically stored and can be referred to later.
+                    Wait to receive an evaluation request from a player which includes video links of their games. Based on the submission, you may choose to accept or decline the request. If you choose to accept, payment is initiated for you to watch the video and complete, at a minimum, a standard D1 Notes evaluation form customized to the sport / position(s) of the player. Completed evaluations are automatically stored and can be referred to later.
                     </p>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ to enhance your profile, request an “D1 Verified” badge from D1 Notes.
 
             <div className="space-y-12" >
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-              How It Works for Enterprises
+              How It Works for Organizations
               </h2>
               <div className="space-y-8">
                 {/* Step 1 */}
@@ -168,13 +168,7 @@ to enhance your profile, request an “D1 Verified” badge from D1 Notes.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Create Account</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Enterprises is a white label version of D1 Notes meant only for private use within an organization or a
-single team. If you are an organization signing up which consists of a number of teams with their
-respective coaches and players who will all be utilizing D1 Notes, create an enterprise account as an
-Organization. If your need is just for a single team with coaches and players, create an enterprise account
-as a Team. The purpose of the white label is to give enterprises a turnkey way of oﬀering additional value
-to their participants by way of their own coaches providing individual game film evaluations to their own
-players on their respective teams during the year, season or events.
+                    Organizations is a white label version of D1 Notes meant only for private use within an organization or a single team. The purpose of the white label is to give organizations or single teams a turnkey way of oﬀering additional value to their participants by way of their own coaches providing individual game film evaluations to their own players on their respective team(s) during the year, season or events.
                     </p>
                   </div>
                 </div>
@@ -189,7 +183,7 @@ players on their respective teams during the year, season or events.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900"> B2B</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    Within an enterprise account, an Organization or Team will choose from various per player evaluation pricing options / packages to purchase up front for the entire Organization or Team to use. Players are not expected to pay for evaluations within the white label.
+                    Within an Organizations account, an organization or single team will choose from various per player evaluation pricing options / packages to purchase up front for the entire organization or single team to use. Players are not expected to pay for evaluations within the white label.
                     </p>
                   </div>
                 </div>
@@ -204,7 +198,7 @@ players on their respective teams during the year, season or events.
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Turnkey</h3>
                     <p className="mt-2 text-base text-gray-500">
-                    D1 Notes provides an easy onboarding process for an account administrator by utilizing a simple, mass upload option that automatically organizes into turnkey white label site use. Organization and Team administrators, players and coaches will quickly be able to reference and manage the comprehensive information in their respective profiles upon logins.
+                    D1 Notes provides an easy onboarding process for an account administrator by utilizing a simple, mass upload option that automatically organizes into turnkey white label site use. Organizations administrators, players and coaches will quickly be able to reference and manage the comprehensive information in their respective profiles upon logins.
                     </p>
                   </div>
                 </div>
