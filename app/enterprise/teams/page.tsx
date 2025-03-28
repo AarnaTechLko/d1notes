@@ -227,7 +227,8 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
 
   useEffect(() => {
     fetchTeams(currentPage, search);
-    fetchPlayers();
+    //this doesn't work and we don't need since fetchTeams seems to be getting the info necessary
+    // fetchPlayers();
   }, [session, search, currentPage]);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Team; direction: 'asc' | 'desc' } | null>(null);
 

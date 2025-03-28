@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
              logo: enterprises.logo,
              affiliationDocs: enterprises.affiliationDocs,
              slug: enterprises.slug,
+             id: enterprises.id,
              parent_id: enterprises.parent_id,
              role_id: enterprises.role_id,
              buy_evaluation: enterprises.buy_evaluation,
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 const {organizationName, id, contactPerson, owner_name,address, affiliationDocs, city ,country,countryCodes,email,logo,mobileNumber,state,facebook,linkedin,instagram,xlink,youtube, website} =await req.json();
- 
+
 try{
     await db.update(enterprises).set(
         { 
@@ -93,7 +94,7 @@ try{
             youtube: youtube,
             website: website
         
-        }).where(eq(enterprises.id,id));
+        }).where(eq(enterprises.id,id)).execute();
         return NextResponse.json({ message: 'Club updated' }, { status: 200 });
     } catch (error) {
         

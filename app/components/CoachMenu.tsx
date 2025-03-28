@@ -64,7 +64,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     className={`${isActiveLink("/browse")} hover:text-blue-300`}
                     onClick={closeMenu}
                 >
-                    Coaches
+                    Find a Coach
                 </Link>
             </li>
             <li className="pt-[8px]">
@@ -73,7 +73,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                     className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
                     onClick={closeMenu}
                 >
-                    Players
+                    Player Profiles
                 </Link>
             </li>
             {/* <li className="relative" ref={enterpriseMenuRef}>
@@ -114,7 +114,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                                     className={`${isActiveLink("/browse/clubs")} block w-full text-left py-2 text-black hover:text-blue-300`}
                                     onClick={closeMenu}
                                 >
-                                    Organizations
+                                    Organization Profiles
                                 </Link>
                             </li>
 
