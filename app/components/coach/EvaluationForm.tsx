@@ -8,12 +8,13 @@ import { getSession, useSession } from "next-auth/react";
 import { type PutBlobResult } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 import { FaPhone } from "react-icons/fa";
-import { positionOptionsList } from "@/lib/constants";
+import { fpScoreFactors, gcScoreFactors, positionOptionsList } from "@/lib/constants";
 import { positionOptionsList2 } from "@/lib/constants";
 import FileUploader from "../FileUploader";
 import ReactQuill from "react-quill";
 import sanitizeHtml from "sanitize-html";
 import 'react-quill/dist/quill.snow.css';
+import { showError } from '@/app/components/Toastr';
 
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
@@ -53,403 +54,94 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     technicalRemarks: boolean;
     tacticalRemarks: boolean;
     physicalRemarks: boolean;
+    distributionRemarks: boolean;
+    organizationRemarks: boolean;
     finalRemarks: boolean;
+    sport: boolean;
+    position: boolean;
+    thingsToWorkOnRemarks: boolean;
+    technicalScores: boolean;
+    physicalScores: boolean;
+    distributionScores: boolean;
+    organizationScores: boolean;
+    tacticalScores: boolean;
   }>({
     technicalRemarks: false,
     tacticalRemarks: false,
     physicalRemarks: false,
+    distributionRemarks: false,
+    organizationRemarks: false,
     finalRemarks: false,
+    sport: false,
+    position: false,
+    thingsToWorkOnRemarks: false,
+    technicalScores: false,
+    physicalScores: false,
+    organizationScores: false,
+    distributionScores: false,
+    tacticalScores: false
   });
-  let technical: any;
-  let tactical: any;
-  let physical: any;
-  let distribution: any;
-  let organization: any;
-  if (position == "Goalkeeper") {
-    technical = [
-      {
-        id: "t1",
-        label: "Passing",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t2",
-        label: "Receiving",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t3",
-        label: "Dribbling",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t4",
-        label: "Shooting",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t5",
-        label: "Finishing",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t6",
-        label: "Heading",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t7",
-        label: "Tackling",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t8",
-        label: "Defending",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t9",
-        label: "Footwork",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t10",
-        label: "Shot Stopping",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t11",
-        label: "Crosses",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t12",
-        label: "1 v 1",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-
-    tactical = [
+  const [scoreFactors, setScoreFactors] = useState<{
+    technical: { id: string, label: string, options: string[] }[],
+    tactical: { id: string, label: string, options: string[] }[],
+    physical: { id: string, label: string, options: string[] }[],
+    distribution: { id: string, label: string, options: string[] }[],
+    organization: {id: string, label :string, options:string[]}[],
+  }>({
+    technical: [],
+    tactical: [],
+    physical: [],
+    distribution: [],
+    organization: []
+  })
+  const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>({});
+  const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>({});
+  const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>({});
+  const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>({});
+  const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>({});
 
 
-      {
-        id: "ta1",
-        label: "Reading the Game",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta2",
-        label: "Decisions with Ball",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta3",
-        label: "Decisions without Ball",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta4",
-        label: "Understanding of Team Play",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta5",
-        label: "Understanding of Role and Position",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta6",
-        label: "Timing of Runs",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta7",
-        label: "Scanning",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta8",
-        label: "Decision Making",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta9",
-        label: "Organization with Back Four",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta10",
-        label: "Positioning",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta11",
-        label: "Role in Build Up",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta12",
-        label: "Role in Counter Attack",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-    distribution = [
-      {
-        id: "d1",
-        label: "With Hands",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "d2",
-        label: "With Feet",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "d3",
-        label: "Restarts",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "d4",
-        label: "Open Play",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "d5",
-        label: "Timing",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-
-    physical = [
-
-      {
-        id: "p1",
-        label: "Strength",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-
-      {
-        id: "p2",
-        label: "Speed",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p3",
-        label: "Mobility",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-
-      {
-        id: "p4",
-        label: "Stamina",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-
-      {
-        id: "p5",
-        label: "Aggressiveness",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-
-      {
-        id: "p6",
-        label: "Flexibility",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-
-      {
-        id: "p7",
-        label: "Agility",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p8",
-        label: "Strength / Power",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p9",
-        label: "Stance",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p10",
-        label: "Bravery",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-
-    organization = [
-      {
-        id: "o1",
-        label: "Starting Position",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "o2",
-        label: "Communication",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "o3",
-        label: "Set Plays For",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "o4",
-        label: "Set Plays Against",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "o5",
-        label: "Leadership",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-  } else {
-    technical = [
-      {
-        id: "t1",
-        label: "Passing",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t2",
-        label: "Receiving",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t3",
-        label: "Dribbling",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t4",
-        label: "Shooting",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t5",
-        label: "Finishing",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t6",
-        label: "Heading",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t7",
-        label: "Tackling",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "t8",
-        label: "Defending",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-
-    tactical = [
-      {
-        id: "ta1",
-        label: "Reading the Game",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta2",
-        label: "Decisions with Ball",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta3",
-        label: "Decisions without Ball",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta4",
-        label: "Understanding of Team Play",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta5",
-        label: "Understanding of Role and Position",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta6",
-        label: "Timing of Runs",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "ta7",
-        label: "Scanning",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-
-    physical = [
-      {
-        id: "p1",
-        label: "Strength",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p2",
-        label: "Speed",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p3",
-        label: "Mobility",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p4",
-        label: "Stamina",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-      {
-        id: "p5",
-        label: "Aggressiveness",
-        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      },
-    ];
-    distribution = [];
-    organization = [];
-  }
-
-  const [technicalScores, setTechnicalScores] = useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(technical.map((tech: any) => [tech.label, "N/A"]))
-  );
-  const [tacticalScores, setTacticalScores] = useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(tactical.map((tact: any) => [tact.label, "N/A"]))
-  );
-  const [physicalScores, setPhysicalScores] = useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(physical.map((phys: any) => [phys.label, "N/A"]))
-  );
-
-  const [distributionScores, setDistributionScores] = useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(distribution.map((dis: any) => [dis.label, "N/A"]))
-  );
-
-  const [organizationScores, setOrganizationScores] = useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(organization.map((org: any) => [org.label, "N/A"]))
-  );
   const formattedDate = evaluationData?.created_at
     ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
     : "";
+  
+  useEffect(() => {
+    setTechnicalScores(() =>
+    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.technical : fpScoreFactors.technical).map((tech: any) => [tech.label, "N/A"]))
+  );
+  setTacticalScores(() =>
+    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.tactical : fpScoreFactors.tactical).map((tact: any) => [tact.label, "N/A"]))
+  );
+  setPhysicalScores(() =>
+    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.physical : fpScoreFactors.physical).map((phys: any) => [phys.label, "N/A"]))
+  );
+  setDistributionScores(() =>
+    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.distribution : fpScoreFactors.distribution).map((dis: any) => [dis.label, "N/A"]))
+  );
+  setOrganizationScores(() =>
+    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.organization : fpScoreFactors.organization).map((org: any) => [org.label, "N/A"]))
+    );
+
+      setTechnicalRemarks("");
+      setTacticalRemarks("");
+      setPhysicalRemarks("");
+      setFinalRemarks("");
+      setThingsToWork("")
+
+  evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
+  }, [evaluationData]);
+
+    useEffect(() => {
+    setScoreFactors(() => ({
+      technical: position === "Goalkeeper" ? [...gcScoreFactors.technical] : [...fpScoreFactors.technical], 
+      tactical: position === "Goalkeeper" ? [...gcScoreFactors.tactical] : [...fpScoreFactors.tactical], 
+      distribution: position === "Goalkeeper" ? [...gcScoreFactors.distribution] : [...fpScoreFactors.distribution], 
+      physical: position === "Goalkeeper" ? [...gcScoreFactors.physical] : [...fpScoreFactors.physical], 
+      organization: position === "Goalkeeper" ? [...gcScoreFactors.organization] : [...fpScoreFactors.organization], 
+    }));
+  }, [position]);
+
+  // Handle Save Draft
   const onSaveAsDraft = () => {
     if (evaluationData) {
       setPlayerID(evaluationData.playerId);
@@ -461,8 +153,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     }
 
     const evaluationDatas = {
-
-
       evaluationId,
       coachId,
       playerId,
@@ -480,25 +170,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       document,
       position,
       sport,
-      thingsToWork,
-
-      // evaluationId,
-      // coachId,
-      // playerId,
-      // technicalScores,
-      // tacticalScores,
-      // physicalScores,
-      // technicalRemarks,
-      // tacticalRemarks,
-      // physicalRemarks,
-      // finalRemarks,
-      // distributionRemarks,
-      // distributionScores,
-      // organizationalRemarks,
-      // thingsToWork,
-      // position,
-      // sport,
-
+      thingsToWork
     };
 
     fetch("/api/coach/evaluations/save?status=4", {
@@ -517,6 +189,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         console.error("Error:", error);
       });
   };
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -530,18 +203,53 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       setLoadSubmit(false);
       onClose();
     }
-
+    
+    const errorMessages = [
+  { field: "technicalRemarks", message: "Technical remarks are required." },
+  { field: "tacticalRemarks", message: "Tactical remarks are required." },
+  { field: "physicalRemarks", message: "Physical remarks are required." },
+  { field: "finalRemarks", message: "Final remarks are required." },
+  { field: "sport", message: "Please select a sport." },
+  { field: "position", message: "Please select a position." },
+  { field: "thingsToWorkOnRemarks", message: "Things to work on remarks are required." },
+  { field: "distributionRemarks", message: "Distribution remarks are required for Goalkeepers." },
+  { field: "organizationRemarks", message: "Organizational remarks are required for Goalkeepers." },
+  { field: "technicalScores", message: "At least one technical score must be selected." },
+  { field: "tacticalScores", message: "At least one tactical score must be selected." },
+  { field: "physicalScores", message: "At least one physical score must be selected." },
+  { field: "organizationScores", message: "At least one organization score must be selected for Goalkeepers." },
+  { field: "distributionScores", message: "At least one distribution score must be selected for Goalkeepers." }
+];
     const validationErrors = {
       technicalRemarks: technicalRemarks.trim() === "",
       tacticalRemarks: tacticalRemarks.trim() === "",
       physicalRemarks: physicalRemarks.trim() === "",
       finalRemarks: finalRemarks.trim() === "",
+      sport: sport === "",
+      position: position === "",
+      thingsToWorkOnRemarks: thingsToWork === "",
+      distributionRemarks: position === "Goalkeeper" && distributionRemarks === "",
+      organizationRemarks: position === "Goalkeeper" && organizationalRemarks === "",
+      technicalScores: Object.values(technicalScores).every((value) => value === "N/A"),
+      tacticalScores: Object.values(tacticalScores).every((value) => value === "N/A"),
+      physicalScores: Object.values(physicalScores).every((value) => value === "N/A"),
+      organizationScores: position === "Goalkeeper" && Object.values(organizationScores).every((value) => value === "N/A"),
+      distributionScores: position === "Goalkeeper" && Object.values(distributionScores).every((value) => value === "N/A")
     };
 
+    errorMessages.forEach(({ field, message }) => {
+    if ((validationErrors as Record<string, boolean>)[field]) {
+      showError(message);
+    }
+  });
+
     setErrors(validationErrors);
+
     if (Object.values(validationErrors).some((isError) => isError)) {
+      setLoadSubmit(false);
       return;
     }
+
     const evaluationDatas = {
       evaluationId,
       coachId,
@@ -584,44 +292,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       });
   };
 
-  // const fetchEvaluationResultData = async () => {
-
-  //     try {
-  //         const response = await fetch(`/api/evaluationdetails?evaluationId=${evaluationId}`, {
-  //             method: 'GET',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //             },
-  //         });
-
-  //         if (!response.ok) {
-
-  //             throw new Error('Failed to fetch evaluation data');
-  //         }
-
-  //         const data = await response.json();
-  //         const datas = data.result;
-  //         console.log(datas.technicalScores);
-  //         setTechnicalScores({
-  //             ...Object.fromEntries(technical.map((tech: any) => [tech.label, datas.technicalScores?.[tech.label] || '0'])),
-  //         });
-  //         setTacticalScores({
-  //             ...Object.fromEntries(tactical.map((tact: any) => [tact.label, datas.tacticalScores?.[tact.label] || '0'])),
-  //         });
-  //         setPhysicalScores({
-  //             ...Object.fromEntries(physical.map((phys: any) => [phys.label, datas.physicalScores?.[phys.label] || '0'])),
-  //         });
-  //         setTechnicalRemarks(datas.technicalRemarks || '');
-  //         setTacticalRemarks(datas.tacticalRemarks || '');
-  //         setPhysicalRemarks(datas.physicalRemarks || '');
-  //         setFinalRemarks(datas.finalRemarks || '');
-  //         // Set the fetched evaluation data
-  //     } catch (error) {
-  //         console.error('Error fetching evaluation data:', error);
-
-  //     }
-  // };
-
+  // Handle Data fetching for Saved Drafts
   const fetchEvaluationResultData = async () => {
     try {
       const response = await fetch(
@@ -639,28 +310,29 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       }
 
       const data = await response.json();
+      setPosition(data.result?.position != null ? data.result?.position : "Goalkeeper");
+      
+      if (data.result) {
+              handleUpdateEvaluationData(data);
+      }
 
-      // console.log("results: ", data.result);
+    } catch (error) {
+      console.error("Error fetching evaluation data:", error);
+    }
+  };
 
+  // Handle Saving data
+  const handleUpdateEvaluationData = async (data: any) => {
       const datas = data.result;
-
-      // console.log("datas: ", datas);
-
       const technicalScoresJson = JSON.parse(datas.technicalScores);
-      console.log(technicalScoresJson);
-
       const tacticalScoresJson = JSON.parse(datas.tacticalScores);
-      console.log(tacticalScoresJson);
-
       const physicalScoresJson = JSON.parse(datas.physicalScores);
-      console.log(physicalScoresJson);
-
-      const distributionScoresJson = JSON.parse(datas.distributionScores);
-      // console.log("distribution: ", distributionScoresJson)
+      const distributionScoresJson = JSON.parse(datas.distributionScores);    
+      const organizationScoresJson = JSON.parse(datas.organizationScores);
 
       setDistributionScores({
         ...Object.fromEntries(
-          distribution.map((dis: any) => [
+          scoreFactors.distribution.map((dis: any) => [
             dis.label,
             distributionScoresJson?.[dis.label] || "0",
           ])
@@ -669,7 +341,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
       setTechnicalScores({
         ...Object.fromEntries(
-          technical.map((tech: any) => [
+          scoreFactors.technical.map((tech: any) => [
             tech.label,
             technicalScoresJson?.[tech.label] || "0",
           ])
@@ -678,7 +350,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
       setTacticalScores({
         ...Object.fromEntries(
-          tactical.map((tact: any) => [
+          scoreFactors.tactical.map((tact: any) => [
             tact.label,
             tacticalScoresJson?.[tact.label] || "0",
           ])
@@ -687,9 +359,18 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
       setPhysicalScores({
         ...Object.fromEntries(
-          physical.map((phys: any) => [
+          scoreFactors.physical.map((phys: any) => [
             phys.label,
             physicalScoresJson?.[phys.label] || "0",
+          ])
+        ),
+      });
+    
+      setOrganizationScores({
+        ...Object.fromEntries(
+          scoreFactors.organization.map((orgs: any) => [
+            orgs.label,
+            organizationScoresJson?.[orgs.label] || "0",
           ])
         ),
       });
@@ -700,24 +381,11 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       setFinalRemarks(datas.finalRemarks || "");
       setThingsToWork(datas.thingsToWork || "")
       setSport(datas.sport);
-      setPosition(datas.position);
       setDistributionRemarks(datas.distributionRemarks || "");
-      // Set the fetched evaluation data
+      setOrganizationalRemarks(datas.organizationalRemarks || "")
+  }
 
-      // console.log("Sport: ", sport)
-      // console.log("Position: ", position)
-      // console.log("technical scores: ", technicalScores)
-      // console.log("tactical scores: ", tacticalScores)
-      // console.log("physical scores: ", physicalScores)
-      // console.log("technical remarks: ", technicalRemarks)
-      // console.log("tactical remarks: ", tacticalRemarks)
-      // console.log("physical remarks: ", physicalRemarks)
-      // console.log("final remarks: ", finalRemarks)
-    } catch (error) {
-      console.error("Error fetching evaluation data:", error);
-    }
-  };
-
+  // Handle document update
   const handleDocumentChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error("No file selected");
@@ -732,16 +400,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       });
       setFileUploading(false);
       const imageUrl = newBlob.url;
-      console.log(imageUrl);
       setDocument(imageUrl);
     } catch (error) {
       setFileUploading(false);
       console.error("Error uploading file:", error);
     }
   };
-  useEffect(() => {
-    evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
-  }, [evaluationData]);
 
   if (!isOpen) return null;
   const handlePositionChange = (event: any) => {
@@ -1026,6 +690,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
                   </select>
+                  <p className="text-red-500 text-sm h-5">{errors.sport ? "Required." : ""}</p>
                 </div>
 
                 {/* Second select */}
@@ -1046,12 +711,13 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       </option>
                     ))}
                   </select>
+                  <p className="text-red-500 text-sm h-5">{errors.position ? "Required." : ""}</p>
                 </div>
               </div>
             </div>
 
             <div className="p-4">
-              {position != "Goalkeeper" && (
+              {position !== "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
@@ -1059,15 +725,17 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Technical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : "Required..."}</p>
+
                     <div className="space-y-4 flex-grow">
-                      {technical.map((tech: any) => (
+                      {scoreFactors.technical.map((tech: any) => (
                         <div
                           key={tech.id}
                           className="flex items-center space-x-2"
                         >
                           <select
                             id={`dropdown-tech-${tech.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 "
+                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
                             value={technicalScores[tech.label]}
                             onChange={(e) =>
                               setTechnicalScores((prev) => ({
@@ -1121,19 +789,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         setTechnicalRemarks(e)
                       }}
                     />} */}
-                    {errors.technicalRemarks && (
+                    {/* {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.technicalRemarks ? "Required." : ""}</p>
                   </div>
 
                   {/* Tactical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h2 className="text-xl mb-4">
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Tactical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h2>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.tacticalScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {tactical.map((tact: any) => (
+                      {scoreFactors.tactical.map((tact: any) => (
                         <div
                           key={tact.id}
                           className="flex items-center space-x-2"
@@ -1186,19 +858,24 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
-                    {errors.tacticalRemarks && (
+                    {/* {errors.tacticalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.tacticalRemarks ? "Required." : ""}</p>
+
                   </div>
 
                   {/* Physical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h3 className="text-xl mb-4">
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Physical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h3>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.physicalScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {physical.map((phys: any) => (
+                      {scoreFactors.physical.map((phys: any) => (
                         <div
                           key={phys.id}
                           className="flex items-center space-x-2"
@@ -1251,23 +928,29 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
-                    {errors.physicalRemarks && (
+                    {/* {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.physicalRemarks ? "Required." : ""}</p>
                   </div>
                 </div>
               )}
+
+              
 
               {position == "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h1 className="text-xl mb-4">
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Technical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {technical.map((tech: any) => (
+                      {scoreFactors.technical.map((tech: any) => (
                         <div
                           key={tech.id}
                           className="flex items-center space-x-2"
@@ -1320,19 +1003,24 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
-                    {errors.technicalRemarks && (
+                    {/* {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.technicalRemarks ? "Required." : ""}</p>
+
                   </div>
 
                   {/* Tactical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h2 className="text-xl mb-4">
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Tactical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h2>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.tacticalScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {tactical.map((tact: any) => (
+                      {scoreFactors.tactical.map((tact: any) => (
                         <div
                           key={tact.id}
                           className="flex items-center space-x-2"
@@ -1385,20 +1073,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
-                    {errors.tacticalRemarks && (
+                    {/* {errors.tacticalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.tacticalRemarks ? "Required." : ""}</p>
                   </div>
 
                   {/* Distribution Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h3 className="text-xl mb-4">
-                      {" "}
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Distribution
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h3>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.distributionScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {distribution.map((dis: any) => (
+                      {scoreFactors.distribution.map((dis: any) => (
                         <div
                           key={dis.id}
                           className="flex items-center space-x-2"
@@ -1451,16 +1142,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
+                    <p className="text-red-500 text-sm h-5">{errors.distributionRemarks ? "Required." : ""}</p>
+
                   </div>
 
                   {/* Physical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h3 className="text-xl mb-4">
+                    <div className="mb-4">
+                      <h1 className="text-xl">
                       Physical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h3>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.physicalScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {physical.map((phys: any) => (
+                      {scoreFactors.physical.map((phys: any) => (
                         <div
                           key={phys.id}
                           className="flex items-center space-x-2"
@@ -1513,17 +1209,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
-                    {errors.physicalRemarks && (
+                    {/* {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )}
+                    )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.physicalRemarks ? "Required." : ""}</p>
+
                   </div>
+                  {/* Organisation Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <h3 className="text-xl mb-4">
-                      Organization
+                    <div className="mb-4">
+                      <h1 className="text-xl">
+                      Organisation
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h3>
+                    </h1>
+                    <p className="text-red-500 text-sm h-5">{errors.organizationScores ? "Required." : ""}</p>
+                    </div>
                     <div className="space-y-4 flex-grow">
-                      {organization.map((org: any) => (
+                      {scoreFactors.organization.map((org: any) => (
                         <div
                           key={org.id}
                           className="flex items-center space-x-2"
@@ -1576,6 +1278,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         }
                       }}
                     />
+                    <p className="text-red-500 text-sm h-5">{errors.organizationRemarks ? "Required." : ""}</p>
+
                   </div>
                 </div>
               )}
@@ -1600,18 +1304,20 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     }
                   }}
                 />
-                {errors.finalRemarks && (
+                {/* {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
-                )}
+                )} */}
+                <p className="text-red-500 text-sm h-5">{errors.finalRemarks ? "Required." : ""}</p>
+
               </div>
               <div className="mt-6">
-                <label htmlFor="final-remarks" className="text-sm font-medium">
+                <label htmlFor="thingtoworkon-remarks" className="text-sm font-medium">
                   Things to Work On:
                   <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                 </label>
                 <textarea
                   value={thingsToWork}
-                  id="final-remarks"
+                  id="thingstoworkon-remarks"
                   className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                   rows={4}
                   onChange={(e) => {
@@ -1623,9 +1329,11 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     }
                   }}
                 />
-                {errors.finalRemarks && (
+                {/* {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
-                )}
+                )} */}
+                    <p className="text-red-500 text-sm h-5">{errors.thingsToWorkOnRemarks ? "Required." : ""}</p>
+
               </div>
               {/* {session?.user.club_id && ( */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
