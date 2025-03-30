@@ -555,7 +555,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Player First Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player First Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -571,7 +571,7 @@ const Profile: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Player Last Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player Last Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -640,7 +640,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="school_name" className="block text-base font-bold mb-2">School Name <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label htmlFor="school_name" className="block text-base font-bold mb-2">School <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -686,7 +686,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -708,7 +708,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies)<span className='mandatory'>*</span></label>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -728,7 +728,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label className="block text-base font-bold mb-2">Country<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Country{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -762,7 +762,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div >
-                <label className="block text-base font-bold mb-2">State/Province<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">State/Province{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
 
                   <select
@@ -785,7 +785,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-base font-bold mb-2">City<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">City{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -802,7 +802,7 @@ const Profile: React.FC = () => {
             {/* dob */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label htmlFor="birthday" className="block text-base font-bold mb-2">Birth Date<span className='mandatory'>*</span></label>
+                <label htmlFor="birthday" className="block text-base font-bold mb-2">Birth Date{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <DatePicker
                     selected={profileData.birthday ? new Date(profileData.birthday) : null}
@@ -820,7 +820,7 @@ const Profile: React.FC = () => {
               </div>
               {/* level */}
               <div>
-                <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level<span className='mandatory'>*</span></label>
+                <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-4 w-full" value={profileData.grade_level}>
                     {playingLevels.map((level) => (
@@ -971,7 +971,7 @@ const Profile: React.FC = () => {
             )} */} 
 
 <div className="mb-5">
-  <label className="block text-base font-bold mb-2">Age: <span className="text-red-500">*</span></label>
+  <label className="block text-base font-bold mb-2">Age: {isEditMode ? <span className='mandatory'>*</span> : ""}</label>
 
   {isEditMode ? (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
@@ -1047,7 +1047,7 @@ const Profile: React.FC = () => {
             {/* Team */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
               <div>
-                <label htmlFor="team" className="block text-base font-bold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="team" className="block text-base font-bold mb-2">Team Name(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
@@ -1064,7 +1064,7 @@ const Profile: React.FC = () => {
               </div>
               {/* Position */}
               <div>
-                <label htmlFor="position" className="block text-base font-bold mb-2">Position(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="position" className="block text-base font-bold mb-2">Position(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <Select
                     isMulti
@@ -1084,7 +1084,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-base font-bold">Mobile Number<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold">Mobile Number{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -1116,7 +1116,7 @@ const Profile: React.FC = () => {
 
 
             <div className="col-span-1 mt-5">
-              <label className="block text-base font-bold mb-2">League<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">League{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <input
                   name="league"
@@ -1133,7 +1133,7 @@ const Profile: React.FC = () => {
             </div>
 
             <div className="col-span-1 mt-5">
-              <label className="block text-base font-bold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">Experience/Accolades{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <textarea
                   name="bio"
