@@ -113,6 +113,17 @@ const Profile: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+
+    if (name === 'country') {
+
+      setProfileData((prevData) => ({
+        ...prevData,
+        "state": "",
+      }));
+
+      fetchStates(value);
+    }
+
   };
 
   const handleImageUpload = async (file: File, closeCrop: boolean = false) => {
@@ -155,7 +166,86 @@ const Profile: React.FC = () => {
     }
   }
 
+  const validateUpdates = (): boolean => {
+
+    const errors = {
+      firstName: "",//
+      lastName: "",//
+      expectedCharge: "",//
+      countrycode: "",//
+      phoneNumber: "",//
+      email: "",//
+      gender: "",//
+      sport: "",//
+      clubName: "",//
+      license_type: "",//
+
+
+      // image: "",
+      // certificate: "",
+      // password: "",
+      country: "",//
+      state: "",//
+      // countryName: "",
+      // facebook: "",
+      // instagram: "",
+      // linkedin: "",
+      // website: "",
+      // xlink: "",
+      // youtube: "",
+      city: "",//
+      qualifications: "",//
+      cv: "",//
+      license: "",//
+      location: "",
+
+    };
+
+
+
+
+    if (!profileData.firstName) errors.firstName = 'First Name is required';
+    if (!profileData.lastName) errors.lastName = 'Last Name is required';
+    if (!profileData.expectedCharge) errors.expectedCharge = 'Base Evaluation Rate is required';
+    if (!profileData.countrycode) errors.countrycode = "Country Code is required";
+    if (!profileData.phoneNumber) errors.phoneNumber = "Phone Number is required";
+    if (!profileData.email) errors.email = "Email is required";
+    if (!profileData.gender) errors.gender = "Gender is required"
+    if (!profileData.sport) errors.sport = 'Sport is required';
+    if (!profileData.clubName) errors.clubName = "Organization name is required";
+    if (!profileData.license_type) errors.license_type = "License Type is required";
+    if (!profileData.country) errors.country = 'Country is required';
+    if (!profileData.state) errors.state = "State is required";
+    if (!profileData.city) errors.city = "City is required";
+    if (!profileData.qualifications) errors.qualifications = "Background/Qualifications is required";
+    if (!profileData.cv) errors.cv = "CV is required";
+    if (!profileData.license) errors.license = "License is required";
+
+
+    // Collect errors to display in SweetAlert
+    Object.entries(errors).reverse()
+      .filter(([_, value]) => value !== "")
+      .forEach(([field, message]) => {
+        showError(message); // Display each error in a separate toastr
+      });
+
+    // Return false if there are any errors
+    if (Object.values(errors).some(value => value !== "")) {
+      // console.log("I'm here")
+      return false; // Validation failed
+    }
+
+    return true;
+  }
+
+
+
+
   const handleSubmit = async () => {
+
+    if (!validateUpdates()) return;
+
+
     try {
       const session = await getSession();
       const coachId = session?.user.id;
@@ -317,7 +407,9 @@ const Profile: React.FC = () => {
                   if (isEditMode) {
                     handleSubmit(); // Call the submit function when in edit mode
                   }
-                  setIsEditMode(!isEditMode);
+                  else {
+                    setIsEditMode(!isEditMode);
+                  }
                 }}
                 className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}

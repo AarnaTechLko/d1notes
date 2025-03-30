@@ -231,6 +231,9 @@ export async function PUT(req: NextRequest) {
       number,
       sport,
       bio,
+      graduation,
+      school_name,
+      league,
       country,
       height,
       weight,
@@ -249,6 +252,7 @@ export async function PUT(req: NextRequest) {
       countrycode
     } = finalBody;
 
+      // console.log(country)
 
     let updateData: any = {
       first_name: first_name || null,
@@ -270,17 +274,19 @@ export async function PUT(req: NextRequest) {
       weight: weight || null,
       state: state || null,
       city: city || null,
+      school_name: school_name || null,
       jersey: jersey || null,
       playingcountries: playingcountries || null,
       facebook: facebook||null,
       instagram: instagram||null,
       linkedin: linkedin||null,
       xlink: xlink||null,
+      league: league||null,
+      graduation: graduation || null,
       youtube: youtube || null,
       website: website || null,
       age_group: age_group ? age_group : null,
-  birth_year: age_group ? null : birth_year || null,
-
+      birth_year: birth_year ? birth_year : null,
       countrycode: countrycode || null
     };
 
