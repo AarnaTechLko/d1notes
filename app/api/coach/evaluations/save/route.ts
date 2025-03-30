@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       }).returning();
     }
 
-
+// updating player evaluation status and setting it to 4
     if (status) {
 
       // console.log("status: ", status)
@@ -108,6 +108,8 @@ export async function POST(req: NextRequest) {
 
     }
     else {
+
+// updating player evaluation status and setting it to 2
       const updateEvaluation = await db
         .update(playerEvaluation)
         .set({
@@ -116,6 +118,7 @@ export async function POST(req: NextRequest) {
         .where(eq(playerEvaluation.id, evaluationId))
         .returning();
 
+// setting evaluation status as "Completed"
       await db
         .update(coachearnings)
         .set({
@@ -194,30 +197,24 @@ const baseUrl = `${protocol}://${host}`;
         html: coachmailmessage || '',
       });
 
-
-      
-
-    }
-
-
-
-
-    let totalAmount;
-    const payment = await db.select().from(coachearnings).where(eq(coachearnings.evaluation_id, evaluationId)).execute();
+    // checkin if there are multiple entries of coach earning
+    const payment = await db.select().from(coachearnings).where(eq(coachearnings.coach_id, coachId)).execute();
+    console.log("payment");
+    console.log(payment);
     if (payment.length >=1) {
       ///return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
-      const totalBalance = await db
-      .select({ value: sum(coachaccount.amount) })
-      .from(coachaccount)
-      .where(eq(coachaccount.coach_id, coachId))
-      .execute();
 
-    const totalBalanceValue = Number(totalBalance[0]?.value) || 0;
-    const commisionAmount = Number(payment[0]?.commision_amount) || 0;
-    totalAmount = totalBalanceValue + commisionAmount;
+      // if multiple entries found, doing something.
+      const totalBalance = await db
+      .select({ value: sum(coachearnings.commision_amount) })
+      .from(coachearnings)
+      .where(eq(coachearnings.coach_id, coachId))
+        .execute();
+      console.log("total balance")
+      console.log(totalBalance);
 
     await db.update(coachaccount)
-      .set({ amount: totalAmount.toString() })
+      .set({ amount: totalBalance[0].value?.toString() })
       .where(eq(coachaccount.coach_id, coachId));
 
     const updatecoachearnings = await db
@@ -229,8 +226,9 @@ const baseUrl = `${protocol}://${host}`;
       .returning();
     }
 
-    
+      
 
+    }
 
     return NextResponse.json({ success: "success" });
   } catch (error) {
