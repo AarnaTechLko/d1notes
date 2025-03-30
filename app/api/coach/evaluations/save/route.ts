@@ -32,7 +32,6 @@ export async function POST(req: NextRequest) {
       thingsToWork
     } = data;
 
-    // console.log("Let's take a look at the data: ", data)
 
     const evaluationQuery = await db.select().from(playerEvaluation).where(eq(playerEvaluation.id, evaluationId)).execute();
     const existingData = await db.select().from(evaluationResults).where(eq(evaluationResults.evaluationId, evaluationId)).limit(1)  // Limit to 1 record
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
     if (existingData.length > 0) {
 
 
-      // console.log("Do we see results: ", evaluationResults)
 
       const updatedData = await db.update(evaluationResults).set({
         evaluationId: evaluationId,
@@ -94,7 +92,6 @@ export async function POST(req: NextRequest) {
 // updating player evaluation status and setting it to 4
     if (status) {
 
-      // console.log("status: ", status)
 
       const updateEvaluation = await db
         .update(playerEvaluation)
@@ -199,8 +196,6 @@ const baseUrl = `${protocol}://${host}`;
 
     // checkin if there are multiple entries of coach earning
     const payment = await db.select().from(coachearnings).where(eq(coachearnings.coach_id, coachId)).execute();
-    console.log("payment");
-    console.log(payment);
     if (payment.length >=1) {
       ///return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
 
@@ -210,8 +205,6 @@ const baseUrl = `${protocol}://${host}`;
       .from(coachearnings)
       .where(eq(coachearnings.coach_id, coachId))
         .execute();
-      console.log("total balance")
-      console.log(totalBalance);
 
     await db.update(coachaccount)
       .set({ amount: totalBalance[0].value?.toString() })
