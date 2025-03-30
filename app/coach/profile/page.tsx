@@ -509,7 +509,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-base font-bold mb-2">First Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">First Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -525,7 +525,7 @@ const Profile: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Last Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Last Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -541,7 +541,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
-                <label className="block text-base font-bold mb-2"> Base Evaluation Rate $<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2"> Base Evaluation Rate ${isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -556,7 +556,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="phoneNumber" className="block text-base font-bold mb-2">Mobile Number<span className='mandatory'>*</span></label>
+                <label htmlFor="phoneNumber" className="block text-base font-bold mb-2">Mobile Number{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
 
                 <div className="flex">
                   {isEditMode ? (
@@ -595,7 +595,7 @@ const Profile: React.FC = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-base font-bold mb-2">Email<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Email{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -613,7 +613,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-5">
               {/* Gender */}
               <div>
-                <label className="block text-base font-bold mb-2">Gender<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Gender{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="gender"
@@ -635,7 +635,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-base font-bold mb-2">Sport<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Sport{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -655,7 +655,7 @@ const Profile: React.FC = () => {
               {/* Club Name */}
               {/*Issue with text needs to be discussed, specifically with styling */}
               <div>
-                <label className="block text-sm font-bold mb-2">Title/Organization(s)/Affiliation(s)<span className='mandatory'>*</span></label>
+                <label className="block text-sm font-bold mb-2">Title/Organization(s)/Affiliation(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -673,7 +673,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-base font-bold mb-2">Coaching License Type<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Coaching License Type{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="license_type"
@@ -701,7 +701,7 @@ const Profile: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-5">
               <div>
-                <label htmlFor="country" className="block text-base font-bold mb-2">Country<span className='mandatory'>*</span></label>
+                <label htmlFor="country" className="block text-base font-bold mb-2">Country{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -724,7 +724,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="state" className="block text-base font-bold mb-2">State/Province<span className='mandatory'>*</span></label>
+                <label htmlFor="state" className="block text-base font-bold mb-2">State/Province{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
 
                 {isEditMode ? (
                   <select
@@ -747,7 +747,7 @@ const Profile: React.FC = () => {
 
               </div>
               <div>
-                <label htmlFor="city" className="block text-base font-bold mb-2">City<span className='mandatory'>*</span></label>
+                <label htmlFor="city" className="block text-base font-bold mb-2">City{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -763,7 +763,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
             <div>
-              <label className="block text-base font-bold mb-2">Background/Qualifications<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">Background/Qualifications{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <textarea
                   name="qualifications"
@@ -893,7 +893,7 @@ const Profile: React.FC = () => {
               {isEditMode ? (
                 <div>
 
-                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV <span className='mandatory'>*</span></label>
+                  <label htmlFor="youtube" className="block text-gray-700 text-sm font-semibold mb-2">Upload CV {isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                   <input
                     placeholder=' '
                     type="file"
@@ -930,7 +930,7 @@ const Profile: React.FC = () => {
               )}
               {isEditMode ? (
                 <div>
-                  <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License <span className='mandatory'>*</span></label>
+                  <label htmlFor="license" className="block text-gray-700 text-sm font-semibold mb-2">Upload Coaching License {isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                   <input
                     placeholder='Ex: https://youtube.com/username'
                     type="file"
