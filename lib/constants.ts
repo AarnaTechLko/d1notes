@@ -399,3 +399,96 @@ export const countries=[
   { label: "Zimbabwe", value: "ZW" }
 ];
 
+
+export const gcScoreFactors = {
+
+  technical: [
+    { id: "t1", label: "Passing", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t2", label: "Receiving", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t3", label: "Dribbling", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t4", label: "Shooting", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t5", label: "Finishing", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t6", label: "Heading", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t7", label: "Tackling", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t8", label: "Defending", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t9", label: "Footwork", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t10", label: "Shot Stopping", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t11", label: "Crosses", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "t12", label: "1 v 1", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] }
+  ],
+  tactical: [
+    { id: "ta1", label: "Reading the Game", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta2", label: "Decisions with Ball", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta3", label: "Decisions without Ball", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9","10"] },
+    { id: "ta4", label: "Understanding of Team Play", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta5", label: "Understanding of Role and Position", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta6", label: "Timing of Runs", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta7", label: "Scanning", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta8", label: "Decision Making", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta9", label: "Organization with Back Four", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta10", label: "Positioning", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta11", label: "Role in Build Up", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "ta12", label: "Role in Counter Attack", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] }
+  ],
+  distribution: [
+    { id: "d1", label: "With Hands", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "d2", label: "With Feet", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "d3", label: "Restarts", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "d4", label: "Open Play", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "d5", label: "Timing", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] }
+  ],
+  physical: [
+    { id: "p1", label: "Strength", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p2", label: "Speed", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p3", label: "Mobility", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p4", label: "Stamina", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p5", label: "Aggressiveness", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p6", label: "Flexibility", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p7", label: "Agility", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p8", label: "Strength / Power", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p9", label: "Stance", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "p10", label: "Bravery", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] }
+  ],
+  organization: [
+    { id: "o1", label: "Starting Position", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "o2", label: "Communication", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "o3", label: "Set Plays For", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "o4", label: "Set Plays Against", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+    { id: "o5", label: "Leadership", options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] }
+  ]
+};
+
+
+export const fpScoreFactors = {
+  technical: [
+    {id:"t1",label:"Passing",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t2",label:"Receiving",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t3",label:"Dribbling",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t4",label:"Shooting",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t5",label:"Finishing",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t6",label:"Heading",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t7",label:"Tackling",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"t8",label:"Defending",options:["Select","1","2","3","4","5","6","7","8","9","10"]}
+  ],
+  tactical: [
+    {id:"ta1",label:"Reading the Game",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta2",label:"Decisions with Ball",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta3",label:"Decisions without Ball",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta4",label:"Understanding of Team Play",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta5",label:"Understanding of Role and Position",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta6",label:"Timing of Runs",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"ta7",label:"Scanning",options:["Select","1","2","3","4","5","6","7","8","9","10"]}
+  ],
+  physical: [
+    {id:"p1",label:"Strength",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"p2",label:"Speed",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"p3",label:"Mobility",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"p4",label:"Stamina",options:["Select","1","2","3","4","5","6","7","8","9","10"]},
+    {id:"p5",label:"Aggressiveness",options:["Select","1","2","3","4","5","6","7","8","9","10"]}
+  ],
+  distribution: [],
+  organization: []
+};
+
+
+
