@@ -67,6 +67,8 @@ const Profile: React.FC = () => {
       const response = await fetch(`/api/masters/states?country=${countryId}`);
       const data = await response.json();
   
+      // console.log("Testing: ", data)
+
       if (Array.isArray(data)) {
         setStatesList(data);
       } else {
@@ -129,6 +131,11 @@ const Profile: React.FC = () => {
       ...prevData,
       [name]: value,
     }));
+
+    if (name === 'country') {
+      fetchStates(Number(value));
+    }
+
   };
 
   const handleImageClick = () => {
@@ -474,6 +481,29 @@ const Profile: React.FC = () => {
               <div>
                 <label className="block text-base font-bold mb-2">Organization State/Province<span className='mandatory'>*</span></label>
                 {isEditMode ? (
+
+                  // <select>
+
+
+                    
+                  // </select>
+
+                  // <select
+                  // name="state"
+                  // id="state"
+                  // value={formValues.state ?? ""}
+                  // onChange={handleChange}
+                  // className="border border-gray-300 rounded-lg py-2 px-4 w-full"
+                  // >
+                  // <option value="">Select</option>
+                  // {statesList.map((state: any, index) => (
+                  //   <option key={index} value={state.name}>
+                  //     {state.name}
+                  //   </option>
+                  // ))}
+                  // </select>
+
+
                   <Select
                   options={statesList.map((state) => ({ label: state.name, value: state.id }))}
                   value={statesList.find((state) => state.id === profileData.state) || null}
