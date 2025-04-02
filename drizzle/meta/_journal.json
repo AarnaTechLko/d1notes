@@ -29,6 +29,20 @@
       "when": 1734937716934,
       "tag": "0003_bent_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1743577324031,
+      "tag": "0004_silent_red_ghost",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1743577493070,
+      "tag": "0005_mysterious_scalphunter",
+      "breakpoints": true
     }
   ]
 }
