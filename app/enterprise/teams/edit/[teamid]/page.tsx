@@ -257,7 +257,7 @@ const EditTeam = ({ params }: TeamProps) => {
             const enterprise_id = session?.user?.id;
             const response = await fetch(`/api/enterprise/teams?team_id=${teamId}`);
             const data = await response.json();
-            // console.log("teams: ", data.teamData[0])
+            console.log("teamsPlayers: ", data.playersData)
             setFormValues(data.teamData[0]);
             setPlayerList(data.playersData);
             setCoachList(data.coachesData);
@@ -631,7 +631,7 @@ const EditTeam = ({ params }: TeamProps) => {
                     <div className="space-y-4 shadow p-8">
                         <h3 className="text-lg font-bold border-b-2 border-black-300 pb-2">Players</h3>
                         <div className="overflow-x-auto">
-                            {coachList.length > 0 ? (<table className="w-full table-auto">
+                            {playerList.length > 0 ? (<table className="w-full table-auto">
                                 <thead>
                                     <tr className="bg-gray-100">
                                         <th className="px-4 py-2 text-left">Image</th>

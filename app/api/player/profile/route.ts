@@ -46,9 +46,9 @@ export async function POST(req: NextRequest) {
                 league: users.league,
                 graduation: users.graduation,
                 school_name: users.school_name,
-    
                 gpa: users.gpa,
-               countryName:countries.name
+                countryName:countries.name,
+                visibility:users.visibility
         
               })
             .from(users)
@@ -60,8 +60,12 @@ export async function POST(req: NextRequest) {
             .limit(1)
             .execute();
 
+        if (user[0].visibility === "off"){
+            return NextResponse.json({ error: 'Player is set to private' }, { status: 403 });     
+        }
+
         if (!user.length) {
-            return NextResponse.json({ message: 'User not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Player not found' }, { status: 404 });
         }
 
         // Step 2: Fetch banners associated with the user
