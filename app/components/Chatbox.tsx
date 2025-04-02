@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaEye, FaPaperclip, FaSmile, FaArrowLeft } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/clientHelpers";
 interface ChatMessage {
@@ -21,7 +21,7 @@ interface User {
     first_name: string;
     last_name: string;
     type: string;
-    location:string;
+    location: string;
     image: string;
     gender: string;
     grade_level: string;
@@ -50,18 +50,23 @@ const ChatBox: React.FC = () => {
     const [loggedInUserType, setLoggedInUserType] = useState<string>();
     const chatBoxRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
+    const [isBlocked, setIsBlocked] = useState(false);
+    const [shouldDisableTextArea, setShouldDisableTextArea] = useState(false);
+    const [currentUsersBlockedUsers, setCurrentUsersBlockedUsers] = useState<number[]>([]);
+    const [selectedUsersBlockedUsers, setSelectedUsersBlockedUsers] = useState<number[]>([]);
+    
     //esentially makes it a global vairable
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
     const handleGoBack = () => {
         router.back(); // This goes back to the previous page
-      };
-    
+    };
+
     useEffect(() => {
         const fetchUsers = async () => {
             if (!session?.user?.id) return;
-            
+
             try {
                 const response = await fetch(`/api/chatusers?user_id=${session.user.id}&user_type=${session.user.type}&club_id=${session?.user?.club_id}`);
                 const data = await response.json();
@@ -78,14 +83,13 @@ const ChatBox: React.FC = () => {
 
     useEffect(() => {
         if (!selectedUser) return;
-        let type;
+        let type: any;
         setLoggedInUserType(session?.user?.type);
-        if (session?.user?.type=='coach')
-        {
-            type='player';
+        if (session?.user?.type == 'coach') {
+            type = 'player';
         }
-        else{
-            type='coach';
+        else {
+            type = 'coach';
         }
         const fetchChatMessages = async () => {
             try {
@@ -93,7 +97,6 @@ const ChatBox: React.FC = () => {
                     `/api/chats?receiver_id=${selectedUser.user_id}&type=${type}&sentFor=${session?.user.id}`
                 );
                 const data = await response.json();
-
                 setChatData(data);
 
 
@@ -112,7 +115,7 @@ const ChatBox: React.FC = () => {
     const handleFileUpload = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
-          }
+        }
     }
 
     // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,13 +126,13 @@ const ChatBox: React.FC = () => {
     //     }
     // };
 
-    const handleImageChange = () =>{
+    const handleImageChange = () => {
 
-        if(fileInputRef.current?.files){
+        if (fileInputRef.current?.files) {
 
 
             const file = fileInputRef.current.files[0];
-            
+
             try {
 
                 console.log(file.name)
@@ -158,6 +161,48 @@ const ChatBox: React.FC = () => {
         setShowUserList(false);
     };
 
+    //whenever player clicks block, this is the handler. Sets the array state variables and updates the database to reflect current changes
+    const handleBlock = () => {
+        if (!selectedUser) return
+
+        setCurrentUsersBlockedUsers((prevBlockedUsers) => {
+            const isBlocked = prevBlockedUsers.includes(selectedUser.user_id);
+            const updatedBlockedUsers = isBlocked ?
+            prevBlockedUsers.filter(num => num != selectedUser.user_id)
+            : [...prevBlockedUsers, selectedUser.user_id]
+
+            updateBlockedUsersApi(updatedBlockedUsers)
+            return updatedBlockedUsers
+        })
+    }
+    //fetch data about the blocked users. The player and the coaches blocked user list. And set them in state variables
+    const fetchBlockedUsers = async () => {
+        const session = await getSession()
+        
+        const response = await fetch(`/api/block-user?current_id=${session?.user.id}&selected_user_id=${selectedUser?.user_id}&current_type=${session?.user.type}&selected_type=${session?.user?.type === "coach" ? "player" : "coach"}`)
+
+        const { currentUsersBlockedUsers, selectedUsersBlockedUsers } = await response.json()
+        
+        setCurrentUsersBlockedUsers(currentUsersBlockedUsers ? currentUsersBlockedUsers.split(",").map(Number): [])
+        setSelectedUsersBlockedUsers(selectedUsersBlockedUsers ? selectedUsersBlockedUsers.split(",").map(Number): [])
+    }
+    
+    //call this function everytime we block a user. This updates the database to reflect that the user blocked or unblocked the other user
+    const updateBlockedUsersApi = async (updateBlockedUsersArray: number[]) => {
+        const session = await getSession()
+        const payload = {
+            id: session?.user.id,
+            type: session?.user.type,
+            blockedUsers: updateBlockedUsersArray.join(',')
+        };
+
+        await fetch("/api/block-user", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+    }
+
     const handleBackClick = () => {
         setShowUserList(true);
         setSelectedUser(null);
@@ -165,19 +210,19 @@ const ChatBox: React.FC = () => {
 
     const handleSendMessage = async () => {
         if (!message.trim() || !selectedUser || !session?.user?.id) return;
-        console.log(selectedUser);
+        
         try {
             const payload: ChatMessage = {
                 senderId: Number(session.user.id),
                 sender_type: session.user.type,
                 receiver_id: selectedUser.user_id,
-                receiver_type : session?.user?.type === "coach" ? "player" : "coach",
-                club_id: Number(session?.user?.club_id) || 0, 
+                receiver_type: session?.user?.type === "coach" ? "player" : "coach",
+                club_id: Number(session?.user?.club_id) || 0,
                 message,
                 createdAt: new Date().toISOString(),
                 messageCreatedAt: new Date().toISOString(),
             };
-            
+
             await fetch("/api/chats", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -202,10 +247,36 @@ const ChatBox: React.FC = () => {
         }
     }, [users]);
 
+    useEffect(() => {
+        if (selectedUser) {
+            // retrieve initial blockeduser arrays from API and set state variables. Arrays represent a list of user ids that the user have blocked.
+            fetchBlockedUsers()
+        }
+    }, [selectedUser])
+
+    useEffect(() => {
+        //wait for selectedUser and session.user variables to be set before comparing their values
+        if(selectedUser && session?.user) {
+            //check if we should display block or unblock when current user is messaging a selected user
+            if(currentUsersBlockedUsers.includes(selectedUser.user_id)) {
+                setIsBlocked(true)
+            }
+            else{
+                setIsBlocked(false)
+            }
+            //check whether the two users are blocking each other. If atleast one user is blocking the other, we make the textfield ineditable
+            if(currentUsersBlockedUsers.includes(selectedUser.user_id) || selectedUsersBlockedUsers.includes(Number(session.user.id))) {
+                setShouldDisableTextArea(true)
+            }
+            else{
+                setShouldDisableTextArea(false)
+            }
+        }
+    }, [currentUsersBlockedUsers])
     return (
         <div className="flex flex-col h-screen">
             <header className="bg-gray-900 text-white text-right">
-            {/* <button 
+                {/* <button 
       onClick={handleGoBack} 
       className="bg-blue-500 text-white px-4 mx-auto py-2 rounded hover:bg-blue-600"
     >
@@ -228,9 +299,8 @@ const ChatBox: React.FC = () => {
                     <div className="flex-1 overflow-y-auto">
                         {users.map((user, index) => (
                             <>
-                                <div className={`flex items-center p-4 cursor-pointer ${
-                        selectedUser === user ? 'bg-gray-300' : 'hover:bg-gray-200'
-                    }`}
+                                <div className={`flex items-center p-4 cursor-pointer ${selectedUser === user ? 'bg-gray-300' : 'hover:bg-gray-200'
+                                    }`}
                                     onClick={() => handleUserSelect(user)}>
                                     <img
                                         src={user.image && user.image !== 'null' ? user.image : '/default.jpg'}
@@ -250,116 +320,118 @@ const ChatBox: React.FC = () => {
                 <div
                     className={`col-span-1 md:col-span-6 flex flex-col`}
                 >
-                   {selectedUser ? (
-    <>
-        <div className="flex items-center p-4 border-b bg-white">
-            <button
-                className="text-gray-500 hover:text-gray-800 md:hidden mr-4"
-                onClick={handleBackClick}
-            >
-                <FaArrowLeft />
-            </button>
-            <div className="flex items-center">
-                <img
-                    src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-                    alt="User Avatar"
-                    className="rounded-full h-[32px]"
-                />
-                <div className="ml-4">
-                    <h2 className="font-semibold">{selectedUser.first_name} {selectedUser.last_name}</h2>
-                </div>
-            </div>
-        </div>
+                    {selectedUser ? (
+                        <>
+                            <div className="flex items-center p-4 border-b bg-white">
+                                <button
+                                    className="text-gray-500 hover:text-gray-800 md:hidden mr-4"
+                                    onClick={handleBackClick}
+                                >
+                                    <FaArrowLeft />
+                                </button>
+                                <div className="flex items-center">
+                                    <img
+                                        src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+                                        alt="User Avatar"
+                                        className="rounded-full h-[32px]"
+                                    />
+                                    <div className="ml-4">
+                                        <h2 className="font-semibold">{selectedUser.first_name} {selectedUser.last_name}</h2>
+                                    </div>
+                                </div>
+                            </div>
 
-        <div
-            className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
-            style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
-        > 
-            {chatData.length > 0 ? (
-                chatData.map((msg, index) => (
-                    <div
-                        className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                        key={index}
-                    >
-                        <div
-                            className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
-                                ? "bg-blue-100"
-                                : "bg-gray-200"
-                            }`}
-                            ref={index === chatData.length - 1 ? lastMessageRef : null}
-                        >
                             <div
-                                dangerouslySetInnerHTML={{ __html: msg.message }}
-                                className="message-content"
-                            ></div>
-                            <p className={`text-xs ${msg.senderId === Number(session?.user?.id) ? "text-right" : "text-left"}`}>
-                                {formatDate(msg.messageCreatedAt)}
-                            </p>
-                        </div>
-                    </div>
-                ))
-            ) : (
-                <div className="text-center text-gray-500 mt-4">No Messages...</div>
-            )}
-        </div>
+                                className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
+                                style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
+                            >
+                                {chatData.length > 0 ? (
+                                    chatData.map((msg, index) => (
+                                        <div
+                                            className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
+                                                ? "justify-end"
+                                                : "justify-start"
+                                                }`}
+                                            key={index}
+                                        >
+                                            <div
+                                                className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
+                                                    ? "bg-blue-100"
+                                                    : "bg-gray-200"
+                                                    }`}
+                                                ref={index === chatData.length - 1 ? lastMessageRef : null}
+                                            >
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: msg.message }}
+                                                    className="message-content"
+                                                ></div>
+                                                <p className={`text-xs ${msg.senderId === Number(session?.user?.id) ? "text-right" : "text-left"}`}>
+                                                    {formatDate(msg.messageCreatedAt)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center text-gray-500 mt-4">No Messages...</div>
+                                )}
+                            </div>
 
-        <div className="p-2 border-t bg-white relative">
-            <div className="flex items-center space-x-2">
-                <button
-                    onClick={handleEmojiClick}
-                    className="text-gray-500 hover:text-gray-800 flex-shrink-0"
-                >
-                    <FaSmile />
-                </button>
+                            <div className="p-2 border-t bg-white relative">
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        onClick={handleEmojiClick}
+                                        className="text-gray-500 hover:text-gray-800 flex-shrink-0"
+                                    >
+                                        <FaSmile />
+                                    </button>
 
-                <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                      ref={fileInputRef}
-                />
-
-
-                <button onClick={handleFileUpload}>
-                    <FaPaperclip />
-                </button>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                        ref={fileInputRef}
+                                    />
 
 
-                <textarea
-                    className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
-                    placeholder=""
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSendMessage();
-                        }
-                    }}
-                />
+                                    <button onClick={handleFileUpload}>
+                                        <FaPaperclip />
+                                    </button>
 
-                <button
-                    onClick={handleSendMessage}
-                    className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
-                >
-                    Send
-                </button>
-            </div>
 
-            {showEmojiPicker && (
-                <div className="absolute bottom-16">
-                    <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-            )}
-        </div>
-    </>
-) : (
-    <div className="text-center text-gray-500 p-6 mt-10">No Messages...</div>
-)}
+                                    <textarea
+                                        className="flex-1 p-2 border rounded-lg bg-gray-100 focus:outline-none resize-none h-18"
+                                        placeholder={shouldDisableTextArea ? "You can no longer send messages to this user.": ""}
+                                        disabled={shouldDisableTextArea}
+                                        value={shouldDisableTextArea ? "": message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleSendMessage();
+                                                fetchBlockedUsers();
+                                            }
+                                        }}
+                                    />
+
+                                    <button
+                                        onClick={handleSendMessage}
+                                        className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
+                                    >
+                                        Send
+                                    </button>
+                                </div>
+
+                                {showEmojiPicker && (
+                                    <div className="absolute bottom-16">
+                                        <EmojiPicker onEmojiClick={onEmojiClick} />
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-center text-gray-500 p-6 mt-10">No Messages...</div>
+                    )}
 
                 </div>
 
@@ -367,72 +439,82 @@ const ChatBox: React.FC = () => {
 
 
                 <div className="col-span-1 md:col-span-3 bg-white border-l border-gray-300 flex flex-col p-4">
-                {selectedUser && (
-                    <>
-                    {loggedInUserType=='player' && (
+                    {selectedUser && (
                         <>
- <h2 className="text-xl font-semibold mb-4 hidden md:block">Coach Profile</h2>
-<div className="relative flex flex-col items-center mb-4 hidden md:block">
-  {/* Image Container for Centering */}
-  <div className="relative">
-    <img
-      src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-      alt="User Avatar"
-      className="rounded-full h-32 w-32 mx-auto"
-    />
-    {/* Button Positioned Above the Image */}
-    <a
-      href={`/coach/${selectedUser.slug}`}
-      className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 py-2 px-4 bg-black bg-opacity-50 text-white flex items-center justify-center rounded transition duration-200 hover:bg-opacity-70"
-      target="_blank"
-    >
-      <FaEye className="mr-1" /> View Details
-    </a>
-  </div>
-  {/* Text Below Image */}
-  <div className="text-center mt-6">
-    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-    <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
-  </div>
-</div>
+                            {loggedInUserType == 'player' && (
+                                <>
+                                    <h2 className="text-xl font-semibold mb-4 hidden md:block">Coach Profile</h2>
+                                    <div className="relative flex flex-col items-center mb-4 hidden md:block">
+                                        {/* Image Container for Centering */}
+                                        <div className="relative">
+                                            <img
+                                                src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+                                                alt="User Avatar"
+                                                className="rounded-full h-32 w-32 mx-auto"
+                                            />
+                                            {/* Button Positioned Above the Image */}
+                                            <a
+                                                href={`/coach/${selectedUser.slug}`}
+                                                className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 py-2 px-4 bg-black bg-opacity-50 text-white flex items-center justify-center rounded transition duration-200 hover:bg-opacity-70"
+                                                target="_blank"
+                                            >
+                                                <FaEye className="mr-1" /> View Details
+                                            </a>
+                                        </div>
+                                        {/* Text Below Image */}
+                                        <div className="text-center mt-6">
+                                            <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+                                            <p className="text-sm text-gray-500"><b>Sport:</b> {selectedUser.sport}</p>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            {(!isBlocked ? <button onClick={handleBlock} className="ml-2 bg-red-500 text-white p-2 rounded-lg flex-shrink-0 h-10">Block</button>: 
+                                                <button onClick={handleBlock} className="ml-2 bg-blue-500 text-white p-2 rounded-lg flex-shrink-0 h-10">Unblock</button>)
+                                            }                                        
+                                        </div>
+                                    </div>
 
 
-</>
+                                </>
+                            )}
+
+                            {loggedInUserType == 'coach' && (
+                                <>
+                                    <h2 className="text-xl font-semibold mb-4 hidden md:block">Player Profile</h2>
+                                    <div className="relative flex flex-col items-center mb-4 hidden md:block">
+                                        {/* Image Container for Centering */}
+                                        <div className="relative">
+                                            <img
+                                                src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
+                                                alt="User Avatar"
+                                                className="rounded-full h-32 w-32 mx-auto"
+                                            />
+                                            {/* Semi-Transparent Black Button Positioned Above the Image */}
+                                            <a
+                                                href={`/players/${selectedUser.slug}`}
+                                                className="absolute bottom-[40px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white flex items-center justify-center px-4 py-2 rounded transition duration-200 hover:bg-opacity-70"
+                                                target="_blank"
+                                            >
+                                                <FaEye className="mr-1" /> View Details
+                                            </a>
+                                        </div>
+                                        {/* Text Below Image */}
+                                        <div className="text-center mt-6">
+                                            <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            {(!isBlocked ? <button onClick={handleBlock} className="ml-2 bg-red-500 text-white p-2 rounded-lg flex-shrink-0 h-10">Block</button>: 
+                                                <button onClick={handleBlock} className="ml-2 bg-blue-500 text-white p-2 rounded-lg flex-shrink-0 h-10">Unblock</button>)
+                                            }
+                                        </div>
+                                    </div>
+
+
+                                </>
+                            )}
+
+                        </>
                     )}
-                   
-                   {loggedInUserType=='coach' && (
-                        <>
- <h2 className="text-xl font-semibold mb-4 hidden md:block">Player Profile</h2>
-<div className="relative flex flex-col items-center mb-4 hidden md:block">
-  {/* Image Container for Centering */}
-  <div className="relative">
-    <img
-      src={selectedUser.image && selectedUser.image !== 'null' ? selectedUser.image : '/default.jpg'}
-      alt="User Avatar"
-      className="rounded-full h-32 w-32 mx-auto"
-    />
-    {/* Semi-Transparent Black Button Positioned Above the Image */}
-    <a
-      href={`/players/${selectedUser.slug}`}
-      className="absolute bottom-[40px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white flex items-center justify-center px-4 py-2 rounded transition duration-200 hover:bg-opacity-70"
-      target="_blank"
-    >
-      <FaEye className="mr-1" /> View Details
-    </a>
-  </div>
-  {/* Text Below Image */}
-  <div className="text-center mt-6">
-    <h3 className="font-semibold text-lg">{selectedUser.first_name} {selectedUser.last_name}</h3>
-  </div>
-</div>
-
-
-</>
-                    )}
-
-            </>
-          )}
-        </div>
+                </div>
 
 
 

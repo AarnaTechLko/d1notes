@@ -20,6 +20,7 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
+    blockedCoachIds: text("blockedCoachIds"),
     first_name: varchar("first_name"),
     last_name: varchar("last_name"),
     grade_level: varchar("grade_level"),
@@ -80,6 +81,7 @@ export const coaches = pgTable(
   "coaches",
   {
     id: serial("id").primaryKey(),
+    blockedPlayerIds: text("blockedPlayerIds"),
     firstName: varchar("firstName"),
     lastName: varchar("lastName"),
     email: varchar("email"),

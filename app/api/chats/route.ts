@@ -42,6 +42,24 @@ export async function POST(req: NextRequest) {
   };
 
   try {
+    //retrieve players blocked users
+    const resultPlayer = await db
+      .select({ blockedCoachIds: users.blockedCoachIds })
+      .from(users)
+      .where(eq(users.id, Number(validPlayerId)))
+    const playersBlockedUsers = resultPlayer[0].blockedCoachIds || "";
+    const arrayPlayerBlockedUsers = playersBlockedUsers ? playersBlockedUsers.split(",").map(Number): [];
+    //retrieve coaches blocked users
+    const resultCoach = await db
+      .select({ blockedPlayerIds: coaches.blockedPlayerIds })
+      .from(coaches)
+      .where(eq(coaches.id, Number(validCoachId)))
+    const coachesBlockedUsers = resultCoach[0].blockedPlayerIds || "";
+    const arrayCoachBlockedUsers = coachesBlockedUsers ? coachesBlockedUsers.split(",").map(Number): [];
+    //see if player blocked coach or coach blocked player
+    if (arrayPlayerBlockedUsers.includes(validCoachId) || arrayCoachBlockedUsers.includes(validPlayerId)) {
+      return NextResponse.json({ error: 'User is Blocked' })
+    }
     // Insert chat
     const insertChat = await db.insert(chats).values(chatValues).returning();
 
