@@ -160,7 +160,7 @@ const Home: React.FC = () => {
     value={search}
     onChange={(e) => setSearch(e.target.value)}
   />
-  <span className="text-lg font-semibold text-gray-800">Total Earnings: USD ${accountBalance}</span>
+  <span className="text-lg font-semibold text-gray-800">Total Earnings: ${accountBalance}</span>
 </div>
 <div ref={tableContainerRef} className="overflow-x-auto max-h-[400px] overflow-y-auto">
 <button

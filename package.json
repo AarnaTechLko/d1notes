@@ -13,6 +13,7 @@
     "push": "drizzle-kit push:pg"
   },
   "dependencies": {
+    "@cyntler/react-doc-viewer": "^1.17.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
@@ -26,7 +27,6 @@
     "@nextui-org/react": "^2.4.8",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.7.0",
-    "@tailwindcss/typography": "^0.5.16",
     "@vercel/blob": "^0.26.0",
     "@vercel/postgres": "^0.5.1",
     "bcryptjs": "^2.4.3",
@@ -52,6 +52,7 @@
     "next-connect": "^1.0.0",
     "nodemailer": "^6.9.16",
     "papaparse": "^5.4.1",
+    "pdfjs-dist": "^5.0.375",
     "react": "^18.3.1",
     "react-data-table-component": "^7.6.2",
     "react-datepicker": "^8.1.0",
@@ -61,7 +62,6 @@
     "react-icons": "^5.3.0",
     "react-input-mask": "^2.0.4",
     "react-joyride": "^2.9.3",
-    "react-modal": "^3.16.1",
     "react-quill": "^2.0.0",
     "react-select": "^5.8.1",
     "react-table": "^7.8.0",

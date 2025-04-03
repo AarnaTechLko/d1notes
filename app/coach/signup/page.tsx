@@ -168,6 +168,13 @@ export default function Register() {
         loginAs: formValues.loginAs,
       });
       if (res?.ok) {
+        if (payload.teamId) {
+          const apiResponse = await fetch('/api/player/assignteam', {
+            method: 'POST',
+            body: JSON.stringify({ teamId: teamId, playerId: session?.user.id, enterpriseId: session?.user.club_id, type: session?.user.type, email: formValues.email }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
         window.location.href = '/coach/completeprofile';
       }
       else {
@@ -255,7 +262,7 @@ export default function Register() {
                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                   {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />}
                 </div></div>
@@ -281,7 +288,7 @@ export default function Register() {
                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                   {otpLoading && <FaSpinner className="animate-spin ml-2 text-blue-500 mt-2" />}
                 </div></div>

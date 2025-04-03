@@ -8,13 +8,12 @@ import { getSession, useSession } from "next-auth/react";
 import { type PutBlobResult } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 import { FaPhone } from "react-icons/fa";
-import { fpScoreFactors, gcScoreFactors, positionOptionsList } from "@/lib/constants";
+import { positionOptionsList } from "@/lib/constants";
 import { positionOptionsList2 } from "@/lib/constants";
 import FileUploader from "../FileUploader";
 import ReactQuill from "react-quill";
 import sanitizeHtml from "sanitize-html";
 import 'react-quill/dist/quill.snow.css';
-import { showError } from '@/app/components/Toastr';
 
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
@@ -33,11 +32,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [technicalRemarks, setTechnicalRemarks] = useState("");
-  const [tacticalRemarks, setTacticalRemarks] = useState("");
-  const [physicalRemarks, setPhysicalRemarks] = useState("");
-  const [organizationalRemarks, setOrganizationalRemarks] = useState("");
-  const [distributionRemarks, setDistributionRemarks] = useState("");
+
   const [position, setPosition] = useState("");
   const [sport, setSport] = useState("");
 
@@ -47,345 +42,478 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileUploading, setFileUploading] = useState<boolean>(false);
   const [loadSubmit, setLoadSubmit] = useState<boolean>(false);
-  const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
-  const [coachID, setCoachID] = useState<number | undefined>(undefined);
+
   const { data: session } = useSession();
   const [errors, setErrors] = useState<{
     technicalRemarks: boolean;
     tacticalRemarks: boolean;
     physicalRemarks: boolean;
-    distributionRemarks: boolean;
-    organizationRemarks: boolean;
     finalRemarks: boolean;
-    sport: boolean;
-    position: boolean;
-    thingsToWorkOnRemarks: boolean;
-    technicalScores: boolean;
-    physicalScores: boolean;
-    distributionScores: boolean;
-    organizationScores: boolean;
-    tacticalScores: boolean;
   }>({
     technicalRemarks: false,
     tacticalRemarks: false,
     physicalRemarks: false,
-    distributionRemarks: false,
-    organizationRemarks: false,
     finalRemarks: false,
-    sport: false,
-    position: false,
-    thingsToWorkOnRemarks: false,
-    technicalScores: false,
-    physicalScores: false,
-    organizationScores: false,
-    distributionScores: false,
-    tacticalScores: false
   });
-  const [scoreFactors, setScoreFactors] = useState<{
-    technical: { id: string, label: string, options: string[] }[],
-    tactical: { id: string, label: string, options: string[] }[],
-    physical: { id: string, label: string, options: string[] }[],
-    distribution: { id: string, label: string, options: string[] }[],
-    organization: {id: string, label :string, options:string[]}[],
-  }>({
-    technical: [],
-    tactical: [],
-    physical: [],
-    distribution: [],
-    organization: []
-  })
-  const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>({});
-  const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>({});
-  const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>({});
-  const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>({});
-  const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>({});
+  let technical: any;
+  let tactical: any;
+  let physical: any;
+  let distribution: any;
+  let organization: any;
+  if (position == "Goalkeeper") {
+    technical = [
+      {
+        id: "t1",
+        label: "Passing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t2",
+        label: "Receiving",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t3",
+        label: "Dribbling",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t4",
+        label: "Shooting",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t5",
+        label: "Finishing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t6",
+        label: "Heading",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t7",
+        label: "Tackling",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t8",
+        label: "Defending",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t9",
+        label: "Footwork",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t10",
+        label: "Shot Stopping",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t11",
+        label: "Crosses",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t12",
+        label: "1 v 1",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+
+    tactical = [
 
 
+      {
+        id: "ta1",
+        label: "Reading the Game",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta2",
+        label: "Decisions with Ball",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta3",
+        label: "Decisions without Ball",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta4",
+        label: "Understanding of Team Play",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta5",
+        label: "Understanding of Role and Position",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta6",
+        label: "Timing of Runs",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta7",
+        label: "Scanning",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta8",
+        label: "Decision Making",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta9",
+        label: "Organization with Back Four",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta10",
+        label: "Positioning",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta11",
+        label: "Role in Build Up",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta12",
+        label: "Role in Counter Attack",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+    distribution = [
+      {
+        id: "d1",
+        label: "With Hands",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "d2",
+        label: "With Feet",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "d3",
+        label: "Restarts",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "d4",
+        label: "Open Play",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "d5",
+        label: "Timing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+
+    physical = [
+
+      {
+        id: "p1",
+        label: "Strength",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p2",
+        label: "Speed",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p3",
+        label: "Mobility",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p4",
+        label: "Stamina",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p5",
+        label: "Aggressiveness",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p6",
+        label: "Flexibility",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+
+      {
+        id: "p7",
+        label: "Agility",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p8",
+        label: "Strength / Power",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p9",
+        label: "Stance",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p10",
+        label: "Bravery",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+
+    organization = [
+      {
+        id: "o1",
+        label: "Starting Position",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "o2",
+        label: "Communication",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "o3",
+        label: "Set Plays For",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "o4",
+        label: "Set Plays Against",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "o5",
+        label: "Leadership",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+  } else {
+    technical = [
+      {
+        id: "t1",
+        label: "Passing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t2",
+        label: "Receiving",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t3",
+        label: "Dribbling",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t4",
+        label: "Shooting",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t5",
+        label: "Finishing",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t6",
+        label: "Heading",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t7",
+        label: "Tackling",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "t8",
+        label: "Defending",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+
+    tactical = [
+      {
+        id: "ta1",
+        label: "Reading the Game",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta2",
+        label: "Decisions with Ball",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta3",
+        label: "Decisions without Ball",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta4",
+        label: "Understanding of Team Play",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta5",
+        label: "Understanding of Role and Position",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta6",
+        label: "Timing of Runs",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "ta7",
+        label: "Scanning",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+
+    physical = [
+      {
+        id: "p1",
+        label: "Strength",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p2",
+        label: "Speed",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p3",
+        label: "Mobility",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p4",
+        label: "Stamina",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      {
+        id: "p5",
+        label: "Aggressiveness",
+        options: ["Select", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+    ];
+    distribution = [];
+    organization = [];
+  }
+
+  const [technicalScores, setTechnicalScores] = useState<{
+    [key: string]: string;
+  }>(() =>
+    Object.fromEntries(technical.map((tech: any) => [tech.label, "N/A"]))
+  );
+  const [tacticalScores, setTacticalScores] = useState<{
+    [key: string]: string;
+  }>(() =>
+    Object.fromEntries(tactical.map((tact: any) => [tact.label, "N/A"]))
+  );
+  const [physicalScores, setPhysicalScores] = useState<{
+    [key: string]: string;
+  }>(() =>
+    Object.fromEntries(physical.map((phys: any) => [phys.label, "N/A"]))
+  );
+
+  const [distributionScores, setDistributionScores] = useState<{
+    [key: string]: string;
+  }>(() =>
+    Object.fromEntries(distribution.map((dis: any) => [dis.label, "N/A"]))
+  );
+
+  const [organizationScores, setOrganizationScores] = useState<{
+    [key: string]: string;
+  }>(() =>
+    Object.fromEntries(organization.map((org: any) => [org.label, "N/A"]))
+  );
   const formattedDate = evaluationData?.created_at
     ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
     : "";
-  
-  useEffect(() => {
-    setTechnicalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.technical : fpScoreFactors.technical).map((tech: any) => [tech.label, "N/A"]))
-  );
-  setTacticalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.tactical : fpScoreFactors.tactical).map((tact: any) => [tact.label, "N/A"]))
-  );
-  setPhysicalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.physical : fpScoreFactors.physical).map((phys: any) => [phys.label, "N/A"]))
-  );
-  setDistributionScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.distribution : fpScoreFactors.distribution).map((dis: any) => [dis.label, "N/A"]))
-  );
-  setOrganizationScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.organization : fpScoreFactors.organization).map((org: any) => [org.label, "N/A"]))
-    );
-
-      setTechnicalRemarks("");
-      setTacticalRemarks("");
-      setPhysicalRemarks("");
-      setFinalRemarks("");
-      setThingsToWork("")
-
-  evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
-  }, [evaluationData]);
-
-    useEffect(() => {
-    setScoreFactors(() => ({
-      technical: position === "Goalkeeper" ? [...gcScoreFactors.technical] : [...fpScoreFactors.technical], 
-      tactical: position === "Goalkeeper" ? [...gcScoreFactors.tactical] : [...fpScoreFactors.tactical], 
-      distribution: position === "Goalkeeper" ? [...gcScoreFactors.distribution] : [...fpScoreFactors.distribution], 
-      physical: position === "Goalkeeper" ? [...gcScoreFactors.physical] : [...fpScoreFactors.physical], 
-      organization: position === "Goalkeeper" ? [...gcScoreFactors.organization] : [...fpScoreFactors.organization], 
-    }));
-  }, [position]);
-
-  // Handle Save Draft
   const onSaveAsDraft = () => {
-    if (evaluationData) {
-      setPlayerID(evaluationData.playerId);
-      setCoachID(evaluationData.coachId);
-    } else {
-      console.error("evaluationData is null or undefined");
-      onClose();
-      // Handle the case where evaluationData is not available
-    }
 
-    const evaluationDatas = {
-      evaluationId,
-      coachId,
-      playerId,
-      technicalScores,
-      tacticalScores,
-      distributionScores,
-      organizationScores,
-      physicalScores,
-      technicalRemarks: cleanHtml(technicalRemarks),
-      tacticalRemarks,
-      physicalRemarks,
-      organizationalRemarks,
-      distributionRemarks,
-      finalRemarks,
-      document,
-      position,
-      sport,
-      thingsToWork
-    };
+    onClose();
 
-    fetch("/api/coach/evaluations/save?status=4", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(evaluationDatas),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        onClose();
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   };
-
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoadSubmit(true);
-    
-    if (evaluationData) {
-      setPlayerID(evaluationData.playerId);
-      setCoachID(evaluationData.coachId);
-    } else {
-      console.error("evaluationData is null or undefined");
-      setLoadSubmit(false);
-      onClose();
-    }
-    
-    const errorMessages = [
-  { field: "technicalRemarks", message: "Technical remarks are required." },
-  { field: "tacticalRemarks", message: "Tactical remarks are required." },
-  { field: "physicalRemarks", message: "Physical remarks are required." },
-  { field: "finalRemarks", message: "Final remarks are required." },
-  { field: "sport", message: "Please select a sport." },
-  { field: "position", message: "Please select a position." },
-  { field: "thingsToWorkOnRemarks", message: "Things to work on remarks are required." },
-  { field: "distributionRemarks", message: "Distribution remarks are required for Goalkeepers." },
-  { field: "organizationRemarks", message: "Organizational remarks are required for Goalkeepers." },
-  { field: "technicalScores", message: "At least one technical score must be selected." },
-  { field: "tacticalScores", message: "At least one tactical score must be selected." },
-  { field: "physicalScores", message: "At least one physical score must be selected." },
-  { field: "organizationScores", message: "At least one organization score must be selected for Goalkeepers." },
-  { field: "distributionScores", message: "At least one distribution score must be selected for Goalkeepers." }
-];
-    const validationErrors = {
-      technicalRemarks: technicalRemarks.trim() === "",
-      tacticalRemarks: tacticalRemarks.trim() === "",
-      physicalRemarks: physicalRemarks.trim() === "",
-      finalRemarks: finalRemarks.trim() === "",
-      sport: sport === "",
-      position: position === "",
-      thingsToWorkOnRemarks: thingsToWork === "",
-      distributionRemarks: position === "Goalkeeper" && distributionRemarks === "",
-      organizationRemarks: position === "Goalkeeper" && organizationalRemarks === "",
-      technicalScores: Object.values(technicalScores).every((value) => value === "N/A"),
-      tacticalScores: Object.values(tacticalScores).every((value) => value === "N/A"),
-      physicalScores: Object.values(physicalScores).every((value) => value === "N/A"),
-      organizationScores: position === "Goalkeeper" && Object.values(organizationScores).every((value) => value === "N/A"),
-      distributionScores: position === "Goalkeeper" && Object.values(distributionScores).every((value) => value === "N/A")
-    };
-
-    errorMessages.forEach(({ field, message }) => {
-    if ((validationErrors as Record<string, boolean>)[field]) {
-      showError(message);
-    }
-  });
-
-    setErrors(validationErrors);
-
-    if (Object.values(validationErrors).some((isError) => isError)) {
-      setLoadSubmit(false);
-      return;
-    }
-
-    const evaluationDatas = {
-      evaluationId,
-      coachId,
-      playerId,
-      technicalScores,
-      tacticalScores,
-      distributionScores,
-      organizationScores,
-      physicalScores,
-      technicalRemarks: cleanHtml(technicalRemarks),
-      tacticalRemarks,
-      physicalRemarks,
-      organizationalRemarks,
-      distributionRemarks,
-      finalRemarks,
-      document,
-      position,
-      sport,
-      thingsToWork,
-    };
-
-
-    // Send the data to an API
-    fetch("/api/coach/evaluations/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(evaluationDatas),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        onClose();
-
-        window.location.reload();
-      })
-      .catch((error) => {
-        setLoadSubmit(false);
-        console.error("Error:", error);
-      });
+   
+    onClose();
   };
 
-  // Handle Data fetching for Saved Drafts
+  // const fetchEvaluationResultData = async () => {
+
+  //     try {
+  //         const response = await fetch(`/api/evaluationdetails?evaluationId=${evaluationId}`, {
+  //             method: 'GET',
+  //             headers: {
+  //                 'Content-Type': 'application/json',
+  //             },
+  //         });
+
+  //         if (!response.ok) {
+
+  //             throw new Error('Failed to fetch evaluation data');
+  //         }
+
+  //         const data = await response.json();
+  //         const datas = data.result;
+  //         console.log(datas.technicalScores);
+  //         setTechnicalScores({
+  //             ...Object.fromEntries(technical.map((tech: any) => [tech.label, datas.technicalScores?.[tech.label] || '0'])),
+  //         });
+  //         setTacticalScores({
+  //             ...Object.fromEntries(tactical.map((tact: any) => [tact.label, datas.tacticalScores?.[tact.label] || '0'])),
+  //         });
+  //         setPhysicalScores({
+  //             ...Object.fromEntries(physical.map((phys: any) => [phys.label, datas.physicalScores?.[phys.label] || '0'])),
+  //         });
+  //         setTechnicalRemarks(datas.technicalRemarks || '');
+  //         setTacticalRemarks(datas.tacticalRemarks || '');
+  //         setPhysicalRemarks(datas.physicalRemarks || '');
+  //         setFinalRemarks(datas.finalRemarks || '');
+  //         // Set the fetched evaluation data
+  //     } catch (error) {
+  //         console.error('Error fetching evaluation data:', error);
+
+  //     }
+  // };
+
   const fetchEvaluationResultData = async () => {
     try {
-      const response = await fetch(
-        `/api/evaluationdetails?evaluationId=${evaluationId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch evaluation data");
-      }
+      console.log("Not getting anything.")
 
-      const data = await response.json();
-      setPosition(data.result?.position != null ? data.result?.position : "Goalkeeper");
-      
-      if (data.result) {
-              handleUpdateEvaluationData(data);
-      }
-
+      // console.log("Sport: ", sport)
+      // console.log("Position: ", position)
+      // console.log("technical scores: ", technicalScores)
+      // console.log("tactical scores: ", tacticalScores)
+      // console.log("physical scores: ", physicalScores)
+      // console.log("technical remarks: ", technicalRemarks)
+      // console.log("tactical remarks: ", tacticalRemarks)
+      // console.log("physical remarks: ", physicalRemarks)
+      // console.log("final remarks: ", finalRemarks)
     } catch (error) {
       console.error("Error fetching evaluation data:", error);
     }
   };
 
-  // Handle Saving data
-  const handleUpdateEvaluationData = async (data: any) => {
-      const datas = data.result;
-      const technicalScoresJson = JSON.parse(datas.technicalScores);
-      const tacticalScoresJson = JSON.parse(datas.tacticalScores);
-      const physicalScoresJson = JSON.parse(datas.physicalScores);
-      const distributionScoresJson = JSON.parse(datas.distributionScores);    
-      const organizationScoresJson = JSON.parse(datas.organizationScores);
-
-      setDistributionScores({
-        ...Object.fromEntries(
-          scoreFactors.distribution.map((dis: any) => [
-            dis.label,
-            distributionScoresJson?.[dis.label] || "0",
-          ])
-        ),
-      });
-
-      setTechnicalScores({
-        ...Object.fromEntries(
-          scoreFactors.technical.map((tech: any) => [
-            tech.label,
-            technicalScoresJson?.[tech.label] || "0",
-          ])
-        ),
-      });
-
-      setTacticalScores({
-        ...Object.fromEntries(
-          scoreFactors.tactical.map((tact: any) => [
-            tact.label,
-            tacticalScoresJson?.[tact.label] || "0",
-          ])
-        ),
-      });
-
-      setPhysicalScores({
-        ...Object.fromEntries(
-          scoreFactors.physical.map((phys: any) => [
-            phys.label,
-            physicalScoresJson?.[phys.label] || "0",
-          ])
-        ),
-      });
-    
-      setOrganizationScores({
-        ...Object.fromEntries(
-          scoreFactors.organization.map((orgs: any) => [
-            orgs.label,
-            organizationScoresJson?.[orgs.label] || "0",
-          ])
-        ),
-      });
-
-      setTechnicalRemarks(datas.technicalRemarks || "");
-      setTacticalRemarks(datas.tacticalRemarks || "");
-      setPhysicalRemarks(datas.physicalRemarks || "");
-      setFinalRemarks(datas.finalRemarks || "");
-      setThingsToWork(datas.thingsToWork || "")
-      setSport(datas.sport);
-      setDistributionRemarks(datas.distributionRemarks || "");
-      setOrganizationalRemarks(datas.organizationalRemarks || "")
-  }
-
-  // Handle document update
   const handleDocumentChange = async () => {
     if (!fileInputRef.current?.files) {
       throw new Error("No file selected");
@@ -400,12 +528,16 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       });
       setFileUploading(false);
       const imageUrl = newBlob.url;
+      console.log(imageUrl);
       setDocument(imageUrl);
     } catch (error) {
       setFileUploading(false);
       console.error("Error uploading file:", error);
     }
   };
+  useEffect(() => {
+    evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
+  }, [evaluationData]);
 
   if (!isOpen) return null;
   const handlePositionChange = (event: any) => {
@@ -439,7 +571,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         <div className="bg-white rounded-lg shadow-lg w-full  max-h-[90vh] overflow-y-auto">
           <form onSubmit={handleSubmit}>
             <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
-              <h2 className="text-lg font-bold">Please take an action!</h2>
+              <h2 className="text-lg font-bold">This is just a sample!</h2>
               <button
                 onClick={onClose}
                 className="text-white hover:text-gray-200 text-xl font-bold"
@@ -468,7 +600,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                   <h3 className="text-lg font-semibold mb-4">
                     Review Title:{" "}
                     <span className="font-normal">
-                      {evaluationData?.review_title}
+                      Sample Form
                     </span>
                   </h3>
                   <div className="flex items-center mb-4">
@@ -506,24 +638,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
             )} */}
                     <span className="text-gray-700">
                       <a
-                        href={`/players/${evaluationData?.playerSlug}`}
                         className=" text-blue-700"
                         target="_blank"
                       >
-                        {evaluationData?.first_name} {evaluationData?.last_name}
+                        John Smith
                       </a>
                     </span>
                   </div>
                   {!session?.user.club_id && (
                     <div className="mb-4">
-                      <strong className="mr-2">Evaluation Rate:</strong>{" "}
-                      <span>${evaluationData?.expectedCharge}</span>
+                      <strong className="mr-2">Evaluation Rate:</strong> $100
                     </div>
                   )}
 
                   <div className="mb-4">
-                    <strong className="mr-2">Date Requested:</strong>{" "}
-                    <span>{formattedDate}</span>
+                    <strong className="mr-2">Date Requested:</strong> Today
                   </div>
 
                   <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
@@ -533,28 +662,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     <div className="mb-4">
                       <strong className="mr-2">Link:</strong>{" "}
                       <a
-                        href={evaluationData?.primary_video_link}
-                        className="text-blue-500"
+                        className="text-gray-500"
                         target="_blank"
                       >
                         Link to video
-                      </a>{" "}
+                      </a>
                       <span className="mx-2">|</span>
-                      <strong>Length:</strong> {evaluationData?.videoOneTiming}{" "}
-                      min.
+                      <strong>Length:</strong> {evaluationData?.videoOneTiming} 20
+                      mins
                       <span className="mx-2">|</span>
-                      <strong>Jersey Color:</strong>{" "}
-                      {evaluationData?.jerseyColorOne}
+                      <strong>Jersey Color:</strong> Blue
                       <span className="mx-2">|</span>
-                      <strong>Jersey Number:</strong>{" "}
-                      {evaluationData?.jerseyNumber}{" "}
+                      <strong>Jersey Number:</strong> 7
                       <span className="mx-2">|</span>
-                      <strong>Position(s):</strong>{" "}
-                      {evaluationData?.positionOne}
+                      <strong>Position(s):</strong> Goalkeeper
                     </div>
                     <div className="mb-4">
-                      <strong>Description: </strong>
-                      {evaluationData?.video_description}
+                      <strong>Description: </strong> This is just a sample
                     </div>
                   </fieldset>
 
@@ -567,7 +691,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       <div className="mb-4">
                         <strong className="mr-2">Link:</strong>{" "}
                         <a
-                          href={evaluationData?.video_link_two}
                           className="text-blue-500"
                           target="_blank"
                         >
@@ -601,7 +724,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       <div className="mb-4">
                         <strong className="mr-2">Link:</strong>{" "}
                         <a
-                          href={evaluationData?.video_link_three}
                           className="text-blue-500"
                           target="_blank"
                         >
@@ -690,7 +812,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
                   </select>
-                  <p className="text-red-500 text-sm h-5">{errors.sport ? "Required." : ""}</p>
                 </div>
 
                 {/* Second select */}
@@ -711,13 +832,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       </option>
                     ))}
                   </select>
-                  <p className="text-red-500 text-sm h-5">{errors.position ? "Required." : ""}</p>
                 </div>
               </div>
             </div>
 
             <div className="p-4">
-              {position !== "Goalkeeper" && (
+              {position != "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
@@ -725,24 +845,16 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Technical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : "Required..."}</p>
-
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.technical.map((tech: any) => (
+                      {technical.map((tech: any) => (
                         <div
                           key={tech.id}
                           className="flex items-center space-x-2"
                         >
                           <select
                             id={`dropdown-tech-${tech.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={technicalScores[tech.label]}
-                            onChange={(e) =>
-                              setTechnicalScores((prev) => ({
-                                ...prev,
-                                [tech.label]: e.target.value,
-                              }))
-                            }
+                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 "
+                            value={1}
                           >
                             {tech.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -768,44 +880,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     </label>
                     <textarea
                       id={`remarks-tech`}
-                      value={technicalRemarks}
+                      value={"This is just a sample"}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTechnicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {<ReactQuill 
-                      theme="snow" 
-                      value={technicalRemarks} 
-                      onChange={(e) => {
-                        console.log(e)
-                        setTechnicalRemarks(e)
-                      }}
-                    />} */}
-                    {/* {errors.technicalRemarks && (
-                      <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.technicalRemarks ? "Required." : ""}</p>
                   </div>
 
                   {/* Tactical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h2 className="text-xl mb-4">
                       Tactical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.tacticalScores ? "Required." : ""}</p>
-                    </div>
+                    </h2>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.tactical.map((tact: any) => (
+                      {tactical.map((tact: any) => (
                         <div
                           key={tact.id}
                           className="flex items-center space-x-2"
@@ -813,13 +902,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-tact-${tact.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={tacticalScores[tact.label]}
-                            onChange={(e) =>
-                              setTacticalScores((prev) => ({
-                                ...prev,
-                                [tact.label]: e.target.value,
-                              }))
-                            }
+                            value={2}
                           >
                             {tact.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -847,35 +930,19 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-tact`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={tacticalRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTacticalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {errors.tacticalRemarks && (
-                      <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.tacticalRemarks ? "Required." : ""}</p>
-
                   </div>
 
                   {/* Physical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h3 className="text-xl mb-4">
                       Physical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.physicalScores ? "Required." : ""}</p>
-                    </div>
+                    </h3>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.physical.map((phys: any) => (
+                      {physical.map((phys: any) => (
                         <div
                           key={phys.id}
                           className="flex items-center space-x-2"
@@ -883,13 +950,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-phys-${phys.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={physicalScores[phys.label]}
-                            onChange={(e) =>
-                              setPhysicalScores((prev) => ({
-                                ...prev,
-                                [phys.label]: e.target.value,
-                              }))
-                            }
+                            value={3}
                           >
                             {phys.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -917,40 +978,26 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-phys`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={physicalRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setPhysicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {errors.physicalRemarks && (
+                    {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.physicalRemarks ? "Required." : ""}</p>
+                    )}
                   </div>
                 </div>
               )}
-
-              
 
               {position == "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h1 className="text-xl mb-4">
                       Technical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : ""}</p>
-                    </div>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.technical.map((tech: any) => (
+                      {technical.map((tech: any) => (
                         <div
                           key={tech.id}
                           className="flex items-center space-x-2"
@@ -958,13 +1005,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-tech-${tech.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 "
-                            value={technicalScores[tech.label]}
-                            onChange={(e) =>
-                              setTechnicalScores((prev) => ({
-                                ...prev,
-                                [tech.label]: e.target.value,
-                              }))
-                            }
+                            value={4}
                           >
                             {tech.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -990,37 +1031,24 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     </label>
                     <textarea
                       id={`remarks-tech`}
-                      value={technicalRemarks}
+                      value={"This is just a sample"}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTechnicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {errors.technicalRemarks && (
+                    {errors.technicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.technicalRemarks ? "Required." : ""}</p>
-
+                    )}
                   </div>
 
                   {/* Tactical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h2 className="text-xl mb-4">
                       Tactical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.tacticalScores ? "Required." : ""}</p>
-                    </div>
+                    </h2>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.tactical.map((tact: any) => (
+                      {tactical.map((tact: any) => (
                         <div
                           key={tact.id}
                           className="flex items-center space-x-2"
@@ -1028,13 +1056,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-tact-${tact.id}`}
                             className="w-[75px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={tacticalScores[tact.label]}
-                            onChange={(e) =>
-                              setTacticalScores((prev) => ({
-                                ...prev,
-                                [tact.label]: e.target.value,
-                              }))
-                            }
+                            value={5}
                           >
                             {tact.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -1062,34 +1084,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-tact`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={tacticalRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTacticalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {errors.tacticalRemarks && (
+                    {errors.tacticalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.tacticalRemarks ? "Required." : ""}</p>
+                    )}
                   </div>
 
                   {/* Distribution Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h3 className="text-xl mb-4">
+                      {" "}
                       Distribution
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.distributionScores ? "Required." : ""}</p>
-                    </div>
+                    </h3>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.distribution.map((dis: any) => (
+                      {distribution.map((dis: any) => (
                         <div
                           key={dis.id}
                           className="flex items-center space-x-2"
@@ -1097,13 +1108,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-dis-${dis.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={distributionScores[dis.label]}
-                            onChange={(e) =>
-                              setDistributionScores((prev) => ({
-                                ...prev,
-                                [dis.label]: e.target.value,
-                              }))
-                            }
+                            value={6}
                           >
                             {dis.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -1131,32 +1136,19 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-dis`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={distributionRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setDistributionRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    <p className="text-red-500 text-sm h-5">{errors.distributionRemarks ? "Required." : ""}</p>
-
                   </div>
 
                   {/* Physical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
+                    <h3 className="text-xl mb-4">
                       Physical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.physicalScores ? "Required." : ""}</p>
-                    </div>
+                    </h3>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.physical.map((phys: any) => (
+                      {physical.map((phys: any) => (
                         <div
                           key={phys.id}
                           className="flex items-center space-x-2"
@@ -1164,13 +1156,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-phys-${phys.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={physicalScores[phys.label]}
-                            onChange={(e) =>
-                              setPhysicalScores((prev) => ({
-                                ...prev,
-                                [phys.label]: e.target.value,
-                              }))
-                            }
+                            value={7}
                           >
                             {phys.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -1198,34 +1184,20 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-phys`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={physicalRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setPhysicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    {/* {errors.physicalRemarks && (
+                    {errors.physicalRemarks && (
                       <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.physicalRemarks ? "Required." : ""}</p>
-
+                    )}
                   </div>
-                  {/* Organisation Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                      Organisation
+                    <h3 className="text-xl mb-4">
+                      Organization
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.organizationScores ? "Required." : ""}</p>
-                    </div>
+                    </h3>
                     <div className="space-y-4 flex-grow">
-                      {scoreFactors.organization.map((org: any) => (
+                      {organization.map((org: any) => (
                         <div
                           key={org.id}
                           className="flex items-center space-x-2"
@@ -1233,13 +1205,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                           <select
                             id={`dropdown-org-${org.id}`}
                             className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={organizationScores[org.label]}
-                            onChange={(e) =>
-                              setOrganizationScores((prev) => ({
-                                ...prev,
-                                [org.label]: e.target.value,
-                              }))
-                            }
+                            value={8}
                           >
                             {org.options.map((option: any, index: any) => (
                               <option key={index} value={option}>
@@ -1267,19 +1233,9 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       id={`remarks-org`}
                       className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                       rows={3}
-                      value={organizationalRemarks}
+                      value={"This is just a sample"}
                       placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setOrganizationalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
                     />
-                    <p className="text-red-500 text-sm h-5">{errors.organizationRemarks ? "Required." : ""}</p>
-
                   </div>
                 </div>
               )}
@@ -1291,49 +1247,29 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                   <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                 </label>
                 <textarea
-                  value={finalRemarks}
+                  value={"This is just a sample"}
                   id="final-remarks"
                   className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                   rows={4}
-                  onChange={(e) => {
-                    const words = e.target.value
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0); // Count non-empty words
-                    if (words.length <= 1000) {
-                      setFinalRemarks(e.target.value); // Update the value if within limit
-                    }
-                  }}
                 />
-                {/* {errors.finalRemarks && (
+                {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
-                )} */}
-                <p className="text-red-500 text-sm h-5">{errors.finalRemarks ? "Required." : ""}</p>
-
+                )}
               </div>
               <div className="mt-6">
-                <label htmlFor="thingtoworkon-remarks" className="text-sm font-medium">
+                <label htmlFor="final-remarks" className="text-sm font-medium">
                   Things to Work On:
                   <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                 </label>
                 <textarea
-                  value={thingsToWork}
-                  id="thingstoworkon-remarks"
+                  value={"This is just a sample"}
+                  id="final-remarks"
                   className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
                   rows={4}
-                  onChange={(e) => {
-                    const words = e.target.value
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0); // Count non-empty words
-                    if (words.length <= 1000) {
-                      setThingsToWork(e.target.value); // Update the value if within limit
-                    }
-                  }}
                 />
-                {/* {errors.finalRemarks && (
+                {errors.finalRemarks && (
                   <p className="text-red-500 text-sm">Required.</p>
-                )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.thingsToWorkOnRemarks ? "Required." : ""}</p>
-
+                )}
               </div>
               {/* {session?.user.club_id && ( */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -1342,43 +1278,23 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     htmlFor="final-remarks"
                     className="text-sm font-medium"
                   >
-                    Upload Document:
+                    Upload Document: NOT ALLOWED
                   </label>
-                  <input
-                    type="file"
-                    name="document"
-                    className=""
-                    onChange={handleDocumentChange}
-                    ref={fileInputRef}
-                  />
                 </div>
               </div>
-              {fileUploading ? (
-                <>
-                  <FileUploader />
-                </>
-              ) : (
-                <>{/* Optional: Placeholder for additional content */}</>
-              )}
 
               {/* )} */}
               <div className="flex justify-end space-x-2 pt-6">
                 <button
                   type="submit"
-                  className="mt-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+                  className="mt-2 bg-gray-600 text-white font-semibold px-4 py-2 rounded"
                 >
-                  {loadSubmit ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                      <span>Submitting...</span>
-                    </div>
-                  ) : (
-                    <span>Submit</span>
-                  )}
+
+                <span>Submit</span>
                 </button>
                 <button
                   type="button"
-                  className="mt-2 bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
+                  className="mt-2 bg-gray-600 text-white font-semibold px-4 py-2 rounded"
                   onClick={onSaveAsDraft}
                 >
                   Save Draft
@@ -1386,7 +1302,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
                 <button
                   onClick={onClose}
-                  className="mt-2 bg-gray-600 text-white font-semibold px-4 py-2 rounded hover:bg-gray-700 transition duration-200"
+                  className="mt-2 bg-gray-600 text-white font-semibold px-4 py-2 rounded"
                 >
                   Close
                 </button>

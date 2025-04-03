@@ -9,7 +9,7 @@ import { FaEye } from "react-icons/fa";
 import ProfileCard from "../components/ProfileCard";
 import { calculateHoursFromNow } from "@/lib/clientHelpers";
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
-import EvaluationForm from '@/app/components/coach/EvaluationForm';
+import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
 import PromptComponent from "../components/Prompt";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import  { useRef } from "react";
@@ -658,7 +658,7 @@ const closeEvform = () => {
                   </tr>
                 ) : filteredRows.length === 0 ? (
                   <tr>
-                    <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+                    <td colSpan={columns.length} className=" py-4 text-gray-500">
                       No Entries...
                     </td>
                   </tr>
@@ -700,7 +700,7 @@ const closeEvform = () => {
             
           </div>
 
-          <EvaluationForm
+          <FakeEvaluationForm
             evaluationId={null}
             evaluationData={null}
             coachId={null}
@@ -715,10 +715,10 @@ const closeEvform = () => {
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
           <h3 className='font-bold text-lg mt-4'>Request an Evaluation</h3>
-         <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive an evaluation, it will look like <button onClick={() => openEvalModal()} className="text-blue-600 hover:text-blue-800 ">this</button>. If your Public Visibility is on, a coach may find you in player marketplace searches and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach. If your Public Visibility is off, you will not show up in the player marketplace.</p>
+         <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive an evaluation, it will look like <button onClick={() => openEvalModal()} className="text-blue-600 hover:text-blue-800 ">this</button>. If your Public Visibility is on, a coach (or the public) may find you in Player Profiles and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach (and only that coach may contact you). If your Public Visibility is off, you will not show up in the player marketplace.</p>
 
-         <h3 className='font-bold text-lg mt-4'>Enterprises / Your Teams Explanation</h3> 
-<p className="text-justify">Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/yourteams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. You will automatically not be charged any rate as your organization / team has already paid for them.</p>
+         <h3 className='font-bold text-lg mt-4'>Organization Explanation</h3> 
+<p className="text-justify">Only if you have been added by an organization or single team that is using D1 Notes’ Organizatons’ (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/yourteams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. Only by going through Your Teams will you automatically not be charged any rate as your organization / team has already paid for them.</p>
 <p></p>
 <h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
 <p className="text-justify">The Messages function in the menu allows you to communicate with any coach in Your Teams as well as communicate further with any coach in the marketplace that has accepted an evaluation request from you.</p>

@@ -126,25 +126,96 @@ const ChatBox: React.FC = () => {
     //     }
     // };
 
-    const handleImageChange = () => {
+    // const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0];
+    //     if (!file) return;
+    
+    //     setUploadedFile(file); // Update state
+    
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onloadend = async () => {
+    //         const base64Data = reader.result?.toString().split(",")[1]; // Extract Base64
+    //         const mimeType = file.type;
+    
+    //         try {
+    //             const response = await fetch("/api/upload", {
+    //                 method: "POST",
+    //                 headers: { "Content-Type": "application/json" },
+    //                 body: JSON.stringify({ file: base64Data, fileName: file.name, mimeType }),
+    //             });
+    
+    //             const data = await response.json();
+    //             if (data.url) {
+    //                 setMessage(data.url); // Save URL in message input
+    //             } else {
+    //                 console.error("Upload failed:", data.error);
+    //             }
+    //         } catch (error) {
+    //             console.error("Error uploading file:", error);
+    //         }
+    //     };
+    // };
 
-        if (fileInputRef.current?.files) {
-
-
-            const file = fileInputRef.current.files[0];
-
-            try {
-
-                console.log(file.name)
-
-                setUploadedFile(file);
-            } catch (error) {
-                console.error('Error getting the file:', error);
-            }
+    const [loading, setLoading] = useState(false);
+    const [preview, setPreview] = useState<string | null>(null); 
+    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+    
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "video/mp4"];
+        const maxSize = 10 * 1024 * 1024; // 10MB
+    
+        if (!allowedTypes.includes(file.type)) {
+            alert("Only JPG, PNG, GIF images and MP4 videos are allowed.");
+            return;
         }
-
-
-    }
+    
+        if (file.size > maxSize) {
+            alert("File size must be 10MB or less.");
+            return;
+        }
+    
+        setUploadedFile(file);
+    
+        // Preview before uploading
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            if (reader.result) {
+                setPreview(reader.result.toString());
+            }
+        };
+    
+        setLoading(true);
+    
+        reader.onloadend = async () => {
+            const base64Data = reader.result?.toString().split(",")[1];
+            const mimeType = file.type;
+    
+            try {
+                const response = await fetch("/api/upload", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ file: base64Data, fileName: file.name, mimeType }),
+                });
+    
+                const data = await response.json();
+                if (data.url) {
+                    setMessage(data.url);
+                } else {
+                    console.error("Upload failed:", data.error);
+                }
+            } catch (error) {
+                console.error("Error uploading file:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+    };
+    
+    
+    
 
     const handleEmojiClick = () => setShowEmojiPicker((prev) => !prev);
 
@@ -231,6 +302,8 @@ const ChatBox: React.FC = () => {
 
             setChatData((prevChatData) => [...prevChatData, payload]); // Add message to chat data
             setMessage(""); // Clear the input field after sending
+            setUploadedFile(null); // Reset file input
+            setPreview(null);
         } catch (error) {
             console.error("Error sending message:", error);
         }
@@ -283,6 +356,8 @@ const ChatBox: React.FC = () => {
       Go Back
     </button> */}
             </header>
+            
+
 
             <div className="grid grid-cols-1 md:grid-cols-12 flex-1 mb-10 overflow-hidden">
                 <div
@@ -341,40 +416,61 @@ const ChatBox: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div
-                                className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
-                                style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
-                            >
-                                {chatData.length > 0 ? (
-                                    chatData.map((msg, index) => (
-                                        <div
-                                            className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
-                                                ? "justify-end"
-                                                : "justify-start"
-                                                }`}
-                                            key={index}
-                                        >
-                                            <div
-                                                className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
-                                                    ? "bg-blue-100"
-                                                    : "bg-gray-200"
-                                                    }`}
-                                                ref={index === chatData.length - 1 ? lastMessageRef : null}
-                                            >
-                                                <div
-                                                    dangerouslySetInnerHTML={{ __html: msg.message }}
-                                                    className="message-content"
-                                                ></div>
-                                                <p className={`text-xs ${msg.senderId === Number(session?.user?.id) ? "text-right" : "text-left"}`}>
-                                                    {formatDate(msg.messageCreatedAt)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-center text-gray-500 mt-4">No Messages...</div>
-                                )}
-                            </div>
+        <div
+            className="flex-1 overflow-y-auto p-4 bg-gray-50 chatboxdiv"
+            style={{ maxHeight: "400px", overflowY: "auto" }} ref={chatBoxRef}
+        > 
+            {chatData.length > 0 ? (
+                chatData.map((msg, index) => (
+                    <div
+                        className={`flex mb-4 ${msg.senderId === Number(session?.user?.id)
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                        key={index}
+                    >
+                        <div
+                            className={`p-3 rounded-lg shadow ${msg.senderId !== Number(session?.user?.id)
+                                ? "bg-blue-100"
+                                : "bg-gray-200"
+                            }`}
+                            ref={index === chatData.length - 1 ? lastMessageRef : null}
+                        >
+                            {/* <div
+                                dangerouslySetInnerHTML={{ __html: msg.message }}
+                                className="message-content"
+                            ></div> */}
+                            {/* <div
+    dangerouslySetInnerHTML={{
+        __html: msg.message.startsWith("https://") ? `<img src="${msg.message}" class="w-48 h-auto rounded-lg" />` : msg.message
+    }}
+    className="message-content"
+/> */}
+<div className="message-content">
+    {msg.message.startsWith("https://") ? (
+        /\.(mp4|webm|ogg)$/i.test(msg.message) ? (
+            <video controls className="w-48 h-auto rounded-lg">
+                <source src={msg.message} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        ) : (
+            <img src={msg.message} alt="preview" className="w-48 h-auto rounded-lg" />
+        )
+    ) : (
+        <div dangerouslySetInnerHTML={{ __html: msg.message }} />
+    )}
+</div>
+
+                            <p className={`text-xs ${msg.senderId === Number(session?.user?.id) ? "text-right" : "text-left"}`}>
+                                {formatDate(msg.messageCreatedAt)}
+                            </p>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="text-center text-gray-500 mt-4">No Messages...</div>
+            )}
+        </div>
 
                             <div className="p-2 border-t bg-white relative">
                                 <div className="flex items-center space-x-2">
@@ -385,16 +481,27 @@ const ChatBox: React.FC = () => {
                                         <FaSmile />
                                     </button>
 
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                        ref={fileInputRef}
-                                    />
+                {/* <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                      ref={fileInputRef}
+                /> */}
+
+<input
+  type="file"
+  accept="image/*, video/*"
+  onChange={handleImageChange}
+  className="hidden"
+  ref={fileInputRef}
+/>
+
+>>>>>>> california
 
 
-                                    <button onClick={handleFileUpload}>
+                    
+                <button onClick={handleFileUpload}>
                                         <FaPaperclip />
                                     </button>
 
@@ -414,24 +521,51 @@ const ChatBox: React.FC = () => {
                                         }}
                                     />
 
-                                    <button
-                                        onClick={handleSendMessage}
-                                        className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
-                                    >
-                                        Send
-                                    </button>
-                                </div>
+                <button
+                    onClick={handleSendMessage}
+                    className="ml-2 bg-green-500 text-white p-2 rounded-lg flex-shrink-0 h-10"
+                >
+                    Send
+                </button>
 
-                                {showEmojiPicker && (
-                                    <div className="absolute bottom-16">
-                                        <EmojiPicker onEmojiClick={onEmojiClick} />
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <div className="text-center text-gray-500 p-6 mt-10">No Messages...</div>
-                    )}
+                
+            </div>
+
+            {preview && (
+    <div className="relative mt-2 flex flex-col items-center">
+        {!loading ? (
+            fileInputRef.current?.files?.[0]?.type.startsWith("video") ? (
+                <video
+                    src={preview}
+                    controls
+                    className="w-32 h-auto rounded-lg shadow-md border border-gray-300"
+                />
+            ) : (
+                <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-32 h-auto rounded-lg shadow-md border border-gray-300"
+                />
+            )
+        ) : (
+            <div className="flex items-center justify-center mt-2">
+                <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        )}
+    </div>
+)}
+
+
+            {showEmojiPicker && (
+                <div className="absolute bottom-16">
+                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+            )}
+        </div>
+    </>
+) : (
+    <div className="text-center text-gray-500 p-6 mt-10">No Messages...</div>
+)}
 
                 </div>
 

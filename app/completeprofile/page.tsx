@@ -188,7 +188,7 @@ export default function Register() {
     /// if (!formValues.gender) newErrors.gender = "Gender is required.";
     if (!formValues.sport) newErrors.sport = "Sports is required.";
     //if (!formValues.jersey) newErrors.jersey = "Jersey number is required.";
-    if (!formValues.playingcountries) newErrors.playingcountries = "Nationaly is required.";
+    if (!formValues.playingcountries) newErrors.playingcountries = "Nationality is required.";
     if (!formValues.team.trim()) newErrors.team = "Team is required.";
     if (!formValues.position.trim()) newErrors.position = "Position is required.";
     if (!formValues.countrycode.trim()) newErrors.countrycode = "Country code is required.";

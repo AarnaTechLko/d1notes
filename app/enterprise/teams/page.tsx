@@ -12,7 +12,6 @@ import { FaArchive, FaClipboard, FaEdit, FaEye, FaTrash } from "react-icons/fa";
 type Team = {
   id?: number;
   team_name?: string;
-  status?: string | undefined;
   description?: string;
   logo?: string;
   created_by?: string;
@@ -228,7 +227,8 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
 
   useEffect(() => {
     fetchTeams(currentPage, search);
-    fetchPlayers();
+    //this doesn't work and we don't need since fetchTeams seems to be getting the info necessary
+    // fetchPlayers();
   }, [session, search, currentPage]);
   const [sortConfig, setSortConfig] = useState<{ key: keyof Team; direction: 'asc' | 'desc' } | null>(null);
 
@@ -319,7 +319,6 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                     </th>
                     <th className="text-left px-4 py-2">Coaches</th>
                     <th className="text-left px-4 py-2">Players</th>
-                    <th className="text-left px-4 py-2">Status</th>
                     <th className="text-left px-4 py-2">Actions</th>
                   </tr>
                 </thead>
@@ -365,15 +364,12 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
                           </Link>
                           <p className="mt-2">Total Players: {team.totalPlayers}</p>
                         </td>
-                        <td>
-                          <span className="px-4 py-2 text-black-500">{team.status}</span>
-                        </td>
                         <td className="px-4 py-2">
                           <div className="flex items-center space-x-2">
-                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team Roster">
+                            <a href={`/teams/${team.slug}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" target="_blank" title="View Team">
                               <FaClipboard />
                             </a>
-                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team Roster">
+                            <a href={`teams/edit/${team.id}`} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-yellow-600" title="Edit Team">
                               <FaEdit />
                             </a>
                             <button className="bg-black text-white px-2 py-1 rounded" onClick={() => handleDelete(team.id)} title="Archive Team">

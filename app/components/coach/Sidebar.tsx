@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaPen, FaClipboardList, FaCog, FaSignOutAlt, FaBars, FaCompressAlt, FaUserPlus, FaDollarSign, FaUsb } from 'react-icons/fa';
+import { FaPen, FaClipboardList, FaCog, FaInbox ,FaSignOutAlt, FaBars, FaCompressAlt, FaUserPlus, FaDollarSign, FaUsb } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import { useSession, signOut } from 'next-auth/react';
 import Visibility from '../Visibility'; 
@@ -202,6 +202,15 @@ const Sidebar: React.FC = () => {
                     <span>Join Requests</span>
                   </a>
                 </li> */}
+
+                <li className="hover:bg-gray-700 rounded transition duration-200">
+                  <a href="/coach/joinrequests" className="flex items-center space-x-2 p-2">
+                    <FaInbox className="text-xl" />
+                    <span>Your Inbox</span>
+                  </a>
+                </li>
+
+
                 <li className="hover:bg-gray-700 rounded transition duration-200">
                   <a href="/coach/teams" className="flex items-center space-x-2 p-2">
                     <FaCompressAlt className="text-xl" />

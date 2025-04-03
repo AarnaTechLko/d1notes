@@ -78,7 +78,7 @@ useEffect(() => {
                     className={`${isActiveLink("/browse")} hover:text-blue-300`}
                     onClick={closeMenu}
                 >
-                    Coaches
+                    Find a Coach
                 </Link>
             </li>
             <li className="pt-[8px]">
@@ -87,7 +87,7 @@ useEffect(() => {
                     className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
                     onClick={closeMenu}
                 >
-                    Players
+                    Player Profiles
                 </Link>
             </li>
             {/* <li ref={enterpriseRef} className="relative pt-[8px]">
@@ -130,7 +130,7 @@ useEffect(() => {
                   // className="block px-4 py-2 text-black hover:text-blue-300"
                   className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
                   onClick={handleOptionClick}>
-                  Organizations
+                  Organization Profiles
                 </Link>
       </li> 
       <li className="pt-[8px]">

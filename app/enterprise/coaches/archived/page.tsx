@@ -240,12 +240,12 @@ const Home: React.FC = () => {
     const handleDelete = async (id: number) => {
         const result = await Swal.fire({
             title: "Are you sure?",
-            text: "This action will delete this coach!",
+            text: "This action will remove this coach!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Yes, Remove!",
             cancelButtonText: 'Cancel',
         });
     
@@ -269,12 +269,12 @@ const Home: React.FC = () => {
     
             if (response.ok) {
                 fetchCoaches();
-                Swal.fire("Deleted!", "Coach deleted successfully!", "success");
+                Swal.fire("Removed!", "Coach removed successfully!", "success");
             } else {
-                Swal.fire("Failed!", responseData.message || "Failed to delete Coach", "error");
+                Swal.fire("Failed!", responseData.message || "Failed to remove Coach", "error");
             }
         } catch (error) {
-            Swal.fire("Error!", "An error occurred while deleting the coach", "error");
+            Swal.fire("Error!", "An error occurred while removing the coach", "error");
         }
     };
     
@@ -382,7 +382,7 @@ const Home: React.FC = () => {
         <th>Used License</th> */}
                                     {/* <th>Evaluations Completed</th> */}
                                     <th>Status</th>
-                                    <th style={{ width: 225 }}>Action</th>
+                                    <th style={{ width: 225 }}>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -459,7 +459,7 @@ const Home: React.FC = () => {
                                                         onClick={() => handleDelete(coach.id)}
                                                         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700"
                                                         aria-label="Archive Player"
-                                                    > Delete
+                                                    > Remove
                                                     </button>
                                                 </div>
                                             </td>

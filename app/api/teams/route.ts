@@ -5,6 +5,7 @@ import { eq, and, desc,count,sql, or, ilike} from "drizzle-orm";
 import { sendEmail } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/helpers";
 import { hash } from 'bcryptjs';
+import { inArray } from "jquery";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -221,8 +222,11 @@ export async function DELETE(req: NextRequest) {
       await db
         .update(coaches)
         .set({ status: 'Archived' } as any)
-        .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
+        .where(sql`${coaches.id} IN (${sql.join(coachesIds, sql`, `)})`);
+        // .where(sql`${coaches.id} IN (${sql.join(coachesIds)})`);
     }
+
+
 
     // Correct the query to properly select playerIds by teamId
     const playerInTeam = await db

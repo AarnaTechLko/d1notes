@@ -21,18 +21,18 @@ export async function POST(req: NextRequest) {
 
   for (let index = 0; index < emails.length; index++) {
     const singleEmail = emails[index];
-
+    
     // **Check if the user has already been invited**
-    // const existingInvite = await db
-    //   .select()
-    //   .from(invitations)
-    //   .where(and(eq(invitations.email, singleEmail), eq(invitations.invitation_for, registrationType)));
+    const existingInvite = await db
+      .select()
+      .from(invitations)
+      .where(and(eq(invitations.email, singleEmail), eq(invitations.enterprise_id, Number(enterpriseId))));
 
 
-    // if (existingInvite.length > 0) {
-    //   console.log(`User ${singleEmail} has already been invited. Skipping.`);
-    //   continue; // **Skip sending duplicate invitations**
-    // }
+    if (existingInvite.length > 0) {
+      console.log(`User ${singleEmail} has already been invited. Skipping.`);
+      continue; // **Skip sending duplicate invitations**
+    }
 
     const payload = JSON.stringify({ enterprise_id: enterpriseId, singleEmail, teamId, registrationType });
     const encryptedString = encryptData(payload);
