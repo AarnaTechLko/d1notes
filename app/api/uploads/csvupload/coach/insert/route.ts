@@ -90,7 +90,7 @@ let team_id=teamId;
     const teamCoachData = insertedPlayers.map(player => ({
         teamId: Number(teamId || 0),           // Adjusted to match the schema
         coachId: player.id,       // Adjusted to match the schema
-        enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+        enterprise_id: Number(enterprise_id), // Adjusted to match the sch ema
       }));
       await db.insert(teamCoaches).values(teamCoachData);
   }
