@@ -164,21 +164,6 @@ export default function Login() {
         }
         
       } else {
-        if (teamId) {
-          const apiResponse = await fetch('/api/player/assignteam', {
-            method: 'POST',
-            body: JSON.stringify({ teamId:teamId, playerId:session?.user.id, enterpriseId:session?.user.club_id, type:session?.user.type, email:formValues.email }),
-            headers: { 'Content-Type': 'application/json' }
-          });
-
-          if (!apiResponse.ok) {
-            showError('Error occurred while processing team data.');
-            return;  
-          }
-
-          const apiData = await apiResponse.json();
-          
-        }
         showSuccess('Logged In Successfully.');
       }
 
@@ -193,6 +178,23 @@ export default function Login() {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
   };
+
+  const assignTeamToUser = async (session: any) => {
+        if (teamId) {
+          const apiResponse = await fetch('/api/player/assignteam', {
+            method: 'POST',
+            body: JSON.stringify({ teamId:teamId, playerId:session?.user.id, enterpriseId:session?.user.club_id, type:session?.user.type, email:formValues.email }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (!apiResponse.ok) {
+            showError('Error occurred while processing team data.');
+            return;  
+          }
+          const apiData = await apiResponse.json();
+          window.location.href = '/joinrequests';
+          console.log(apiData);
+        }
+  }
 
   useEffect(() => {
 
@@ -210,7 +212,7 @@ export default function Login() {
         window.location.href = '/dashboard';
       }
       else if (session.user.type === 'player' && teamId) {
-        window.location.href = '/joinrequests';
+        assignTeamToUser(session);
       }
 
 

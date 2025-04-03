@@ -168,7 +168,7 @@ export default function Register() {
         loginAs: formValues.loginAs,
       });
       if (res?.ok) {
-        if (payload.teamId) {
+        if (teamId) {
           const apiResponse = await fetch('/api/player/assignteam', {
             method: 'POST',
             body: JSON.stringify({ teamId: teamId, playerId: session?.user.id, enterpriseId: session?.user.club_id, type: session?.user.type, email: formValues.email }),
