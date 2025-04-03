@@ -530,7 +530,7 @@ export default function Register() {
                     placeholder=""
                     name="gpa"
                     className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                    min="0"
+                    min="1"
                     step="any"
                     value={formValues.gpa}
                     onChange={handleChange}

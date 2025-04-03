@@ -90,7 +90,7 @@ let team_id=teamId;
     const teamCoachData = insertedPlayers.map(player => ({
         teamId: Number(teamId || 0),           // Adjusted to match the schema
         coachId: player.id,       // Adjusted to match the schema
-        enterprise_id: Number(enterprise_id), // Adjusted to match the schema
+        enterprise_id: Number(enterprise_id), // Adjusted to match the sch ema
       }));
       await db.insert(teamCoaches).values(teamCoachData);
   }
@@ -124,7 +124,7 @@ let team_id=teamId;
                     used_for: 'Coach',
                 }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
 
-                if (updateLicense.rowCount > 0) {
+                if ((updateLicense.rowCount ?? 0) > 0) {
                     await db.update(coaches).set({
                         status: 'Active'
                     }).where(eq(coaches.id, player.id));

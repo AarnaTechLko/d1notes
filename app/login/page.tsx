@@ -178,7 +178,6 @@ export default function Login() {
 
           const apiData = await apiResponse.json();
           
-          console.log(apiData);
         }
         showSuccess('Logged In Successfully.');
       }
