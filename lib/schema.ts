@@ -13,7 +13,7 @@ import {
   integer // Ensure integer is imported from drizzle-orm/pg-core
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
- 
+import { sql } from "drizzle-orm"; 
 
 // Users table
 export const users = pgTable(
@@ -543,4 +543,25 @@ export const states=pgTable("states",{
   country_id:integer("country_id"),
  
 });
+export const admin = pgTable("admin", {
+  id: serial("id").primaryKey(),
+  username: varchar("username", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  role: text("role", { enum: ["customer_support", "executive"] }).notNull(),
+  password_hash: text("password_hash").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const ticket = pgTable("ticket", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  subject: text("subject").notNull(),
+  assign_to: integer('assign_to').default(0), // Ensure this is defined
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+
+
 

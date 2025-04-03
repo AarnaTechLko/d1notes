@@ -1,7 +1,9 @@
+"use client"
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
-
+// import Support from "@/app/support/page"
+import SupportModal from "./SupportModal";
 interface FreeMenuProps {
   session: any;
   closeMenu: () => void;
@@ -29,6 +31,8 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
   const [enterpriseOpen, setEnterpriseOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
   const enterpriseRef = useRef<HTMLLIElement>(null);
+  const [supportOpen, setSupportOpen] = useState(false);
+
 
   const handleCreateAccountToggle = () => {
     setCreateAccountOpen((prev) => !prev);
@@ -199,8 +203,21 @@ const FreeMenu: React.FC<FreeMenuProps> = ({
           How It Works?
         </Link>
       </li>
+      <li>
+        <button
+          className="text-black hover:text-blue-300"
+          onClick={() => setSupportOpen(true)}
+        >
+          Support
+        </button>
+      </li>
+
+      {/* Support Modal */}
+      {supportOpen && (
+      <SupportModal setSupportOpen={setSupportOpen}/>)}
     </>
   );
 };
 
 export default FreeMenu;
+

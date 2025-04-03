@@ -125,11 +125,12 @@ import { sendEmail } from '@/lib/helpers';
                 used_for: 'Player',
             }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
 
-            if (updateLicense.rowCount > 0) {
+            if ((updateLicense.rowCount ?? 0) > 0) {
                 await db.update(users).set({
                     status: 'Active'
                 }).where(eq(users.id, player.id));
             }
+            
         }
       }
     }
