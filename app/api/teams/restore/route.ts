@@ -98,6 +98,9 @@ export async function DELETE(req: NextRequest) {
 
 
         await db.delete(teams).where(eq(teams.id, id));
+        await db.delete(teamCoaches).where(eq(teams.id, id));
+        await db.delete(teamPlayers).where(eq(teams.id, id));
+
 
         return NextResponse.json({ success: true, message: 'Team has been removed successfully' });
     } catch (error) {
