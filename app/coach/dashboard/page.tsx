@@ -9,6 +9,7 @@ import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import Modal from '../../components/Modal';
 import AcceptanceModal from '@/app/components/coach/AcceptanceModal';
 import { useSession, signOut } from 'next-auth/react';
+import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
 import EvaluationForm from '@/app/components/coach/EvaluationForm';
 import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
@@ -87,6 +88,7 @@ const Dashboard: React.FC = () => {
   const [isEnd, setIsEnd] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
+  const [isFakeFormOpen, setIsFakeFormOpen] = useState(false);
   //const [clubId, setClubId]=useState<string | undefined>(undefined);
   const [evaluationId, setEvaluationId] = useState<number | undefined>(undefined);
   const [coachId, setCoachId] = useState<number | undefined>(undefined);
@@ -113,6 +115,16 @@ const Dashboard: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentDescription, setCurrentDescription] = useState<string>("");
 
+  const openEvalModal = () => {
+    console.log("Going to open")
+    setIsEvFormOpen(true);
+  };
+
+  const openFakeEvalModel = () => {
+
+    setIsFakeFormOpen(true)
+
+  }
 
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
@@ -446,6 +458,12 @@ const Dashboard: React.FC = () => {
     setIsAcceptOpen(false);
   };
 
+  const closeFakeEvform = () => {
+
+    setIsFakeFormOpen(false);
+
+  }
+
   const closeEvform = () => {
     setIsEvFormOpen(false);
   };
@@ -589,6 +607,16 @@ const Dashboard: React.FC = () => {
         isOpen={isEvFormOpen}
         onClose={closeEvform}
       />
+
+      <FakeEvaluationForm
+        evaluationId={null}
+        evaluationData={null}
+        coachId={null}
+        playerId={null}
+        isOpen={isFakeFormOpen}
+        onClose={closeFakeEvform}
+      />
+
 
       <div className="flex h-screen">
         <DetailsModal
@@ -775,13 +803,13 @@ const Dashboard: React.FC = () => {
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
           <h3 className='font-bold text-lg mt-4'>Visibility</h3>
-          <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like this <a href="/evaluationdetails" target="_blank" className="text-blue-600 hover:text-blue-800 ">link</a>. You may search players in the marketplace and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
+          <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like <button onClick={() => openFakeEvalModel()} className="text-blue-600 hover:text-blue-800 ">this</button>. You may search players in Player Profiles and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
 
 <h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>
-<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 60 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="/coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
+<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a>  or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 120 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="/coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
 
-<h3 className='font-bold text-lg mt-4'>Enterprises / Your Teams Explanation</h3>
-<p>Only if you have been added by an organization or single team that is using D1 Notes’ Enterprises (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>
+<h3 className='font-bold text-lg mt-4'>Organizations Explanation</h3>
+<p>Only if you have been added by an organization or single team that is using D1 Notes’ Organizations (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>
 
 <h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
 <p>The Messages function in the menu allows you to communicate with any player in Your Teams as well as communicate further with any player in the marketplace once you have accepted their evaluation request.</p>

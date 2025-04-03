@@ -9,6 +9,7 @@ import { countryCodesList, countries, states, positionOptionsList, Grades, gende
 import FileUploader from '../components/FileUploader';
 import { upload } from '@vercel/blob/client';
 import { profile } from 'console';
+import { showError } from '@/app/components/Toastr';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CropEasy from '../components/crop/CropEasy';
@@ -18,6 +19,7 @@ const Profile: React.FC = () => {
   const [openCrop, setOpenCrop] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<number | undefined>(undefined);
   const [countriesArray, setCountriesArray] = useState([]);
+  const [statesList, setStatesList] = useState([]);
   const [nationality, setNationality] = useState<{ label: string; value: string }[]>([]);
   const [position, setPosition] = useState<{ label: string; value: string }[]>([]);
   // const [appliedPosition, setAppliedPosition] = useState<{ label: string; value: string}[]>([])
@@ -61,7 +63,7 @@ const Profile: React.FC = () => {
     xlink: "",
     youtube: "",
     website: "",
-    team_year: "",
+    // team_year: "",
     birth_year: "",
   });
 
@@ -86,9 +88,13 @@ const Profile: React.FC = () => {
 
         if (response.ok) {
           const data = await response.json();
+
+          // console.log("Data: ", data)
+
           setProfileData(data);
-          console.log(data);
+          // console.log("state ", data.state);
           // console.log("Testing:" + data.birth_year);
+          // console.log("data: ", data)
           if (data.age_group != '') {
             setSelectedDOBOption('ageGroup')
           }
@@ -108,8 +114,8 @@ const Profile: React.FC = () => {
             // nationalities = [data.playingcountries.trim()];
             nationalities = countries.find(option => option.label.trim() === data.playingcountries)
           }
-          console.log(data.playingcountries)
-          console.log(nationalities);
+          // console.log(data.playingcountries)
+          // console.log(nationalities);
           setNationality(nationalities);
 
 
@@ -128,6 +134,12 @@ const Profile: React.FC = () => {
           // console.log(ppositons);
           setPosition(ppositons);
 
+          fetch('/api/masters/countries')
+          .then((response) => response.json())
+          .then((data) => setCountriesArray(data || []))
+          .catch((error) => console.error('Error fetching countries:', error));
+
+          fetchStates(Number(data.country))
 
         } else {
           console.error("Error fetching profile data:", response.statusText);
@@ -139,6 +151,17 @@ const Profile: React.FC = () => {
 
     fetchProfileData();
   }, []);
+
+  const fetchStates = async (country: number) => {
+    try {
+      const response = await fetch(`/api/masters/states?country=${country}`);
+      const data = await response.json();
+      setStatesList(data); // Adjust key if necessary based on your API response structure
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
+    }
+  };
+
 
 
   const formatHeight = (value: string) => {
@@ -179,10 +202,26 @@ const Profile: React.FC = () => {
   // };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    // console.log("I'm here")
+    // console.log({[name]: value})
+
+    // console.log("State: ", profileData.state)
+
     setProfileData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
+    if (name === 'country') {
+      //this looks wrong
+      setProfileData((prevData) => ({
+        ...prevData,
+        "state": "",
+      }));
+
+      fetchStates(Number(value));
+    }
 
   };
 
@@ -223,6 +262,9 @@ const Profile: React.FC = () => {
       
     }
     const uploadImage = async (file: File): Promise<string> => {
+
+      // console.log("Stupidity: ", profileData)
+
       try {
         const newBlob = await upload(file.name, file, {
           access: 'public',
@@ -254,11 +296,94 @@ const Profile: React.FC = () => {
     const formattedNumber = formatPhoneNumber(event.target.value);
     setProfileData({ ...profileData, number: formattedNumber });
   };
+
+
+  const validateUpdates = (): boolean => {
+
+    const errors = {
+      firstName: "",
+      lastName: "",
+      graduation: "",
+      sport: "",
+      playingcountries: "",
+      country: "",
+      state: "",
+      city: "",
+      birthday: "",
+      grade_level: "",
+      // age_group: "",
+      // birth_year: "",
+      age: "",
+      team: "",
+      position:"",
+      phoneNumber: "",
+      league: "",
+      bio: "",
+      location: "",
+      countrycode: "",
+    };
+
+
+
+
+    if (!profileData.first_name) errors.firstName = 'First Name is required';
+    if (!profileData.last_name) errors.lastName = 'Last Name is required';
+    if (!profileData.graduation) errors.graduation = 'Graduation is required';
+    if (!profileData.sport) errors.sport = 'Sport is required';
+    if (!profileData.playingcountries) errors.playingcountries = "Nations is required"
+    if (!profileData.country) errors.country = 'Country is required';
+    if (!profileData.state) errors.state = "State is required";
+    if (!profileData.city) errors.city = "City is required";
+    if (!profileData.birthday) errors.birthday = "Birthday is required";
+    if (!profileData.grade_level) errors.grade_level = "Level is required.";
+
+    if (!profileData.age_group && !profileData.birth_year) errors.age = "Input either Age Group or Birth Year.";
+
+    if (!profileData.team) errors.team = "Team name is required";
+
+    if (!profileData.position) errors.position = "Positions are required"
+    
+    if (!profileData.number) errors.phoneNumber  = "Phone number is required"
+
+    if (!profileData.league) errors.league = "League is required"
+
+    if (!profileData.bio) errors.bio = "Bio is required"
+    
+    // if (!profileData.countrycode) errors.team_year = "Team year is required"
+
+
+
+    // Collect errors to display in SweetAlert
+    Object.entries(errors).reverse()
+      .filter(([_, value]) => value !== "")
+      .forEach(([field, message]) => {
+        showError(message); // Display each error in a separate toastr
+      });
+
+    // Return false if there are any errors
+    if (Object.values(errors).some(value => value !== "")) {
+      // console.log("I'm here")
+      return false; // Validation failed
+    }
+
+    return true;
+  }
+
+
+
+
+
   const handleSubmit = async () => {
+
+    if (!validateUpdates()) return;
+
+
     try {
-      console.log(profileData);
+      // console.log(profileData.school_name);
       const session = await getSession();
       const playerId = session?.user.id;
+    
+
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
@@ -299,7 +424,7 @@ const Profile: React.FC = () => {
     }
   };
   const handleCountryChange = (selectedOptions: any) => {
-    console.log(selectedOptions);
+    // console.log(selectedOptions);
     const playingcountries = selectedOptions ? selectedOptions.map((option: any) => option.label).join(", ") : "";
     setNationality(selectedOptions);
     setProfileData({ ...profileData, playingcountries: playingcountries });
@@ -352,7 +477,9 @@ const Profile: React.FC = () => {
                   if (isEditMode) {
                     handleSubmit(); // Call the submit function when in edit mode
                   }
-                  setIsEditMode(!isEditMode);
+                  else{
+                    setIsEditMode(!isEditMode);
+                  }
                 }}
                 className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
@@ -428,7 +555,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-5">
               {/* First Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Player First Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player First Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -444,7 +571,7 @@ const Profile: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Player Last Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Player Last Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -513,7 +640,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="school_name" className="block text-base font-bold mb-2">School Name <span className="text-xs text-gray-500">(Optional)</span></label>
+                <label htmlFor="school_name" className="block text-base font-bold mb-2">School <span className="text-xs text-gray-500">(Optional)</span></label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -559,7 +686,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -581,7 +708,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies)<span className='mandatory'>*</span></label>
+                <label htmlFor="playingcountries" className="block text-gray-700 text-sm font-semibold mb-2">Nationality(ies){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (<Select
                   isMulti
                   name='playingcountries'
@@ -601,7 +728,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label className="block text-base font-bold mb-2">Country<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Country{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -617,10 +744,13 @@ const Profile: React.FC = () => {
                         </option>
                       ))} */}
 
-                       <option value="" disabled>Select a Country</option>
-  {countryCodesList.map(({ id, country }) => (
-    <option key={id} value={id}>{country}</option>
-  ))}
+                       <option value="">Select a Country</option>
+                       {countriesArray
+                        .map((country: any) => (
+                          <option key={country.id} value={country.id}>
+                            {country.name}
+                          </option>
+                        ))}
 
                     {/* <option value="">Select</option> */}
                     {/* <option value="USA">USA</option> */}
@@ -632,7 +762,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div >
-                <label className="block text-base font-bold mb-2">State/Province<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">State/Province{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
 
                   <select
@@ -643,11 +773,11 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   >
                     <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option key={state.abbreviation} value={state.name}>
-                        {state.name}
-                      </option>
-                    ))}
+                    {statesList.map((state: any, index) => (
+                        <option key={index} value={state.name}>
+                          {state.name}
+                        </option>
+                      ))}
                   </select>
                 ) : (
                   <p className="mt-2 text-[12px] font-medium text-gray-800">{profileData.state}</p>
@@ -655,7 +785,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-base font-bold mb-2">City<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">City{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -672,12 +802,12 @@ const Profile: React.FC = () => {
             {/* dob */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
               <div>
-                <label htmlFor="birthday" className="block text-base font-bold mb-2">Birth Date<span className='mandatory'>*</span></label>
+                <label htmlFor="birthday" className="block text-base font-bold mb-2">Birth Date{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <DatePicker
                     selected={profileData.birthday ? new Date(profileData.birthday) : null}
                     onChange={handleDateChange}
-                    dateFormat="MM-DD-YYYY" // Correct format
+                    dateFormat="MM/dd/yyyy" // Correct format
                     className="border border-gray-300 rounded-md py-2 px-4 w-full"
                   />
                 ) : (
@@ -690,7 +820,7 @@ const Profile: React.FC = () => {
               </div>
               {/* level */}
               <div>
-                <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level<span className='mandatory'>*</span></label>
+                <label htmlFor="grade_level" className="block text-base font-bold mb-2"> Level{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select name="grade_level" onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-4 w-full" value={profileData.grade_level}>
                     {playingLevels.map((level) => (
@@ -841,7 +971,7 @@ const Profile: React.FC = () => {
             )} */} 
 
 <div className="mb-5">
-  <label className="block text-base font-bold mb-2">Age: <span className="text-red-500">*</span></label>
+  <label className="block text-base font-bold mb-2">Age: {isEditMode ? <span className='mandatory'>*</span> : ""}</label>
 
   {isEditMode ? (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
@@ -917,7 +1047,7 @@ const Profile: React.FC = () => {
             {/* Team */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-5">
               <div>
-                <label htmlFor="team" className="block text-base font-bold mb-2">Team Name(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="team" className="block text-base font-bold mb-2">Team Name(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     placeholder="Ex. LA Stars / 2011 or LA Tigers / U15"
@@ -934,7 +1064,7 @@ const Profile: React.FC = () => {
               </div>
               {/* Position */}
               <div>
-                <label htmlFor="position" className="block text-base font-bold mb-2">Position(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="position" className="block text-base font-bold mb-2">Position(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <Select
                     isMulti
@@ -954,7 +1084,7 @@ const Profile: React.FC = () => {
 
 
               <div>
-                <label className="block text-base font-bold">Mobile Number<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold">Mobile Number{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -986,7 +1116,7 @@ const Profile: React.FC = () => {
 
 
             <div className="col-span-1 mt-5">
-              <label className="block text-base font-bold mb-2">League<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">League{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <input
                   name="league"
@@ -1003,7 +1133,7 @@ const Profile: React.FC = () => {
             </div>
 
             <div className="col-span-1 mt-5">
-              <label className="block text-base font-bold mb-2">Experience/Accolades<span className='mandatory'>*</span></label>
+              <label className="block text-base font-bold mb-2">Experience/Accolades{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <textarea
                   name="bio"

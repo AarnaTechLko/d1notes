@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { showError, showSuccess } from './Toastr';
-import { getSession, signIn } from 'next-auth/react';
+import { useSession, getSession} from 'next-auth/react';
+import { visibility } from 'html2canvas/dist/types/css/property-descriptors/visibility';
 
 interface VisibilityProps {
   playerId?: string; 
@@ -12,6 +13,10 @@ interface VisibilityProps {
 const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus }) => {
   const [isOn, setIsOn] = useState(false);
   
+  const { data: session, update } = useSession();
+
+  // console.log("session: ", session)
+
   useEffect(() => {
    if(visibilitystatus === 'on')
    {
@@ -51,9 +56,32 @@ const Visibility: React.FC<VisibilityProps> = ({ playerId,type,visibilitystatus 
       if (!response.ok) {
         showError("Some issue occured while updating the status.")
       }
-      
-      const session = await getSession();
+
+      await update({
+
+        user:{
+          ...session?.user,
+          visibility: stateValue,
+        },
+      });
+      // const session = await getSession();
       const data=await response.json();
+
+      if (data.state){
+
+        //had to specify which data we want to update otherwise the update function will retrieve the same session data
+        //which could cause problems in the future even though leaving it blank would work for now
+        await update({
+
+          user:{
+            ...session?.user,
+            visibility: data.state,
+          },
+        });
+
+      }
+
+
        
       showSuccess(data.message+ ` to ${stateValue.toUpperCase()}`);
     } catch (error) {

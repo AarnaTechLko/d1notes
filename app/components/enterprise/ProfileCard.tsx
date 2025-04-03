@@ -20,6 +20,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
 
     // console.log("club id: ", session?.user.club_id)
 
+    // console.log("session: ", session)
+
     if(session)
     {
       // if(session?.user?.type=='coach' || session?.user?.type=='player')

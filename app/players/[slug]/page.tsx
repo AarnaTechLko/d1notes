@@ -108,11 +108,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           body: JSON.stringify(payload),
         });
 
+        const responseData = await response.json();
+
         if (!response.ok) {
-          throw new Error('Club not found');
+          setError(responseData.error);
         }
 
-        const responseData = await response.json();
+
         setCoachData(responseData.clubdata);
         
         setTeamData(responseData.teamplayersList);
@@ -125,7 +127,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         }
         
       } catch (err) {
-        setError('Some error occurred.:'+err);
+        setError('Some error occurred : '+ err);
       } finally {
         setLoading(false);
       }

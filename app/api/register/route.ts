@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       team_id: team_id,
       jersey: null,
       slug: null,
-      visibility: "off",
+      visibility: "on",
       password: hashedPassword,
       createdAt: new Date(),
     };

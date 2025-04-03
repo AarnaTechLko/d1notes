@@ -5,7 +5,7 @@
 //however instead of making a page for every coach we just pass in there id through the url
 // and use slig to render the page based on the data retrieved from it
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import LoginModal from '../../components/LoginModal'; // Import the modal
@@ -534,7 +534,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
                 return (
 
-                  <li key={index} className="bg-white p-4 rounded-lg shadow flex items-center">
+                  <li key={index} className="bg-white p-4 rounded-lg shadow flex text-justify">
                     {/* Circular Image */}
                     {evaluation.image && evaluation.image !== 'null' && (
                       <Image
@@ -542,7 +542,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                         alt={`Evaluation by ${evaluation.review_title}`}
                         width={50}
                         height={50}
-                        className="rounded-full object-cover mr-4"
+                        className="rounded-full object-cover mr-4 self-center"
                       />
                     )}
                     {(!evaluation.image || evaluation.image === 'null') && (
@@ -551,28 +551,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                         alt={`Evaluation by ${evaluation.review_title}`}
                         width={50}
                         height={50}
-                        className="rounded-full object-cover mr-4"
+                        className="rounded-full object-cover mr-4 self-center"
                       />
                     )}
 
 
                     {/* Review Title and Other Details */}
-                    <div className="flex-1">
+                    <div className="flex-1 pr-4 min-w-fit self-center">
                       {/* <h3 className="font-semibold text-gray-800">{evaluation.review_title}</h3> */}
                       <p>{evaluation.first_name} {evaluation.last_name}</p>
                     </div>
 
-                    <div className="flex-1">
+                    <div className="flex-2 overflow-auto break-all p-4 self-center items-start">
                       {/* <h3 className="font-semibold text-gray-800">Testimonial</h3> */}
                       <p>{evaluation.remarks}</p>
                     </div>
                     {/* Rating Column */}
-                    <div>
-                      <p className="text-gray-600">Rating:
+                    <div className="flex-1 min-w-fit self-center">
+                      <p className="text-gray-600 text-right">Rating:
                         {stars}
                         {evaluation.rating || 0} / 5</p>
                     </div>
-                  </li>
+                  </li>
                 );
               })}
             </ul>

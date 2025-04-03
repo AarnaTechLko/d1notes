@@ -158,7 +158,7 @@ const handler = NextAuth({
               view_evaluation: enterprise[0].view_evaluation,
               buy_evaluation: enterprise[0].buy_evaluation,
               coach_id: null,
-              club_id: null,
+              club_id: enterprise[0].id.toString(),
               visibility: 'on',
               added_by: null
             };
@@ -211,7 +211,7 @@ const handler = NextAuth({
         session.user.image = token.image as string | null;
         session.user.coach_id = token.coach_id as string | null; // Add the type to the session
         session.user.club_id = token.club_id as string | null;
-        session.user.image = token.image as string | null;
+        // session.user.image = token.image as string | null;
         session.user.expectedCharge = token.expectedCharge as string | null;
         session.user.club_name = token.club_name as string | null;
         session.user.added_by = token.added_by as string | null;

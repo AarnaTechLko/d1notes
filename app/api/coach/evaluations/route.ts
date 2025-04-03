@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
         )
       )
       .orderBy(playerEvaluation.updated_at)
-      .limit(10) // Limit the number of results to 10
+      // .limit(10) // Limit the number of results to 10
       .execute();
 
     return NextResponse.json(evaluationsData);

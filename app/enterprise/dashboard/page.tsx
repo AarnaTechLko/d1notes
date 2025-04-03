@@ -75,26 +75,29 @@ const Dashboard: React.FC = () => {
           <h3 className='font-bold text-lg'>Quick Tips</h3>
 
           <h3 className='font-bold text-lg mt-4'>Welcome</h3>
-          <p>This Enterprise (white label) version of D1 Notes will allow your organization to internally / privately manage and enhance the development of YOUR players by facilitating individual game film analysis among your teams and their respective coaches and players. Note that your organization’s profile image, name and sport will be visible in the marketplace; however, the public cannot click beyond this to access any additional information.</p>
+          <p>This Organizations (white label) version of D1 Notes will allow your organization or single team to internally / privately manage and enhance the development of YOUR players by facilitating individual game film analysis among your team(s) and their respective coaches and players. Note that your organization’s or single team’s profile image, name and sport will be visible in Organization Profiles; however, the public cannot click beyond this to access any additional information.</p>
 
 <h3 className='font-bold text-lg mt-4'>First Step / Purchase Evaluations</h3> 
-<p>As an administrator, your first step is to purchase an initial number of individual game film evaluations for your organization to use in the Player Evaluation Pricing table above. If you need to add more evaluations later, simply purchase more. Your players will not be charged when requesting evaluations from coaches on their respective teams unless your organization does not have any purchased evaluations available. Track your organization’s total Evaluations Available and Evaluations Used by referring to the top of this Dashboard.</p>
+<p>Your first step is to purchase an initial number of individual game film evaluations and set per player per team allocations for your organization or single team to use in the Player Evaluation Pricing table above. If you need to add more evaluations later, simply purchase more. Your players will not be charged when requesting evaluations from coaches on their respective team(s) by going through Your Teams (as opposed to going through the coach marketplace) unless your organization or single team does not have any purchased evaluations available. Track your organization’s or single team’s total Evaluations Available and Evaluations Used by referring to the top of this Dashboard.</p>
 
 <h3 className='font-bold text-lg mt-4'>Second Step / Your Teams</h3>
-<p>By <a href="/enterprise/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu, this is where you populate all of your teams, coaches and players in your organization. If you choose to Add Team Manually, then you will be prompted to create a team profile, after which you can then Add Coaches to Team and Add Players to Team. When you add coaches and players, emails will automatically be sent to invite them, after which they will login or create a profile and automatically populate Your Teams. If you choose to Mass Team Upload, then you will be prompted to upload an excel file that contains CoachEmail, PlayerEmail, TeamName, Gender and YearOrAgeGroup inputs, after which emails will automatically be sent to the coaches and players and automatically be comprehensively populated in Your Teams. Under Actions, you can view the team’s roster of coaches and players, edit team details and archive a team.</p>
+
+<p>Your second step is to create team profiles by <a href="/enterprise/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. A team must be set up first in order to populate with coaches and players next. The Your Teams section is also where you can reference all team related information in one place. </p>
+
 
 <h3 className='font-bold text-lg mt-4'>Your Coaches and Your Players</h3>
-<p>By <a href="/enterprise/coaches" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Coaches and <a href="/enterprise/players" target="_blank" className="text-blue-600 hover:text-blue-800 ">here </a>  on Your Players, you can view / search through various information on all of the coaches and players in your organization, including reviewing completed evaluations or archiving a coach or player.</p>
+
+<p>By <a href="/enterprise/coaches" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Coaches and <a href="/enterprise/players" target="_blank" className="text-blue-600 hover:text-blue-800 "> clicking here </a>  or on Your Players in the menu, this is where you start the process of adding coaches and players to Your Teams. When you complete adding coaches and players, emails are sent to invite them, after which they will login or create a profile associated with their receiving email addresses and automatically populate Your Teams. The Your Coaches and Your Players sections are also where you can reference all individual coach and player information in one place.</p>
 
 <h3 className='font-bold text-lg mt-4'>Invitation Log</h3> 
-<p>By <a href="/enterprise/joinrequests" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Invitation Log in the menu, you can view all of the manually added or mass uploaded coach and player email / invitation statuses and resend email invitations if needed.</p>
+<p>By <a href="/enterprise/joinrequests" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Invitation Log in the menu, you can view invitation statuses and resend email invitations if needed.</p>
 
 <h3 className='font-bold text-lg mt-4'>Sub Administrators</h3> 
 
 <p>As the main administrator, if you would like to add additional administrators, <a href="/enterprise/doc" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Sub Administrators in order to give access to someone other than you to the organization profile; however, you must add purchasing and/or viewing of evaluations access if desired. These administrators will never have the ability to add other administrators and you can remove any administrator at any time</p>
 
 <h3 className='font-bold text-lg mt-4'>Archives</h3> 
-<p>By clicking on Archives in the menu, you can view all of your Teams, Coaches and Players that you have archived. From here, you may choose to add a Team, Coach or Player back to Your Teams, or you remove a Team, Coach or Player from your organization completely. If you choose to remove a Team, your coach(es) and players of that team will still be part of your organization individually in the coach and player archives.  
+<p>By clicking on Archives in the menu, you can view your Teams, Coaches and Players that you have archived. From here, you may choose to add a Team, Coach or Player back to Your Teams.
 </p>
 
         </div>

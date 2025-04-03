@@ -450,6 +450,10 @@ const Home: React.FC = () => {
       confirmButtonText: "Yes, archive it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
+
+        const enterpriseId = session?.user?.id;
+
+
         try {
           const response = await fetch(`/api/player/archived`, {
             method: "POST",
@@ -458,7 +462,8 @@ const Home: React.FC = () => {
             },
             body: JSON.stringify({
               id, // Send only the id
-              type: 'coach'
+              type: 'coach',
+              club_id: enterpriseId
             }),
           });
           const responseData = await response.json();

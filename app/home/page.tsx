@@ -207,12 +207,12 @@ export default function Home(): JSX.Element {
 
         {/* Enterprises Box */}
         <div className="bg-red-500 text-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Enterprises</h2>
+          <h2 className="text-2xl font-bold mb-4">Organizations</h2>
           <p className="text-lg">
           Are you an organization or team that can benefit from a turnkey solution which has the potential to increase individual player development and the value / level of satisfaction delivered to your participants?
           </p>
           
-          <a href='/howitworks#enterprises' className='text-lg font-bold'>How It Works for Enterprises</a>
+          <a href='/howitworks#enterprises' className='text-lg font-bold'>How It Works for Organizations</a>
         </div>
       </div>
 
