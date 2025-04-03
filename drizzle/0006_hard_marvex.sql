@@ -1,0 +1,1 @@
+ALTER TABLE "ticket" ADD COLUMN "assign_to" integer NOT NULL;

@@ -124,7 +124,7 @@ let team_id=teamId;
                     used_for: 'Coach',
                 }).where(eq(licenses.licenseKey, checkLicense[0].licenseKey));
 
-                if (updateLicense.rowCount > 0) {
+                if ((updateLicense.rowCount ?? 0) > 0) {
                     await db.update(coaches).set({
                         status: 'Active'
                     }).where(eq(coaches.id, player.id));
