@@ -552,16 +552,36 @@ export const admin = pgTable("admin", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+
+
 export const ticket = pgTable("ticket", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
   subject: text("subject").notNull(),
   assign_to: integer('assign_to').default(0), // Ensure this is defined
+  ticket_from: integer('ticket_from').default(0), // Ensure this is defined
+  status: varchar("status").default("Pending"),
+  role: varchar("role"),
   message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+export const ticket_messages = pgTable("ticket_messages", {
+  id: serial("id").primaryKey(),
+  ticket_id: integer("ticket_id").notNull(),
+  replied_by: text("replied_by").notNull(),
+  message: text("message").notNull(),
+  status: varchar("status").default("Pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
+
+export const userOrgStatus = pgTable("userOrgStatus",{
+	org_user_id:integer("org_user_id"),
+	enterprise_id:integer("enterprise_id").references(() => enterprises.id),
+	status:text("status").default("Pending").notNull(),
+	role:text("text")
+})
 
 
 
