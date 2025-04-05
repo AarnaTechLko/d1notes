@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Image from 'next/image';
 import { FaUser } from 'react-icons/fa';
 import { getSession } from 'next-auth/react';
@@ -11,10 +11,23 @@ interface ProfileCardProps {
   logo: string;
   organization: string;
   country: string;
+  countryName: string;
+  state: string;
+  city: string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country,id }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country, countryName, id, state, city }) => {
   
+
+
+  // useEffect(() => {
+  //   fetch('/api/masters/countries')
+  //     .then((response) => response.json())
+  //     .then((data) => setCountriesList(data || []))
+  //     .catch((error) => console.error('Error fetching countries:', error));
+  // }, []);
+
+
   const handleRedirect =async (slug: string, id:string) => {
     const session = await getSession();
 
@@ -97,6 +110,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     {/* Profile Info Section */}
     <div className="text-center mt-4">
         <h3 className="text-lg font-semibold">{organization}</h3>
+        {/* <p>EST {}</p> */}
+        <p>{countryName}</p>
+        <p>{state}</p>
+        <p>{city}</p>
         <p>Sport: Soccer</p>
         </div>
     

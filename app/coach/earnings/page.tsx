@@ -16,7 +16,7 @@ interface Accounts {
   created_at?: string;
   image?: string;
   slug?: string;
-  evaluation_title?: string;
+  evaluation_title: string;
 }
 
 const Home: React.FC = () => {
@@ -116,7 +116,8 @@ const Home: React.FC = () => {
     if (search) {
       const filtered = accounts.filter((account) =>
         account.playername.toLowerCase().includes(search.toLowerCase()) ||
-      account.status.toString().includes(search.toLowerCase())
+      account.status.toString().includes(search.toLowerCase()) ||
+      account.evaluation_title.toLowerCase().includes(search.toLowerCase())
       );
       setFilterAccounts(filtered);
     } else {

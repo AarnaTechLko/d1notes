@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/clientHelpers';
 // Define the type for the data
 interface Order {
   invitationId: number;
-  team_name: string;
+  team_name?: string;
   club_name: string;
   teamLogo: string;
   clubLogo: string;
@@ -59,9 +59,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.team_name.toLowerCase().includes(search.toLowerCase()) ||
+        order.team_name?.toLowerCase().includes(search.toLowerCase()) ||
         order.club_name.toLowerCase().includes(search.toLowerCase()) ||
-        order.status.toString().includes(search.toLowerCase())
+        order.status.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
     } else {
