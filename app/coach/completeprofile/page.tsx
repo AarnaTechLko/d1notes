@@ -42,6 +42,7 @@ interface FormValues {
   license: string;
   cv: string;
   license_type: string;
+  isCompletedProfile: boolean;
 }
 
 interface FormErrors {
@@ -65,6 +66,7 @@ interface FormErrors {
   license: string | null;
   cv: string | null;
   license_type: string | null;
+  isCompletedProfile: boolean;
 
 }
 
@@ -98,6 +100,7 @@ export default function Register() {
     license: '',
     cv: '',
     license_type: '',
+    isCompletedProfile: false,
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -121,7 +124,7 @@ export default function Register() {
     license: null,
     cv: null,
     license_type: null,
-
+    isCompletedProfile: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -173,7 +176,7 @@ export default function Register() {
       license: null,
       cv: null,
       license_type: null,
-
+      isCompletedProfile: false,
       image: null, // Ensure this property is included
     };
 
@@ -231,7 +234,7 @@ export default function Register() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    // setFormValues({...formValues, isCompletedProfile: true})
     setError(null);
     setSuccessMessage(null);
 

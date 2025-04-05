@@ -496,10 +496,6 @@ const ChatBox: React.FC = () => {
   className="hidden"
   ref={fileInputRef}
 />
-
->>>>>>> california
-
-
                     
                 <button onClick={handleFileUpload}>
                                         <FaPaperclip />

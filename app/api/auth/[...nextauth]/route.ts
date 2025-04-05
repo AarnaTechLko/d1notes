@@ -25,9 +25,10 @@ interface ExtendedUser {
   coachCurrency?: string | null;
   added_by?: string | null;
   visibility?: string | null;
-  teamId?: string | null
-  buy_evaluation?: string | null
-  view_evaluation?: string | null
+  teamId?: string | null;
+  buy_evaluation?: string | null;
+  view_evaluation?: string | null;
+  isCompletedProfile: boolean;
 }
 
 const handler = NextAuth({
@@ -81,7 +82,8 @@ const handler = NextAuth({
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by: null,
               teamId: teamId,
-              visibility: coach[0].visibility
+              visibility: coach[0].visibility,
+              isCompletedProfile: coach[0].isCompletedProfile
             };
           }
         } else if (loginAs === 'player') {
@@ -115,7 +117,8 @@ const handler = NextAuth({
               teamName:user[0].team,
               added_by: null,
               teamId: teamId,
-              visibility: user[0].visibility
+              visibility: user[0].visibility,
+              isCompletedProfile: user[0].isCompletedProfile
             };
           }
         }
@@ -177,7 +180,7 @@ const handler = NextAuth({
   },
   callbacks: {
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       // Check if the user exists and is of the correct type
       if (user) {
         const extendedUser = user as ExtendedUser; // Cast the user to the extended type
@@ -195,14 +198,31 @@ const handler = NextAuth({
         token.teamId = extendedUser.teamId;
         token.buy_evaluation = extendedUser.buy_evaluation;
         token.view_evaluation = extendedUser.view_evaluation;
+        token.isCompletedProfile = extendedUser.isCompletedProfile;
+
+        // if(token.type === "player" && !token.isCompletedProfile) {
+        //   const user = await db.select({isCompletedProfile: users.isCompletedProfile}).from(users).where(eq(users.id, Number(token.id))).execute();
+        //   token.isCompletedProfile = user[0].isCompletedProfile
+        //   console.log("in JWT isCompletedProfile", token.isCompletedProfile)
+        // }
+        // else if (token.type === " coach" && !token.isCompletedProfile) {
+
+        // }
+        
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
       }
+      // console.log("JWT callback", { token, trigger, session });
+      if(trigger === 'update' && session.isCompletedProfile) {
+        // return { ...token, isCompletedProfile: true}
+        token.isCompletedProfile = session.isCompletedProfile
+        
+      }
+      
       return token;
     },
     async session({ session, token }) {
-
       if (session.user) {
         session.user.id = token.id as string;
         session.user.type = token.type as string; // Add the type to the session
@@ -219,7 +239,8 @@ const handler = NextAuth({
         session.user.teamId = token.teamId as string | null;
         session.user.buy_evaluation = token.buy_evaluation as string | null;
         session.user.view_evaluation = token.view_evaluation as string | null;
-        //token.expectedCharge = extendedUser.expectedCharge;
+        session.user.isCompletedProfile = token.isCompletedProfile as boolean;
+          //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session
         }
