@@ -20,7 +20,9 @@ export async function middleware(req: NextRequest) {
         pathname === '/favicon.ico';
 
     const isApiRoute = pathname.startsWith('/api');
-    const isProtectedLoginPath = !unprotectedPaths.includes(pathname) || isStaticAsset || isApiRoute;
+    const isUnprotectedPath = unprotectedPaths.includes(pathname) || isStaticAsset || isApiRoute;
+
+    const isProtectedLoginPath = !isUnprotectedPath;
 
     // const paths = ['/dashboard', '/browse', '/coach']
     // const isProtectedPath = paths.some(path => req.nextUrl.pathname.startsWith(path));
@@ -34,7 +36,8 @@ export async function middleware(req: NextRequest) {
         '/howitworks',
         '/completeprofile'
     ];
-    const isProtectedCompletedProfilePath = !unprotectedCompletedProfilePaths.includes(pathname) || isStaticAsset || isApiRoute;
+    const isUnprotectedCompletedProfilePath = unprotectedCompletedProfilePaths.includes(pathname) || isStaticAsset || isApiRoute;
+    const isProtectedCompletedProfilePath = !isUnprotectedCompletedProfilePath;
 
     if (token && !token?.isCompletedProfile && isProtectedCompletedProfilePath) {
         console.log('HERE IN THE MIDDLEWARE: REDIRECTING TO COMPLETEPROFILE')
