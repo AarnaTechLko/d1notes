@@ -10,6 +10,9 @@ import Filters from '../../components/enterprise/Filters';
 interface Profile {
   organizationName: string;
   country: string;
+  countryName: string;
+  state: string;
+  city: string;
   logo: string;
   slug: string;
   club_id: string;
@@ -64,7 +67,7 @@ const Home = () => {
     setFilteredProfiles(
       profiles.filter((profile) => {
         
-        const organizationName = (profile.organizationName || '').toLowerCase();
+        const organizationName = `${profile.organizationName} ${profile.countryName} ${profile.state} ${profile.city}`.toLowerCase();
        
     
         return (
@@ -107,6 +110,9 @@ const Home = () => {
                     organization={profile.organizationName}
                     logo={profile.logo ?? '/default.jpg'}
                     country={profile.country}
+                    countryName={profile.countryName}
+                    state={profile.state}
+                    city={profile.city}
                     slug={profile.slug}
                   />
                 </div>

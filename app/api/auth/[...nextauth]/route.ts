@@ -61,6 +61,10 @@ const handler = NextAuth({
             return null; // Invalid credentials
           }
 
+          if (coach[0].status === "Deactivated") {
+            throw new Error("Your account has been deactivated.");
+          }
+
           else {
             if (enterprise_id) {
               newEnterpriseID=enterprise_id;
@@ -146,7 +150,11 @@ const handler = NextAuth({
           const enterprise = await db.select().from(enterprises).where(eq(enterprises.email, email)).execute();
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
             return null; // Invalid credentials
-          } else {
+          } 
+          else if (enterprise[0].status === "Deactivated") {
+            throw new Error("Your account has been deactivated.");
+          }
+          else {
             return {
               id: enterprise[0].id.toString(),
               name: enterprise[0].organizationName,

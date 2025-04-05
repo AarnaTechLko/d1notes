@@ -92,6 +92,7 @@ const Profile: React.FC = () => {
           // console.log("Data: ", data)
 
           setProfileData(data);
+          // console.log("country: ", data.country);
           // console.log("state ", data.state);
           // console.log("Testing:" + data.birth_year);
           // console.log("data: ", data)
@@ -616,7 +617,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <label htmlFor="graduation" className="block text-base font-bold mb-2">High School Graduation Year<span className='mandatory'>*</span></label>
+                <label htmlFor="graduation" className="block text-base font-bold mb-2">High School Graduation Year{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="graduation"
@@ -1116,7 +1117,7 @@ const Profile: React.FC = () => {
 
 
             <div className="col-span-1 mt-5">
-              <label className="block text-base font-bold mb-2">League{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
+              <label className="block text-base font-bold mb-2">League(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
               {isEditMode ? (
                 <input
                   name="league"

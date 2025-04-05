@@ -17,9 +17,16 @@ export async function GET(req: NextRequest) {
   const birthyear = searchParams.get('birthyear') || '';
   const position = searchParams.get('position') || '';
 
+  // console.log("country: ", country)
+  // console.log("state: ", state)
+  // console.log("city: ", city)
+  // console.log("graduation: ", graduation)
+  // console.log("birthyear: ", birthyear)
+  // console.log("position: ", position)
+
   try {
     const conditions = [and(
-      inArray(users.status, ['Active', 'Archived']),
+      inArray(users.status, ['Active', 'Archived', 'Pending']),
       not(eq(users.first_name, '')),
       eq(users.visibility, 'on')
     )];
@@ -95,6 +102,7 @@ export async function GET(req: NextRequest) {
 
     const result = await query.execute();
 
+    // console.log("Result: ", result)
 
     const formattedCoachList = result.map(coach => ({
       coachName: `${coach.coachName} ${coach.coachLastName}`,
