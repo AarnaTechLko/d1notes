@@ -267,30 +267,29 @@ export default function Register() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Something went wrong!");
       }
-      else {
-        
-        await getSession().then(() => {
-          update({ isCompletedProfile: true });
+
+      const updatedSession  = await getSession();
+
+      if (updatedSession  && updatedSession .user) {
+        await update({
+          ...updatedSession,
+          user: {
+            ...updatedSession.user,
+            isCompletedProfile: true
+          }
         });
-        await getSession()
-      
-      };
-      
+        window.location.href = "/dashboard";
+      }
       if (session && session.user.id) {
         const email = session?.user?.email;
-      }
-
-      router.push("/dashboard");
-      
+      }      
       // window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
     }
   };
-  useEffect(() => {
-    console.log(session)
-  }, [session])
+
 
 //   useEffect(() => {
 //     const interceptNavigation = async (event:any) => {

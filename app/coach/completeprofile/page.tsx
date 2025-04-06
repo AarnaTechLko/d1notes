@@ -1,7 +1,7 @@
 "use client"; // Important for using hooks in Next.js 13+
 
 import { useState, useRef, useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import DefaultPic from "../../public/default.jpg";
 import Brand from '../../public/images/brand.jpg';
 import CertificateImage from '../../public/certificate.png'
@@ -133,7 +133,7 @@ export default function Register() {
   const LisenseInputRef = useRef<HTMLInputElement | null>(null);
   const CvInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
   const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
@@ -283,10 +283,19 @@ export default function Register() {
       });
       if (response.ok) {
         localStorage.clear();
-        router.push("/coach/dashboard");
-
+        const updatedSession  = await getSession();
+  
+        if (updatedSession  && updatedSession .user) {
+          await update({
+            ...updatedSession,
+            user: {
+              ...updatedSession.user,
+              isCompletedProfile: true
+            }
+          });
+          window.location.href = "/coach/dashboard";
+        }
       }
-
       //window.location.href = '/coach/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong!');

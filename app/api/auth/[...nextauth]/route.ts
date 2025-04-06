@@ -214,10 +214,9 @@ const handler = NextAuth({
         }
       }
       // console.log("JWT callback", { token, trigger, session });
-      if(trigger === 'update' && session.isCompletedProfile) {
-        // return { ...token, isCompletedProfile: true}
-        token.isCompletedProfile = session.isCompletedProfile
-        
+      if (trigger === 'update') {
+        return { ...token, isCompletedProfile: session.user.isCompletedProfile };
+        // token.isCompletedProfile = session.isCompletedProfile
       }
       
       return token;

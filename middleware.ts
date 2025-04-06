@@ -4,8 +4,7 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.SECRET_KEY });
     const {pathname} = req.nextUrl
-    // console.log(req.nextUrl.pathname)
-    const unprotectedPaths = [
+    const publicPaths = [
         '/', // homepage
         '/login',
         '/register',
@@ -20,28 +19,20 @@ export async function middleware(req: NextRequest) {
         pathname === '/favicon.ico';
 
     const isApiRoute = pathname.startsWith('/api');
-    const isUnprotectedPath = unprotectedPaths.includes(pathname) || isStaticAsset || isApiRoute;
+    const isPublicPath = publicPaths.includes(pathname) || isStaticAsset || isApiRoute;
 
-    const isProtectedLoginPath = !isUnprotectedPath;
-
-    // const paths = ['/dashboard', '/browse', '/coach']
-    // const isProtectedPath = paths.some(path => req.nextUrl.pathname.startsWith(path));
-
-    if (!token && isProtectedLoginPath) {
-    // if (!token) {
+    if (!token && !isPublicPath) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
+
     const unprotectedCompletedProfilePaths = [
         '/', // homepage
         '/howitworks',
         '/completeprofile'
     ];
-    const isUnprotectedCompletedProfilePath = unprotectedCompletedProfilePaths.includes(pathname) || isStaticAsset || isApiRoute;
-    const isProtectedCompletedProfilePath = !isUnprotectedCompletedProfilePath;
+    const isPathUnprotected = unprotectedCompletedProfilePaths.includes(pathname) || isStaticAsset || isApiRoute;
 
-    if (token && !token?.isCompletedProfile && isProtectedCompletedProfilePath) {
-        console.log('HERE IN THE MIDDLEWARE: REDIRECTING TO COMPLETEPROFILE')
-        console.log('TOKEN: ', token)
+    if (token && !token?.isCompletedProfile && !isPathUnprotected) {
         return NextResponse.redirect(new URL("/completeprofile", req.url));
     }
 
