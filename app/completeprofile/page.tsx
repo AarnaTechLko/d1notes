@@ -51,6 +51,7 @@ export interface FormValues {
   xlink?: string;
   team_year?: string;
   image: string | null; // Updated to store Base64 string
+  isCompletedProfile: boolean;
 }
 
 export default function Register() {
@@ -88,9 +89,10 @@ export default function Register() {
     xlink: "",
     gpa: undefined,
     image: null,
+    isCompletedProfile: false
   });
 
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -148,13 +150,27 @@ export default function Register() {
     setFormValues((prevValues) => ({ ...prevValues, height: formattedValue }));
   };
 
+  const updateIsCompletedField = async () => {
+    const formData = new FormData();
+    setFormValues(prevFormValues => {
+      const updatedValues = {...prevFormValues, isCompletedProfile: true}
+      // Append all form values to FormData
+      for (const key in updatedValues) {
+        const value = updatedValues[key as keyof FormValues];
+        formData.append(key, value as string | Blob);
+      }
+      
+      return updatedValues
+    });
+    return formData;
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setSuccessMessage(null);
 
-
+    
     // Validation
     const newErrors: Partial<FormValues> = {};
     // if (!formValues.image) {
@@ -223,15 +239,8 @@ export default function Register() {
       setValidationErrors(newErrors); // Optionally set the errors in the state
       return;
     }
-
-    const formData = new FormData();
-
-    // Append all form values to FormData
-    for (const key in formValues) {
-      const value = formValues[key as keyof FormValues];
-      formData.append(key, value as string | Blob);
-    }
-
+    const formData = await updateIsCompletedField() //don't need to pass formData since we assign formData when returning
+    
     if (session && session.user.id) {
       formData.append("playerID", session.user.id); // Assuming user.id is the ID
     } else {
@@ -242,8 +251,9 @@ export default function Register() {
     try {
       session.user.name = formValues.first_name;
       session.user.image = formValues.image;
-
+      
       const token = localStorage.getItem("token");
+      
       const response = await fetch("/api/register", {
         method: "PUT",
         headers: {
@@ -251,22 +261,76 @@ export default function Register() {
         },
         body: formData,
       });
-
+      
+      
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Something went wrong!");
       }
+
+      const updatedSession  = await getSession();
+
+      if (updatedSession  && updatedSession .user) {
+        await update({
+          ...updatedSession,
+          user: {
+            ...updatedSession.user,
+            isCompletedProfile: true
+          }
+        });
+        window.location.href = "/dashboard";
+      }
       if (session && session.user.id) {
         const email = session?.user?.email;
-      }
-
-      router.push("/dashboard");
+      }      
       // window.location.href = "/dashboard"; // Redirect after successful registration
     } catch (err) {
       setLoading(false);
       showError(err instanceof Error ? err.message : "Something went wrong!");
     }
   };
+
+
+//   useEffect(() => {
+//     const interceptNavigation = async (event:any) => {
+//       // Check if the profile is completed, this could come from context or session
+//       const isCompletedProfile = session?.user.isCompletedProfile;  // Replace with actual logic
+
+//       if (!isCompletedProfile) {
+//         // Show SweetAlert popup
+//         const result = await Swal.fire({
+//           title: 'Profile Incomplete',
+//           text: 'Please complete your profile before proceeding.',
+//           icon: 'warning',
+//           confirmButtonText: 'Complete Profile',
+//         });
+
+//         if (result.isConfirmed) {
+//           // Redirect to the profile completion page after the popup
+//           router.push('/completeprofile');
+//         } else {
+//           // Optionally, handle what to do if the user cancels the popup
+//           console.log('User canceled, navigation blocked');
+//         }
+        
+//         // Prevent the default navigation until user response
+//         event.preventDefault(); // Stops the navigation from occurring
+//       }
+//     };
+
+//     // Attach event listener to intercept navigation
+//     // window.addEventListener('beforeunload', interceptNavigation);
+//       window.addEventListener("beforeunload", function(event) {
+//       // Custom logic can go here
+//       event.preventDefault(); // Some browsers might require this line
+//     });
+
+//     // Clean up the event listener when component unmounts
+//     return () => {
+//       window.removeEventListener('beforeunload', interceptNavigation);
+//     };
+//   }, [router]);
+  
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -324,7 +388,7 @@ export default function Register() {
       .catch((error) => console.error('Error fetching countries:', error));
   }, []);
 
-
+  
 
   const formatPhoneNumber = (value: string) => {
     if (!value) return value;

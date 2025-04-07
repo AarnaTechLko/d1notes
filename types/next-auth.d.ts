@@ -20,6 +20,7 @@ declare module 'next-auth' {
       teamId?: string | null;
       view_evaluation?: string | null;
       buy_evaluation?: string | null;
+      isCompletedProfile?: boolean;
     }
   }
 }
