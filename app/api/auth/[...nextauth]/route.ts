@@ -199,24 +199,13 @@ const handler = NextAuth({
         token.buy_evaluation = extendedUser.buy_evaluation;
         token.view_evaluation = extendedUser.view_evaluation;
         token.isCompletedProfile = extendedUser.isCompletedProfile;
-
-        // if(token.type === "player" && !token.isCompletedProfile) {
-        //   const user = await db.select({isCompletedProfile: users.isCompletedProfile}).from(users).where(eq(users.id, Number(token.id))).execute();
-        //   token.isCompletedProfile = user[0].isCompletedProfile
-        //   console.log("in JWT isCompletedProfile", token.isCompletedProfile)
-        // }
-        // else if (token.type === " coach" && !token.isCompletedProfile) {
-
-        // }
         
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
       }
-      // console.log("JWT callback", { token, trigger, session });
       if (trigger === 'update') {
         return { ...token, isCompletedProfile: session.user.isCompletedProfile };
-        // token.isCompletedProfile = session.isCompletedProfile
       }
       
       return token;

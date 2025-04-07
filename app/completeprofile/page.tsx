@@ -1061,7 +1061,6 @@ export default function Register() {
               </div>
               <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center">
                 <button
-                  // onClick={handleClick}
                   type="submit"
                   className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg"
                   disabled={loading}
@@ -1076,7 +1075,6 @@ export default function Register() {
                     </>
                   )}
                 </button>
-                {/* <button type="button" className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg" onClick={handleClick}>Test Profile Complete</button> */}
               </div>
             </form>
           </div>

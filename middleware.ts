@@ -64,11 +64,9 @@ export async function middleware(req: NextRequest) {
     //for Loggin in
     const isApiRoute = pathname.startsWith('/api');
     const isPublicPath = publicPaths.includes(pathname) || isStaticAsset || isApiRoute;
-    // const isProtectedLoginPath = !isUnprotectedPath;
 
     //for Completing Profile
     const isPathUnprotected = unprotectedCompletedProfilePaths.includes(pathname) || isStaticAsset || isApiRoute;
-    // const isProtectedCompletedProfilePath = !isUnprotectedCompletedProfilePath;
 
     //if the user hasn't logged in and they are accessing a page that they aren't allowed, redirect them to login page
     if (!token && !isPublicPath) {
