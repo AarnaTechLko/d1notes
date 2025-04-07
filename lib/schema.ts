@@ -10,7 +10,8 @@ import {
   date,
   decimal,
   pgEnum,
-  integer // Ensure integer is imported from drizzle-orm/pg-core
+  integer, // Ensure integer is imported from drizzle-orm/pg-core
+  boolean
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
 import { sql } from "drizzle-orm"; 
@@ -20,6 +21,7 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
+    blockedCoachIds: text("blockedCoachIds"),
     first_name: varchar("first_name"),
     last_name: varchar("last_name"),
     grade_level: varchar("grade_level"),
@@ -62,6 +64,7 @@ export const users = pgTable(
     status: varchar("status").default("Pending"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
+    isCompletedProfile: boolean("isCompletedProfile").default(false)
   },
   (users) => {
     return {
@@ -80,6 +83,7 @@ export const coaches = pgTable(
   "coaches",
   {
     id: serial("id").primaryKey(),
+    blockedPlayerIds: text("blockedPlayerIds"),
     firstName: varchar("firstName"),
     lastName: varchar("lastName"),
     email: varchar("email"),
@@ -98,7 +102,7 @@ export const coaches = pgTable(
     country:varchar("country"),
     state:varchar("state"),
     city:varchar("city"),
-    currency: varchar("currency").default("$"), 
+    currency: varchar("currency").default("$"),
     rating: decimal("rating", { precision: 10, scale: 1 }).default('0'),
     password: text("password").notNull(),
     certificate:text("certificate"),
@@ -114,6 +118,7 @@ export const coaches = pgTable(
     license:text("license"),
     status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
+    isCompletedProfile: boolean("isCompletedProfile").default(false)
   },
   (coaches) => {
     return {

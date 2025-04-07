@@ -98,10 +98,21 @@ export async function DELETE(req: NextRequest) {
 
 
         await db.delete(teams).where(eq(teams.id, id));
-        await db.delete(teamCoaches).where(eq(teams.id, id));
-        await db.delete(teamPlayers).where(eq(teams.id, id));
+        // Check if there are records in teamCoaches table for the given team ID
+        const coachesExist = await db.select().from(teamCoaches).where(eq(teams.id, id)).limit(1);
 
+        // Check if there are records in teamPlayers table for the given team ID
+        const playersExist = await db.select().from(teamPlayers).where(eq(teams.id, id)).limit(1);
 
+        // Perform deletions only if records exist
+        if (coachesExist.length > 0) {
+            await db.delete(teamCoaches).where(eq(teams.id, id));
+        }
+        if (playersExist.length > 0) {
+            await db.delete(teamPlayers).where(eq(teams.id, id));
+        } else {
+            console.log("No records found for deletion.");
+        }
         return NextResponse.json({ success: true, message: 'Team has been removed successfully' });
     } catch (error) {
         console.error('Error archiving team:', error);
