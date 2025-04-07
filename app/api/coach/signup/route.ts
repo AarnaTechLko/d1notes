@@ -5,7 +5,7 @@ import { coaches, evaluation_charges, invitations, licenses, otps, playerEvaluat
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, between, lt,ilike,sql } from 'drizzle-orm';
+import { eq,isNotNull,and, inArray ,between, lt,ilike,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
@@ -224,7 +224,7 @@ export async function GET(req: NextRequest) {
   try {
     const conditions = [isNotNull(coaches.firstName)];
     
-    conditions.push(eq(coaches.status,'Active'));
+    conditions.push(inArray(coaches.status,['Active', 'Archived', 'Pending']));
     conditions.push(eq(coaches.visibility, 'on'));
     if (country) {
       conditions.push(eq(coaches.country, country));

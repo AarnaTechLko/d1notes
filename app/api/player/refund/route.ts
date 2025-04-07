@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
             payment_intent: sessions.payment_intent as string,
           });
 
-
+          const changePayStats = await db.update(payments).set({status: "refund"}).where(eq(payments.evaluation_id, id));
 
           return NextResponse.json(
             { payment_info},
