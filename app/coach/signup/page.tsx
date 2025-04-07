@@ -206,11 +206,7 @@ export default function Register() {
 
     return JSON.parse(decrypted);
   };
-  useEffect(() => {
-    if (session && !session.user.name) {
-      window.location.href = '/coach/completeprofile';
-    }
-  }, [session]);
+
 
   return (
     <>
