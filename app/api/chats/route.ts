@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
   };
 
   try {
+    /*----BEFORE POSTING MESSAGE CHECK IF USERS BLOCKED EACH OTHER----- */
     //retrieve players blocked users
     const resultPlayer = await db
       .select({ blockedCoachIds: users.blockedCoachIds })
@@ -60,6 +61,8 @@ export async function POST(req: NextRequest) {
     if (arrayPlayerBlockedUsers.includes(validCoachId) || arrayCoachBlockedUsers.includes(validPlayerId)) {
       return NextResponse.json({ error: 'User is Blocked' })
     }
+    /*--------------------------------------------------------------------*/
+
     // Insert chat
     const insertChat = await db.insert(chats).values(chatValues).returning();
 

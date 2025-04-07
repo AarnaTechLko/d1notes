@@ -169,7 +169,6 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
     setPlayersBlockedUsers(currentUsersBlockedUsers ? currentUsersBlockedUsers.split(",").map(Number) : [])
     setCoachesBlockedUsers(selectedUsersBlockedUsers ? selectedUsersBlockedUsers.split(",").map(Number) : [])
-    // console.log(playersBlockedUsers, coachesBlockedUsers)
   }
 
   useEffect(() => {
@@ -178,7 +177,6 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       return
     }
     fetchBlockedUsers()
-    .then(() => console.log(playersBlockedUsers, coachesBlockedUsers));
   }, [coachData])
 
   useEffect(() => {

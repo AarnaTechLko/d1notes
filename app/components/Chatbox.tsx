@@ -52,8 +52,8 @@ const ChatBox: React.FC = () => {
     const router = useRouter();
     const [isBlocked, setIsBlocked] = useState(false);
     const [shouldDisableTextArea, setShouldDisableTextArea] = useState(false);
-    const [currentUsersBlockedUsers, setCurrentUsersBlockedUsers] = useState<number[]>([]);
-    const [selectedUsersBlockedUsers, setSelectedUsersBlockedUsers] = useState<number[]>([]);
+    const [idListBlockedBySessionUser, setIdListBlockedBySessionUser] = useState<number[]>([]);
+    const [idListBlockedBySelectedUser, setIdListBlockedBySelectedUser] = useState<number[]>([]);
     
     //esentially makes it a global vairable
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -236,7 +236,7 @@ const ChatBox: React.FC = () => {
     const handleBlock = () => {
         if (!selectedUser) return
 
-        setCurrentUsersBlockedUsers((prevBlockedUsers) => {
+        setIdListBlockedBySessionUser((prevBlockedUsers) => {
             const isBlocked = prevBlockedUsers.includes(selectedUser.user_id);
             const updatedBlockedUsers = isBlocked ?
             prevBlockedUsers.filter(num => num != selectedUser.user_id)
@@ -254,8 +254,8 @@ const ChatBox: React.FC = () => {
 
         const { currentUsersBlockedUsers, selectedUsersBlockedUsers } = await response.json()
         
-        setCurrentUsersBlockedUsers(currentUsersBlockedUsers ? currentUsersBlockedUsers.split(",").map(Number): [])
-        setSelectedUsersBlockedUsers(selectedUsersBlockedUsers ? selectedUsersBlockedUsers.split(",").map(Number): [])
+        setIdListBlockedBySessionUser(currentUsersBlockedUsers ? currentUsersBlockedUsers.split(",").map(Number): [])
+        setIdListBlockedBySelectedUser(selectedUsersBlockedUsers ? selectedUsersBlockedUsers.split(",").map(Number): [])
     }
     
     //call this function everytime we block a user. This updates the database to reflect that the user blocked or unblocked the other user
@@ -331,21 +331,21 @@ const ChatBox: React.FC = () => {
         //wait for selectedUser and session.user variables to be set before comparing their values
         if(selectedUser && session?.user) {
             //check if we should display block or unblock when current user is messaging a selected user
-            if(currentUsersBlockedUsers.includes(selectedUser.user_id)) {
+            if(idListBlockedBySessionUser.includes(selectedUser.user_id)) {
                 setIsBlocked(true)
             }
             else{
                 setIsBlocked(false)
             }
             //check whether the two users are blocking each other. If atleast one user is blocking the other, we make the textfield ineditable
-            if(currentUsersBlockedUsers.includes(selectedUser.user_id) || selectedUsersBlockedUsers.includes(Number(session.user.id))) {
+            if(idListBlockedBySessionUser.includes(selectedUser.user_id) || idListBlockedBySelectedUser.includes(Number(session.user.id))) {
                 setShouldDisableTextArea(true)
             }
             else{
                 setShouldDisableTextArea(false)
             }
         }
-    }, [currentUsersBlockedUsers])
+    }, [idListBlockedBySessionUser])
     return (
         <div className="flex flex-col h-screen">
             <header className="bg-gray-900 text-white text-right">
