@@ -66,7 +66,7 @@ interface FormErrors {
   license: string | null;
   cv: string | null;
   license_type: string | null;
-  isCompletedProfile: boolean;
+  // isCompletedProfile: boolean;
 
 }
 
@@ -124,7 +124,7 @@ export default function Register() {
     license: null,
     cv: null,
     license_type: null,
-    isCompletedProfile: false,
+    // isCompletedProfile: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -176,7 +176,7 @@ export default function Register() {
       license: null,
       cv: null,
       license_type: null,
-      isCompletedProfile: false,
+      // isCompletedProfile: false,
       image: null, // Ensure this property is included
     };
 
@@ -471,17 +471,17 @@ export default function Register() {
     }
   };
 
-  useEffect(() => {
-    if (session) {
-      //   if (session.user.type === 'coach') {
-      //     window.location.href = '/coach/dashboard';
-      //   } else if (session.user.type === 'player') {
-      //     window.location.href = '/dashboard';
-      //   } else if (!session.user.name) {
-      //     window.location.href = '/completeprofile';
-      //   }
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     //   if (session.user.type === 'coach') {
+  //     //     window.location.href = '/coach/dashboard';
+  //     //   } else if (session.user.type === 'player') {
+  //     //     window.location.href = '/dashboard';
+  //     //   } else if (!session.user.name) {
+  //     //     window.location.href = '/completeprofile';
+  //     //   }
+  //   }
+  // }, [session]);
 
   return (
     <>
