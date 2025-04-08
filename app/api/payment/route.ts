@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   try {
     // Parse the request body
     const body = await req.json();
-    const { coachId, playerId, amount, evaluationId,currency } = body;
+    const { coachId, playerId, amount, evaluationId, currency } = body;
     let newcurrency;
     if(currency=="€")
     {
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       ],
       mode: 'payment',
       success_url: `${req.headers.get('origin')}/paymentDone?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get('origin')}/paymentCancel`,
+      cancel_url: `${req.headers.get('origin')}/paymentCancel?evaluation_id=${evaluationId}`,
     });
 
     const paymentdone = await db.insert(payments).values({

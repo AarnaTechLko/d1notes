@@ -11,6 +11,10 @@ export async function middleware(req: NextRequest) {
         '/coach/signup',
         '/enterprise/signup',
         '/howitworks',
+        '/about',
+        '/news',
+        '/faq',
+        '/contact'
     ];
     const unprotectedCompletedProfilePaths = [//authenticated users who have not completed their profile only have access to these routes
         '/', // homepage

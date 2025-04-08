@@ -282,7 +282,7 @@ const EditTeam = ({ params }: TeamProps) => {
         }
     }, [teamId]);
 
-    const handleRemoveCoach = async (teamId: any, id: any) => {
+    const handleRemoveCoach = async (teamId: any, id: any, formValues: any) => {
         // Show SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -306,7 +306,8 @@ const EditTeam = ({ params }: TeamProps) => {
                 },
                 body: JSON.stringify({
                 id,
-                teamId
+                teamId,
+                enterprise_id: formValues
                 }),
             });
             if (response.ok) {
@@ -324,7 +325,7 @@ const EditTeam = ({ params }: TeamProps) => {
     };
 
 
-    const handleRemovePlayer = async (teamId: any, id: any) => {
+    const handleRemovePlayer = async (teamId: any, id: any, formValues: any) => {
         // Show SweetAlert confirmation dialog
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -335,7 +336,7 @@ const EditTeam = ({ params }: TeamProps) => {
             cancelButtonText: 'No, keep it',
         });
 
-        console.log("Team id: ", teamId)
+        // console.log("Team id: ", teamId)
 
         // If the user confirms, proceed with the deletion
         
@@ -348,7 +349,8 @@ const EditTeam = ({ params }: TeamProps) => {
                 },
                 body: JSON.stringify({
                 id,
-                teamId
+                teamId,
+                enterprise_id: formValues
                 }),
             });
             if (response.ok) {
@@ -615,7 +617,7 @@ const EditTeam = ({ params }: TeamProps) => {
   {coach.status ? "Active" : "Inactive"}
 </span></td>
                                             <td className="px-4 py-2 text-center">
-                                                <button className="text-zinc-500 hover:text-zinc-700" onClick={() => handleRemoveCoach(teamid, coach.coachId)}>
+                                                <button className="text-zinc-500 hover:text-zinc-700" onClick={() => handleRemoveCoach(teamid, coach.coachId, formValues.creator_id)}>
                                                     <FaArchive />
                                                 </button>
                                             </td>
@@ -679,7 +681,7 @@ const EditTeam = ({ params }: TeamProps) => {
                                             </td>
                                             <td className="px-4 py-2 text-center">
                                                 <button className="text-zinc-500 hover:text-zinc-700"
-                                                    onClick={() => handleRemovePlayer(teamid, player.playerId)}>
+                                                    onClick={() => handleRemovePlayer(teamid, player.playerId, formValues.creator_id)}>
                                                     <FaArchive />
                                                 </button>
                                             </td>
