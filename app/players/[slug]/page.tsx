@@ -158,7 +158,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           setError(responseData.error);
         }
 
-        console.log("User: ", responseData.user);
+        console.log("Organization: ", responseData.playerOrganizations);
+
+        console.log("Teams: ", responseData.playerOfTheTeam)
 
         setOrganization(responseData.playerOrganizations);
         setPlayerData(responseData.clubdata);
@@ -375,7 +377,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
  
   weight: number; */}
           
-          {organizations.length > 0 ? (
+          {organizations?.length > 0 ? (
             organizations.map((item: any) => (
               <PlayerProfileCard
                 key={item.id}
@@ -396,7 +398,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           Teams
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {teams.length > 0 ? (
+        {teams?.length > 0 ? (
           teams.map((item: any) => (
           
             <ProfileCard
