@@ -15,6 +15,7 @@ import ReactQuill from "react-quill";
 import sanitizeHtml from "sanitize-html";
 import 'react-quill/dist/quill.snow.css';
 import { showError } from '@/app/components/Toastr';
+import Swal from 'sweetalert2';
 
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
@@ -25,6 +26,34 @@ type EvaluationFormProps = {
   onClose: () => void;
 };
 
+enum modeTypes {
+  Add,
+  Edit
+}
+
+// Mode: Add/Edit
+// Position: Null/Select
+// showDefaultForm(Goalkeeper)
+// On submit call add
+
+// On change role
+// Pop up : You can only fill up 1 of the form
+// Position: position
+// ShowDefaultForm(position)
+
+// showDefaultForm: Position
+// clear form
+// load useState
+// render form
+
+// More: Edit
+// need to preserve Mode and Id of Evaluation for edit.
+// Position: position
+// showDefaultForm(position)
+// fill up the values
+// onSubmit call update
+
+
 const EvaluationForm: React.FC<EvaluationFormProps> = ({
   evaluationId,
   evaluationData,
@@ -33,17 +62,20 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   isOpen,
   onClose,
 }) => {
+  // Remarks
   const [technicalRemarks, setTechnicalRemarks] = useState("");
   const [tacticalRemarks, setTacticalRemarks] = useState("");
   const [physicalRemarks, setPhysicalRemarks] = useState("");
   const [organizationalRemarks, setOrganizationalRemarks] = useState("");
   const [distributionRemarks, setDistributionRemarks] = useState("");
+  const [finalRemarks, setFinalRemarks] = useState("");
+  const [thingsToWork, setThingsToWork] = useState("");
+
+
   const [position, setPosition] = useState("");
   const [sport, setSport] = useState("");
 
   const [document, setDocument] = useState("");
-  const [finalRemarks, setFinalRemarks] = useState("");
-  const [thingsToWork, setThingsToWork] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileUploading, setFileUploading] = useState<boolean>(false);
   const [loadSubmit, setLoadSubmit] = useState<boolean>(false);
@@ -94,52 +126,192 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     distribution: [],
     organization: []
   })
+
+  
   const [technicalScores, setTechnicalScores] = useState<{ [key: string]: string }>({});
   const [tacticalScores, setTacticalScores] = useState<{ [key: string]: string }>({});
   const [physicalScores, setPhysicalScores] = useState<{ [key: string]: string }>({});
   const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>({});
   const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>({});
+  const [mode, setMode] = useState<modeTypes>(modeTypes.Add);
 
 
+  const validationErrors = {
+  technicalRemarks: technicalRemarks.trim() === "",
+  tacticalRemarks: tacticalRemarks.trim() === "",
+  physicalRemarks: physicalRemarks.trim() === "",
+  finalRemarks: finalRemarks.trim() === "",
+  sport: sport === "",
+  position: position === "",
+  thingsToWorkOnRemarks: thingsToWork === "",
+  distributionRemarks: position === "Goalkeeper" && distributionRemarks === "",
+  organizationRemarks: position === "Goalkeeper" && organizationalRemarks === "",
+  technicalScores: Object.values(technicalScores).every((value) => value === "N/A"),
+  tacticalScores: Object.values(tacticalScores).every((value) => value === "N/A"),
+  physicalScores: Object.values(physicalScores).every((value) => value === "N/A"),
+  organizationScores: position === "Goalkeeper" && Object.values(organizationScores).every((value) => value === "N/A"),
+  distributionScores: position === "Goalkeeper" && Object.values(distributionScores).every((value) => value === "N/A")
+};
   const formattedDate = evaluationData?.created_at
     ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
     : "";
   
   useEffect(() => {
-    setTechnicalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.technical : fpScoreFactors.technical).map((tech: any) => [tech.label, "N/A"]))
-  );
-  setTacticalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.tactical : fpScoreFactors.tactical).map((tact: any) => [tact.label, "N/A"]))
-  );
-  setPhysicalScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.physical : fpScoreFactors.physical).map((phys: any) => [phys.label, "N/A"]))
-  );
-  setDistributionScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.distribution : fpScoreFactors.distribution).map((dis: any) => [dis.label, "N/A"]))
-  );
-  setOrganizationScores(() =>
-    Object.fromEntries((position === "Goalkeeper" ? gcScoreFactors.organization : fpScoreFactors.organization).map((org: any) => [org.label, "N/A"]))
-    );
-
-      setTechnicalRemarks("");
-      setTacticalRemarks("");
-      setPhysicalRemarks("");
-      setFinalRemarks("");
-      setThingsToWork("")
-
-  evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
+    evaluationData?.evaluationId != null ? setMode(modeTypes.Edit) : setMode(modeTypes.Add);
+    if (evaluationData?.evaluationId == null) {
+      showDefaultForm(null);
+      setMode(modeTypes.Add);
+    } else {
+      setMode(modeTypes.Edit);
+      fetchEvaluationResultData();
+    }
   }, [evaluationData]);
 
-    useEffect(() => {
+  const showDefaultForm = async (position: "Goalkeeper" | "Field Player" | null) => {
+    console.log(position);
     setScoreFactors(() => ({
-      technical: position === "Goalkeeper" ? [...gcScoreFactors.technical] : [...fpScoreFactors.technical], 
-      tactical: position === "Goalkeeper" ? [...gcScoreFactors.tactical] : [...fpScoreFactors.tactical], 
-      distribution: position === "Goalkeeper" ? [...gcScoreFactors.distribution] : [...fpScoreFactors.distribution], 
-      physical: position === "Goalkeeper" ? [...gcScoreFactors.physical] : [...fpScoreFactors.physical], 
-      organization: position === "Goalkeeper" ? [...gcScoreFactors.organization] : [...fpScoreFactors.organization], 
+      technical: position === "Field Player" ? [...fpScoreFactors.technical] : [...gcScoreFactors.technical],
+      tactical: position === "Field Player" ? [...fpScoreFactors.tactical] : [...gcScoreFactors.tactical],
+      distribution: position === "Field Player" ? [...fpScoreFactors.distribution] : [...gcScoreFactors.distribution],
+      physical: position === "Field Player" ? [...fpScoreFactors.physical] : [...gcScoreFactors.physical],
+      organization: position === "Field Player" ? [...fpScoreFactors.organization] : [...gcScoreFactors.organization],
     }));
-  }, [position]);
+
+    const getScores = (factor: any[]) => 
+      Object.fromEntries(factor.map((item: any) => [item.label, "N/A"]));
+
+    setTechnicalScores(() => getScores(position === "Field Player" ? fpScoreFactors.technical : gcScoreFactors.technical));
+    setTacticalScores(() => getScores(position === "Field Player" ? fpScoreFactors.tactical : gcScoreFactors.tactical));
+    setPhysicalScores(() => getScores(position === "Field Player" ? fpScoreFactors.physical : gcScoreFactors.physical));
+    setDistributionScores(() => getScores(position === "Field Player" ? fpScoreFactors.distribution : gcScoreFactors.distribution));
+    setOrganizationScores(() => getScores(position === "Field Player" ? fpScoreFactors.organization : gcScoreFactors.organization));
+
+    setTechnicalRemarks("");
+    setTacticalRemarks("");
+    setPhysicalRemarks("");
+    setOrganizationalRemarks("");
+    setDistributionRemarks("");
+    setFinalRemarks("");
+    setThingsToWork("");
+    console.log(scoreFactors);
+    console.log(technicalScores);
+    console.log(tacticalScores);
+    console.log(physicalScores);
+    console.log(distributionScores);
+    console.log(organizationScores);
+    return;
+  } 
+  
+    // Handle Data fetching for Saved Drafts
+  const fetchEvaluationResultData = async () => {
+    try {
+      const response = await fetch(
+        `/api/evaluationdetails?evaluationId=${evaluationId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch evaluation data");
+      }
+      const data = await response.json();
+      if (data.result) {
+        setPosition(data.result?.position);
+        await showDefaultForm(data.result?.position);
+        handleUpdateEvaluationData(data.result);
+      }
+    } catch (error) {
+      console.error("Error fetching evaluation data:", error);
+    }
+  };
+
+    // Handle Saving data
+  const handleUpdateEvaluationData = async (datas: any) => {
+      const technicalScoresJson = JSON.parse(datas.technicalScores);
+      const tacticalScoresJson = JSON.parse(datas.tacticalScores);
+      const physicalScoresJson = JSON.parse(datas.physicalScores);
+      const distributionScoresJson = JSON.parse(datas.distributionScores);    
+      const organizationScoresJson = JSON.parse(datas.organizationScores);
+
+      setDistributionScores({
+        ...Object.fromEntries(
+          scoreFactors.distribution.map((dis: any) => [
+            dis.label,
+            distributionScoresJson?.[dis.label] || "0",
+          ])
+        ),
+      });
+
+      setTechnicalScores({
+        ...Object.fromEntries(
+          scoreFactors.technical.map((tech: any) => [
+            tech.label,
+            technicalScoresJson?.[tech.label] || "0",
+          ])
+        ),
+      });
+
+      setTacticalScores({
+        ...Object.fromEntries(
+          scoreFactors.tactical.map((tact: any) => [
+            tact.label,
+            tacticalScoresJson?.[tact.label] || "0",
+          ])
+        ),
+      });
+
+      setPhysicalScores({
+        ...Object.fromEntries(
+          scoreFactors.physical.map((phys: any) => [
+            phys.label,
+            physicalScoresJson?.[phys.label] || "0",
+          ])
+        ),
+      });
+    
+      setOrganizationScores({
+        ...Object.fromEntries(
+          scoreFactors.organization.map((orgs: any) => [
+            orgs.label,
+            organizationScoresJson?.[orgs.label] || "0",
+          ])
+        ),
+      });
+
+      setTechnicalRemarks(datas.technicalRemarks || "");
+      setTacticalRemarks(datas.tacticalRemarks || "");
+      setPhysicalRemarks(datas.physicalRemarks || "");
+      setFinalRemarks(datas.finalRemarks || "");
+      setThingsToWork(datas.thingsToWork || "")
+      setSport(datas.sport);
+      setDistributionRemarks(datas.distributionRemarks || "");
+      setOrganizationalRemarks(datas.organizationalRemarks || "")
+  }
+
+  const handlePositionChange = (event: any) => {
+    const selectedValue = event.target.value;
+    if (Object.values(validationErrors).every((isError) => isError)) {
+          setPosition(selectedValue);
+          showDefaultForm(selectedValue);
+    } else {
+      Swal.fire({
+        title: "Warning!",
+        text: "You can only submit evaluation for one position. Proceeding will clear your selected fields.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel"
+      }).then((res) => {
+        if (res.isConfirmed) {
+          setPosition(selectedValue);
+          showDefaultForm(selectedValue);
+        }
+      });
+    }
+  };
 
   // Handle Save Draft
   const onSaveAsDraft = () => {
@@ -220,22 +392,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   { field: "organizationScores", message: "At least one organization score must be selected for Goalkeepers." },
   { field: "distributionScores", message: "At least one distribution score must be selected for Goalkeepers." }
 ];
-    const validationErrors = {
-      technicalRemarks: technicalRemarks.trim() === "",
-      tacticalRemarks: tacticalRemarks.trim() === "",
-      physicalRemarks: physicalRemarks.trim() === "",
-      finalRemarks: finalRemarks.trim() === "",
-      sport: sport === "",
-      position: position === "",
-      thingsToWorkOnRemarks: thingsToWork === "",
-      distributionRemarks: position === "Goalkeeper" && distributionRemarks === "",
-      organizationRemarks: position === "Goalkeeper" && organizationalRemarks === "",
-      technicalScores: Object.values(technicalScores).every((value) => value === "N/A"),
-      tacticalScores: Object.values(tacticalScores).every((value) => value === "N/A"),
-      physicalScores: Object.values(physicalScores).every((value) => value === "N/A"),
-      organizationScores: position === "Goalkeeper" && Object.values(organizationScores).every((value) => value === "N/A"),
-      distributionScores: position === "Goalkeeper" && Object.values(distributionScores).every((value) => value === "N/A")
-    };
+
 
     errorMessages.forEach(({ field, message }) => {
     if ((validationErrors as Record<string, boolean>)[field]) {
@@ -292,99 +449,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       });
   };
 
-  // Handle Data fetching for Saved Drafts
-  const fetchEvaluationResultData = async () => {
-    try {
-      const response = await fetch(
-        `/api/evaluationdetails?evaluationId=${evaluationId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch evaluation data");
-      }
-
-      const data = await response.json();
-      setPosition(data.result?.position != null ? data.result?.position : "Goalkeeper");
-      
-      if (data.result) {
-              handleUpdateEvaluationData(data);
-      }
-
-    } catch (error) {
-      console.error("Error fetching evaluation data:", error);
-    }
-  };
-
-  // Handle Saving data
-  const handleUpdateEvaluationData = async (data: any) => {
-      const datas = data.result;
-      const technicalScoresJson = JSON.parse(datas.technicalScores);
-      const tacticalScoresJson = JSON.parse(datas.tacticalScores);
-      const physicalScoresJson = JSON.parse(datas.physicalScores);
-      const distributionScoresJson = JSON.parse(datas.distributionScores);    
-      const organizationScoresJson = JSON.parse(datas.organizationScores);
-
-      setDistributionScores({
-        ...Object.fromEntries(
-          scoreFactors.distribution.map((dis: any) => [
-            dis.label,
-            distributionScoresJson?.[dis.label] || "0",
-          ])
-        ),
-      });
-
-      setTechnicalScores({
-        ...Object.fromEntries(
-          scoreFactors.technical.map((tech: any) => [
-            tech.label,
-            technicalScoresJson?.[tech.label] || "0",
-          ])
-        ),
-      });
-
-      setTacticalScores({
-        ...Object.fromEntries(
-          scoreFactors.tactical.map((tact: any) => [
-            tact.label,
-            tacticalScoresJson?.[tact.label] || "0",
-          ])
-        ),
-      });
-
-      setPhysicalScores({
-        ...Object.fromEntries(
-          scoreFactors.physical.map((phys: any) => [
-            phys.label,
-            physicalScoresJson?.[phys.label] || "0",
-          ])
-        ),
-      });
-    
-      setOrganizationScores({
-        ...Object.fromEntries(
-          scoreFactors.organization.map((orgs: any) => [
-            orgs.label,
-            organizationScoresJson?.[orgs.label] || "0",
-          ])
-        ),
-      });
-
-      setTechnicalRemarks(datas.technicalRemarks || "");
-      setTacticalRemarks(datas.tacticalRemarks || "");
-      setPhysicalRemarks(datas.physicalRemarks || "");
-      setFinalRemarks(datas.finalRemarks || "");
-      setThingsToWork(datas.thingsToWork || "")
-      setSport(datas.sport);
-      setDistributionRemarks(datas.distributionRemarks || "");
-      setOrganizationalRemarks(datas.organizationalRemarks || "")
-  }
-
   // Handle document update
   const handleDocumentChange = async () => {
     if (!fileInputRef.current?.files) {
@@ -408,9 +472,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   };
 
   if (!isOpen) return null;
-  const handlePositionChange = (event: any) => {
-    setPosition(event.target.value);
-  };
   const cleanHtml = (html: string) => {
     return sanitizeHtml(html, {
       allowedTags: [
@@ -725,7 +786,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Technical
                       <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
                     </h1>
-                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : "Required..."}</p>
+                    <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : ""}</p>
 
                     <div className="space-y-4 flex-grow">
                       {scoreFactors.technical.map((tech: any) => (
