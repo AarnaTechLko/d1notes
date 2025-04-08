@@ -253,12 +253,6 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
-    // const formData = new FormData();
-
-    // for (const key in formValues) {
-    //   const value = formValues[key as keyof FormValues];
-    //   formData.append(key, value as string | Blob);
-    // }
 
     const formData = await updateIsCompletedField() //don't need to pass formData since we assign formData when returning
 
@@ -271,10 +265,6 @@ export default function Register() {
     }
 
     try {
-
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
       const response = await fetch('/api/coach/signup', {
         method: 'PUT',
         body: formData,

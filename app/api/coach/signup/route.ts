@@ -140,6 +140,7 @@ export async function PUT(req: NextRequest) {
   const website = formData.get('website') as string | null;
   const license_type = formData.get('license_type') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
+  const isCompletedProfile = formData.get('isCompletedProfile') as boolean | null;
 
   const timestamp = Date.now(); 
   const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${lastName.trim().toLowerCase().replace(/\s+/g, '-')}${timestamp}`;
@@ -174,6 +175,7 @@ export async function PUT(req: NextRequest) {
     cv: cv || null,  
     image:imageFile,
     status:"Active",
+    isCompletedProfile: isCompletedProfile
   })
   .where(eq(coaches.id, coachIdAsNumber))
   .execute();
