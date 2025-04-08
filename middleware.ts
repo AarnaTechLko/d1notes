@@ -17,7 +17,6 @@ export async function middleware(req: NextRequest) {
         '/howitworks',
         '/completeprofile',
         '/coach/completeprofile'
-
     ];
 
     const playerAccessOnlyPaths = [

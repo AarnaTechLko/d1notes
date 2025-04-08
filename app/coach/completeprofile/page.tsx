@@ -66,7 +66,6 @@ interface FormErrors {
   license: string | null;
   cv: string | null;
   license_type: string | null;
-  // isCompletedProfile: boolean;
 
 }
 
@@ -124,7 +123,6 @@ export default function Register() {
     license: null,
     cv: null,
     license_type: null,
-    // isCompletedProfile: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -220,6 +218,7 @@ export default function Register() {
     Object.entries(errors).reverse()
       .filter(([_, value]) => value !== undefined && value !== null)
       .forEach(([field, message]) => {
+
         showError(message); // Display each error in a separate toastr
       });
 
@@ -231,6 +230,19 @@ export default function Register() {
     return true;
   };
 
+  const updateIsCompletedField = async () => {
+    const formData = new FormData();
+    setFormValues(prevFormValues => {
+      const updatedValues = {...prevFormValues, isCompletedProfile: true}
+      // Append all form values to FormData
+      for (const key in updatedValues) {
+        const value = updatedValues[key as keyof FormValues];
+        formData.append(key, value as string | Blob);
+      }
+      return updatedValues
+    });
+    return formData;
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -241,12 +253,15 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    for (const key in formValues) {
-      const value = formValues[key as keyof FormValues];
-      formData.append(key, value as string | Blob);
-    }
+    // for (const key in formValues) {
+    //   const value = formValues[key as keyof FormValues];
+    //   formData.append(key, value as string | Blob);
+    // }
+
+    const formData = await updateIsCompletedField() //don't need to pass formData since we assign formData when returning
+
     if (session && session.user.id) {
       formData.append("coachId", session.user.id);
 
@@ -257,7 +272,9 @@ export default function Register() {
 
     try {
 
-
+      formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
       const response = await fetch('/api/coach/signup', {
         method: 'PUT',
         body: formData,
