@@ -6,7 +6,7 @@
 // and use slig to render the page based on the data retrieved from it
 
 import { useEffect, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import LoginModal from '../../components/LoginModal'; // Import the modal
 import EvaluationModal from '@/app/components/EvaluationModal';
@@ -127,7 +127,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
       }
     };
-    
+    if (!session?.user.id) {
+      return
+    }
     const payload = { slug: slug, loggeInUser: session?.user.id };
     const fetchCoachData = async () => {
       try {
@@ -193,7 +195,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     //users belong to same org but are out of evaluations
     if (totalLicenses === "outOfLicense") {
       Swal.fire({
-        title: "Error!",
+        title: "Out of evaluations!",
         text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
         icon: "error",
         confirmButtonText: "OK",
@@ -203,12 +205,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     //coach is not part of players org
     else if (totalLicenses === "notAvailable") {
       Swal.fire({
-        title: "Warning!",
-        text: "This coach is not part of your organization. This evaluation will not be sponsored.",
-        icon: "warning",
+        title: "Error!",
+        text: "This coach is not on your Team",
+        icon: "error",
         confirmButtonText: "OK",
       });
+      return;
     }
+    
     setIsevaluationModalOpen(true);
   };
   const handleDownload = async (url: string) => {

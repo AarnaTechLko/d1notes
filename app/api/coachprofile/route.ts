@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { coaches, joinRequest, playerEvaluation, users, countries, licenses, evaluation_charges } from '../../../lib/schema'
+import { coaches, joinRequest, playerEvaluation, users, countries, licenses, evaluation_charges, teamPlayers, teamCoaches } from '../../../lib/schema'
 import debug from 'debug';
 import { eq, and, ne } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -13,11 +13,13 @@ import { SECRET_KEY } from '@/lib/constants';
 
 export async function POST(req: NextRequest) {
   const { slug, loggeInUser } = await req.json();
-  
+  if (!loggeInUser) {
+    return NextResponse.json({message: "session not found"},{status: 400})
+  }
   try {
 
     // Using 'like' with lower case for case-insensitive search
-    const coachlist = await db
+    const coachlist = await db //get information about the coach
       .select({
         firstName: coaches.firstName,
         lastName: coaches.lastName,
@@ -113,34 +115,60 @@ export async function POST(req: NextRequest) {
         eq(joinRequest.requestToID, coachlist[0].id),
       )).execute();
 
-    
-    const playersEnterpriseId = await db
-      .select({ enterprise_id: users.enterprise_id })
-      .from(users)
-      .where(eq(users.id, loggeInUser))
+
+    // const playersEnterpriseId = await db //get player's enterprise id (might not need to do this anymore if i'm pulling from teamPlayers and teamCoaches)
+    //   .select({ enterprise_id: users.enterprise_id })
+    //   .from(users)
+    //   .where(eq(users.id, loggeInUser))
+    //   .execute()
+
+    // get players team id and enterprise id
+    const playersTeamAndEnterpriseId = await db
+      .select({ team_id: teamPlayers.teamId, enterprise_id: teamPlayers?.enterprise_id })
+      .from(teamPlayers)
+      .where(eq(teamPlayers.playerId, loggeInUser))
       .execute()
 
-    const isRequested = requested.length;
+    // get coaches team id and enterprise id
+    const coachesTeamAndEnterpriseId = await db
+      .select({ team_id: teamCoaches.teamId, enterprise_id: teamCoaches?.enterprise_id })
+      .from(teamCoaches)
+      .where(eq(teamCoaches.coachId, coachlist[0].id))
+      .execute()
+    
     let totalLicneses;
-    let availableLicenses;
-    if(playersEnterpriseId.length>0) {//player is part of org
-      if (coachlist[0].enterprise_id === playersEnterpriseId[0].enterprise_id) { //coach and player are part of the same org
+    const isRequested = requested.length;
+    
+    //checks whether 
+    if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length>0) {//if player is in an organization
+      const playersEnterpriseId = playersTeamAndEnterpriseId[0].enterprise_id
+      const playersTeamId = playersTeamAndEnterpriseId[0].team_id
+      const coachesEnterpriseId = coachesTeamAndEnterpriseId[0].enterprise_id
+      const coachesTeamId = coachesTeamAndEnterpriseId[0].team_id
+
+      let availableLicenses;
+      if (coachesEnterpriseId === playersEnterpriseId && coachesTeamId === playersTeamId) { //coach and player are part of the same org and team
         availableLicenses = await db.select().from(licenses).where(
           and(
-            eq(licenses.enterprise_id, Number(coachlist[0].enterprise_id)),
+            eq(licenses.enterprise_id, Number(coachesEnterpriseId)),
             ne(licenses.status, 'Consumed')
           )
         );
+        console.log("available Licenses:", availableLicenses)
         if (availableLicenses.length <= 0) {
           totalLicneses = "outOfLicense";
         }
-      } // coach is outside players org
-      else {
+      }
+      else {// coach is in enterprise but is not in players team
         totalLicneses = "notAvailable";
       }
+
     }
-    else {//player is not part of org
-      totalLicneses = "notApplicable";
+    // else if (playersTeamAndEnterpriseId.length <= 0 && coachesTeamAndEnterpriseId.length > 0) {//if player isn't in organization but coach is
+    //   totalLicneses = "available"
+    // }
+    else if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length <= 0) {//if player is in org but coach isn't
+      totalLicneses = "notAvailable"
     }
 
     const evaluationCharges = await db.select().from(evaluation_charges).where(eq(evaluation_charges.coach_id, Number(coachlist[0].id)));
