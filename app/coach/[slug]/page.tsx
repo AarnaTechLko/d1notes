@@ -6,7 +6,7 @@
 // and use slig to render the page based on the data retrieved from it
 
 import { useEffect, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import LoginModal from '../../components/LoginModal'; // Import the modal
 import EvaluationModal from '@/app/components/EvaluationModal';
@@ -127,7 +127,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
       }
     };
-    
+    if (!session?.user.id) {
+      return
+    }
     const payload = { slug: slug, loggeInUser: session?.user.id };
     const fetchCoachData = async () => {
       try {
@@ -160,7 +162,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }, [session, slug]);
 
   const fetchBlockedUsers = async () => {
-    if (session?.user.type === "coach") {
+    if (session?.user.type !== "player") {
       return
     }
     const response = await fetch(`/api/block-user?current_id=${session?.user.id}&selected_user_id=${coachData?.id}&current_type=${"player"}&selected_type=${"coach"}`)
@@ -189,19 +191,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }, [playersBlockedUsers, coachesBlockedUsers])
 
   const handleLicenseCheck = (totalLicenses: string, setIsevaluationModalOpen: (state: boolean) => void) => {
-    if (session?.user?.club_id) {
-
-
-      if (totalLicenses === "notavailable") {
-        Swal.fire({
-          title: "Error!",
-          text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return;
-      }
+    console.log(totalLicenses)
+    //users belong to same org but are out of evaluations
+    if (totalLicenses === "outOfLicense") {
+      Swal.fire({
+        title: "Out of evaluations!",
+        text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
     }
+    //coach is not part of players org
+    else if (totalLicenses === "notAvailable") {
+      Swal.fire({
+        title: "Error!",
+        text: "This coach is not on your Team",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    
     setIsevaluationModalOpen(true);
   };
   const handleDownload = async (url: string) => {
