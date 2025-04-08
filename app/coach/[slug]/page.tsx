@@ -160,7 +160,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }, [session, slug]);
 
   const fetchBlockedUsers = async () => {
-    if (session?.user.type === "coach") {
+    if (session?.user.type !== "player") {
       return
     }
     const response = await fetch(`/api/block-user?current_id=${session?.user.id}&selected_user_id=${coachData?.id}&current_type=${"player"}&selected_type=${"coach"}`)
@@ -189,18 +189,25 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }, [playersBlockedUsers, coachesBlockedUsers])
 
   const handleLicenseCheck = (totalLicenses: string, setIsevaluationModalOpen: (state: boolean) => void) => {
-    if (session?.user?.club_id) {
-
-
-      if (totalLicenses === "notavailable") {
-        Swal.fire({
-          title: "Error!",
-          text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return;
-      }
+    console.log(totalLicenses)
+    //users belong to same org but are out of evaluations
+    if (totalLicenses === "outOfLicense") {
+      Swal.fire({
+        title: "Error!",
+        text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    //coach is not part of players org
+    else if (totalLicenses === "notAvailable") {
+      Swal.fire({
+        title: "Warning!",
+        text: "This coach is not part of your organization. This evaluation will not be sponsored.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
     }
     setIsevaluationModalOpen(true);
   };
