@@ -1,9 +1,44 @@
 // pages/paymentCancelled.tsx
+"use client"; // Ensure this is a client component
+
 
 import Link from 'next/link';
-import React from 'react';
+import React,{useEffect} from 'react';
+import { getSession} from "next-auth/react";
+
+
 
 const PaymentCancelled: React.FC = () => {
+
+  useEffect(() => {
+  
+    const fetchOrders = async () => {
+
+      // const session = await getSession();
+
+      // console.log("session: ", session)
+      const urlParams = new URLSearchParams(window.location.search);
+      const evaluation_id = urlParams.get("evaluation_id");
+
+      console.log("evaluation_id: ", evaluation_id);
+
+      const response = await fetch('/api/delete-unpaid-evaluation', {
+       method: 'DELETE',
+       headers: {
+           'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        evaluation_id
+      })
+      })
+     };
+  
+     fetchOrders();
+  
+  })
+
+  //  console.log(session.email);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 py-10 px-4">
       <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6 text-center">

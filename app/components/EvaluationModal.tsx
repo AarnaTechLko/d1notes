@@ -127,12 +127,16 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
       return;
     }
     let status;
-    if (playerClubId != coachClubId) {
-      status = 'Pending';
-    }
-    else {
-      status = 'Paid';
-    }
+
+    //uses old code that no longer works and causes problems
+    // if (playerClubId != coachClubId) {
+    //   status = 'Pending';
+    // }
+    // else {
+    //   status = 'Paid';
+    // }
+
+    status = 'Pending';
 
     if (playerClubId !== Number(coachClubId)) {
       enterprise_id = null;
@@ -202,16 +206,16 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         }
 
         const evaluationReponse = await response.json();
-        let paidBy;
-        if (child) {
-          paidBy = evaluationReponse.result[0].parent_id; // Use '=' for assignment
-        } else {
-          paidBy = evaluationReponse.result[0].player_id;
-        }
+        // let paidBy;
+        // if (child) {
+        //   paidBy = evaluationReponse.result[0].parent_id; // Use '=' for assignment
+        // } else {
+        //   paidBy = evaluationReponse.result[0].player_id;
+        // }
         const payload = {
           evaluationId: evaluationReponse.result[0].id,
           coachId: evaluationReponse.result[0].coach_id,
-          playerId: paidBy,
+          playerId: playerId,
           amount: evaluationCharges && evaluationCharges > 0 ? evaluationCharges : amount,
           currency: currency
         };
