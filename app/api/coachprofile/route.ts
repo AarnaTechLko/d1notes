@@ -140,33 +140,35 @@ export async function POST(req: NextRequest) {
     const isRequested = requested.length;
     
     //checks whether 
-    if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length>0) {//if player is in an organization
-      const playersEnterpriseId = playersTeamAndEnterpriseId[0].enterprise_id
-      const playersTeamId = playersTeamAndEnterpriseId[0].team_id
+    if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length>0) {//if player and coach is in an organization
+      // const playersEnterpriseId = playersTeamAndEnterpriseId[0].enterprise_id
+      // const playersTeamId = playersTeamAndEnterpriseId[0].team_id
       const coachesEnterpriseId = coachesTeamAndEnterpriseId[0].enterprise_id
-      const coachesTeamId = coachesTeamAndEnterpriseId[0].team_id
+      // const coachesTeamId = coachesTeamAndEnterpriseId[0].team_id
 
+      //looks to see if player and coach are on the same team and organization
+      const isSameEnterpriseAndTeam = playersTeamAndEnterpriseId.filter(item1 => 
+        coachesTeamAndEnterpriseId.some(item2 => 
+          item1.team_id === item2.team_id && item1.enterprise_id === item2.enterprise_id
+          )
+        )
       let availableLicenses;
-      if (coachesEnterpriseId === playersEnterpriseId && coachesTeamId === playersTeamId) { //coach and player are part of the same org and team
+      if (isSameEnterpriseAndTeam.length > 0) { //coach and player are part of the same org and team
         availableLicenses = await db.select().from(licenses).where(
           and(
             eq(licenses.enterprise_id, Number(coachesEnterpriseId)),
             ne(licenses.status, 'Consumed')
           )
         );
-        console.log("available Licenses:", availableLicenses)
         if (availableLicenses.length <= 0) {
           totalLicneses = "outOfLicense";
         }
       }
-      else {// coach is in enterprise but is not in players team
+      else {// otherwise coach and player are not part of the same org or team or both
         totalLicneses = "notAvailable";
       }
 
     }
-    // else if (playersTeamAndEnterpriseId.length <= 0 && coachesTeamAndEnterpriseId.length > 0) {//if player isn't in organization but coach is
-    //   totalLicneses = "available"
-    // }
     else if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length <= 0) {//if player is in org but coach isn't
       totalLicneses = "notAvailable"
     }
