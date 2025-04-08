@@ -8,7 +8,7 @@ interface FreeMenuProps {
   session: any;
   closeMenu: () => void;
   isActiveLink: (path: string) => string;
-  handleLogout: () => void;
+  handleLogout: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
   toggleHelp: () => void;
   toggleDropdown: () => void;
   toggleCreateAccount: () => void;

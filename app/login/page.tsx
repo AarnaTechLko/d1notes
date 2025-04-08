@@ -7,6 +7,8 @@ import { showSuccess, showError } from '../components/Toastr';
 import ForgotPassword from '../components/ForgotPassword';
 import crypto from 'crypto';
 import Swal from 'sweetalert2';
+import {FaEye, FaEyeSlash} from "react-icons/fa"
+
 interface FormValues {
   email: string;
   password: string;
@@ -19,7 +21,7 @@ export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session, status } = useSession();
   const [enterpriseId, setEnterpriseId] = useState<string | null>('');
-
+  const [showPassword, setShowPassword] = useState(false);
   const [referenceEmail, setReferenceEmail] = useState<string | null | undefined>();
   const [registrationType, setRegistrationType] = useState<string | null | undefined>();
   const [isClient, setIsClient] = useState(false);
@@ -314,12 +316,12 @@ export default function Login() {
                 />
               </div>
 
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
                   Password<span className='mandatory'>*</span>
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formValues.password}
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -327,6 +329,15 @@ export default function Login() {
 
                   disabled={loading}
                 />
+
+                <span
+                  className="absolute top-[60%] right-0 flex items-center pr-3 cursor-pointer text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </span>
+
+
               </div>
 
               <button

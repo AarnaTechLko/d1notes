@@ -60,6 +60,9 @@ export async function POST(req: NextRequest) {
             .limit(1)
             .execute();
 
+        // console.log("Testing stuff: ", user[0])
+
+
         if (user[0].visibility === "off"){
             return NextResponse.json({ error: 'Player is set to private' }, { status: 403 });     
         }
@@ -144,12 +147,31 @@ export async function POST(req: NextRequest) {
             
             .execute();
  
+        // Step 5: Fetch all organizations related to player       
+        const allOrgs = await db.selectDistinct({
+
+            organizationId: enterprises.id,
+            logo: enterprises.logo,
+            organizationName: enterprises.organizationName,
+            slug: enterprises.slug,
+            country: enterprises.country,
+            countryName: countries.name
+        })
+        .from(enterprises)
+        .where(eq(enterprises.id, Number(user[0].enterprise_id)))
+        .leftJoin(countries, eq(countries.id, sql<number>`CAST(${enterprises.country} AS INTEGER)`))
+        .execute();
+
+
+
+            
         return NextResponse.json({
             clubdata: user[0],
             clubname:enterprise[0],
             enterprisesList,
             playerOfTheTeam: teamsOfPlayer,
             teamPlayers: allTeamPlayers,
+            playerOrganizations: allOrgs,
             coachesList:coachesList
         });
     } catch (error) {
