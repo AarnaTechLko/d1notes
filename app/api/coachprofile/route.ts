@@ -136,31 +136,30 @@ export async function POST(req: NextRequest) {
       .where(eq(teamCoaches.coachId, coachlist[0].id))
       .execute()
     
-    let totalLicneses;
+    let totalLicneses = "available";
     const isRequested = requested.length;
     
-    //checks whether 
-    if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length>0) {//if player and coach is in an organization
-      // const playersEnterpriseId = playersTeamAndEnterpriseId[0].enterprise_id
-      // const playersTeamId = playersTeamAndEnterpriseId[0].team_id
-      const coachesEnterpriseId = coachesTeamAndEnterpriseId[0].enterprise_id
-      // const coachesTeamId = coachesTeamAndEnterpriseId[0].team_id
+    if (playersTeamAndEnterpriseId.length > 0) {//if player is in an organization
 
-      //looks to see if player and coach are on the same team and organization
+      // if (coachesTeamAndEnterpriseId.length <= 0) {//if coach is not in an organization
+      //   totalLicneses = "notAvailable"
+      // }
+
+      //looks for intersections to see if player and coach are on the same team and org
       const isSameEnterpriseAndTeam = playersTeamAndEnterpriseId.filter(item1 => 
         coachesTeamAndEnterpriseId.some(item2 => 
           item1.team_id === item2.team_id && item1.enterprise_id === item2.enterprise_id
           )
         )
       let availableLicenses;
-      if (isSameEnterpriseAndTeam.length > 0) { //coach and player are part of the same org and team
+      if (isSameEnterpriseAndTeam.length > 0) { //if coach and player are part of the same org and team
         availableLicenses = await db.select().from(licenses).where(
           and(
-            eq(licenses.enterprise_id, Number(coachesEnterpriseId)),
+            eq(licenses.enterprise_id, Number(coachlist[0].enterprise_id)),
             ne(licenses.status, 'Consumed')
           )
         );
-        if (availableLicenses.length <= 0) {
+        if (availableLicenses.length <= 0) {//if we are out of evaluations
           totalLicneses = "outOfLicense";
         }
       }
@@ -168,9 +167,6 @@ export async function POST(req: NextRequest) {
         totalLicneses = "notAvailable";
       }
 
-    }
-    else if (playersTeamAndEnterpriseId.length > 0 && coachesTeamAndEnterpriseId.length <= 0) {//if player is in org but coach isn't
-      totalLicneses = "notAvailable"
     }
 
     const evaluationCharges = await db.select().from(evaluation_charges).where(eq(evaluation_charges.coach_id, Number(coachlist[0].id)));

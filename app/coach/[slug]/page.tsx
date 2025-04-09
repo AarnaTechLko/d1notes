@@ -206,7 +206,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     else if (totalLicenses === "notAvailable") {
       Swal.fire({
         title: "Error!",
-        text: "This coach is not on your Team",
+        text: "This coach is not on your team. Please request an evaluation from your team's coach.",
         icon: "error",
         confirmButtonText: "OK",
       });
