@@ -135,6 +135,26 @@ export async function POST(req: NextRequest) {
     }
 }
 
+export async function PATCH(req:NextRequest) {
+
+    const body = await req.json();
+
+    console.log('Request body:', body); // Log the incoming request body
+
+    try {
+
+        const {evaluationId} = body;
+
+        console.log("id: ", evaluationId)
+
+        await db.update(playerEvaluation).set({payment_status: 'Paid'}).where(eq(playerEvaluation.id, evaluationId))
+
+        return NextResponse.json({ status: 200 });
+    } catch (error){
+        console.error('Error during insertion:', error); // Log the error for debugging
+        return NextResponse.json({ message: body }, { status: 500 });        
+    }
+}
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);

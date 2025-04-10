@@ -15,7 +15,9 @@ export async function POST(req: NextRequest) {
         //need to come back and implement another part of where clause that checks organization id once we have 
         //userOrgStatus set up
 
-        const query = await db.select({team_id: teamCoaches.teamId}).from(teamCoaches).where(and(eq(teamCoaches.coachId,id),eq(teamCoaches.enterprise_id,enterprise_id)));
+        // const query = await db.select({team_id: teamCoaches.teamId}).from(teamCoaches).where(and(eq(teamCoaches.coachId,id),eq(teamCoaches.enterprise_id,enterprise_id)));
+
+        const query = await db.select({team_id: teamCoaches.teamId}).from(teamCoaches).where(eq(teamCoaches.coachId,id));
 
         // console.log("query: ", query)
 

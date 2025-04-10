@@ -189,10 +189,10 @@ const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of 
 
     try {
       // Proceed with the deletion (archiving the team) if the user confirmed.
-      await fetch("/api/teams", {
+      await fetch("/api/teams/archiveteam", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, creator_id: session?.user.id }),
       });
 
       // Refresh the list of teams after deletion
