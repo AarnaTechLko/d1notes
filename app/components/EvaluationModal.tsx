@@ -253,6 +253,24 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
         window.location.href = '/dashboard';
       }
       else {
+
+        // change player status to paid
+        const evaluationResponse = await response.json();
+        const payload = {
+          evaluationId: evaluationResponse.result[0].id,
+        };
+
+
+        const paymentResponse = await fetch('/api/evaluation', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+
+
         await Swal.fire({
           icon: 'success',
           title: 'Success',

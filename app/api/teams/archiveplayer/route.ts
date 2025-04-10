@@ -10,8 +10,9 @@ export async function POST(req: NextRequest) {
     
         const { id, teamId, enterprise_id } = await req.json();
 
-        const query = await db.select({team_id: teamPlayers.teamId}).from(teamPlayers).where(eq(teamPlayers.enterprise_id,enterprise_id));
+        // const query = await db.select({team_id: teamPlayers.teamId}).from(teamPlayers).where(eq(teamPlayers.enterprise_id,enterprise_id));
 
+        const query = await db.select({team_id: teamPlayers.teamId}).from(teamPlayers).where(eq(teamPlayers.playerId,id));
 
         const activeTeams = query.map(async (p) => {
             //check to see if teams are active, if not then don't append
