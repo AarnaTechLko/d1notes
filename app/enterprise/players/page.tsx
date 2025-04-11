@@ -329,6 +329,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Teams assigned successfully!");
+        setSelectedTeams([])
         setIsOpen(false);
       } else {
         showError("Error assigning teams");
@@ -518,7 +519,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className="flex justify-between mt-5">
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {setIsOpen(false); setSelectedTeams([])}}
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                   >
                     Close

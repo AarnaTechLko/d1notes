@@ -12,27 +12,51 @@ interface ProfileCardProps {
   creatorname: string;
   logo: string;
   rating: number;
-  redirect?:boolean
+  redirect?:boolean;
+  teamId: number;
+  type: string;
+  playerId: number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug, redirect }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug, redirect, teamId, type, playerId }) => {
   
   const handleRedirect =async (slug: string) => {
- 
-    const session = await getSession();
-    //window.location.href = `/teams/${slug}`;
-    if(redirect)
-    {
-     window.location.href = `/teams/${slug}`;
+
+    // console.log("team Id: ", teamId)
+
+    // console.log("player type: ", type)
+
+    // console.log("player id: ", playerId)
+
+    // const session = await getSession();
+
+    if (playerId === 0){
+      window.location.href = `/teams/${slug}`;
+    }
+    else if (playerId === teamId){
+      window.location.href = `/teams/${slug}`;
     }
     else{
-    Swal.fire({
+
+      Swal.fire({
         title: 'Unauthorized!',
         text: 'Only logged in members and administrators of this Organization / Team may view.',
-        icon: 'error', // 'success' displays a green checkmark icon
+        icon: 'error',
         confirmButtonText: 'OK',
-      });
+      })
     }
+    // if(playerId === teamId)
+    // {
+    //  window.location.href = `/teams/${slug}`;
+    // }
+    // else{
+    // Swal.fire({
+    //     title: 'Unauthorized!',
+    //     text: 'Only logged in members and administrators of this Organization / Team may view.',
+    //     icon: 'error', // 'success' displays a green checkmark icon
+    //     confirmButtonText: 'OK',
+    //   });
+    // }
   // window.open(`/teams/${slug}`, '_blank');
   };
   const stars = Array.from({ length: 5 }, (_, i) => (

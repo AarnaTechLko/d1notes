@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, countries, enterprises, joinRequest, playerEvaluation, teams, users } from '../../../../lib/schema'
+import { coaches, countries, enterprises, joinRequest, playerEvaluation, teams, users, teamPlayers, teamCoaches } from '../../../../lib/schema'
 import debug from 'debug';
 import { eq, and, isNotNull,sql } from 'drizzle-orm';
 import { promises as fs } from 'fs';
@@ -12,7 +12,7 @@ import { SECRET_KEY } from '@/lib/constants';
 
 
 export async function POST(req: NextRequest) {
-    const { slug, loggeInUser } = await req.json();
+    const { slug, loggeInUser, loggedInUserType } = await req.json();
 
     try {
         // Using 'like' with lower case for case-insensitive search
@@ -64,12 +64,41 @@ export async function POST(req: NextRequest) {
             logo: club.logo ? `${club.logo}` : null,
         }));
 
-        const clubTeams = await db.select().from(teams).where(
-            and(
-                eq(teams.creator_id, Number(payload[0].id)),
-                eq(teams.created_by, 'Enterprise'),
-            )
-        ).execute();
+        let clubTeams
+
+        console.log("user type: ", loggedInUserType)
+
+        if (loggedInUserType === "coach"){
+            clubTeams = await db.selectDistinct().from(teams).leftJoin(teamCoaches, eq(teamCoaches.coachId,loggeInUser)).where(
+                and(
+                    eq(teams.creator_id, Number(payload[0].id)),
+                    eq(teams.created_by, 'Enterprise'),
+                    eq(teams.status, 'Active'),
+                    eq(teams.id, teamCoaches.teamId)
+                )
+            ).execute();
+        }
+        else if (loggedInUserType === "player") {
+
+            clubTeams = await db.selectDistinct().from(teams).leftJoin(teamPlayers, eq(teamPlayers.playerId,loggeInUser)).where(
+                and(
+                    eq(teams.creator_id, Number(payload[0].id)),
+                    eq(teams.created_by, 'Enterprise'),
+                    eq(teams.status, 'Active'),
+                    eq(teams.id, teamPlayers.teamId)
+                )
+            ).execute();
+        }
+    
+        else {
+
+            clubTeams = await db.select().from(teams).where(
+                and(
+                    eq(teams.creator_id, Number(payload[0].id)),
+                    eq(teams.created_by, 'Enterprise'),
+                )
+            ).execute();
+        }
 
 
         const clubCoaches = await db.select().from(coaches)

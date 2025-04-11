@@ -128,6 +128,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [clubName, setClubName] = useState<string | null>(null);
   const [teams, setTeams] = useState<string[]>([]);
   const [restTeams, setRestTeams] = useState<RestTeam[]>([]);
+  const [playerType, setPlayerType] = useState<string | null>(null);
   const [currentBanner, setCurrentBanner] = useState(0); // Track the current banner index
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -142,7 +143,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
   useEffect(() => {
-    const payload = { slug: slug };
+    const payload = { slug: slug, loggeInUser: session?.user.id, loggedInUserType: session?.user.type };
     setCoachId(session?.user?.id ?? null);
     const fetchCoachData = async () => {
       try {
@@ -158,9 +159,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           setError(responseData.error);
         }
 
-        console.log("Organization: ", responseData.playerOrganizations);
+        // console.log("Organization: ", responseData.playerOrganizations);
 
-        console.log("Teams: ", responseData.playerOfTheTeam)
+        // console.log("Teams: ", responseData.playerOfTheTeam)
 
         setOrganization(responseData.playerOrganizations);
         setPlayerData(responseData.clubdata);
@@ -181,6 +182,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     };
 
     fetchCoachData();
+    setPlayerType(session?.user?.type || null);
+
   }, [slug,session]);
 
   useEffect(() => {
@@ -400,15 +403,40 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {teams?.length > 0 ? (
           teams.map((item: any) => (
-          
+        
+            
+            // key={item.teams?.teamSlug ?? item.teamSlug}
+            // teamId={item.teams?.id ?? item.id}
+            // creatorname={item.teams?.creatorName ?? item.creatorName}
+            // teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+            // logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
+            // rating={5}
+            // slug={item.teams?.slug ?? item.slug}
+            // playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+            // type={String(playerType)}
+
+            // <ProfileCard
+            //     key={item?.teamSlug}
+            //     creatorname={item.creatorName}
+            //     teamName={item.teamName} // Ensure `team_name` is correct
+            //     logo={item.logo ?? '/default.jpg'}
+            //     rating={5}
+            //     slug={item.teamSlug}
+            //   />
+
             <ProfileCard
-                key={item?.teamSlug}
-                creatorname={item.creatorName}
-                teamName={item.teamName} // Ensure `team_name` is correct
-                logo={item.logo ?? '/default.jpg'}
-                rating={5}
-                slug={item.teamSlug}
-              />
+              key={item.teams?.teamSlug ?? item.teamSlug}
+              teamId={item.teams?.id ?? item.id}
+              creatorname={item.teams?.creatorName ?? item.creatorName}
+              teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+              logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
+              rating={5}
+              slug={item.teams?.slug ?? item.slug}
+              playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+              type={String(playerType)}
+            />
+
+
           ) )) : (
             <p>No Teams added yet...</p>
           )}
