@@ -121,13 +121,12 @@ const Home: React.FC = () => {
       console.error('Failed to fetch orders');
       return;
     }
-
+    
     const data = await response.json();
     setOrders(data.data);
     setFilteredOrders(data.data); // Initially show all orders
   };
   useEffect(() => {
-
 
     fetchOrders();
   }, []);
@@ -135,8 +134,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.team_name.toLowerCase().includes(search.toLowerCase()) ||
-        order.status.toString().includes(search.toLowerCase())
+        order.team_name?.toLowerCase().includes(search.toLowerCase()) ||
+        order.club_name?.toLowerCase().includes(search.toLowerCase()) ||
+        order.status?.toString().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
     } else {

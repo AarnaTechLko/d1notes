@@ -61,8 +61,8 @@ const Home: React.FC = () => {
     if (search) {
       const filtered = orders.filter((order) =>
         order.team_name?.toLowerCase().includes(search.toLowerCase()) ||
-        order.club_name.toLowerCase().includes(search.toLowerCase()) ||
-        order.status.toLowerCase().includes(search.toLowerCase())
+        order.club_name?.toLowerCase().includes(search.toLowerCase()) ||
+        order.status?.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
     } else {
@@ -237,6 +237,7 @@ const Home: React.FC = () => {
                                 : "bg-red-500  text-white"
                             }`}
                           onClick={() => {
+                            console.log(order)
                             if (order.status === "Sent") {
                               setSelectedOrder(order);
                               setShowConfirmation(true);
