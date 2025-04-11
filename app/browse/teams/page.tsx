@@ -24,6 +24,10 @@ const Home = () => {
   const [filteredProfiles, setFilteredProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [redirect, setRedirect] = useState<boolean>(true);
+
+  const [playerType, setPlayerType] = useState<string | null>(null);
+
+
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
   const [filters, setFilters] = useState({
@@ -153,7 +157,7 @@ const Home = () => {
           <div className="w-full md:w-3/4 p-4">
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {error && <p className="text-red-500">{error}</p>}
-            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
               {filteredProfiles.map((profile: any) => (
                 <div className="w-full lg:w-auto" key={profile.slug}>
 
@@ -169,7 +173,7 @@ const Home = () => {
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
