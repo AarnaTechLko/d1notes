@@ -115,62 +115,66 @@ export async function POST(req: NextRequest) {
         eq(joinRequest.requestToID, coachlist[0].id),
       )).execute();
 
-
-    // const playersEnterpriseId = await db //get player's enterprise id (might not need to do this anymore if i'm pulling from teamPlayers and teamCoaches)
-    //   .select({ enterprise_id: users.enterprise_id })
-    //   .from(users)
-    //   .where(eq(users.id, loggeInUser))
-    //   .execute()
-
-    // get players team id and enterprise id
-    const playersTeamAndEnterpriseId = await db
-      .select({ team_id: teamPlayers.teamId, enterprise_id: teamPlayers?.enterprise_id })
-      .from(teamPlayers)
-      .where(eq(teamPlayers.playerId, loggeInUser))
-      .execute()
-
-    // get coaches team id and enterprise id
-    const coachesTeamAndEnterpriseId = await db
-      .select({ team_id: teamCoaches.teamId, enterprise_id: teamCoaches?.enterprise_id })
-      .from(teamCoaches)
-      .where(eq(teamCoaches.coachId, coachlist[0].id))
-      .execute()
     
-    let totalLicneses = "available";
+    let totalLicense = "available";
     const isRequested = requested.length;
+
+    //See if player is part of an organization by retrieving info from users table
+    const playersEnterpriseId = await db
+        .select({enterprise_id: users.enterprise_id})
+        .from(users)
+        .where(eq(users.id, loggeInUser))
+        .execute()
+    const playerIsPartOfEnterprise = !!playersEnterpriseId[0].enterprise_id
+
     
-    if (playersTeamAndEnterpriseId.length > 0) {//if player is in an organization
+    if (playerIsPartOfEnterprise) {//if a player is part of an organization
 
-      // if (coachesTeamAndEnterpriseId.length <= 0) {//if coach is not in an organization
-      //   totalLicneses = "notAvailable"
-      // }
+      // get players team id and enterprise id
+      const playersTeamAndEnterpriseId = await db
+        .select({ team_id: teamPlayers.teamId, enterprise_id: teamPlayers?.enterprise_id })
+        .from(teamPlayers)
+        .where(eq(teamPlayers.playerId, loggeInUser))
+        .execute()
 
-      //looks for intersections to see if player and coach are on the same team and org
-      const isSameEnterpriseAndTeam = playersTeamAndEnterpriseId.filter(item1 => 
-        coachesTeamAndEnterpriseId.some(item2 => 
-          item1.team_id === item2.team_id && item1.enterprise_id === item2.enterprise_id
+      // get coaches team id and enterprise id
+      const coachesTeamAndEnterpriseId = await db
+        .select({ team_id: teamCoaches.teamId, enterprise_id: teamCoaches?.enterprise_id })
+        .from(teamCoaches)
+        .where(eq(teamCoaches.coachId, coachlist[0].id))
+        .execute()
+
+      if (playerIsPartOfEnterprise && playersTeamAndEnterpriseId.length > 0) {//first checks if they are part of an enterprise, then check if they are part of a team/teams
+        //looks for intersections to see if player and coach are on the same team and org
+        const isSameEnterpriseAndTeam = playersTeamAndEnterpriseId.filter(item1 =>
+          coachesTeamAndEnterpriseId.some(item2 =>
+            item1.team_id === item2.team_id && item1.enterprise_id === item2.enterprise_id
           )
         )
-      let availableLicenses;
-      if (isSameEnterpriseAndTeam.length > 0) { //if coach and player are part of the same org and team
-        availableLicenses = await db.select().from(licenses).where(
-          and(
-            eq(licenses.enterprise_id, Number(coachlist[0].enterprise_id)),
-            ne(licenses.status, 'Consumed')
-          )
-        );
-        if (availableLicenses.length <= 0) {//if we are out of evaluations
-          totalLicneses = "outOfLicense";
+        let availableLicenses;
+        if (isSameEnterpriseAndTeam.length > 0) { //if coach and player are part of the same org and team
+          availableLicenses = await db.select().from(licenses).where(
+            and(
+              eq(licenses.enterprise_id, Number(coachlist[0].enterprise_id)),
+              ne(licenses.status, 'Consumed')
+            )
+          );
+          if (availableLicenses.length <= 0) {//if we are out of evaluations
+            totalLicense = "outOfLicense";
+          }//otherwise we do not assign totalLicense and leave it as "available"
         }
-      }
-      else {// otherwise coach and player are not part of the same org or team or both
-        totalLicneses = "notAvailable";
-      }
+        else {// otherwise coach and player are not part of the same org or team or both
+          totalLicense = "notAvailable";
+        }
 
+      }
+      else{//otherwise player has not been assigned a team just yet and should not be able to request evaluations from any coach
+          totalLicense = "notAvailable";
+      }
     }
-
+    
     const evaluationCharges = await db.select().from(evaluation_charges).where(eq(evaluation_charges.coach_id, Number(coachlist[0].id)));
-    return NextResponse.json({ coachdata: payload[0], evaluationlist: evaluationlist, isRequested: isRequested, totalLicneses: totalLicneses, evaluationCharges: evaluationCharges });
+    return NextResponse.json({ coachdata: payload[0], evaluationlist: evaluationlist, isRequested: isRequested, totalLicneses: totalLicense, evaluationCharges: evaluationCharges });
   } catch (error) {
     const err = error as any;
     console.error('Error fetching coaches:', error);

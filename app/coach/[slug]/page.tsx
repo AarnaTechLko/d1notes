@@ -191,7 +191,6 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }, [playersBlockedUsers, coachesBlockedUsers])
 
   const handleLicenseCheck = (totalLicenses: string, setIsevaluationModalOpen: (state: boolean) => void) => {
-    console.log(totalLicenses)
     //users belong to same org but are out of evaluations
     if (totalLicenses === "outOfLicense") {
       Swal.fire({
