@@ -213,7 +213,7 @@ const handler = NextAuth({
         }
       }
       if (trigger === 'update') {
-        return { ...token, isCompletedProfile: session.user.isCompletedProfile };
+        return { ...token, isCompletedProfile: session.user.isCompletedProfile, club_id: session.user.club_id };
       }
       
       return token;

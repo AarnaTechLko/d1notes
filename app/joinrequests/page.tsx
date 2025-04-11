@@ -16,7 +16,7 @@ interface Order {
   teamSlug: string;
   clubSlug: string;
   createdAt: string;
-
+  enterprise_id: string;
 }
 
 const Home: React.FC = () => {
@@ -25,7 +25,7 @@ const Home: React.FC = () => {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 10; // Set the number of items per page
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
@@ -35,22 +35,32 @@ const Home: React.FC = () => {
     setSelectedOrder(null);
   };
 
-  
+
   const handleAccept = async () => {
     if (!selectedOrder) return;
-    console.log(selectedOrder);
+    console.log(selectedOrder.enterprise_id);
     const invitationId = selectedOrder.invitationId;
     const session = await getSession();
     const userId = session?.user?.id;
-    const userType='player';
+    const userType = 'player';
     const status = 'Joined';
- 
+
+    if (session && session.user) {
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          club_id: selectedOrder.enterprise_id
+        }
+      })
+    }
+
     try {
 
       const response = await fetch(`/api/joinrequest/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ invitationId,status, userId, userType}),
+        body: JSON.stringify({ invitationId, status, userId, userType }),
       });
 
       if (response.ok) {
@@ -66,15 +76,15 @@ const Home: React.FC = () => {
     handleConfirmationClose(); // Close modal after accepting
   };
 
- 
+
   const handleReject = async () => {
     if (!selectedOrder) return;
-   
+
     const invitationId = selectedOrder.invitationId;
-    const status='Declined'
+    const status = 'Declined'
     const session = await getSession();
     const userId = session?.user?.id;
-    const userType='player';
+    const userType = 'player';
     try {
 
 
@@ -167,10 +177,10 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                 
+
                   <th>Organization</th>
                   <th>Team</th>
-                  <th>Interest Receievd On</th>
+                  <th>Interest Received On</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -178,23 +188,23 @@ const Home: React.FC = () => {
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((order, index) => (
                     <tr key={order.invitationId}>
-                     
+
 
                       <td style={{ textAlign: "center" }}>
-                        
-                          <img
-                            src={order.clubLogo}
-                            alt="Club Logo"
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                              display: "block",
-                              margin: "0 auto",
-                              borderRadius: "50%"
-                            }}
-                          />
-                          <div>{order.club_name}</div>
-                        
+
+                        <img
+                          src={order.clubLogo}
+                          alt="Club Logo"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            display: "block",
+                            margin: "0 auto",
+                            borderRadius: "50%"
+                          }}
+                        />
+                        <div>{order.club_name}</div>
+
                       </td>
                       <td style={{ textAlign: "center" }}>
                         <a href={`/teams/${order.teamSlug}`} target="_blank">
@@ -217,25 +227,24 @@ const Home: React.FC = () => {
 
                       <td>{formatDate(order.createdAt)}</td>
                       <td>
-                      <button
-  className={`px-4 py-2 rounded-lg text-white ${
-    order.status === "Joined"
-      ? "bg-green-500"
-      : order.status === "Requested"
-      ? "bg-yellow-500"
-      : "bg-red-500"
-  }`}
-  onClick={() => {
-    if (order.status === "Sent") {
-     
-      setSelectedOrder(order);
-      setShowConfirmation(true);
-    }
-   
-  }}
->
-  {order.status === "Sent" ? "Received" : order.status}
-</button>
+                        <button
+                          className={`px-4 py-2 rounded-lg text-white ${order.status === "Joined"
+                              ? "bg-green-500"
+                              : order.status === "Requested"
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
+                            }`}
+                          onClick={() => {
+                            if (order.status === "Sent") {
+
+                              setSelectedOrder(order);
+                              setShowConfirmation(true);
+                            }
+
+                          }}
+                        >
+                          {order.status === "Sent" ? "Received" : order.status}
+                        </button>
 
                       </td>
                     </tr>
@@ -254,8 +263,8 @@ const Home: React.FC = () => {
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 1
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
                   }`}
               >
                 Previous
@@ -271,8 +280,8 @@ const Home: React.FC = () => {
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === totalPages
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
                   }`}
               >
                 Next
