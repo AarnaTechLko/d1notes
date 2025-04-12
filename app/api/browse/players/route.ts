@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
 
     //ilike is used to say that the attribute isn't case sensitive
     if (city) {
-      conditions.push(ilike(users.city, city));
+      conditions.push(ilike(users.city, `%${city}%`));
     }
     if (graduation) {
       conditions.push(ilike(users.graduation, graduation));
