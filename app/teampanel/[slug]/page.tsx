@@ -237,13 +237,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               <ProfileCard
                 key={item.teams?.teamSlug ?? item.teamSlug}
                 teamId={item.teams?.id ?? item.id}
-                creatorname={item.teams?.creatorName ?? item.creatorName}
                 teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
                 logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
                 rating={5}
                 slug={item.teams?.slug ?? item.slug}
                 playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
-                type={String(playerType)}
               /> 
             );
 

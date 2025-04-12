@@ -9,16 +9,13 @@ import Swal from 'sweetalert2';
 interface ProfileCardProps {
   slug: string;
   teamName: string;
-  creatorname: string;
   logo: string;
   rating: number;
-  redirect?:boolean;
   teamId: number;
-  type: string;
   playerId: number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, creatorname, logo, rating,slug, redirect, teamId, type, playerId }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, teamId, playerId }) => {
   
   const handleRedirect =async (slug: string) => {
 
