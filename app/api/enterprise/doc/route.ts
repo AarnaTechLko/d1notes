@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
       role_id: body.role_id,
       parent_id: body.enterprise_id,
       mobileNumber: body.phone,
-      buy_evaluation: body.acceptEvaluations,
-      view_evaluation: body.buyLicenses,
+      buy_evaluation: body.buyLicenses,
+      view_evaluation: body.acceptEvaluations,
       password: hashedPassword,
     });
 
