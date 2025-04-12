@@ -106,7 +106,9 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
     if (!primaryVideoUrl) newErrors.primaryVideoUrl = 'Primary Video URL is required.';
     if (!videoOneTiming) newErrors.videoOneTiming = 'Timing is required.';
     if (!videoDescription) newErrors.videoDescription = 'Video Description is required.';
-
+    if (!jerseyNumberOne) newErrors.jerseyNumber = "Jersey Number is required";
+    if (!jerseyColorOne) newErrors.jerseyColorOne = "Jersey Color is required";
+    if (!positionOne) newErrors.positionOne = "Position is required";
     // if (!lighttype) newErrors.lighttype = 'Game Light Type is required.';
     // if (!position) newErrors.position = 'Position is required.';
     // if (!percentage) newErrors.percentage = 'Percentage is required.';
@@ -492,9 +494,9 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
               <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Turnaround Time */}
-                <div className="mb-4 grid content-between">
+                <div className="grid content-center">
                   <label htmlFor="videoTiming" className="block text-gray-700 mb-1">
-                  Player Game Entry Time (Minute)<span className="mandatory">*</span>
+                  Player Game Time (Minute)<span className="mandatory">*</span>
                   </label>
                   <input
                     type="text"
@@ -509,7 +511,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Number */}
-                <div className="mb-4 grid content-between">
+                <div className="grid content-center">
                   <label htmlFor="jerseyNumber" className="block text-gray-700 mb-1">
                     Jersey Number<span className="mandatory">*</span>
                   </label>
@@ -526,7 +528,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Color */}
-                <div className="mb-4 grid content-between">
+                <div className="grid content-center">
                   <label htmlFor="jerseyColorOne" className="block text-gray-700 mb-1">
                     Jersey Color<span className="mandatory">*</span>
                   </label>
@@ -543,7 +545,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Position */}
-                <div className="mb-4 grid content-between">
+                <div className="grid content-center">
                   <label htmlFor="positionOne" className="block text-gray-700 mb-1">
                     Position<span className="mandatory">*</span>
                   </label>
