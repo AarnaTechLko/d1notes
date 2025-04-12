@@ -610,9 +610,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                       <p>{evaluation.first_name} {evaluation.last_name}</p>
                     </div>
 
-                    <div className="flex-2 h-64 w-1/2 overflow-y-auto break-all p-4 self-center items-start">
+                    <div className="flex self-center inline-block align-middle h-64 w-1/2 overflow-y-auto break-all p-4 items-start">
                       {/* <h3 className="font-semibold text-gray-800">Testimonial</h3> */}
-                      <p>{evaluation.remarks}</p>
+                      <p className='mx-auto my-auto'>{evaluation.remarks}</p>
                     </div>
                     {/* Rating Column */}
                     <div className="flex-1 min-w-fit self-center">
