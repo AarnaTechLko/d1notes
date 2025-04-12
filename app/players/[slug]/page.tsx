@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/app/components/Loading';
-import ProfileCard from '@/app/components/teams/ProfileCard';
+import ProfileCard from '@/app/components/players/TeamProfileCard';
 import ClubProfileCard from '@/app/components/enterprise/ProfileCard';
 import PlayerProfileCard from '../../components/players/EnterpriseProfileCard'
 import Profile from '@/app/coach/profile/page';
@@ -161,7 +161,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         // console.log("Organization: ", responseData.playerOrganizations);
 
-        // console.log("Teams: ", responseData.playerOfTheTeam)
+        console.log("Teams: ", responseData.playerOfTheTeam)
 
         setOrganization(responseData.playerOrganizations);
         setPlayerData(responseData.clubdata);
@@ -425,15 +425,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             //   />
 
             <ProfileCard
-              key={item.teams?.teamSlug ?? item.teamSlug}
-              teamId={item.teams?.id ?? item.id}
-              creatorname={item.teams?.creatorName ?? item.creatorName}
-              teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
-              logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
+              key={item.teamSlug}
+              teamName={item.teamName} // Ensure `team_name` is correct
+              logo={item.teamLogo  ??'/default.jpg'}
+              sport={item.sport}
               rating={5}
-              slug={item.teams?.slug ?? item.slug}
-              playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
-              type={String(playerType)}
             />
 
 
