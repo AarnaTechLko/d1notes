@@ -202,6 +202,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
        {
         const stripe = await stripePromise;
         if (!stripe) {
+          console.log("failed to pay")
           throw new Error('Stripe is not loaded');
         }
 
@@ -491,7 +492,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
               <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Turnaround Time */}
-                <div className="mb-4">
+                <div className="mb-4 grid content-between">
                   <label htmlFor="videoTiming" className="block text-gray-700 mb-1">
                   Player Game Entry Time (Minute)<span className="mandatory">*</span>
                   </label>
@@ -508,7 +509,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Number */}
-                <div>
+                <div className="mb-4 grid content-between">
                   <label htmlFor="jerseyNumber" className="block text-gray-700 mb-1">
                     Jersey Number<span className="mandatory">*</span>
                   </label>
@@ -525,7 +526,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Color */}
-                <div>
+                <div className="mb-4 grid content-between">
                   <label htmlFor="jerseyColorOne" className="block text-gray-700 mb-1">
                     Jersey Color<span className="mandatory">*</span>
                   </label>
@@ -542,7 +543,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Position */}
-                <div>
+                <div className="mb-4 grid content-between">
                   <label htmlFor="positionOne" className="block text-gray-700 mb-1">
                     Position<span className="mandatory">*</span>
                   </label>
@@ -616,7 +617,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
 
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="videoTwoTiming" className="block text-gray-700 mb-1">
                   Player Game Entry Time (Minute)
                   </label>
@@ -629,7 +630,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                     onChange={(e) => setVideoTwoTiming(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="jerseyNumberTwo" className="block text-gray-700 mb-1">
                     Jersey Number
                   </label>
@@ -645,7 +646,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Color */}
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="jerseyColorTwo" className="block text-gray-700 mb-1">
                     Jersey Color
                   </label>
@@ -661,7 +662,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Position */}
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="positionTwo" className="block text-gray-700 mb-1">
                     Position
                   </label>
@@ -798,7 +799,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="videoThreeTiming" className="block text-gray-700 mb-1">
                   Player Game Entry Time (Minute)
                   </label>
@@ -811,7 +812,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                     onChange={(e) => setVideoThreeTiming(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="jerseyNumberThree" className="block text-gray-700 mb-1">
                     Jersey Number
                   </label>
@@ -827,7 +828,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Jersey Color */}
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="jerseyColorThree" className="block text-gray-700 mb-1">
                     Jersey Color
                   </label>
@@ -843,7 +844,7 @@ const EvaluationModal: React.FC<EvaluationModalProps> = ({ isOpen, onClose, coac
                 </div>
 
                 {/* Position */}
-                <div>
+                <div className='mb-4 grid content-between'>
                   <label htmlFor="positionThree" className="block text-gray-700 mb-1">
                     Position
                   </label>
