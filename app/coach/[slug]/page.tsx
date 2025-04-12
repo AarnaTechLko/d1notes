@@ -130,7 +130,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     if (!session?.user.id) {
       return
     }
-    const payload = { slug: slug, loggeInUser: session?.user.id };
+    const payload = { slug: slug, loggeInUser: session?.user.id, userType: session?.user.type };
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/coachprofile/`, {
@@ -346,14 +346,14 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </div> */}
 
 
-              {!(session && session.user && session.user.type === 'coach') && (
+              {!(session && session.user && session.user.type === 'coach' || session?.user.type === "enterprise") && (
                 <>
                   {!session ? (
                     <button
                       onClick={() => setIsModalOpen(true)} // Open modal on click
                       className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
-                      Login to Request  Evaluation
+                      Login to Request Evaluation
                     </button>
                   ) :
                     isEvaluationAllowed ? (
