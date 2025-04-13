@@ -732,7 +732,11 @@ const Home: React.FC = () => {
                       <td>
                         <div className="flex items-center space-x-2">
                           <button
-                            onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler
+                            onClick={() => {
+                              if(coach.firstName) {//if player has completed profile
+                                handleTeamAssign(coach)
+                              }
+                            }} // Pass the banner ID to the delete handler
                             className=" text-green-500 hover:text-green-700 mr-4"
                             aria-label="Archive Player"
                             title="Assign a Team"

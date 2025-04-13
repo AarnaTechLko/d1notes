@@ -57,7 +57,7 @@ export default function Login() {
 
         setFormValues((prevValues) => ({
           ...prevValues,
-          email: decryptedData.singleEmail || '',
+          email: (decryptedData.singleEmail || '').toLowerCase(),
           teamId: decryptedData.teamId || '',
           loginAs: decryptedData.registrationType || 'coach',
           enterprise_id: decryptedData.userId || '',
@@ -178,7 +178,7 @@ export default function Login() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value });
+    setFormValues({ ...formValues, [name]: name === 'email' ? value.toLowerCase() : value });
   };
 
   const assignTeamToUser = async (session: any) => {
