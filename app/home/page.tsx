@@ -221,7 +221,7 @@ export default function Home(): JSX.Element {
       <div className="bg-yellow-500 text-white p-6 rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-4">D1 NOTES is here to help!</h2>
           <p className="text-lg">
-          We provide the most practical online platform for giving, receiving and managing individual game film evaluations by way of seamlessly connecting coaches, trainers, scouts and enterprises with players, anywhere, anytime (and soon to be, any sport). A win-win-win format for all.
+          We provide the most practical online platform for giving, receiving and managing individual game film evaluations by way of seamlessly connecting coaches, trainers, scouts and organizations with players, anywhere, anytime (and soon to be, any sport). A win-win-win format for all.
           </p>
         </div>
 

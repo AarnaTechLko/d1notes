@@ -203,7 +203,7 @@ const ChatBox: React.FC = () => {
 
                 const data = await response.json();
                 if (data.url) {
-                    setMessage(data.url);
+                    setMessage(" " + data.url + " ");
                 } else {
                     console.error("Upload failed:", data.error);
                 }
@@ -449,14 +449,20 @@ const ChatBox: React.FC = () => {
     className="message-content"
 /> */}
                                                 <div className="message-content">
-                                                    {msg.message.startsWith("https://") ? (
-                                                        /\.(mp4|webm|ogg)$/i.test(msg.message) ? (
-                                                            <video controls className="w-48 h-auto rounded-lg">
-                                                                <source src={msg.message} type="video/mp4" />
-                                                                Your browser does not support the video tag.
-                                                            </video>
+                                                    {msg.message.includes("https://") ? (//shouldn't be startsWith, should just include http://
+                                                        /\.(mp4|webm|ogg)$/i.test(msg.message.match(/https?:\/\/[^\s]+/)?.[0] || "") ? (
+                                                            <>
+                                                                <video controls className="w-48 h-auto rounded-lg">
+                                                                    <source src={msg.message.match(/https?:\/\/[^\s]+/)?.[0] || ""} type="video/mp4" />
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                                {msg.message.replace(/https?:\/\/[^\s]+/g, '').trim()}
+                                                            </>
                                                         ) : (
-                                                            <img src={msg.message} alt="preview" className="w-48 h-auto rounded-lg" />
+                                                            <>
+                                                                <img src={msg.message.match(/https?:\/\/[^\s]+/)?.[0] || ""} alt="preview" className="w-48 h-auto rounded-lg" />
+                                                                {msg.message.replace(/https?:\/\/[^\s]+/g, '').trim()}
+                                                            </>
                                                         )
                                                     ) : (
                                                         <div dangerouslySetInnerHTML={{ __html: msg.message }} />
