@@ -56,7 +56,8 @@ export async function middleware(req: NextRequest) {
         '/enterprise/coaches/archived',
         '/enterprise/profile',
         '/enterprise/changepassword',
-        '/enterprise/massuploadteams'
+        '/enterprise/massuploadteams',
+        '/enterprise/messages'
     ];
     
     const isEnterpriseOnlyAccess = enterpriseAccessOnlyPaths.includes(pathname) || pathname.startsWith('/enterprise/addcoaches') || pathname.startsWith('/enterprise/teams/edit') || pathname.startsWith('/enterprise/invitations')

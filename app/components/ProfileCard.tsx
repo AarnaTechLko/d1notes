@@ -7,6 +7,7 @@ import EvaluationModal from './EvaluationModal';
 import { useSession } from 'next-auth/react';
 import { FaYoutube } from 'react-icons/fa';
 import Star from './Stars';
+import { useRouter } from 'next/navigation';
  
 
 interface ProfileCardProps {
@@ -39,6 +40,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, ra
   const [isevaluationModalopen,setIsevaluationModalOpen]=useState(false);
   const [playerId,setPlayerId]=useState<string>('');
   const { data: session } = useSession();
+  const router = useRouter();
 useEffect(()=>{
   setPlayerId(session?.user?.id || '');
 }, [session])
@@ -52,7 +54,12 @@ useEffect(()=>{
     return <Star key={i} filled={fillPercent} />;
 });
 
-
+const handleRedirectToLogin = (e: any) => {
+  if(!session) {
+    e.preventDefault();
+    router.push("/login");
+  }
+}
 
   return (
     <>
@@ -90,27 +97,27 @@ useEffect(()=>{
     {/* Bio Icon Section */}
     <div className="flex space-x-4 justify-center mt-3 mb-3 h-5">
       {facebook &&(
-    <a href={facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+    <a href={facebook} target="_blank" rel="noopener noreferrer" onClick={handleRedirectToLogin} className="text-gray-500 hover:text-blue-600">
       <FaFacebook size={20} />
     </a>
       )}
        {instagram &&(
-    <a href={instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+    <a href={instagram} target="_blank" rel="noopener noreferrer" onClick={handleRedirectToLogin} className="text-gray-500 hover:text-pink-500">
       <FaInstagram size={20} />
     </a>
      )}
      {linkedin &&(
-    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+    <a href={linkedin} target="_blank" rel="noopener noreferrer" onClick={handleRedirectToLogin} className="text-gray-500 hover:text-blue-700">
       <FaLinkedin size={20} />
     </a>
      )}
     {xlink &&(
-    <a href={xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+    <a href={xlink} target="_blank" rel="noopener noreferrer" onClick={handleRedirectToLogin} className="text-gray-500 hover:text-black">
       <FaXTwitter size={20} />
     </a>
      )}
     {youtube &&(
-    <a href={youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+    <a href={youtube} target="_blank" rel="noopener noreferrer" onClick={handleRedirectToLogin} className="text-gray-500 hover:text-red-600">
       <FaYoutube size={20} />
     </a>
      )}

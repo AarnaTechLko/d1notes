@@ -366,9 +366,15 @@ const ChatBox: React.FC = () => {
                     className={`md:col-span-3 bg-gray-100 border-r border-gray-300 flex flex-col ${showUserList ? "block" : "hidden"
                         } md:block`}
                 >
-                    <div className="p-4 border-b">
+                    <div className="flex items-center gap-4 p-4 border-b">
+                        <button 
+                            onClick={() => {router.back()}}
+                            className="text-gray-500 hover:text-gray-800">
+                            <FaArrowLeft />
+                        </button>
                         <input
                             className="w-full p-2 rounded bg-gray-200 border focus:outline-none"
+                            // className="flex-1 p-2 rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             type="text"
                             placeholder="Search by Name..."
                         />
