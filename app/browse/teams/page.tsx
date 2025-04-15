@@ -39,53 +39,19 @@ const Home = () => {
     amount: 0,
     rating: null as number | null,
   });
-  const handleRedirect = (profileId: number, clubId:number) => {
-    if (session?.user.type == 'player' ||  session?.user.type == 'coach') {
-      if (teamids.includes(profileId)) {
-        return true;
-      }
-      else {
-        return false;
-      }
+  const handleRedirect = (profileId: number, clubId: number) => {
+    if (session?.user.type == 'player' || session?.user.type == 'coach') {
+      return teamids.includes(profileId);
     }
-    if (session?.user.type == 'enterprise' && Number(session.user.id)==clubId) {
+    if (session?.user.type == 'enterprise' && Number(session.user.id) === clubId) {
       return true;
     }
     if (session?.user.type == 'team' && Number(session?.user.id) === profileId) {
       return true;
     }
-
+    return false;
   };
 
-  const fetchTeamIds = async () => {
-    try {
-      let type;
-      let userId;
-
-      if (session) {
-        type = session.user.type;
-        userId = session.user.id;
-      }
-      else {
-        return "unAuthorized";
-      }
-
-      const response = await fetch(`/api/browse/fetchteams?type=${type}&userId=${userId}`); // Replace with your API endpoint
-      if (!response.ok) {
-        throw new Error('Failed to fetch teams');
-      }
-      const data = await response.json();
-
-      setTeamIds(data);
-    } catch (err) {
-      setError('Some issue occurred.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  // Fetch coach data from API
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -99,12 +65,11 @@ const Home = () => {
           rating: filters.rating?.toString() || '',
         }).toString();
 
-        const response = await fetch(`/api/browse/teams?${queryParams}`); // Replace with your API endpoint
+        const response = await fetch(`/api/browse/teams?${queryParams}`);
         if (!response.ok) {
           throw new Error('Failed to fetch profiles');
         }
         const data = await response.json();
-        console.log(data);
         setProfiles(data);
       } catch (err) {
         setError('Some issue occurred.');
@@ -113,29 +78,46 @@ const Home = () => {
       }
     };
 
+    const fetchTeamIds = async () => {
+      try {
+        if (!session) return;
+
+        const type = session.user.type;
+        const userId = session.user.id;
+
+        const response = await fetch(`/api/browse/fetchteams?type=${type}&userId=${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch teams');
+        }
+        const data = await response.json();
+        setTeamIds(data);
+      } catch (err) {
+        setError('Some issue occurred.');
+      }
+    };
+
     fetchProfiles();
     fetchTeamIds();
-  }, [filters]); // Fetch profiles whenever the filters change
+  }, [filters, session]);
 
   useEffect(() => {
-
     setFilteredProfiles(
-      profiles.filter((profile) => {
-
-        const organizationName = (profile.teamName || '').toLowerCase();
-
-
-        return (
-          organizationName.includes(searchQuery.toLowerCase())
-
-        );
-      })
+      profiles.filter((profile) =>
+        (profile.teamName || '').toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
-  }, [searchQuery, profiles, session]); // Filter profiles based on search query
+  }, [searchQuery, profiles, session]);
 
-  const handleFilterChange = (newFilters: { country: string; state: string; city: string; year: string; gender: string; amount: number; rating: number | null }) => {
-    setFilters(newFilters);
-    console.log(newFilters);
+  const handleFilterChange = (newFilters: {
+    country: string;
+    state: string;
+    city: string;
+    year: string;
+    gender: string;
+    amount: number;
+    rating: number | null;
+  }) => {
+  setFilters(newFilters);
   };
 
   if (loading) {

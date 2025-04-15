@@ -63,7 +63,7 @@ const TicketsPage = () => {
   const [ticketReplies, setTicketReplies] = useState<TicketReply[]>([]);
 
 
-  const [userId, setUserId] = useState<string | null>(null);
+  // const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
 
 
