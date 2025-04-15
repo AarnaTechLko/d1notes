@@ -21,6 +21,7 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
+    blockedCoachIds: text("blockedCoachIds"),
     first_name: varchar("first_name"),
     last_name: varchar("last_name"),
     grade_level: varchar("grade_level"),
@@ -117,6 +118,7 @@ export const coaches = pgTable(
     license:text("license"),
     status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
+    isCompletedProfile: boolean("isCompletedProfile").default(false)
   },
   (coaches) => {
     return {
@@ -576,6 +578,15 @@ export const ticket = pgTable("ticket", {
   status: varchar("status").default("Pending"),
   role: varchar("role"),
   message: text("message").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const ticket_messages = pgTable("ticket_messages", {
+  id: serial("id").primaryKey(),
+  ticket_id: integer("ticket_id").notNull(),
+  replied_by: text("replied_by").notNull(),
+  message: text("message").notNull(),
+  status: varchar("status").default("Pending"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
