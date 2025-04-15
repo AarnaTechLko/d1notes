@@ -255,6 +255,7 @@ const handler = NextAuth({
           session.user.visibility = user.visibility;
         }
       }
+      
 
 
 

@@ -1,0 +1,1 @@
+ALTER TABLE "admin" ADD COLUMN "is_deleted" boolean DEFAULT false;

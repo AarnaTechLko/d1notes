@@ -9,6 +9,7 @@ import {
   uniqueIndex,
   date,
   decimal,
+  boolean,
   pgEnum,
   integer // Ensure integer is imported from drizzle-orm/pg-core
 } from "drizzle-orm/pg-core";
@@ -20,6 +21,7 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
+    blockedCoachIds: text("blockedCoachIds"),
     first_name: varchar("first_name"),
     last_name: varchar("last_name"),
     grade_level: varchar("grade_level"),
@@ -62,6 +64,7 @@ export const users = pgTable(
     status: varchar("status").default("Pending"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
+    isCompletedProfile: boolean("isCompletedProfile").default(false)
   },
   (users) => {
     return {
@@ -114,6 +117,8 @@ export const coaches = pgTable(
     license:text("license"),
     status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
+    isCompletedProfile: boolean("isCompletedProfile").default(false),
+    blockedPlayerIds: text("blockedPlayerIds"),
   },
   (coaches) => {
     return {
@@ -548,6 +553,17 @@ export const admin = pgTable("admin", {
   role: text("role", { enum: ["customer_support", "executive"] }).notNull(),
   password_hash: text("password_hash").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
+
+});
+
+export const admins = pgTable("admin", {
+  id: serial("id").primaryKey(),
+  username: varchar("username", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  role: text("role", { enum: ["customer_support", "executive"] }).notNull(),
+  password_hash: text("password_hash").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  is_deleted: boolean("is_deleted").default(false), // ✅ Add this line
 });
 
 export const ticket = pgTable("ticket", {
@@ -556,9 +572,28 @@ export const ticket = pgTable("ticket", {
   email: text("email").notNull(),
   subject: text("subject").notNull(),
   assign_to: integer('assign_to').default(0), // Ensure this is defined
+  ticket_from: integer('ticket_from').default(0), // Ensure this is defined
+  status: varchar("status").default("Pending"),
+  role: varchar("role"),
   message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+export const ticket_messages = pgTable("ticket_messages", {
+  id: serial("id").primaryKey(),
+  ticket_id: integer("ticket_id").notNull(),
+  replied_by: text("replied_by").notNull(),
+  message: text("message").notNull(),
+  status: varchar("status").default("Pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+
+export const userOrgStatus = pgTable("userOrgStatus",{
+	org_user_id:integer("org_user_id"),
+	enterprise_id:integer("enterprise_id").references(() => enterprises.id),
+	status:text("status").default("Pending").notNull(),
+	role:text("text")
+})
 
 
 

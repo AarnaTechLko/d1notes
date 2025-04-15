@@ -13,14 +13,15 @@
 // });
 
 
-// import "dotenv/config"; // Ensure .env file is loaded
-// import { defineConfig } from "drizzle-kit";
+import "dotenv/config"; // Ensure .env file is loaded
+import { defineConfig } from "drizzle-kit";
 
-// export default defineConfig({
-//   out: "./drizzle",
-//   schema: "./lib/schema.ts",
-//   dialect: "postgresql",
-//   dbCredentials: {
-//     url: process.env.POSTGRES_URL!, // Ensure this is correctly set in .env
-//   },
-// });
+
+export default defineConfig({
+  out: "./drizzle",
+  schema: "./lib/schema.ts",
+  dialect: "postgresql",
+  dbCredentials: {
+    url: process.env.POSTGRES_URL!, // Ensure this is correctly set in .env
+  },
+});

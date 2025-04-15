@@ -1,26 +1,32 @@
 import { NextResponse } from 'next/server';
 import { db } from "@/lib/db";
-import { ticket,admin,users } from '@/lib/schema';
+import { ticket,admin,users ,ticket_messages} from '@/lib/schema';
 import { ilike, desc, sql, count, or,eq } from 'drizzle-orm';
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions"; // or wherever it's located
 
 export async function POST(req: Request) {
   try {
- 
-    const { name, email, subject, message } = await req.json();
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { id,name, email, subject, message } = await req.json();
 
     // Insert the ticket into the database
     const result = await db.insert(ticket).values({
+      id,
       name,
       email,
       subject,
       message,
       assign_to: 0,
-   
+  ticket_from: parseInt(session.user.id),
+  role: session.user.name, 
       status:"pending",
     }).returning(); // Ensure it returns the inserted data
-
-    return NextResponse.json({ message: 'Ticket created successfully', result }, { status: 200 });
+    return NextResponse.json({ message: 'Ticket created successfully', ticket: result[0] }, { status: 200 });
   } catch (error) {
     console.error("Error creating ticket:", error);
     return NextResponse.json({ error: "Error creating ticket" }, { status: 500 });
@@ -29,7 +35,14 @@ export async function POST(req: Request) {
 
 // GET: Fetch tickets with optional filters, pagination & search
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
   try {
+    const userId = parseInt(session.user.id); // Ensure it's a number
+
     const url = new URL(req.url);
     const search = url.searchParams.get('search')?.trim() || '';  
     const page = parseInt(url.searchParams.get('page') || '1', 10);
@@ -37,6 +50,7 @@ export async function GET(req: Request) {
     
     const offset = (page - 1) * limit;
     
+    const baseCondition = eq(ticket.ticket_from, userId);
 
     // Dynamic search conditions across multiple fields
     const whereClause = search
@@ -46,7 +60,7 @@ export async function GET(req: Request) {
           ilike(ticket.subject, `%${search}%`),
           ilike(ticket.message, `%${search}%`)
         )
-      : undefined;
+      : baseCondition;
 
     // Query to fetch tickets with additional aggregations (optional)
     const ticketsData = await db
@@ -74,6 +88,22 @@ export async function GET(req: Request) {
       .limit(limit);
       
 
+          // For each ticket, fetch the latest reply message
+          const enrichedTickets = await Promise.all(
+            ticketsData.map(async (t) => {
+              const latestReply = await db
+                .select({ message: ticket_messages.message })
+                .from(ticket_messages)
+                .where(eq(ticket_messages.ticket_id, t.id))
+                .orderBy(desc(ticket_messages.createdAt))
+                .limit(1);
+          
+              return {
+                ...t,
+                message: latestReply[0]?.message || t.message,
+              };
+            })
+          );
       
 
     // Get total ticket count for pagination
@@ -86,7 +116,7 @@ export async function GET(req: Request) {
     const totalPages = Math.ceil(totalCount / limit);
 
     return NextResponse.json({
-      tickets: ticketsData,
+      tickets: enrichedTickets,
       currentPage: page,
       totalPages: totalPages,
       hasNextPage: page < totalPages,

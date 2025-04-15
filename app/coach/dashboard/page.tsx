@@ -9,8 +9,9 @@ import { Evaluation, EvaluationsByStatus } from '../../types/types';
 import Modal from '../../components/Modal';
 import AcceptanceModal from '@/app/components/coach/AcceptanceModal';
 import { useSession, signOut } from 'next-auth/react';
-import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
+// import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
 import EvaluationForm from '@/app/components/coach/EvaluationForm';
+import NewEvaluationForm from '@/app/components/coach/NewEvaluationForm';
 import { FaArrowLeft, FaArrowRight, FaEye } from 'react-icons/fa';
 import { getSession } from "next-auth/react";
 import { calculateHoursFromNow } from '@/lib/clientHelpers';
@@ -19,7 +20,8 @@ import TeamProfileCard from '@/app/components/teams/ProfileCard';
 import Swal from 'sweetalert2';
 import { showError } from '@/app/components/Toastr';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import  { useRef } from "react";
+import { useRef } from "react";
+
 
 
 
@@ -54,17 +56,17 @@ const Dashboard: React.FC = () => {
       tableContainerRef.current.scrollLeft += 200;
     }
   };
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (tableContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
         const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
 
-        
+
         setIsStart(scrollLeft === 0);
-      setIsEnd(scrollLeft + clientWidth >= scrollWidth);
-      setIsMiddle(scrollPercentage >= 40);
+        setIsEnd(scrollLeft + clientWidth >= scrollWidth);
+        setIsMiddle(scrollPercentage >= 40);
 
       }
     };
@@ -81,13 +83,16 @@ const Dashboard: React.FC = () => {
     };
   }, []); // Empty dependency array means it runs only once after mount
 
- 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenNew, setIsModalOpenNew] = useState(false);
   const [isMiddle, setIsMiddle] = useState(false);
   const [IsStart, setIsStart] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isEvFormOpen, setIsEvFormOpen] = useState(false);
+  const [isNewEvFormOpen, setIsNewEvFormOpen] = useState(false);
+
   const [isFakeFormOpen, setIsFakeFormOpen] = useState(false);
   //const [clubId, setClubId]=useState<string | undefined>(undefined);
   const [evaluationId, setEvaluationId] = useState<number | undefined>(undefined);
@@ -98,6 +103,7 @@ const Dashboard: React.FC = () => {
   const [teams, setTeams] = useState<[]>([]);
   const [evaluationData, setEvaluationData] = useState<Evaluation | undefined>(undefined);
   const [modalContent, setModalContent] = useState<JSX.Element | null>(null);
+  const [newmodalContent, setnewModalContent] = useState<JSX.Element | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loadingAccept, setLoadingAccept] = useState<boolean>(false);
   const [loadingReject, setLoadingReject] = useState<boolean>(false);
@@ -119,6 +125,8 @@ const Dashboard: React.FC = () => {
     console.log("Going to open")
     setIsEvFormOpen(true);
   };
+  const openNewEvForm = () => setIsNewEvFormOpen(true);
+  const closeNewEvForm = () => setIsNewEvFormOpen(false);
 
   const openFakeEvalModel = () => {
 
@@ -241,11 +249,11 @@ const Dashboard: React.FC = () => {
         accessor: 'first_name',
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="flex items-center space-x-2">
-           <img
-  src={(!row.original.image || row.original.image === 'null') ? '/default.jpg' : row.original.image}
-  alt={row.original.first_name}
-  className="w-8 h-8 rounded-full"
-/>
+            <img
+              src={(!row.original.image || row.original.image === 'null') ? '/default.jpg' : row.original.image}
+              alt={row.original.first_name}
+              className="w-8 h-8 rounded-full"
+            />
             <a
               href={`/players/${row.original.playerSlug}`}
               className=" font-bold text-blue-700"
@@ -341,46 +349,58 @@ const Dashboard: React.FC = () => {
           if (selectedTab === '0') {
             return (
               // <a className="cursor-pointer" onClick={() => handleRequestedAction(evaluation)}>
-               <>   <button
-               onClick={() => handleAccept(evaluation)}  
-              className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-600 transition duration-200"
-            >
-          {loadingAccept ? (
-  <div className="flex items-center">
-    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-    <span>Accepting...</span>
-  </div>
-) : (
-  <span>Accept</span>
-)}
- 
-            </button>
-            <button
-             onClick={() => handleReject(evaluation)}  
-             
-              className="bg-red-500 ml-2 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 transition duration-200"
-            >
-             {loadingReject ? (
-  <div className="flex items-center">
-    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-    <span>Declining...</span>
-  </div>
-) : (
-  <span>Decline</span>
-)}
-            </button>
-            
-                </>
+              <>   <button
+                onClick={() => handleAccept(evaluation)}
+                className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+              >
+                {loadingAccept ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                    <span>Accepting...</span>
+                  </div>
+                ) : (
+                  <span>Accept</span>
+                )}
+
+              </button>
+                <button
+                  onClick={() => handleReject(evaluation)}
+
+                  className="bg-red-500 ml-2 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+                >
+                  {loadingReject ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                      <span>Declining...</span>
+                    </div>
+                  ) : (
+                    <span>Decline</span>
+                  )}
+                </button>
+
+              </>
 
             );
           } else if (selectedTab === '1') {
             return (
-              <button
-                onClick={() => handleAcceptedAction(evaluation)}
-                className="bg-green-500 text-white px-4 py-2 rounded text-sm md:text-base"
-              >
-                Evaluate
-              </button>
+              <>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => handleAcceptedAction(evaluation)}
+                    className="bg-green-500 text-white px-3 py-1 rounded text-xs"
+                  >
+                    Evaluate
+                  </button>
+                  <button
+                   
+                    onClick={() => NewhandleAcceptedAction(evaluation)}
+                    className="bg-green-500 text-white px-3 py-1 rounded text-xs"
+                  >
+                    New Evaluate
+                  </button>
+                </div>
+
+              </>
             );
           } else if (selectedTab === '4') {
             return (
@@ -420,7 +440,7 @@ const Dashboard: React.FC = () => {
 
     fetchEvaluations(selectedTab);
     setIsDropdownOpen(false);
-     
+
   }
   const handleRequestedAction = (evaluation: Evaluation) => {
     setEvaluationId(evaluation.evaluationId);
@@ -441,9 +461,19 @@ const Dashboard: React.FC = () => {
     console.log("evaluation: ", evaluation);
     setIsEvFormOpen(true);
   };
+  
+  const NewhandleAcceptedAction = (evaluation: Evaluation) => {
+    setEvaluationId(evaluation.evaluationId);
+    setCoachId(evaluation.coachId);
+    setPlayerId(evaluation.playerId);
+    setEvaluationData(evaluation);
+    console.log("evaluation: ", evaluation);
+    setIsNewEvFormOpen(true);
+  };
+
 
   const tableInstance = useTable({ columns, data });
-  
+
   const filteredRows = tableInstance.rows.filter((row) =>
     row.cells.some((cell) =>
       String(cell.value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -451,7 +481,10 @@ const Dashboard: React.FC = () => {
   );
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsModalOpenNew(false);
+
     setModalContent(null);
+    setnewModalContent(null);
   };
 
   const closeAcceptanceModal = () => {
@@ -467,6 +500,10 @@ const Dashboard: React.FC = () => {
   const closeEvform = () => {
     setIsEvFormOpen(false);
   };
+  const closeNewEvform = () => {
+    setIsNewEvFormOpen(false);
+  };
+
   const clubId = useMemo(() => session?.user?.club_id ?? '', [session]);
 
   useEffect(() => {
@@ -478,7 +515,7 @@ const Dashboard: React.FC = () => {
   }, [selectedTab]);
 
 
-  const handleAccept = async (evaluation:any) => {
+  const handleAccept = async (evaluation: any) => {
     setLoadingAccept(true);
     Swal.fire({
       title: 'Are you sure?',
@@ -490,7 +527,7 @@ const Dashboard: React.FC = () => {
       confirmButtonText: 'Yes, Accept',
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
-     
+
       if (result.isConfirmed) {
         const payload = {
           evaluationId: evaluation.evaluationId,
@@ -520,7 +557,7 @@ const Dashboard: React.FC = () => {
               window.location.href = window.location.href;
             }, 1000);
           });
-        } catch (error:any) {
+        } catch (error: any) {
           setLoadingAccept(false);
           showError(error?.message);
         }
@@ -528,7 +565,7 @@ const Dashboard: React.FC = () => {
     });
   };
 
-  const handleReject = async (evaluation:any) => {
+  const handleReject = async (evaluation: any) => {
     setLoadingReject(true);
     Swal.fire({
       title: 'Add a Comment',
@@ -544,7 +581,7 @@ const Dashboard: React.FC = () => {
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
-       
+
         const remark = result.value;
         if (!remark) {
           Swal.fire('Error', 'Remark is required to reject the evaluation.', 'error');
@@ -556,7 +593,7 @@ const Dashboard: React.FC = () => {
           status: 3,
           remark: remark, // Include the remark in the payload
         };
-        
+
         try {
           const response = await fetch('/api/coach/evaluations', {
             method: 'PUT',
@@ -591,6 +628,8 @@ const Dashboard: React.FC = () => {
   return (
     <>
 
+
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {modalContent}
       </Modal>
@@ -607,15 +646,24 @@ const Dashboard: React.FC = () => {
         isOpen={isEvFormOpen}
         onClose={closeEvform}
       />
+      <NewEvaluationForm
+        evaluationId={evaluationId ?? null}
+        evaluationData={evaluationData ?? null}
+        coachId={coachId ?? null}
+        playerId={playerId ?? null}
+        isOpen={isNewEvFormOpen}
+        onClose={closeNewEvForm}
+      />
 
-      <FakeEvaluationForm
+
+      {/* <FakeEvaluationForm
         evaluationId={null}
         evaluationData={null}
         coachId={null}
         playerId={null}
         isOpen={isFakeFormOpen}
         onClose={closeFakeEvform}
-      />
+      /> */}
 
 
       <div className="flex h-screen">
@@ -681,7 +729,7 @@ const Dashboard: React.FC = () => {
                 { name: 'Drafts', value: '4' },
               ].map((tab) => (
                 <button
-                key={`${tab.name}${tab.value}`}
+                  key={`${tab.name}${tab.value}`}
                   onClick={() => handleTabChange(tab)}
                   className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
                 >
@@ -700,13 +748,12 @@ const Dashboard: React.FC = () => {
                 className="w-full p-2 mb-4 border border-gray-300 rounded-md"
               />
               <button
-  onClick={scrollLeft}
-  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
-    IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
-  }`}
->
-  <FaArrowLeft />
-</button>
+                onClick={scrollLeft}
+                className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+                  }`}
+              >
+                <FaArrowLeft />
+              </button>
 
               <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
                 <thead>
@@ -728,31 +775,31 @@ const Dashboard: React.FC = () => {
                 <tbody {...tableInstance.getTableBodyProps()}>
                   {loading ? (
                     <tr>
-                     <td colSpan={columns.length} className="text-center py-4">
-  <div className="flex justify-center items-center gap-2">
-    <svg
-      className="animate-spin h-5 w-5 text-gray-500"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v8H4z"
-      ></path>
-    </svg>
-    <span>Loading Evaluations...</span>
-  </div>
-</td>
+                      <td colSpan={columns.length} className="text-center py-4">
+                        <div className="flex justify-center items-center gap-2">
+                          <svg
+                            className="animate-spin h-5 w-5 text-gray-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8H4z"
+                            ></path>
+                          </svg>
+                          <span>Loading Evaluations...</span>
+                        </div>
+                      </td>
                     </tr>
                   ) : filteredRows.length === 0 ? (
                     <tr>
@@ -781,41 +828,41 @@ const Dashboard: React.FC = () => {
                 </tbody>
               </table>
               <button
-  onClick={scrollRight}
-  disabled={isEnd} 
-  style={{
-    backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
-    color: "white",
-    padding: "10px",
-    border: "none",
-    cursor: isEnd ? "not-allowed" : "pointer",
-  }}
-  className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+                onClick={scrollRight}
+                disabled={isEnd}
+                style={{
+                  backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                  color: "white",
+                  padding: "10px",
+                  border: "none",
+                  cursor: isEnd ? "not-allowed" : "pointer",
+                }}
+                className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
   `}
->
-  <FaArrowRight />
-</button>
+              >
+                <FaArrowRight />
+              </button>
 
             </div>
           </div>
 
           <div className="grid grid-cols-1 bg-white  mt-4 p-6">
-          <h3 className='font-bold text-lg'>Quick Tips</h3>
+            <h3 className='font-bold text-lg'>Quick Tips</h3>
 
-          <h3 className='font-bold text-lg mt-4'>Visibility</h3>
-          <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like <button onClick={() => openFakeEvalModel()} className="text-blue-600 hover:text-blue-800 ">this</button>. You may search players in Player Profiles and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
+            <h3 className='font-bold text-lg mt-4'>Visibility</h3>
+            <p>Ensure your Public Visibility in the menu is on so that players seeking individual game film evaluations can find your profile in the coach marketplace. If you would like to go through a quick D1 Notes verification process to enhance your profile with a “D1 Verified” badge, <a href="/contact" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> to email and let us know! Upon receiving an evaluation request, you can either accept or politely decline it with a comment. A completed evaluation will look like <button onClick={() => openFakeEvalModel()} className="text-blue-600 hover:text-blue-800 ">this</button>. You may search players in Player Profiles and see their limited information, but you cannot click through to see all of their details, nor contact them until they request an evaluation from you. If your Public Visibility is off, you will not show up in the coach marketplace.</p>
 
-<h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>
-<p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a>  or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 120 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="/coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
+            <h3 className='font-bold text-lg mt-4'>Time and Rate Explanation</h3>
+            <p>In order to add pricing tiers to your base evaluation rate based on faster maximum evaluation turnaround times, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a>  or on Time and Rate in the menu. The default rate is your base evaluation rate and the default turnaround time is 120 hours or 5 days (the maximum time). Adding tiers to your oﬀering is optional. If you would like to modify your base evaluation rate, <a href="/coach/charges" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Time and Rate in the menu, or <a href="/coach/profile" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or edit your Profile in Settings.</p>
 
-<h3 className='font-bold text-lg mt-4'>Organizations Explanation</h3>
-<p>Only if you have been added by an organization or single team that is using D1 Notes’ Organizations (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>
+            <h3 className='font-bold text-lg mt-4'>Organizations Explanation</h3>
+            <p>Only if you have been added by an organization or single team that is using D1 Notes’ Organizations (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/coach/teams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s) and view the coaches and players on your roster(s). These players will automatically not be charged any rate as your organization / team has already paid for them.</p>
 
-<h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
-<p>The Messages function in the menu allows you to communicate with any player in Your Teams as well as communicate further with any player in the marketplace once you have accepted their evaluation request.</p>
+            <h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
+            <p>The Messages function in the menu allows you to communicate with any player in Your Teams as well as communicate further with any player in the marketplace once you have accepted their evaluation request.</p>
 
 
-        </div>
+          </div>
 
           {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>

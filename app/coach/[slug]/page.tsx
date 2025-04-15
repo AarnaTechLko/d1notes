@@ -126,7 +126,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
     const payload = { slug: slug, loggeInUser: session?.user.id };
     const fetchCoachData = async () => {
-      try {
+      try {  
         const response = await fetch(`/api/coachprofile/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

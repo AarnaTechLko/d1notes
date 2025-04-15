@@ -23,6 +23,9 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLin
   const [enterpriseOpen, setEnterpriseOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
   const enterpriseRef = useRef<HTMLLIElement>(null);
+  const [supportOpen, setSupportOpen] = useState(false);
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
         if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
@@ -131,6 +134,15 @@ useEffect(() => {
           Dashboard
         </Link>
       </li>
+      <li className="relative">
+          <Link
+              href="/browse/tickets"
+              className={`${isActiveLink("/browse/tickets")} w-full block text-left py-2 text-black hover:text-blue-300`}
+              onClick={closeMenu}
+          >
+          Support
+          </Link>
+      </li>  
       
       {/* commented by Harsh 14-03-2025 */}
       {/* <li className="pt-[8px]">
@@ -141,10 +153,12 @@ useEffect(() => {
       <li className="pt-[8px]">
                 <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
             </li>
+         
       {/* <li className="relative" ref={dropdownRef}>
       <button
                     onClick={handleToggleDropdown}
                     className="flex  mx-auto"
+
                 >
                     <Image
                         src={session?.user?.image || '/default.jpg'}

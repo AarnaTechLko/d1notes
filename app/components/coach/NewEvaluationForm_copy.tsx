@@ -15,7 +15,15 @@ import ReactQuill from "react-quill";
 import sanitizeHtml from "sanitize-html";
 import 'react-quill/dist/quill.snow.css';
 import { showError } from '@/app/components/Toastr';
-
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+} from 'recharts';
+import { Star } from 'lucide-react';
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
   evaluationData?: Evaluation | null; // Update to accept Evaluation or null
@@ -25,11 +33,52 @@ type EvaluationFormProps = {
   onClose: () => void;
 };
 
+type Player = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  image: string;
+  position: string;
+  grade_level: string;
+  location: string;
+  height: string;
+  weight: string;
+  jersey: string;
+  birthday: string;
+  graduation: string;
+  birth_year: string;
+  age_group: string;
+  status: string;
+  coachName?: string;
+  coachLastName?: string;
+  enterpriseName?: string;
+};
+
+// map start
+const headerMetrics = ['Speed', 'Ablity', 'COD with ball', 'COD without ball', 'Counter Move Jump'];
+
+const radarSkills = [
+    'Receiving & 1st Touch',
+    'Shots on Goal',
+    'Finishing Touches',
+    'Combination Play',
+    'Workrate',
+    'Pressing from the Front',
+    '1v1 Domination',
+    'Goal Threat',
+    'Being a Good Teammate',
+    'Decision Making',
+    'No. of Touches in Final 3rd',
+    'Off the Ball Movement',
+    'Ability to find Space in the box',
+    'Runs off the ball/Forward runs',
+];
+// map end
+
 const EvaluationForm: React.FC<EvaluationFormProps> = ({
   evaluationId,
   evaluationData,
   coachId,
-  playerId,
   isOpen,
   onClose,
 }) => {
@@ -407,7 +456,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     }
   };
 
-  if (!isOpen) return null;
+ if (!isOpen) return null;
   const handlePositionChange = (event: any) => {
     setPosition(event.target.value);
   };
@@ -432,6 +481,57 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       }
     });
   };
+
+
+
+// player start
+
+
+const [playerId, setPlayerId] = useState('');
+const [data, setData] = useState<null | { player: Player }>(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState<string | null>(null);
+const handleSearch = async () => {
+  setError(null);
+  setLoading(true);
+  setData(null);
+  try {
+    const res = await fetch(`/api/player/${playerId}`);
+    if (!res.ok) throw new Error(`Player not found (ID: ${playerId})`);
+    const result = await res.json();
+    setData(result);
+  } catch (err) {
+    setError((err as Error).message);
+  } finally {
+    setLoading(false);
+  }
+};
+// end player
+
+// map start
+const [headerRatings, setHeaderRatings] = useState<number[]>(Array(headerMetrics.length).fill(7));
+const [skillRatings, setSkillRatings] = useState<number[]>([
+    7, 8, 8, 8, 7, 6, 7, 9, 9, 8, 8, 8, 8, 8,
+]);
+
+const handleHeaderRatingChange = (index: number, value: number) => {
+    const newRatings = [...headerRatings];
+    newRatings[index] = value;
+    setHeaderRatings(newRatings);
+};
+
+const handleSkillRatingChange = (index: number, value: number) => {
+    const newRatings = [...skillRatings];
+    newRatings[index] = value;
+    setSkillRatings(newRatings);
+};
+
+const chartData = radarSkills.map((label, i) => ({
+    subject: label,
+    A: skillRatings[i],
+}));
+// map end
+
 
   return (
     <>
@@ -936,432 +1036,191 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                 </div>
               )}
 
+<div className="grid grid-cols-12 gap-4 md:gap-6">
+<div className="col-span-12 space-y-6 xl:col-span-7 w-[1000px]">
+{/* player individuals */}
+<div className="p-8 max-w-5xl mx-auto font-sans">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">🔍 Search Player By ID</h1>
 
+      <div className="flex gap-4 items-center mb-6">
+        <input
+          type="number"
+          placeholder="Enter Player ID"
+          value={playerId}
+          onChange={(e) => setPlayerId(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded-lg w-64 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Search
+        </button>
+      </div>
 
-              {position == "Goalkeeper" && (
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
-                  {/* Technical Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                        Technical
-                        <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                      </h1>
-                      <p className="text-red-500 text-sm h-5">{errors.technicalScores ? "Required." : ""}</p>
-                    </div>
-                    <div className="space-y-4 flex-grow">
-                      {scoreFactors.technical.map((tech: any) => (
-                        <div
-                          key={tech.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <select
-                            id={`dropdown-tech-${tech.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20 "
-                            value={technicalScores[tech.label]}
-                            onChange={(e) =>
-                              setTechnicalScores((prev) => ({
-                                ...prev,
-                                [tech.label]: e.target.value,
-                              }))
-                            }
-                          >
-                            {tech.options.map((option: any, index: any) => (
-                              <option key={index} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <label
-                            htmlFor={`dropdown-tech-${tech.id}`}
-                            className="text-sm font-medium"
-                          >
-                            {tech.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <label
-                      htmlFor={`remarks-tech`}
-                      className="mt-4 text-sm font-medium"
-                    >
-                      Commentary:
-                      <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </label>
-                    <textarea
-                      id={`remarks-tech`}
-                      value={technicalRemarks}
-                      className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                      rows={3}
-                      placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTechnicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
-                    />
-                    {/* {errors.technicalRemarks && (
-                      <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.technicalRemarks ? "Required." : ""}</p>
+      {loading && <p className="text-blue-600 font-medium">Loading...</p>}
+      {error && <p className="text-red-600 font-medium">{error}</p>}
 
-                  </div>
+      {data?.player && (
+        <div className="bg-white shadow-xl rounded-2xl p-6">
+          <div className="flex items-center gap-6 mb-4">
+            <img
+              src={data.player.image || '/default-avatar.png'}
+              alt="Player"
+              className="w-32 h-32 object-cover rounded-xl border"
+            />
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {data.player.first_name} {data.player.last_name}
+              </h2>
+              <p className="text-gray-600">{data.player.position} · Grade {data.player.grade_level}</p>
+              <p className="text-sm text-gray-500">Status: {data.player.status}</p>
+            </div>
+          </div>
 
-                  {/* Tactical Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                        Tactical
-                        <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                      </h1>
-                      <p className="text-red-500 text-sm h-5">{errors.tacticalScores ? "Required." : ""}</p>
-                    </div>
-                    <div className="space-y-4 flex-grow">
-                      {scoreFactors.tactical.map((tact: any) => (
-                        <div
-                          key={tact.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <select
-                            id={`dropdown-tact-${tact.id}`}
-                            className="w-[75px] border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={tacticalScores[tact.label]}
-                            onChange={(e) =>
-                              setTacticalScores((prev) => ({
-                                ...prev,
-                                [tact.label]: e.target.value,
-                              }))
-                            }
-                          >
-                            {tact.options.map((option: any, index: any) => (
-                              <option key={index} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <label
-                            htmlFor={`dropdown-tact-${tact.id}`}
-                            className="text-sm font-medium"
-                          >
-                            {tact.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <label
-                      htmlFor={`remarks-tact`}
-                      className="mt-4 text-sm font-medium"
-                    >
-                      Commentary:
-                      <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </label>
-                    <textarea
-                      id={`remarks-tact`}
-                      className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                      rows={3}
-                      value={tacticalRemarks}
-                      placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setTacticalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
-                    />
-                    {/* {errors.tacticalRemarks && (
-                      <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.tacticalRemarks ? "Required." : ""}</p>
-                  </div>
+          <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+            <p><strong>Location:</strong> {data.player.location}</p>
+            <p><strong>Height:</strong> {data.player.height} cm</p>
+            <p><strong>Weight:</strong> {data.player.weight} kg</p>
+            <p><strong>Jersey:</strong> #{data.player.jersey}</p>
+            <p><strong>Birthday:</strong> {data.player.birthday}</p>
+            <p><strong>Graduation:</strong> {data.player.graduation}</p>
+            <p><strong>Age Group:</strong> {data.player.age_group}</p>
+            <p><strong>Birth Year:</strong> {data.player.birth_year}</p>
+            <p><strong>Coach:</strong> {data.player.coachName} {data.player.coachLastName}</p>
+            <p><strong>Enterprise:</strong> {data.player.enterpriseName}</p>
+          </div>
 
-                  {/* Distribution Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                        Distribution
-                        <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                      </h1>
-                      <p className="text-red-500 text-sm h-5">{errors.distributionScores ? "Required." : ""}</p>
-                    </div>
-                    <div className="space-y-4 flex-grow">
-                      {scoreFactors.distribution.map((dis: any) => (
-                        <div
-                          key={dis.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <select
-                            id={`dropdown-dis-${dis.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={distributionScores[dis.label]}
-                            onChange={(e) =>
-                              setDistributionScores((prev) => ({
-                                ...prev,
-                                [dis.label]: e.target.value,
-                              }))
-                            }
-                          >
-                            {dis.options.map((option: any, index: any) => (
-                              <option key={index} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <label
-                            htmlFor={`dropdown-dis-${dis.id}`}
-                            className="text-sm font-medium"
-                          >
-                            {dis.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <label
-                      htmlFor={`remarks-dis`}
-                      className="mt-4 text-sm font-medium"
-                    >
-                      Commentary:
-                      <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </label>
-                    <textarea
-                      id={`remarks-dis`}
-                      className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                      rows={3}
-                      value={distributionRemarks}
-                      placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setDistributionRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
-                    />
-                    <p className="text-red-500 text-sm h-5">{errors.distributionRemarks ? "Required." : ""}</p>
-
-                  </div>
-
-                  {/* Physical Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                        Physical
-                        <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                      </h1>
-                      <p className="text-red-500 text-sm h-5">{errors.physicalScores ? "Required." : ""}</p>
-                    </div>
-                    <div className="space-y-4 flex-grow">
-                      {scoreFactors.physical.map((phys: any) => (
-                        <div
-                          key={phys.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <select
-                            id={`dropdown-phys-${phys.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={physicalScores[phys.label]}
-                            onChange={(e) =>
-                              setPhysicalScores((prev) => ({
-                                ...prev,
-                                [phys.label]: e.target.value,
-                              }))
-                            }
-                          >
-                            {phys.options.map((option: any, index: any) => (
-                              <option key={index} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <label
-                            htmlFor={`dropdown-phys-${phys.id}`}
-                            className="text-sm font-medium"
-                          >
-                            {phys.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <label
-                      htmlFor={`remarks-phys`}
-                      className="mt-4 text-sm font-medium"
-                    >
-                      Commentary:
-                      <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </label>
-                    <textarea
-                      id={`remarks-phys`}
-                      className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                      rows={3}
-                      value={physicalRemarks}
-                      placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setPhysicalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
-                    />
-                    {/* {errors.physicalRemarks && (
-                      <p className="text-red-500 text-sm">Required.</p>
-                    )} */}
-                    <p className="text-red-500 text-sm h-5">{errors.physicalRemarks ? "Required." : ""}</p>
-
-                  </div>
-                  {/* Organisation Section */}
-                  <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                    <div className="mb-4">
-                      <h1 className="text-xl">
-                        Organisation
-                        <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                      </h1>
-                      <p className="text-red-500 text-sm h-5">{errors.organizationScores ? "Required." : ""}</p>
-                    </div>
-                    <div className="space-y-4 flex-grow">
-                      {scoreFactors.organization.map((org: any) => (
-                        <div
-                          key={org.id}
-                          className="flex items-center space-x-2"
-                        >
-                          <select
-                            id={`dropdown-org-${org.id}`}
-                            className="border border-gray-300 rounded-md p-1 text-gray-700 text-sm w-20"
-                            value={organizationScores[org.label]}
-                            onChange={(e) =>
-                              setOrganizationScores((prev) => ({
-                                ...prev,
-                                [org.label]: e.target.value,
-                              }))
-                            }
-                          >
-                            {org.options.map((option: any, index: any) => (
-                              <option key={index} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                          <label
-                            htmlFor={`dropdown-org-${org.id}`}
-                            className="text-sm font-medium"
-                          >
-                            {org.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <label
-                      htmlFor={`remarks-org`}
-                      className="mt-4 text-sm font-medium"
-                    >
-                      Commentary:
-                      <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                    </label>
-                    <textarea
-                      id={`remarks-org`}
-                      className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                      rows={3}
-                      value={organizationalRemarks}
-                      placeholder="Noting time stamps appropriately is extremely helpful"
-                      onChange={(e) => {
-                        const words = e.target.value
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0); // Count non-empty words
-                        if (words.length <= 500) {
-                          setOrganizationalRemarks(e.target.value); // Update the value if within limit
-                        }
-                      }}
-                    />
-                    <p className="text-red-500 text-sm h-5">{errors.organizationRemarks ? "Required." : ""}</p>
-
-                  </div>
-                </div>
+          {/* Collapsible Sections
+          {['evaluations', 'earnings', 'payments', 'evaluationResults'].map((section) => (
+            <div key={section} className="mt-6">
+              <button
+                onClick={() => toggleSection(section)}
+                className="flex justify-between items-center w-full text-left text-lg font-medium text-blue-600 hover:text-blue-800 transition"
+              >
+                {section === 'evaluationResults'
+                  ? 'Evaluation Results'
+                  : section.charAt(0).toUpperCase() + section.slice(1)}
+                {expandedSection === section ? <ChevronUp /> : <ChevronDown />}
+              </button>
+              {expandedSection === section && (
+                <pre className="mt-2 p-4 bg-gray-100 rounded-xl overflow-auto text-sm max-h-64">
+                  {JSON.stringify((data as any)[section], null, 2)}
+                </pre>
               )}
+            </div>
+          ))} */}
+        </div>
+      )}
+    </div>
+{/* end */}
 
-              {/* Final Remarks Section */}
-              <div className="mt-6">
-                <label htmlFor="final-remarks" className="text-sm font-medium">
-                  Additional Comments:
-                  <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                </label>
-                <textarea
-                  value={finalRemarks}
-                  id="final-remarks"
-                  className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                  rows={4}
-                  onChange={(e) => {
-                    const words = e.target.value
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0); // Count non-empty words
-                    if (words.length <= 1000) {
-                      setFinalRemarks(e.target.value); // Update the value if within limit
-                    }
-                  }}
-                />
-                {/* {errors.finalRemarks && (
-                  <p className="text-red-500 text-sm">Required.</p>
-                )} */}
-                <p className="text-red-500 text-sm h-5">{errors.finalRemarks ? "Required." : ""}</p>
 
-              </div>
-              <div className="mt-6">
-                <label htmlFor="thingtoworkon-remarks" className="text-sm font-medium">
-                  Things to Work On:
-                  <span className="text-red-500 after:content-['*'] after:ml-1 after:text-red-500"></span>
-                </label>
-                <textarea
-                  value={thingsToWork}
-                  id="thingstoworkon-remarks"
-                  className="border border-gray-300 rounded-md p-2 text-gray-700 text-sm w-full mt-1"
-                  rows={4}
-                  onChange={(e) => {
-                    const words = e.target.value
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0); // Count non-empty words
-                    if (words.length <= 1000) {
-                      setThingsToWork(e.target.value); // Update the value if within limit
-                    }
-                  }}
-                />
-                {/* {errors.finalRemarks && (
-                  <p className="text-red-500 text-sm">Required.</p>
-                )} */}
-                <p className="text-red-500 text-sm h-5">{errors.thingsToWorkOnRemarks ? "Required." : ""}</p>
+{/* map start */}
 
-              </div>
-              {/* {session?.user.club_id && ( */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="mt-6">
-                  <label
-                    htmlFor="final-remarks"
-                    className="text-sm font-medium"
-                  >
-                    Upload Document:
-                  </label>
-                  <input
-                    type="file"
-                    name="document"
-                    className=""
-                    onChange={handleDocumentChange}
-                    ref={fileInputRef}
-                  />
+
+<div className="p-4 bg-white rounded-xl shadow-lg ">
+            {/* Top Section: Header metrics */}
+            <div className="w-fit bg-white p-4 rounded-xl shadow">
+                <table className="table-auto border-collapse  border-gray-300">
+                    <thead>
+                        <tr>
+                            {headerMetrics.map((metric, index) => (
+                                <th key={index} className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
+                                    {metric}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {headerMetrics.map((_, index) => (
+                                <td key={index} className="px-4 py-2 border border-gray-300 bg-white">
+                                    <div
+                                        className="flex justify-center gap-1"
+                                        onDoubleClick={() => handleHeaderRatingChange(index, 0)}
+                                    >
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                size={16}
+                                                className={`cursor-pointer transition ${headerRatings[index] > i
+                                                        ? 'fill-yellow-400 stroke-yellow-400'
+                                                        : 'stroke-gray-300'
+                                                    }`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // prevent double-click event
+                                                    handleHeaderRatingChange(index, i + 1);
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+
+                                </td>
+                            ))}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            {/* Body: Skills sidebar + Radar */}
+            <div className="p-5 flex flex-row gap-8">
+                {/* Sidebar with skill values */}
+                <div className="flex flex-col gap-2 w-[250px]">
+                    {radarSkills.map((label, i) => (
+                        <div key={i} className="flex items-center justify-between gap-2">
+                            <label className="text-sm text-gray-700 w-[180px]">{label}</label>
+                            <input
+                                type="number"
+                                min={0}
+                                max={10}
+                                value={skillRatings[i]}
+                                onChange={(e) => handleSkillRatingChange(i, Number(e.target.value))}
+                                className="w-12 text-center border rounded px-1 py-0.5 text-sm"
+                            />
+                        </div>
+                    ))}
                 </div>
-              </div>
-              {fileUploading ? (
-                <>
-                  <FileUploader />
-                </>
-              ) : (
-                <>{/* Optional: Placeholder for additional content */}</>
-              )}
 
-              {/* )} */}
+                {/* Radar Chart */}
+                <div className="flex-1 h-[500px] min-w-[400px]">
+                    <ResponsiveContainer>
+                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                            <PolarGrid />
+                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+                            <PolarRadiusAxis angle={80} domain={[0, 2, 3, 4, 5, 6, 7, 8, 9, 10]} tickCount={10}
+
+                            />
+                            <Radar
+                                name="Player"
+                                dataKey="A"
+                                stroke="#1e40af"
+                                fill="#3b82f6"
+                                fillOpacity={0.5}
+                            />
+                        </RadarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+        </div>
+{/* map end */}
+
+
+
+  </div>
+  </div>
+
+             
+
+
+
+
+
+
+
+            
+              
               <div className="flex justify-end space-x-2 pt-6">
                 <button
                   type="submit"
