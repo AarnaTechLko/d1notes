@@ -39,20 +39,27 @@ const Header: React.FC = () => {
   const dropdownRefSignup = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
 
-  const handleLogout = async () => {
+  const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    event.preventDefault();
+
     setIsLoggingOut(true);
 
     try {
       const result = await signOut({
         redirect: false,
-        callbackUrl: "/login",
+        // callbackUrl: "/login",
       });
 
-      setTimeout(() => {
-        if (result.url) {
-          router.push(result.url); // Use Next.js router for redirection
-        }
-      }, 2000);
+      // console.log("Results: ", result);
+      // console.log("Session: ", session);
+
+      router.push("/login");
+
+      // setTimeout(() => {
+        // if (result.url) {
+        //   router.push(result.url); // Use Next.js router for redirection
+        // }
+      // }, 2000);
     } catch (error) {
       console.error("Logout error:", error);
       setIsLoggingOut(false);

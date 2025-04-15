@@ -5,7 +5,7 @@ import { coaches, evaluation_charges, invitations, licenses, otps, playerEvaluat
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, between, lt,ilike,sql } from 'drizzle-orm';
+import { eq,isNotNull,and, inArray ,between, lt,ilike,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function POST(req: NextRequest) {
@@ -140,6 +140,7 @@ export async function PUT(req: NextRequest) {
   const website = formData.get('website') as string | null;
   const license_type = formData.get('license_type') as string | null;
   const coachIdAsNumber = parseInt(coachId, 10);
+  const isCompletedProfile = formData.get('isCompletedProfile') as boolean | null;
 
   const timestamp = Date.now(); 
   const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${lastName.trim().toLowerCase().replace(/\s+/g, '-')}${timestamp}`;
@@ -174,6 +175,7 @@ export async function PUT(req: NextRequest) {
     cv: cv || null,  
     image:imageFile,
     status:"Active",
+    isCompletedProfile: isCompletedProfile
   })
   .where(eq(coaches.id, coachIdAsNumber))
   .execute();
@@ -224,7 +226,7 @@ export async function GET(req: NextRequest) {
   try {
     const conditions = [isNotNull(coaches.firstName)];
     
-    conditions.push(eq(coaches.status,'Active'));
+    conditions.push(inArray(coaches.status,['Active', 'Archived', 'Pending']));
     conditions.push(eq(coaches.visibility, 'on'));
     if (country) {
       conditions.push(eq(coaches.country, country));

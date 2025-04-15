@@ -60,6 +60,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string | null>(null);
+  const [playerType, setPlayerType] = useState<string | null>(null);
   const { data: session } = useSession();
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
   function toSentenceCase(str: string): string {
@@ -72,7 +73,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
   // Fetch coach data
   useEffect(() => {
-    const payload = { slug: slug, loggeInUser: session?.user.id };
+    const payload = { slug: slug, loggeInUser: session?.user.id, loggedInUserType: session?.user.type };
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/enterprise/profile/`, {
@@ -88,6 +89,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         const responseData = await response.json();
         console.log("Country data", responseData.country);
         setCoachData(responseData.clubdata);
+
+        // console.log("Club Teams: ", responseData.clubTeams)
+
+
         setTeamData(responseData.clubTeams);
         setCoachList(responseData.coachesList);
         setIsRequested(responseData.isRequested);
@@ -100,8 +105,11 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       }
     };
 
+    // console.log("Session: ", session);
+
     fetchCoachData();
     setPlayerId(session?.user?.id || null);
+    setPlayerType(session?.user?.type || null);
 
   }, [session, slug]);
 
@@ -264,8 +272,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {teamData && teamData.length > 0 ? (
               teamData.map((item: any) => {
-                console.log(item); // Check the structure of item
-                return (
+                // console.log(item); // Check the structure of item
+
+                /*
                   <ProfileCard
                     key={item?.teamSlug}
                     creatorname={item.creatorName}
@@ -274,6 +283,17 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     rating={5}
                     slug={item.slug}
                   />
+                */
+                return (
+                  <ProfileCard
+                    key={item.teams?.teamSlug ?? item.teamSlug}
+                    teamId={item.teams?.id ?? item.id}
+                    teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+                    logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
+                    rating={5}
+                    slug={item.teams?.slug ?? item.slug}
+                    playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+                  /> 
                 );
               })
             ) : (
@@ -283,13 +303,21 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
         </section>
 
-        <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
+        {/* <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Coaches
         </h2>
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {coachList && coachList.length > 0 ? (
               coachList.map((item: any) => (
+                // <CoachProfileCard
+                //   key={item?.teamSlug}
+                //   name={item.firstName}
+                //   organization={item.clubName} // Ensure `clubName` is correct
+                //   image={item.image ?? '/default.jpg'}
+                //   rating={5}
+                //   slug={item.slug}
+                // />
                 <CoachProfileCard
                   key={item?.teamSlug}
                   name={item.firstName}
@@ -298,6 +326,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   rating={5}
                   slug={item.slug}
                 />
+
               ))
             ) : (
               <p className="text-black-500 text-lg">No Coaches added yet....</p>
@@ -343,7 +372,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             )}
           </div>
 
-        </section>
+        </section> */}
 
 
 

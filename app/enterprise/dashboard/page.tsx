@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
 
 <h3 className='font-bold text-lg mt-4'>Sub Administrators</h3> 
 
-<p>As the main administrator, if you would like to add additional administrators, <a href="/enterprise/doc" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Sub Administrators in order to give access to someone other than you to the organization profile; however, you must add purchasing and/or viewing of evaluations access if desired. These administrators will never have the ability to add other administrators and you can remove any administrator at any time</p>
+<p>As the main administrator, if you would like to add additional administrators, <a href="/enterprise/doc" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Sub Administrators in order to give access to someone other than you to the organization profile; however, you must add purchasing and/or viewing of evaluations access if desired. These administrators will never have the ability to add other administrators and you can remove any administrator at any time.</p>
 
 <h3 className='font-bold text-lg mt-4'>Archives</h3> 
 <p>By clicking on Archives in the menu, you can view your Teams, Coaches and Players that you have archived. From here, you may choose to add a Team, Coach or Player back to Your Teams.

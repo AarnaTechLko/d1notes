@@ -329,6 +329,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Teams assigned successfully!");
+        setSelectedTeams([])
         setIsOpen(false);
       } else {
         showError("Error assigning teams");
@@ -518,7 +519,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className="flex justify-between mt-5">
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {setIsOpen(false); setSelectedTeams([])}}
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                   >
                     Close
@@ -623,7 +624,11 @@ const Home: React.FC = () => {
                       }</td>
                       <td>
                         <button
-                          onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler
+                          onClick={() => {
+                            if (coach.first_name) {//if player has completed profile
+                              handleTeamAssign(coach)
+                            }
+                          }} // Pass the banner ID to the delete handler
                           className=" text-green-500 hover:text-green-700 mr-4"
                           aria-label="Archive Player"
                           title='Assign a Team'

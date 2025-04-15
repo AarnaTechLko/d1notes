@@ -1,64 +1,65 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaUser } from 'react-icons/fa';
 import { getSession } from 'next-auth/react';
+import { showError } from '../Toastr';
 import Swal from 'sweetalert2';
- 
 
 interface ProfileCardProps {
   slug: string;
-  teamName: string;
+  id: string;
   logo: string;
-  rating: number;
-  teamId: number;
-  playerId: number;
+  organization: string;
+  country: string;
+//   countryName: string;
+//   state: string;
+//   city: string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, teamId, playerId }) => {
-  
-  const handleRedirect =async (slug: string) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country, id}) => {
 
-    // console.log("team Id: ", teamId)
 
-    // console.log("player type: ", type)
+  const handleRedirect =async (slug: string, id:string) => {
+    const session = await getSession();
 
-    // console.log("player id: ", playerId)
+    // console.log("club id: ", session?.user.club_id)
 
-    // const session = await getSession();
+    // console.log("session: ", session)
 
-    if (playerId === 0){
-      window.location.href = `/teams/${slug}`;
-    }
-    else if (playerId === teamId){
-      window.location.href = `/teams/${slug}`;
+    if(session)
+    {
+      // if(session?.user?.type=='coach' || session?.user?.type=='player')
+      // {
+       //// window.location.href = `/enterprise/${slug}`;
+      
+      if(session.user.club_id==id)
+      {
+        window.location.href = `/enterprise/${slug}`;
+      }
+      else{
+        Swal.fire({
+          title: 'Unauthorized!',
+          text: 'Only logged in members of this Team may access.',
+          icon: 'error', // 'success' displays a green checkmark icon
+          confirmButtonText: 'OK',
+        });
+        
+      }
+    // }
+    // else{
+    //   window.location.href = `/enterprise/${slug}`;
+    // }
     }
     else{
-
       Swal.fire({
         title: 'Unauthorized!',
         text: 'Only logged in members and administrators of this Organization / Team may view.',
-        icon: 'error',
+        icon: 'error', // 'success' displays a green checkmark icon
         confirmButtonText: 'OK',
-      })
+      });
+    
     }
-    // if(playerId === teamId)
-    // {
-    //  window.location.href = `/teams/${slug}`;
-    // }
-    // else{
-    // Swal.fire({
-    //     title: 'Unauthorized!',
-    //     text: 'Only logged in members and administrators of this Organization / Team may view.',
-    //     icon: 'error', // 'success' displays a green checkmark icon
-    //     confirmButtonText: 'OK',
-    //   });
-    // }
-  // window.open(`/teams/${slug}`, '_blank');
   };
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
-  ));
 
   return (
     <><div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group">
@@ -68,7 +69,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, 
     {logo && logo !== 'null' && (
       <Image
         src={logo}
-        alt={teamName}
+        alt={organization}
         layout="fill"
         className="object-cover rounded-lg"
       />
@@ -76,7 +77,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, 
      {logo && logo == 'null' && (
       <Image
         src={'/default.jpg'}
-        alt={teamName}
+        alt={organization}
         layout="fill"
         className="object-cover rounded-lg"
       />
@@ -88,7 +89,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, 
       <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
         {/* Link in the middle of the overlay */}
         <a 
-         onClick={() => handleRedirect(slug)}
+         onClick={() => handleRedirect(slug,id)}
           className="bg-white text-black py-2 px-4 rounded-full text-lg font-semibold cursor-pointer"
         >
           View Details
@@ -99,13 +100,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ teamName, logo, rating,slug, 
   
     {/* Profile Info Section */}
     <div className="text-center mt-4">
-        <h3 className="text-lg font-semibold">{teamName}</h3>
-        <p>Sport:Soccer</p>
+        <h3 className="text-lg font-semibold">{organization}</h3>
+        {/* <p>EST {}</p> */}
+        <p>{country}</p>
+        <p>Sport: Soccer</p>
         </div>
     
   </div>
  
   </>
+    
   );
 };
 

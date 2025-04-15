@@ -185,6 +185,8 @@ const Home: React.FC = () => {
     setSelectedTeams((prev) =>
       //filter removes the team id that has been unchecked, else when a new team id
       //is checked it will be added to the array
+
+      //only changes I made was the format
       prev.includes(teamId)
         ? prev.filter((id) => id !== teamId)
         : [...prev, teamId]
@@ -212,6 +214,7 @@ const Home: React.FC = () => {
 
       if (response.ok) {
         showSuccess("Teams assigned successfully!");
+        setSelectedTeams([])
         setIsOpen(false);
       } else {
         showError("Error assigning teams");
@@ -729,7 +732,11 @@ const Home: React.FC = () => {
                       <td>
                         <div className="flex items-center space-x-2">
                           <button
-                            onClick={() => handleTeamAssign(coach)} // Pass the banner ID to the delete handler
+                            onClick={() => {
+                              if(coach.firstName) {//if player has completed profile
+                                handleTeamAssign(coach)
+                              }
+                            }} // Pass the banner ID to the delete handler
                             className=" text-green-500 hover:text-green-700 mr-4"
                             aria-label="Archive Player"
                             title="Assign a Team"
@@ -964,7 +971,7 @@ const Home: React.FC = () => {
               </div>
               <div className="flex justify-between mt-5">
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {setIsOpen(false); setSelectedTeams([])}}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                 >
                   Close

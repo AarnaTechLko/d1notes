@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/clientHelpers';
 // Define the type for the data
 interface Order {
   invitationId: number;
-  team_name: string;
+  team_name?: string;
   club_name: string;
   teamLogo: string;
   clubLogo: string;
@@ -16,6 +16,7 @@ interface Order {
   teamSlug: string;
   clubSlug: string;
   createdAt: string;
+  enterprise_id: string;
 }
 
 const Home: React.FC = () => {
@@ -29,7 +30,7 @@ const Home: React.FC = () => {
   const router = useRouter();
 
   const limit = 10; // Set the number of items per page
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const fetchOrders = async () => {
     const session = await getSession();
     const enterpriseId = session?.user?.id; // Adjust according to your session structure
@@ -59,9 +60,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (search) {
       const filtered = orders.filter((order) =>
-        order.team_name.toLowerCase().includes(search.toLowerCase()) ||
-        order.club_name.toLowerCase().includes(search.toLowerCase()) ||
-        order.status.toString().includes(search.toLowerCase())
+        order.team_name?.toLowerCase().includes(search.toLowerCase()) ||
+        order.club_name?.toLowerCase().includes(search.toLowerCase()) ||
+        order.status?.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredOrders(filtered);
     } else {
@@ -97,9 +98,19 @@ const Home: React.FC = () => {
     const invitationId = selectedOrder.invitationId;
     const session = await getSession();
     const userId = session?.user?.id;
-    const userType='coach';
+    const userType = 'coach';
     const status = 'Joined';
- 
+
+    if (session && session.user) {
+      console.log(session)
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          club_id: selectedOrder.enterprise_id
+        }
+      })
+    }
     try {
 
       const response = await fetch(`/api/joinrequest/approve`, {
@@ -121,15 +132,15 @@ const Home: React.FC = () => {
     handleConfirmationClose(); // Close modal after accepting
   };
 
- 
+
   const handleReject = async () => {
     if (!selectedOrder) return;
-   
+
     const invitationId = selectedOrder.invitationId;
-    const status='Declined'
+    const status = 'Declined'
     const session = await getSession();
     const userId = session?.user?.id;
-    const userType='coach';
+    const userType = 'coach';
     try {
 
 
@@ -168,7 +179,7 @@ const Home: React.FC = () => {
             <table className="w-full text-sm text-left text-gray-700">
               <thead>
                 <tr>
-                  
+
                   <th>Organization</th>
                   <th>Team</th>
                   <th>Date and Time Received</th>
@@ -179,10 +190,10 @@ const Home: React.FC = () => {
                 {paginatedOrders.length > 0 ? (
                   paginatedOrders.map((order, index) => (
                     <tr key={order.invitationId}>
-                     
+
 
                       <td style={{ textAlign: "center" }}>
-                      <a href={`/enterprise/${order.clubSlug}`} target="_blank">
+                        <a href={`/enterprise/${order.clubSlug}`} target="_blank">
                           <img
                             src={order.clubLogo}
                             alt="Club Logo"
@@ -218,25 +229,25 @@ const Home: React.FC = () => {
 
                       <td>{formatDate(order.createdAt)}</td>
                       <td>
-                      <button
-  className={`px-4 py-2 rounded-lg ${
-    order.status === "Joined"
-      ? " text-green-800"
-      : order.status === "Requested"
-      ? "bg-yellow-500  text-black"
-      : "bg-red-500  text-white"
-  }`}
-  onClick={() => {
-    if (order.status === "Sent") {
-      setSelectedOrder(order);
-      setShowConfirmation(true);
-      
-     }
-    
-  }}
->
-  {order.status === "Sent" ? "Received" : order.status}
-</button>
+                        <button
+                          className={`px-4 py-2 rounded-lg ${order.status === "Joined"
+                              ? " text-green-800"
+                              : order.status === "Requested"
+                                ? "bg-yellow-500  text-black"
+                                : "bg-red-500  text-white"
+                            }`}
+                          onClick={() => {
+                            console.log(order)
+                            if (order.status === "Sent") {
+                              setSelectedOrder(order);
+                              setShowConfirmation(true);
+
+                            }
+
+                          }}
+                        >
+                          {order.status === "Sent" ? "Received" : order.status}
+                        </button>
 
                       </td>
                     </tr>

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { enterprises, otps } from '../../../../lib/schema';
+import { enterprises, countries, otps } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, between, lt,ilike } from 'drizzle-orm';
+import { eq,isNotNull, and, sql , between, lt,ilike } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 export async function GET(req: NextRequest) {
@@ -57,18 +57,29 @@ export async function GET(req: NextRequest) {
         .select({
             organizationName: enterprises.organizationName,
             country: enterprises.country,
+            countryName: countries.name,
+            state: enterprises.state,
+            city:enterprises.city,
             logo: enterprises.logo,
             slug: enterprises.slug,
             club_id:enterprises.id
           
         })
         .from(enterprises)
+        .leftJoin(countries, eq(countries.id, sql<number>`CAST(${enterprises.country} AS INTEGER)`))
         .where(and(...conditions))
+        
+      // .leftJoin(countries, eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`))
+
+        
         const coachlist =await query.execute();
   
         const formattedCoachList = coachlist.map(coach => ({
             organizationName: coach.organizationName,
             country: coach.country,
+            countryName: coach.countryName,
+            state: coach.state,
+            city: coach.city,
             logo:coach.logo,
             slug:coach.slug,
             club_id:coach.club_id

@@ -5,8 +5,8 @@
 //however instead of making a page for every coach we just pass in there id through the url
 // and use slig to render the page based on the data retrieved from it
 
-import { useEffect, useState} from 'react';
-import { useSession } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
+import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import LoginModal from '../../components/LoginModal'; // Import the modal
 import EvaluationModal from '@/app/components/EvaluationModal';
@@ -80,6 +80,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [evaluationList, setEvaluationList] = useState<EvaluationData[]>([]);
   const [evaluationRates, setEvaluationRates] = useState<[]>([]);
   const [kids, setKids] = useState<Kids[] | undefined>(undefined);
+  const [coachesBlockedUsers, setCoachesBlockedUsers] = useState<number[]>();
+  const [playersBlockedUsers, setPlayersBlockedUsers] = useState<number[]>();
+  const [isEvaluationAllowed, setIsEvaluationAllowed] = useState<boolean>(true);
+  const hasMounted = useRef(false);
   const compareValues = (v1: any, v2: any): string => {
     const num1 = (v1 === null || v1 === 'null') ? NaN : Number(v1);
     const num2 = (v2 === null || v2 === 'null') ? NaN : Number(v2);
@@ -123,8 +127,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
       }
     };
-
-    const payload = { slug: slug, loggeInUser: session?.user.id };
+    if (!session?.user.id) {
+      return
+    }
+    const payload = { slug: slug, loggeInUser: session?.user.id, userType: session?.user.type };
     const fetchCoachData = async () => {
       try {  
         const response = await fetch(`/api/coachprofile/`, {
@@ -152,24 +158,60 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     fetchKids()
     fetchCoachData();
     setPlayerId(session?.user?.id || null);
-    setPlayerClubid(session?.user?.club_id || '')
+    setPlayerClubid(session?.user?.club_id || '');
   }, [session, slug]);
 
+  const fetchBlockedUsers = async () => {
+    if (session?.user.type !== "player") {
+      return
+    }
+    const response = await fetch(`/api/block-user?current_id=${session?.user.id}&selected_user_id=${coachData?.id}&current_type=${"player"}&selected_type=${"coach"}`)
+
+    const { currentUsersBlockedUsers, selectedUsersBlockedUsers } = await response.json()
+
+    setPlayersBlockedUsers(currentUsersBlockedUsers ? currentUsersBlockedUsers.split(",").map(Number) : [])
+    setCoachesBlockedUsers(selectedUsersBlockedUsers ? selectedUsersBlockedUsers.split(",").map(Number) : [])
+  }
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return
+    }
+    fetchBlockedUsers()
+  }, [coachData])
+
+  useEffect(() => {
+    if(playersBlockedUsers?.includes(Number(coachData?.id)) || coachesBlockedUsers?.includes(Number(session?.user.id))) {
+      setIsEvaluationAllowed(false)
+    }
+    else {
+      setIsEvaluationAllowed(true)
+    }
+  }, [playersBlockedUsers, coachesBlockedUsers])
 
   const handleLicenseCheck = (totalLicenses: string, setIsevaluationModalOpen: (state: boolean) => void) => {
-    if (session?.user?.club_id) {
-
-
-      if (totalLicenses === "notavailable") {
-        Swal.fire({
-          title: "Error!",
-          text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return;
-      }
+    //users belong to same org but are out of evaluations
+    if (totalLicenses === "outOfLicense") {
+      Swal.fire({
+        title: "Out of evaluations!",
+        text: "You cannot request an evaluation as your organization does not have sufficient evaluations.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
     }
+    //coach is not part of players org
+    else if (totalLicenses === "notAvailable") {
+      Swal.fire({
+        title: "Error!",
+        text: "This coach is not on your team. Please request an evaluation from your team's coach.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    
     setIsevaluationModalOpen(true);
   };
   const handleDownload = async (url: string) => {
@@ -304,23 +346,29 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
               </div> */}
 
 
-              {!(session && session.user && session.user.type === 'coach') && (
+              {!(session && session.user && session.user.type === 'coach' || session?.user.type === "enterprise") && (
                 <>
                   {!session ? (
                     <button
                       onClick={() => setIsModalOpen(true)} // Open modal on click
                       className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                     >
-                     Login to Request  Evaluation 
+                      Login to Request Evaluation
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => handleLicenseCheck(totalLicneses || '', setIsevaluationModalOpen)}// Open modal on click
-                      className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      Request Evaluation
-                    </button>
-                  )}
+                  ) :
+                    isEvaluationAllowed ? (
+                      <button
+                        onClick={() => handleLicenseCheck(totalLicneses || '', setIsevaluationModalOpen)}// Open modal on click
+                        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      >
+                        Request Evaluation
+                      </button>
+                    ) : (
+                      <>
+                        <button disabled className="mt-6 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 cursor-not-allowed" >Request Evaluation</button>
+                        <p className="mt-2 text-sm text-gray-500">Cannot request evaluation. You or the user is blocked...</p>
+                      </>
+                    )}
                 </>
               )}
 
@@ -562,9 +610,9 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                       <p>{evaluation.first_name} {evaluation.last_name}</p>
                     </div>
 
-                    <div className="flex-2 overflow-auto break-all p-4 self-center items-start">
+                    <div className="flex self-center inline-block align-middle h-64 w-1/2 overflow-y-auto break-all p-4 items-start">
                       {/* <h3 className="font-semibold text-gray-800">Testimonial</h3> */}
-                      <p>{evaluation.remarks}</p>
+                      <p className='mx-auto my-auto'>{evaluation.remarks}</p>
                     </div>
                     {/* Rating Column */}
                     <div className="flex-1 min-w-fit self-center">

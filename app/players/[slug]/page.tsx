@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/app/components/Loading';
-import ProfileCard from '@/app/components/teams/ProfileCard';
+import ProfileCard from '@/app/components/players/TeamProfileCard';
 import ClubProfileCard from '@/app/components/enterprise/ProfileCard';
-import PlayerProfileCard from '../../components/players/ProfileCard'
+import PlayerProfileCard from '../../components/players/EnterpriseProfileCard'
 import Profile from '@/app/coach/profile/page';
 import JoinRequestModal from '@/app/components/JoinRequestModal';
 import { FaFacebook, FaInstagram, FaLinkedin, FaUser, FaYoutube } from 'react-icons/fa';
@@ -26,6 +26,37 @@ interface Profile {
 
 }
 
+interface Player {
+  first_name: string;
+  last_name: string;
+  image: string;
+  graduation: string;
+  sport: string;
+  playingcountries: string;
+  position: string;
+  birth_year?: string;
+  age_group?: string;
+  country: string;
+  state: string;
+  city: string;
+  team: string;
+  countrycode: string;
+  number: string;
+  league: string;
+  bio: string;
+  height?: string;
+  weight?: string;
+  gender?: string;
+  grade_level?: string;
+  jersey?: string;
+  gpa?: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  xlink?: string;
+  youtube?: string;
+
+}
 interface RestTeam {
   playerId: string;
   playerName: string;
@@ -35,7 +66,7 @@ interface RestTeam {
   slug?: string;
 }
 
-interface CoachData {
+interface playerData {
   first_name: string;
   last_name: string;
   jersey: string;
@@ -74,16 +105,30 @@ interface CoachProfileProps {
   };
 }
 
+interface Organization{
+  organizationId: number;
+  logo: string;
+  organizationName: string;
+  slug: string;
+  country: string;
+  countryName: string;
+}
+
 const CoachProfile = ({ params }: CoachProfileProps) => {
   const { slug } = params;
-  const [coachData, setCoachData] = useState<CoachData | null>(null);
+
+  //This allows for either Player interface or undefined values
+  //However we need to use optional chaining to help prevent runtime error
+
+  const [playerData, setPlayerData] = useState<Player | null>(null);
   const [teamData, setTeamData] = useState<Profile[]>([]);
   const [banners, setBanners] = useState<string[]>([]);
   const [coaches, setCoaches] = useState<string[]>([]);
-  const [organizations, setOrganization] = useState<string[]>([]);
+  const [organizations, setOrganization] = useState<Organization[]>([]);
   const [clubName, setClubName] = useState<string | null>(null);
   const [teams, setTeams] = useState<string[]>([]);
   const [restTeams, setRestTeams] = useState<RestTeam[]>([]);
+  const [playerType, setPlayerType] = useState<string | null>(null);
   const [currentBanner, setCurrentBanner] = useState(0); // Track the current banner index
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,7 +143,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
   useEffect(() => {
-    const payload = { slug: slug };
+    const payload = { slug: slug, loggeInUser: session?.user.id, loggedInUserType: session?.user.type };
     setCoachId(session?.user?.id ?? null);
     const fetchCoachData = async () => {
       try {
@@ -114,9 +159,12 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           setError(responseData.error);
         }
 
+        // console.log("Organization: ", responseData.playerOrganizations);
 
-        setCoachData(responseData.clubdata);
-        
+        console.log("Teams: ", responseData.playerOfTheTeam)
+
+        setOrganization(responseData.playerOrganizations);
+        setPlayerData(responseData.clubdata);
         setTeamData(responseData.teamplayersList);
         setTeams(responseData.playerOfTheTeam);
         setRestTeams(responseData.teamPlayers);
@@ -134,6 +182,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     };
 
     fetchCoachData();
+    setPlayerType(session?.user?.type || null);
+
   }, [slug,session]);
 
   useEffect(() => {
@@ -149,13 +199,13 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   }
 
   if (error) return <div>{error}</div>;
-  if (!coachData) return <div>Club not found</div>;
+  // if (!playerData) return <div>Club not found</div>;
 
-  const joiningDate = new Date(coachData.createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  // const joiningDate = new Date(playerData.createdAt).toLocaleDateString('en-US', {
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric',
+  // });
 
   return (
     <>
@@ -169,19 +219,19 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           <div className="flex flex-col md:flex-row  mb-4 md:mb-0 md:mr-4">
             {/* Profile Image */}
             <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-              {coachData.image && coachData.image !== 'null' && (
+              {playerData?.image && playerData?.image !== 'null' && (
                 <Image
-                  src={coachData.image ?? '/default.jpg'}
-                  alt={`${coachData.first_name} ${coachData.last_name}`}
+                  src={playerData.image ?? '/default.jpg'}
+                  alt={`${playerData.first_name} ${playerData.last_name}`}
                   width={200}
                   height={200}
                   className="rounded-full object-cover"
                 />
               )}
-              {coachData.image && coachData.image == 'null' && (
+              {playerData?.image && playerData?.image == 'null' && (
                 <Image
                   src={'/default.jpg'}
-                  alt={`${coachData.first_name} ${coachData.last_name}`}
+                  alt={`${playerData.first_name} ${playerData.last_name}`}
                   width={200}
                   height={200}
                   className="rounded-full object-cover"
@@ -194,37 +244,37 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             {/* Coach Info */}
             <div className="text-left md:text-left">
             <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
-  {coachData?.jersey && (
+  {playerData?.jersey && (
     <span className="bg-blue-500 text-xl text-white px-4 py-2 rounded-full w-10 h-10 inline-flex items-center justify-center">
-      #{coachData.jersey || '-'}
+      #{playerData.jersey || '-'}
     </span>
   )}{" "}
-  {coachData.first_name} {coachData.last_name}
+  {playerData?.first_name} {playerData?.last_name}
 </h3>
 
             <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
-                {coachData.facebook && (
-                  <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
+                {playerData?.facebook && (
+                  <a href={playerData?.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
                     <FaFacebook size={25} />
                   </a>
                 )}
-                {coachData.instagram && (
-                  <a href={coachData.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
+                {playerData?.instagram && (
+                  <a href={playerData?.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500">
                     <FaInstagram size={25} />
                   </a>
                 )}
-                {coachData.linkedin && (
-                  <a href={coachData.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
+                {playerData?.linkedin && (
+                  <a href={playerData?.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
                     <FaLinkedin size={25} />
                   </a>
                 )}
-                {coachData.xlink && (
-                  <a href={coachData.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+                {playerData?.xlink && (
+                  <a href={playerData?.xlink} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
                     <FaXTwitter size={25} />
                   </a>
                 )}
-                {coachData.youtube && (
-                  <a href={coachData.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                {playerData?.youtube && (
+                  <a href={playerData?.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
                     <FaYoutube size={25} />
                   </a>
                 )}
@@ -232,24 +282,24 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <div className='bg-white p-6 w-full mt-4'>
               <div className="grid grid-cols-3 gap-5">
                 {/* <div><b>Organization Name:</b> {clubName}</div> */}
-                <div><b>Position(s):</b> {coachData.position ?? "N/A"}</div>
-                <div><b>Graduation Year (High School):</b> {coachData.graduation ?? "N/A"}</div>
-                 <div><b>Weight (lbs):</b> {coachData.weight ?? "N/A"}</div>  
-                <div><b>Height:</b> {coachData.height ?? "N/A"}</div>
-                <div><b>School Name:</b> {coachData.school_name ?? "N/A"}</div>
-                <div><b>GPA:</b> {coachData.gpa ?? "N/A"}</div>
-                <div><b>Sport(s):</b> {coachData.sport ?? "N/A"}</div>
-                <div><b>Nationality(ies):</b> {coachData.playingcountries ?? "N/A"}</div>
-                <div><b>Gender:</b> {coachData.gender ?? "N/A"}</div>
-                <div><b>Team Name(s):</b> {coachData.team ?? "N/A"}</div>
-                <div><b>Level:</b> {coachData.grade_level ?? "N/A"}</div>
-                <div><b>Country:</b> {coachData.countryName ?? "N/A"}</div>
-                <div><b>State:</b> {coachData.state ?? "N/A"}</div>
-                <div><b>City:</b> {coachData.city ?? "N/A"}</div>
+                <div><b>Position(s):</b> {playerData?.position ?? "N/A"}</div>
+                <div><b>Graduation Year (High School):</b> {playerData?.graduation ?? "N/A"}</div>
+                 <div><b>Weight (lbs):</b> {playerData?.weight ?? "N/A"}</div>  
+                <div><b>Height:</b> {playerData?.height ?? "N/A"}</div>
+                {/* <div><b>School Name:</b> {playerData[0].school_name ?? "N/A"}</div> */}
+                <div><b>GPA:</b> {playerData?.gpa ?? "N/A"}</div>
+                <div><b>Sport(s):</b> {playerData?.sport ?? "N/A"}</div>
+                <div><b>Nationality(ies):</b> {playerData?.playingcountries ?? "N/A"}</div>
+                <div><b>Gender:</b> {playerData?.gender ?? "N/A"}</div>
+                <div><b>Team Name(s):</b> {playerData?.team ?? "N/A"}</div>
+                <div><b>Level:</b> {playerData?.grade_level ?? "N/A"}</div>
+                {/* <div><b>Country:</b> {playerData[0].countryName ?? "N/A"}</div> */}
+                <div><b>State:</b> {playerData?.state ?? "N/A"}</div>
+                <div><b>City:</b> {playerData?.city ?? "N/A"}</div>
                 
               </div>
               <div className="grid grid-cols-3 gap-5 mt-4">
-            {/*   <div><b>City:</b> {coachData.city ?? "N/A"}</div> */}
+            {/*   <div><b>City:</b> {playerData.city ?? "N/A"}</div> */}
             {/* { birth_year && (
           <p className="text-gray-500 teampagefont">
             <b>Birth Year: </b>{birth_year}
@@ -260,20 +310,20 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             <b>Age Group: </b>{age_group}
           </p>
           )} */}
-          { coachData.age_group && (
-              <div><b>Age Group:</b> {coachData.age_group ?? "N/A"}</div>
+          { playerData?.age_group && (
+              <div><b>Age Group:</b> {playerData.age_group ?? "N/A"}</div>
             )}
-            { coachData.birth_year && (
-              <div><b>Birth Year:</b> {coachData.birth_year ?? "N/A"}</div>
+            { playerData?.birth_year && (
+              <div><b>Birth Year:</b> {playerData.birth_year ?? "N/A"}</div>
             )}
             
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>League(s):</b> {coachData.league ?? "N/A"}</div>
+              <div><b>League(s):</b> {playerData?.league ?? "N/A"}</div>
               
               </div>
               <div className="grid grid-cols-1 gap-5 mt-4">
-              <div><b>Experience/Accolades:</b> {coachData.bio ?? "N/A"}</div>
+              <div><b>Experience/Accolades:</b> {playerData?.bio ?? "N/A"}</div>
               
               </div>
               {/* <div>
@@ -316,38 +366,73 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           Organization
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-         {organizations.length > 0 ? (
-  organizations.map((item: any) => (
-    <ClubProfileCard
-      key={item.id}
-   
-      organization={item.organizationName}
-      logo={item.logo ?? '/default.jpg'}
-      id={item.id}
-      country={item.country}
-      slug={item.slug}
-    />
-  ))
-) : (
-  <p>No Organizations added yet..</p>
-)}
+
+
+        {/* slug: string;
+  enterpriseName: string;
+  firstName: string;
+  lastName: string;
+  image?: string;
+  position: string;
+  grade_level: string;
+  location: string;
+  height: number;
+ 
+  weight: number; */}
+          
+          {organizations?.length > 0 ? (
+            organizations.map((item: any) => (
+              <PlayerProfileCard
+                key={item.id}
+            
+                organization={item.organizationName}
+                logo={item.logo ?? '/default.jpg'}
+                id={item.id}
+                country={item.countryName}
+                slug={item.slug}
+              />
+            ))
+          ) : (
+            <p>No Organizations added yet..</p>
+          )}
 
         </div>
       <h2 className="text-lg font-semibold mt-5 bg-customBlue text-black p-4 rounded-lg">
           Teams
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {teams.length > 0 ? (
+        {teams?.length > 0 ? (
           teams.map((item: any) => (
-          
+        
+            
+            // key={item.teams?.teamSlug ?? item.teamSlug}
+            // teamId={item.teams?.id ?? item.id}
+            // creatorname={item.teams?.creatorName ?? item.creatorName}
+            // teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+            // logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
+            // rating={5}
+            // slug={item.teams?.slug ?? item.slug}
+            // playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+            // type={String(playerType)}
+
+            // <ProfileCard
+            //     key={item?.teamSlug}
+            //     creatorname={item.creatorName}
+            //     teamName={item.teamName} // Ensure `team_name` is correct
+            //     logo={item.logo ?? '/default.jpg'}
+            //     rating={5}
+            //     slug={item.teamSlug}
+            //   />
+
             <ProfileCard
-                key={item?.teamSlug}
-                creatorname={item.creatorName}
-                teamName={item.teamName} // Ensure `team_name` is correct
-                logo={item.logo ?? '/default.jpg'}
-                rating={5}
-                slug={item.teamSlug}
-              />
+              key={item.teamSlug}
+              teamName={item.teamName} // Ensure `team_name` is correct
+              logo={item.teamLogo  ??'/default.jpg'}
+              sport={item.sport}
+              rating={5}
+            />
+
+
           ) )) : (
             <p>No Teams added yet...</p>
           )}
@@ -389,15 +474,15 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
       </div> 
 
 
-      {isJoinRequestModalOpen && coachId && (
+      {/* {isJoinRequestModalOpen && coachId && (
         <JoinRequestModal
           isOpen={isJoinRequestModalOpen}
           onRequest={() => setIsRequested(1)}
-          requestToID={coachData?.id.toString()}
+          requestToID={playerData?.id.toString()}
           type="team"
           onClose={() => setIsJoinRequestModalOpen(false)}
         />
-      )}
+      )} */}
     </>
   );
 };

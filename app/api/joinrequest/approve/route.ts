@@ -7,17 +7,22 @@ export async function POST(req: Request) {
     const body = await req.json();
     const {invitationId,status, userId,userType} = body;
     const updateInvitations=await db.update(invitations).set({status:status}).where(eq(invitations.id, invitationId)).returning({teamId:invitations.team_id, clubId:invitations.enterprise_id});
+
+    // console.log("I'm here")
+    // console.log("Test: ", updateInvitations[0].teamId)
+
     if(status=='Joined')
     {
         if(userType=='coach')
         {
-            await db.insert(teamCoaches).values(
-                {
-                  teamId:Number(updateInvitations[0].teamId),
-                  coachId:userId,
-                  enterprise_id:Number(updateInvitations[0].clubId) ,
-                }).returning();
-
+            if(updateInvitations[0].teamId !== 0){
+                await db.insert(teamCoaches).values(
+                    {
+                    teamId:Number(updateInvitations[0].teamId),
+                    coachId:userId,
+                    enterprise_id:Number(updateInvitations[0].clubId) ,
+                    }).returning();
+            }
             await db.update(coaches).set(
                 {
                     enterprise_id:Number(updateInvitations[0].clubId).toString()
@@ -26,18 +31,20 @@ export async function POST(req: Request) {
             ).where(eq(coaches.id,userId));
         }
         else{
-            await db.insert(teamPlayers).values(
-                {
-                  teamId:Number(updateInvitations[0].teamId),
-                  playerId:userId,
-                  enterprise_id:Number(updateInvitations[0].clubId) ,
-                }).returning();
-                await db.update(users).set(
+            if(updateInvitations[0].teamId !== 0){
+                await db.insert(teamPlayers).values(
                     {
-                        enterprise_id:Number(updateInvitations[0].clubId).toString()
-                         
-                    }
-                ).where(eq(users.id,userId));
+                    teamId:Number(updateInvitations[0].teamId),
+                    playerId:userId,
+                    enterprise_id:Number(updateInvitations[0].clubId) ,
+                    }).returning();
+            }
+            await db.update(users).set(
+                {
+                    enterprise_id:Number(updateInvitations[0].clubId).toString()
+                        
+                }
+            ).where(eq(users.id,userId));
         }
        
     }

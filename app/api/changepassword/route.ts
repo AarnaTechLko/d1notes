@@ -89,8 +89,8 @@ export async function POST(request: Request) {
 
         const emailResult = await sendEmail({
             to: user_email,
-            subject: "D1 NOTES Player Registration",
-            text: "D1 NOTES Player Registration",
+            subject: `D1 NOTES ${user_type} Password Change`,
+            text: `D1 NOTES ${user_type}`,
             html: `<p>Dear ${user_name}! Your password for ${user_type} account on D1 NOTES has been changed.`,
           });
 

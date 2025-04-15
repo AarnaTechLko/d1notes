@@ -19,6 +19,16 @@ export async function POST(req: NextRequest) {
         if(type=='player')
         {
               data = await Promise.all(teamIds.map(async (teamId) => {
+
+                const alreadyExist = await db.select().from(teamPlayers).where(and(eq(teamPlayers.teamId,teamId),eq(teamPlayers.playerId, playerId), eq(teamPlayers.enterprise_id, enterpriseId)));
+
+                // console.log(alreadyExist)
+
+                if(alreadyExist.length > 0){
+                  return null;
+                }
+
+
                 const result = await db.insert(teamPlayers).values({
                   teamId: teamId,
                   playerId: playerId,
@@ -32,6 +42,17 @@ export async function POST(req: NextRequest) {
         if(type=='coach')
             {
                   data = await Promise.all(teamIds.map(async (teamId) => {
+
+
+                    const alreadyExist = await db.select().from(teamCoaches).where(and(eq(teamCoaches.teamId,teamId),eq(teamCoaches.coachId, playerId), eq(teamCoaches.enterprise_id, enterpriseId)));
+
+                    console.log(alreadyExist)
+    
+                    if(alreadyExist.length > 0){
+                      return null;
+                    }
+
+
                     const result = await db.insert(teamCoaches).values({
                       teamId: teamId,
                       coachId: playerId,

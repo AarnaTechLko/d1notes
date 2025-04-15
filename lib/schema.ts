@@ -11,7 +11,7 @@ import {
   decimal,
   boolean,
   pgEnum,
-  integer // Ensure integer is imported from drizzle-orm/pg-core
+  integer, 
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
 import { sql } from "drizzle-orm"; 
@@ -21,7 +21,6 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
-    blockedCoachIds: text("blockedCoachIds"),
     first_name: varchar("first_name"),
     last_name: varchar("last_name"),
     grade_level: varchar("grade_level"),
@@ -83,6 +82,7 @@ export const coaches = pgTable(
   "coaches",
   {
     id: serial("id").primaryKey(),
+    blockedPlayerIds: text("blockedPlayerIds"),
     firstName: varchar("firstName"),
     lastName: varchar("lastName"),
     email: varchar("email"),
@@ -101,7 +101,7 @@ export const coaches = pgTable(
     country:varchar("country"),
     state:varchar("state"),
     city:varchar("city"),
-    currency: varchar("currency").default("$"), 
+    currency: varchar("currency").default("$"),
     rating: decimal("rating", { precision: 10, scale: 1 }).default('0'),
     password: text("password").notNull(),
     certificate:text("certificate"),
@@ -117,8 +117,6 @@ export const coaches = pgTable(
     license:text("license"),
     status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
-    isCompletedProfile: boolean("isCompletedProfile").default(false),
-    blockedPlayerIds: text("blockedPlayerIds"),
   },
   (coaches) => {
     return {
@@ -566,6 +564,8 @@ export const admins = pgTable("admin", {
   is_deleted: boolean("is_deleted").default(false), // ✅ Add this line
 });
 
+
+
 export const ticket = pgTable("ticket", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -578,15 +578,6 @@ export const ticket = pgTable("ticket", {
   message: text("message").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
-export const ticket_messages = pgTable("ticket_messages", {
-  id: serial("id").primaryKey(),
-  ticket_id: integer("ticket_id").notNull(),
-  replied_by: text("replied_by").notNull(),
-  message: text("message").notNull(),
-  status: varchar("status").default("Pending"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 
 export const userOrgStatus = pgTable("userOrgStatus",{
 	org_user_id:integer("org_user_id"),
@@ -594,7 +585,5 @@ export const userOrgStatus = pgTable("userOrgStatus",{
 	status:text("status").default("Pending").notNull(),
 	role:text("text")
 })
-
-
 
 

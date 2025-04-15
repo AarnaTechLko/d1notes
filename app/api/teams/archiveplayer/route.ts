@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { teamPlayers, users } from "@/lib/schema";
+import { teamPlayers, users, teams } from "@/lib/schema";
 import { eq, and, exists ,desc,count } from "drizzle-orm";
 
 export async function POST(req: NextRequest) { 
@@ -8,13 +8,21 @@ export async function POST(req: NextRequest) {
     //try and catch not working need to fix to help us in future
     try{
     
-        const { id, teamId } = await req.json();
+        const { id, teamId, enterprise_id } = await req.json();
 
-        const query = await db.select({player_id: teamPlayers.playerId}).from(teamPlayers).where(eq(teamPlayers.playerId,id));
+        // const query = await db.select({team_id: teamPlayers.teamId}).from(teamPlayers).where(eq(teamPlayers.enterprise_id,enterprise_id));
+
+        const query = await db.select({team_id: teamPlayers.teamId}).from(teamPlayers).where(eq(teamPlayers.playerId,id));
+
+        const activeTeams = query.map(async (p) => {
+            //check to see if teams are active, if not then don't append
+            await db.select().from(teams).where(and(eq(teams.id,p.team_id),eq(teams.status, "Active")))
+
+        });
 
         // console.log("query: ", query)
 
-        if(query.length === 1){
+        if(activeTeams.length === 1){
             await db.update(users).set({status:'Archived'}).where(eq(users.id, id));
         }
         

@@ -8,6 +8,8 @@ import Select from "react-select";
 import { countryCodesList, countries, states, positionOptionsList } from '@/lib/constants';
 import { upload } from '@vercel/blob/client';
 import CropEasy from '@/app/components/crop/CropEasy';
+import { showError } from '@/app/components/Toastr';
+
 
 const Profile: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -229,7 +231,61 @@ const Profile: React.FC = () => {
     const formattedNumber = formatPhoneNumber(event.target.value);
     setProfileData({ ...profileData, mobileNumber: formattedNumber });
   };
+
+  const validateUpdates = (): boolean =>{
+
+    const errors ={
+
+      organizationName: "",
+      countryName: "",
+      owner_name: "",
+      email: "",
+      mobileNumber: "",
+      countryCodes: "",
+      address: "",
+      country: "",
+      state: "",
+      city: "",
+      logo: "",
+      sport: "",
+      description: "",
+    };
+
+    if(!profileData.organizationName) errors.organizationName = "Name of Organization is required";
+    if(!profileData.owner_name) errors.owner_name = "Name of Administrator is required";
+    if(!profileData.email) errors.email = "Administrator Email is required";
+    if(!profileData.sport) errors.sport = "Sport is required";
+    if(!profileData.countryCodes) errors.countryCodes = "Country code is required";
+    if(!profileData.mobileNumber) errors.mobileNumber = "Mobile phone number is required";
+    if(!profileData.country) errors.country = "Country is required";
+    if(!profileData.state) errors.state = "State is required";
+    if(!profileData.city) errors.city = "City is required";
+    if(!profileData.address) errors.address = "Street address is required";
+    if(!profileData.description) errors.description = "Organization description is required";
+
+    Object.entries(errors).reverse()
+      .filter(([_, value]) => value !== "")
+      .forEach(([field, message]) => {
+        showError(message); // Display each error in a separate toastr
+      });
+
+    // Return false if there are any errors
+    if (Object.values(errors).some(value => value !== "")) {
+      // console.log("I'm here")
+      return false; // Validation failed
+    }
+
+    return true;
+
+
+  }
+
   const handleSubmit = async () => {
+
+    if (!validateUpdates()) return;
+
+
+
     try {
       console.log(profileData);
       const session = await getSession();
@@ -302,7 +358,9 @@ const Profile: React.FC = () => {
                   if (isEditMode) {
                     handleSubmit(); // Call the submit function when in edit mode
                   }
-                  setIsEditMode(!isEditMode);
+                  else{
+                    setIsEditMode(!isEditMode);
+                  }
                 }}
                 className={`px-5 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md ${isEditMode ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
@@ -360,7 +418,7 @@ const Profile: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-5 mb-2">
               {/* First Name */}
               <div>
-                <label className="block text-base font-bold mb-2">Organization Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -376,7 +434,7 @@ const Profile: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
               <div>
-                <label className="block text-base font-bold mb-2">Administrator Name<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Name{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -392,7 +450,7 @@ const Profile: React.FC = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-base font-bold mb-2">Administrator Email<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Email{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="email"
@@ -409,7 +467,7 @@ const Profile: React.FC = () => {
               {/* Sports */}
 
               <div className="flex-1">
-                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s)<span className='mandatory'>*</span></label>
+                <label htmlFor="sport" className="block text-base font-bold mb-2">Sport(s){isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="sport"
@@ -417,16 +475,17 @@ const Profile: React.FC = () => {
                     value={profileData.sport}
                     onChange={handleChange}
                   >
+                    <option value="">Select</option>
                     <option value="Soccer">Soccer</option>
 
                   </select>
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">Soccer</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.sport}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-base font-bold mb-2">Administrator Mobile Number<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Administrator Mobile Number{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <div className="flex">
                     <select
@@ -457,7 +516,7 @@ const Profile: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
               <div>
-                <label className="block text-base font-bold mb-2">Organization Country<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Country{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <select
                     name="country"
@@ -479,7 +538,7 @@ const Profile: React.FC = () => {
 
               </div>
               <div>
-                <label className="block text-base font-bold mb-2">Organization State/Province<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization State/Province{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
 
                   // <select>
@@ -503,17 +562,31 @@ const Profile: React.FC = () => {
                   // ))}
                   // </select>
 
+                  <select
+                  name="state"
+                  id="state"
+                  value={profileData.state}
+                  onChange={handleChange}
+                  className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
+                >
+                  <option value="">Select a state</option>
+                  {statesList.map((state: any, index) => (
+                      <option key={index} value={state.name}>
+                        {state.name}
+                      </option>
+                    ))}
+                </select>
 
-                  <Select
-                  options={statesList.map((state) => ({ label: state.name, value: state.id }))}
-                  value={statesList.find((state) => state.id === profileData.state) || null}
-                  onChange={(selectedOption) =>
-                    setProfileData((prevData) => ({ ...prevData, state: selectedOption?.value || "" }))
-                  }
-                />
+                //   <Select
+                //   options={statesList.map((state) => ({ label: state.name, value: state.id }))}
+                //   value={statesList.find((state) => state.id === profileData.state) || null}
+                //   onChange={(selectedOption) =>
+                //     setProfileData((prevData) => ({ ...prevData, state: selectedOption?.value || "" }))
+                //   }
+                // />
                 
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.stateName}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.state}</p>
                 )}
 
 
@@ -521,7 +594,7 @@ const Profile: React.FC = () => {
 
               {/* Location */}
               <div>
-                <label className="block text-base font-bold mb-2">Organization City<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization City{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
                   <input
                     type="text"
@@ -537,7 +610,7 @@ const Profile: React.FC = () => {
 
               <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
 
-                <label className="block text-base font-bold mb-2">Organization Street Address<span className='mandatory'>*</span></label>
+                <label className="block text-base font-bold mb-2">Organization Street Address{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
                 {isEditMode ? (
 
                   <textarea name="address" maxLength={1500} className='w-full border border-gray-300 rounded-md py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -553,7 +626,7 @@ const Profile: React.FC = () => {
               </div>
 
               <div className="col-span-2 sm:col-span-2 lg:col-span-3 mb-4">
-                <label htmlFor="city" className="block text-base font-bold mb-2">Organization Description<span className='mandatory'>*</span></label>
+                <label htmlFor="city" className="block text-base font-bold mb-2">Organization Description{isEditMode ? <span className='mandatory'>*</span> : ""}</label>
 
                 {isEditMode ? (
                   <textarea name="description" maxLength={1500} className='w-full border border-gray-300 rounded-md py-2 px-4  focus:outline-none focus:ring-2 focus:ring-blue-500'

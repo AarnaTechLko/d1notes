@@ -119,6 +119,7 @@ export async function GET(req: Request) {
       teamSlug: teams.slug, // Ensure correct column name
       clubLogo: enterprises.logo, // Ensure correct column name
       teamLogo: teams.logo, // Ensure correct column name
+      enterprise_id: invitations.enterprise_id
     })
     .from(invitations)
     .leftJoin(teams, eq(teams.id,invitations.team_id))
@@ -140,6 +141,7 @@ export async function GET(req: Request) {
       teamSlug: row.teamSlug,
       clubSlug: row.clubSlug,
       createdAt: row.createdAt,
+      enterprise_id: row.enterprise_id
     }));
 
     
@@ -163,6 +165,7 @@ export async function GET(req: Request) {
       teamSlug: teams.slug, // Ensure correct column name
       clubLogo: enterprises.logo, // Ensure correct column name
       teamLogo: teams.logo, // Ensure correct column name
+      enterprise_id: invitations.enterprise_id
     })
     .from(invitations)
     .leftJoin(teams, eq(teams.id,invitations.team_id))
@@ -184,6 +187,7 @@ export async function GET(req: Request) {
       teamSlug: row.teamSlug,
       clubSlug: row.clubSlug,
       createdAt: row.createdAt,
+      enterprise_id: row.enterprise_id
     }));
 
     return NextResponse.json({ data: plainResult }, { status: 200 });

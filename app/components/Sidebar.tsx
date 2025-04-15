@@ -72,14 +72,17 @@ const Sidebar: React.FC = () => {
     try {
       const result = await signOut({
         redirect: false, 
-        callbackUrl: "/login",
+        // callbackUrl: "/login",
       });
   
-      setTimeout(() => {
-        if (result.url) {
-          router.push(result.url); // Use Next.js router for redirection
-        }
-      }, 2000);
+      // setTimeout(() => {
+      //   if (result.url) {
+      //     router.push(result.url); // Use Next.js router for redirection
+      //   }
+      // }, 2000);
+      router.push("/login");
+
+
     } catch (error) {
       console.error("Logout error:", error);
       setIsLoggingOut(false);

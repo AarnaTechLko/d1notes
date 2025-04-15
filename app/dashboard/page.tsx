@@ -366,7 +366,7 @@ const Dashboard: React.FC = () => {
                 return (
                   <span >
                     {/* flag for later */}
-                    {remainingTime.toFixed(2)} Hours
+                    {remainingTime.toFixed(0)} Hours
                   </span>
                 );
               }
@@ -552,6 +552,9 @@ const closeEvform = () => {
       String(cell.value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  // console.log("Filtered Rows: ", filteredRows);
+  
   return (
     <div className="flex h-screen">
       <Modal

@@ -47,6 +47,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [isRequested, setIsRequested] = useState<number>(0);
   const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [playerType, setPlayerType] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string | null>(null);
@@ -59,7 +60,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
   // Fetch coach data
   useEffect(() => {
-    const payload = { slug: slug,loggeInUser:session?.user.id };
+    const payload = { slug: slug, loggeInUser: session?.user.id, loggedInUserType: session?.user.type };
     const fetchCoachData = async () => {
       try {
         const response = await fetch(`/api/enterprise/profile/`, {
@@ -87,6 +88,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
     fetchCoachData();
     setPlayerId(session?.user?.id || null);
+    setPlayerType(session?.user?.type || null);
 
   }, [session, slug]);
 
@@ -221,16 +223,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           <div className="flex flex-col md:flex-row md:space-x-8">
           {teamData?.map((item: any) => {
             console.log(item); // Check the structure of item
+            // return (
+            //   <ProfileCard
+            //     key={item?.teamSlug}
+            //     creatorname={item.creatorName}
+            //     teamName={item.teamName} // Ensure `team_name` is correct
+            //     logo={item.logo ?? '/default.jpg'}
+            //     rating={5}
+            //     slug={item.slug}
+            //   />
+            // );
             return (
               <ProfileCard
-                key={item?.teamSlug}
-                creatorname={item.creatorName}
-                teamName={item.teamName} // Ensure `team_name` is correct
-                logo={item.logo ?? '/default.jpg'}
+                key={item.teams?.teamSlug ?? item.teamSlug}
+                teamId={item.teams?.id ?? item.id}
+                teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+                logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
                 rating={5}
-                slug={item.slug}
-              />
+                slug={item.teams?.slug ?? item.slug}
+                playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+              /> 
             );
+
           })}
 
           </div>

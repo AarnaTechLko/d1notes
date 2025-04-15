@@ -81,7 +81,6 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     } else if (field === 'state') {
       newState = value as string;
       setState(newState);
-    } else if (field === 'city') {
     } else if (field === 'graduation') {
       newgraduation = value as string;
       setGraduation(newgraduation);

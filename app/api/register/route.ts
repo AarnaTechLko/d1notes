@@ -132,9 +132,10 @@ D1 Notes Team</p>`,
 }
 
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest, res: NextResponse) {
   const logError = debug('app:error');
   const formData = await req.formData();
+  const isCompletedProfile = formData.get('isCompletedProfile') as boolean | null;
   const firstName = formData.get('first_name') as string;
   const lastName = formData.get('last_name') as string;
   const gradeLevel = formData.get('grade_level') as string;
@@ -169,6 +170,7 @@ export async function PUT(req: NextRequest) {
   const age_group = formData.get('age_group') as string | null;
   const birth_year = formData.get('team_year') as string | null;
   const playerIDAsNumber = parseInt(playerID, 10);
+  // const isCompletedProfile = formData.get('isCompletedProfile') as boolean | null;
   try {
     const timestamp = Date.now();
     const slug = `${firstName.trim().toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
@@ -209,7 +211,8 @@ export async function PUT(req: NextRequest) {
         age_group: age_group || null,
         birth_year: birth_year || null,
         gpa: gpa || '0.00',
-        status: "Active"
+        status: "Active",
+        isCompletedProfile: isCompletedProfile
       })
       .where(eq(users.id, playerIDAsNumber))
 

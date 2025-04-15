@@ -72,7 +72,8 @@ export async function POST(req: NextRequest) {
       .where(
         and(
           eq(playerEvaluation.coach_id, coachId),
-          eq(playerEvaluation.status, status)
+          eq(playerEvaluation.status, status),
+          eq(playerEvaluation.payment_status, "Paid")
         )
       )
       .orderBy(playerEvaluation.updated_at)

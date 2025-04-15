@@ -1,7 +1,7 @@
 "use client"; // Important for using hooks in Next.js 13+
 
 import { useState, useRef, useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import DefaultPic from "../../public/default.jpg";
 import Brand from '../../public/images/brand.jpg';
 import CertificateImage from '../../public/certificate.png'
@@ -42,6 +42,7 @@ interface FormValues {
   license: string;
   cv: string;
   license_type: string;
+  isCompletedProfile: boolean;
 }
 
 interface FormErrors {
@@ -98,6 +99,7 @@ export default function Register() {
     license: '',
     cv: '',
     license_type: '',
+    isCompletedProfile: false,
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -121,7 +123,6 @@ export default function Register() {
     license: null,
     cv: null,
     license_type: null,
-
   });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -130,7 +131,7 @@ export default function Register() {
   const LisenseInputRef = useRef<HTMLInputElement | null>(null);
   const CvInputRef = useRef<HTMLInputElement | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [certificateUploading, setCertificateUploading] = useState<boolean>(false);
   const [photoUploading, setPhotoUploading] = useState<boolean>(false);
   const [licenseUpoading, setLicenseUpoading] = useState<boolean>(false);
@@ -173,7 +174,7 @@ export default function Register() {
       license: null,
       cv: null,
       license_type: null,
-
+      // isCompletedProfile: false,
       image: null, // Ensure this property is included
     };
 
@@ -217,6 +218,7 @@ export default function Register() {
     Object.entries(errors).reverse()
       .filter(([_, value]) => value !== undefined && value !== null)
       .forEach(([field, message]) => {
+
         showError(message); // Display each error in a separate toastr
       });
 
@@ -228,22 +230,32 @@ export default function Register() {
     return true;
   };
 
+  const updateIsCompletedField = async () => {
+    const formData = new FormData();
+    setFormValues(prevFormValues => {
+      const updatedValues = {...prevFormValues, isCompletedProfile: true}
+      // Append all form values to FormData
+      for (const key in updatedValues) {
+        const value = updatedValues[key as keyof FormValues];
+        formData.append(key, value as string | Blob);
+      }
+      return updatedValues
+    });
+    return formData;
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    // setFormValues({...formValues, isCompletedProfile: true})
     setError(null);
     setSuccessMessage(null);
 
     if (!validateForm()) return;
 
     setLoading(true);
-    const formData = new FormData();
 
-    for (const key in formValues) {
-      const value = formValues[key as keyof FormValues];
-      formData.append(key, value as string | Blob);
-    }
+    const formData = await updateIsCompletedField() //don't need to pass formData since we assign formData when returning
+
     if (session && session.user.id) {
       formData.append("coachId", session.user.id);
 
@@ -253,8 +265,6 @@ export default function Register() {
     }
 
     try {
-
-
       const response = await fetch('/api/coach/signup', {
         method: 'PUT',
         body: formData,
@@ -280,10 +290,19 @@ export default function Register() {
       });
       if (response.ok) {
         localStorage.clear();
-        router.push("/coach/dashboard");
-
+        const updatedSession  = await getSession();
+  
+        if (updatedSession  && updatedSession .user) {
+          await update({
+            ...updatedSession,
+            user: {
+              ...updatedSession.user,
+              isCompletedProfile: true
+            }
+          });
+          window.location.href = "/coach/dashboard";
+        }
       }
-
       //window.location.href = '/coach/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong!');
@@ -459,17 +478,17 @@ export default function Register() {
     }
   };
 
-  useEffect(() => {
-    if (session) {
-      //   if (session.user.type === 'coach') {
-      //     window.location.href = '/coach/dashboard';
-      //   } else if (session.user.type === 'player') {
-      //     window.location.href = '/dashboard';
-      //   } else if (!session.user.name) {
-      //     window.location.href = '/completeprofile';
-      //   }
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     //   if (session.user.type === 'coach') {
+  //     //     window.location.href = '/coach/dashboard';
+  //     //   } else if (session.user.type === 'player') {
+  //     //     window.location.href = '/dashboard';
+  //     //   } else if (!session.user.name) {
+  //     //     window.location.href = '/completeprofile';
+  //     //   }
+  //   }
+  // }, [session]);
 
   return (
     <>
