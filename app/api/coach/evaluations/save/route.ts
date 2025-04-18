@@ -151,6 +151,7 @@ export async function POST(req: NextRequest) {
       const playerData = await db.select().from(users).where(eq(users.id, playerId));
 
 let subject;
+
 let mailmessage;
 let coachsubject;
 let coachmailmessage;

@@ -1,5 +1,35 @@
 'use client';
 import React, { useEffect, useRef, useState } from "react";
+import { FormEvent } from 'react';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+} from 'recharts';
+import { Star } from 'lucide-react';
+
+const headerMetrics = ['Speed', 'Ability', 'COD with ball', 'COD without ball', 'Counter Move Jump'];
+
+const radarSkills = [
+  { label: 'Receiving & 1st Touch', key: 'receivingFirstTouch' },
+  { label: 'Shots on Goal', key: 'shotsOnGoal' },
+  { label: 'Finishing Touches', key: 'finishingTouches' },
+  { label: 'Combination Play', key: 'combinationPlay' },
+  { label: 'Workrate', key: 'workrate' },
+  { label: 'Pressing from the Front', key: 'pressingFromFront' },
+  { label: '1v1 Domination', key: 'oneVOneDomination' },
+  { label: 'Goal Threat', key: 'goalThreat' },
+  { label: 'Being a Good Teammate', key: 'beingAGoodTeammate' },
+  { label: 'Decision Making', key: 'decisionMakingScore' },
+  { label: 'No. of Touches in Final 3rd', key: 'touchesInFinalThird' },
+  { label: 'Off the Ball Movement', key: 'offTheBallMovement' },
+  { label: 'Ability to find Space in the box', key: 'spaceInBoxAbility' },
+  { label: 'Runs off the ball/Forward runs', key: 'forwardRuns' },
+];
+
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import defaultImage from "../../public/default.jpg";
@@ -14,17 +44,28 @@ type NewEvaluationFormProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+import Swal from 'sweetalert2';
+// const RATING_OPTIONS = ['Excellent', 'Positive', 'Neutral'];
 
-
-
-const CHARACTERISTICS: Record<string, string[]> = {
-  Communication: ['Persistence', 'Aggression', 'Alertness'],
-  Execution: ['Scoring', 'Receiving', 'Passing'],
-  'Decision Making': ['Mobility', 'Anticipation', 'Pressure'],
-  'Soccer Fitness': ['Speed Endurance', 'Strength', 'Explosive Movements'],
+// At the top of your file or in a separate types file
+type RatingInputProps = {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-const RATING_OPTIONS = ['Excellent', 'Positive', 'Neutral'];
+// Use React.FC with the prop type
+const RatingInput: React.FC<RatingInputProps> = ({ value, onChange }) => (
+  <select
+    value={value}
+    onChange={onChange}
+    className="w-full border border-gray-300 rounded-md p-2 text-sm"
+  >
+    <option value="">Select</option>
+    <option value="EXCELLENT">EXCELLENT</option>
+    <option value="POSITIVE">POSITIVE</option>
+    <option value="NEUTRAL">NEUTRAL</option>
+  </select>
+);
 
 
 const NewEvaluationForm: React.FC<NewEvaluationFormProps> = ({
@@ -36,77 +77,94 @@ const NewEvaluationForm: React.FC<NewEvaluationFormProps> = ({
   onClose,
 
 }) => {
-  const [ratings, setRatings] = useState<Record<string, Record<string, string>>>({});
-  const [superStrengths, setSuperStrengths] = useState('');
-  const [areasForDevelopment, setAreasForDevelopment] = useState('');
-  const [idpGoals, setIdpGoals] = useState('');
-  const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
-  const [coachID, setCoachID] = useState<number | undefined>(undefined);
- 
-  const [openDropdown, setOpenDropdown] = useState<Record<string, boolean>>({});
+  const [formData, setFormData] = useState({
+    speed: '',
+    ability: '',
+    codWithBall: '',
+    codWithoutBall: '',
+    counterMoveJump: '',
+    receivingFirstTouch: '',
+    shotsOnGoal: '',
+    finishingTouches: '',
+    combinationPlay: '',
+    workrate: '',
+    pressingFromFront: '',
+    oneVOneDomination: '',
+    goalThreat: '',
+    beingAGoodTeammate: '',
+    decisionMakingScore: '',
+    touchesInFinalThird: '',
+    offTheBallMovement: '',
+    spaceInBoxAbility: '',
+    forwardRuns: '',
 
-  const handleRatingChange = (category: string, skill: string, value: string) => {
-    setRatings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [skill]: value,
-      },
-    }));
+    ratings: {
+      comm_persistence: '',
+      comm_aggression: '',
+      comm_alertness: '',
+      exe_scoring: '',
+      exe_receiving: '',
+      exe_passing: '',
+      dec_mobility: '',
+      dec_anticipation: '',
+      dec_pressure: '',
+      soc_speedEndurance: '',
+      soc_strength: '',
+      soc_explosiveMovements: '',
+    },
+
+    // Additional text fields
+    superStrengths: '',
+    developmentAreas: '',
+    idpGoals: '',
+    keySkills: '',
+    attacking: '',
+    defending: '',
+    transitionDefending: '',
+    transitionAttacking: '',
+  });
+  const [headerRatings, setHeaderRatings] = useState<number[]>(Array(headerMetrics.length).fill(0));
+  const [skillRatings, setSkillRatings] = useState<number[]>(Array(radarSkills.length).fill(0));
+const [submitting, setSubmitting] = useState(false);
+  const handleHeaderRatingChange = (index: number, value: number) => {
+    const newRatings = [...headerRatings];
+    newRatings[index] = value;
+    setHeaderRatings(newRatings);
+  };
+  const [submittedEvaluations, setSubmittedEvaluations] = useState<number[]>([]);
+
+  const handleSkillRatingChange = (index: number, value: number) => {
+    const newRatings = [...skillRatings];
+    newRatings[index] = value;
+    setSkillRatings(newRatings);
   };
 
-/* ***************************data facthing************************* */
-// Handle Data fetching for Saved Drafts
-const fetchEvaluationResultData = async () => {
-  try {
-    const response = await fetch(
-      `/api/evaluationdetails?evaluationId=${evaluationId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch evaluation data");
-    }
-
-    const data = await response.json();
-
-    console.log("fatching data evaluations:",data.data);
-  } catch (error) {
-    console.error("Error fetching evaluation data:", error);
-  }
-};
-const userId = evaluationId;
-
-const formattedDate = evaluationData?.created_at
-    ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
-    : "";
-
-  useEffect(() => {
-    evaluationData?.evaluationId != null ? fetchEvaluationResultData() : "";
-  }, [evaluationData]);
-
-
-  /* data fatching end  */
-
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    setSubmitting(true);
   
+    // Flatten the ratings object
+    const { ratings, ...rest } = formData;
     const payload = {
-      ratings,
-      superStrengths,
-      areasForDevelopment,
-      idpGoals,
-      submittedAt: new Date().toISOString(),
+      ...rest,
+      ...ratings,
+      playerId,
+      coachId,       // Make sure this is available
+      evaluationId,
+      speed: headerRatings[0],
+      ability: headerRatings[1],
+      codWithBall: headerRatings[2],
+      codWithoutBall: headerRatings[3],
+      counterMoveJump: headerRatings[4],
+      // map skills
+      ...radarSkills.reduce((acc, skill, i) => {
+        acc[skill.key] = skillRatings[i];
+        return acc;
+      }, {} as any),  // Make sure this is available
     };
+    
   
     try {
-      const res = await fetch('/api/playerevaluation', {
+      const res = await fetch('/api/radarEvaluation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,18 +172,44 @@ const formattedDate = evaluationData?.created_at
         body: JSON.stringify(payload),
       });
   
-      if (!res.ok) throw new Error('Submission failed');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Unknown error');
+      }
   
-      const data = await res.json();
-      alert('Evaluation submitted successfully!');
-      // Optionally reset form or redirect
+      const responseData = await res.json();
+      console.log('Evaluation submitted:', responseData);
+      Swal.fire("Success", "Evaluation submitted successfully!", "success");
+      setSubmittedEvaluations(prev => 
+        typeof evaluationId === 'number' ? [...prev, evaluationId] : prev
+      );
+      
+      onClose(); // close the modal
     } catch (error) {
-      console.error(error);
-      alert('There was an error submitting the evaluation.');
+      console.error('Error submitting radar evaluation:', error);
+      Swal.fire("Error", "Something went wrong. Please check console.", "error");
     }
   };
-  
+const chartData = radarSkills.map((skill, i) => ({
+    subject: skill.label,
+    A: skillRatings[i],
+  }));
+  const userId = evaluationId;
 
+  const formattedDate = evaluationData?.created_at
+    ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
+    : "";
+
+    useEffect(() => {
+        const saved = localStorage.getItem('submittedEvaluations');
+        if (saved) {
+          setSubmittedEvaluations(JSON.parse(saved));
+        }
+      }, []);
+      
+      useEffect(() => {
+        localStorage.setItem('submittedEvaluations', JSON.stringify(submittedEvaluations));
+      }, [submittedEvaluations]);
   if (!isOpen) return null;
 
 
@@ -136,7 +220,7 @@ const formattedDate = evaluationData?.created_at
         {/* Header */}
         <div className="bg-blue-700 text-white p-5 flex justify-between items-center rounded-t-2xl sticky top-0 z-10">
           <h2 className="text-xl font-bold">Player Evaluation Form</h2>
-         
+
           <button onClick={onClose} className="text-white text-2xl hover:text-gray-200">
             &times;
           </button>
@@ -159,12 +243,12 @@ const formattedDate = evaluationData?.created_at
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4">
-                    Review Title:{" "}
-                    <span className="font-normal">
-                      {evaluationData?.review_title}
-                    </span>
-                  </h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Review Title:{" "}
+                <span className="font-normal">
+                  {evaluationData?.review_title}
+                </span>
+              </h3>
 
               <div className="flex items-center mb-4">
                 <strong className="mr-2">Player:</strong>
@@ -192,11 +276,11 @@ const formattedDate = evaluationData?.created_at
                 </span>
               </div>
 
-              
-                <div className="mb-4">
-                  <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
-                </div>
-             
+
+              <div className="mb-4">
+                <strong className="mr-2">Evaluation Rate:</strong> <span>${evaluationData?.expectedCharge}</span>
+              </div>
+
 
               <div className="mb-4">
                 <strong className="mr-2">Date Requested:</strong> <span>{formattedDate}</span>
@@ -284,22 +368,100 @@ const formattedDate = evaluationData?.created_at
               </ul>
             </div>
           </div>
-          <Playerdata/> 
+          <div className="p-4 bg-white rounded-xl shadow-lg">
+      {/* Top Section: Header metrics */}
+      <div className="w-fit bg-white p-4 rounded-xl shadow mb-6">
+        <table className="table-auto border-collapse border-gray-300">
+          <thead>
+            <tr>
+              {headerMetrics.map((metric, index) => (
+                <th key={index} className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
+                  {metric}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {headerRatings.map((rating, index) => (
+                <td key={index} className="px-4 py-2 border border-gray-300 bg-white">
+                  <div className="flex justify-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={16}
+                        className={`cursor-pointer ${rating > i ? 'fill-yellow-400 stroke-yellow-400' : 'stroke-gray-300'}`}
+                        onClick={() => handleHeaderRatingChange(index, i + 1)}
+                      />
+                    ))}
+                  </div>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Body: Skills sidebar + Radar */}
+      <div className="p-5 flex flex-row gap-8">
+        <div className="flex flex-col gap-2 w-[250px]">
+          {radarSkills.map((skill, i) => (
+            <div key={i} className="flex items-center justify-between gap-2">
+              <label className="text-sm text-gray-700 w-[180px]">{skill.label}</label>
+              <input
+                type="number"
+                min={0}
+                max={10}
+                value={skillRatings[i]}
+                onChange={(e) => handleSkillRatingChange(i, Number(e.target.value))}
+                className="w-12 text-center border rounded px-1 py-0.5 text-sm"
+              />
+            </div>
+          ))}
         </div>
 
-             
+        {/* Radar Chart */}
+        <div className="flex-1 h-[500px] min-w-[400px]">
+          <ResponsiveContainer>
+            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+              <PolarGrid />
+              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+              <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} />
+              <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      
+    </div>        </div>
+
+
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-12 bg-white">
+        <form  className="p-6 space-y-12 bg-white">
           {/* Characteristics Header */}
           <div className="flex items-center gap-6 mb-6">
-            <img
-              src="/path/to/player-image.jpg"
-              alt="Player"
-              className="w-28 h-28 rounded-lg border-4 border-blue-600 object-cover"
-            />
+
+            {evaluationData?.image && evaluationData.image !== "null" ? (
+              <Image
+                src={evaluationData.image}
+                alt="Player Avatar"
+                className="w-12 h-12 mr-3 rounded-full object-cover"
+                width={48}
+                height={48}
+              />
+            ) : (
+              <Image
+                src={defaultImage}
+                alt="Default Player Avatar"
+                className="w-12 h-12 mr-3 rounded-full object-cover"
+                width={48}
+                height={48}
+              />
+            )}
             <div>
-              <h2 className="text-3xl font-bold text-blue-700">CHARACTERISTICS</h2>
+              <h2 className="text-3xl font-bold text-gray-700">CHARACTERISTICS</h2>
               <div className="text-sm mt-2 flex gap-4 flex-wrap">
                 <span className="bg-yellow-400 text-black px-2 py-0.5 rounded">EXCELLENT</span>
                 <span className="bg-cyan-400 text-black px-2 py-0.5 rounded">POSITIVE</span>
@@ -309,170 +471,352 @@ const formattedDate = evaluationData?.created_at
           </div>
 
           {/* Ratings Sections */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {Object.entries(CHARACTERISTICS).map(([category, skills]) => (
-          <div key={category}>
-            <h3 className="text-lg font-semibold text-blue-700 border-b pb-1 mb-4">{category}</h3>
-            {skills.map(skill => (
-              <div key={skill} className="mb-4 relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1">{skill}</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    readOnly
-                    value={ratings[category]?.[skill] || ''}
-                    onClick={() =>
-                      setOpenDropdown(prev => ({
-                        ...prev,
-                        [`${category}-${skill}`]: !prev[`${category}-${skill}`],
-                      }))
-                    }
-                    className={`w-full cursor-pointer border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      ratings[category]?.[skill] === 'Excellent'
-                        ? 'text-yellow-400 '
-                        : ratings[category]?.[skill] === 'Positive'
-                        ? 'text-cyan-400 '
-                        : ratings[category]?.[skill] === 'Neutral'
-                        ? 'text-blue-300 '
-                        : 'text-white'
-                    }`}
-                    placeholder="Select Rating"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-700">
-                    ▼
-                  </div>
+          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-8"> */}
 
-                  {openDropdown[`${category}-${skill}`] && (
-                    <div className="absolute right-0 z-20 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg">
-                      {RATING_OPTIONS.map(option => (
-                        <div
-                          key={option}
-                          onClick={() => {
-                            handleRatingChange(category, skill, option);
-                            setOpenDropdown(prev => ({
-                              ...prev,
-                              [`${category}-${skill}`]: false,
-                            }));
-                          }}
-                          className={`cursor-pointer px-4 py-2 hover:bg-gray-100 ${
-                            option === 'Excellent'
-                              ? 'text-yellow-400 '
-                              : option === 'Positive'
-                              ? 'text-cyan-400 '
-                              : option === 'Neutral'
-                              ? 'text-blue-300 '
-                              : ''
-                          }`}
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+          <input type="hidden" name="userId" value={userId || ''} />
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Communication */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 border-b pb-1 mb-4">Communication</h3>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-700 font-bold">Persistence</span> <span className="text-gray-700">(Remain in advance position)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.comm_persistence}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        comm_persistence: e.target.value,
+                      },
+                    }))
+                  }
+                />
               </div>
-            ))}
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Aggression</span> <span className="text-gray-700">(Aggressive attitude to complete for the ball)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.comm_aggression}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        comm_aggression: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Alertness</span> <span className="text-gray-700">(Anticipate positive opportunities)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.comm_alertness}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        comm_alertness: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Execution */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 border-b pb-1 mb-4">Execution</h3>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Scoring</span> <span className="text-gray-700">(One touch finishes (head and feet))</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.exe_scoring}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        exe_scoring: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Receiving</span> <span className="text-gray-700">(Secure ball under pressure. Turn & face their goal)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.exe_receiving}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        exe_receiving: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-semibold">Passing</span> <span className="text-gray-700">(Layoffs, penetrating, creating goal scoring opportunities)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.exe_passing}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        exe_passing: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Decision Making */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 border-b pb-1 mb-4">Decision Making</h3>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-semibold">Mobility</span> <span className="text-gray-700">(Timing to optimise scoring opportunities)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.dec_mobility}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        dec_mobility: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Anticipation</span> <span className="text-gray-700">(Attack the spaces behind defence)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.dec_anticipation}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        dec_anticipation: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Pressure</span> <span className="text-gray-700">(Contain/disrupt opponents build up)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.dec_pressure}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        dec_pressure: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+            </div>
+
+            {/* Soccer Fitness */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 border-b pb-1 mb-4">Soccer Fitness</h3>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Speed Endurance</span> <span className="text-gray-700">(Repetition of explosive runs)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.soc_speedEndurance}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        soc_speedEndurance: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Strength</span> <span className="text-gray-700">(Compete for possession of the ball)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.soc_strength}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        soc_strength: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+
+              <div className="mb-4 relative">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <span className="text-blue-500 font-bold">Explosive Movements</span> <span className="text-gray-700">(Acceleration, deceleration, COD)</span>
+                </label>
+                <RatingInput
+                  value={formData.ratings.soc_explosiveMovements}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      ratings: {
+                        ...prev.ratings,
+                        soc_explosiveMovements: e.target.value,
+                      },
+                    }))
+                  }
+                />              </div>
+            </div>
+
+
+            {/* Dropdown Rating Options */}
+
+
           </div>
-        ))}
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-2">Super Strengths</label>
-          <textarea
-            rows={5}
-            value={superStrengths}
-            onChange={e => setSuperStrengths(e.target.value)}
-            placeholder="Write player's super strengths..."
-            className="w-full border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Super Strengths</label>
+              <textarea
+                rows={5}
+                value={formData.superStrengths}
+                onChange={e => setFormData(prev => ({ ...prev, superStrengths: e.target.value }))}
+                placeholder="Write player's super strengths..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-        <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-2">Areas for Development</label>
-          <textarea
-            rows={5}
-            value={areasForDevelopment}
-            onChange={e => setAreasForDevelopment(e.target.value)}
-            placeholder="Write areas of development..."
-            className="w-full border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Areas for Development</label>
+              <textarea
+                rows={5}
+                value={formData.developmentAreas}
+                onChange={e => setFormData(prev => ({ ...prev, developmentAreas: e.target.value }))}
+                placeholder="Write areas of development..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-        <div className="md:col-span-2">
-          <label className="block text-lg font-semibold text-gray-800 mb-2">IDP Goals</label>
-          <textarea
-            rows={5}
-            value={idpGoals}
-            onChange={e => setIdpGoals(e.target.value)}
-            placeholder="Write IDP goals..."
-            className="w-full border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-          {/* Key Skills & Game Phases */}
-          <div className="space-y-12">
-            <h2 className="text-2xl font-bold text-blue-700 text-center">Centre Forward Key Skills & Game Phases</h2>
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">IDP Goals</label>
+              <textarea
+                rows={5}
+                value={formData.idpGoals}
+                onChange={e => setFormData(prev => ({ ...prev, idpGoals: e.target.value }))}
+                placeholder="Write IDP goals..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-gray-800">
-              <div>
-                <h3 className="text-xl font-bold text-blue-700 mb-4">Centre Forward – Key Skills</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>1 v 1 Attacking (Outplay)</li>
-                  <li>Finishing – Heading, volleys, 1st time etc.</li>
-                  <li>Movement to create space for self or others</li>
-                  <li>Dribbling and running with the ball</li>
-                  <li>Hold up and link play</li>
-                  <li>Creating opportunities & clever movement</li>
-                  <li>Receiving skills</li>
-                  <li>Transition to Defend and pressing</li>
-                </ul>
-              </div>
+            {/* Key Skills */}
+            <div>
+              <label className="block text-semibold font-semibold text-gray-800 mb-2">Centre Forward – Key Skills</label>
+              <textarea
+                rows={5}
+                value={formData.keySkills}
+                onChange={e => setFormData(prev => ({ ...prev, keySkills: e.target.value }))}
+                placeholder="Write key skills..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div>
-                <h3 className="text-xl font-bold text-blue-700 mb-4">Attacking</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>Movements to receive or open passing lines</li>
-                  <li>Receiving under pressure</li>
-                  <li>Dribbling and running with the ball depending on press</li>
-                  <li>Crossing and cutbacks</li>
-                  <li>Creativity and combination play</li>
-                  <li>Secure, hold up, link and support play</li>
-                </ul>
-              </div>
+            {/* Attacking */}
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Attacking</label>
+              <textarea
+                rows={5}
+                value={formData.attacking}
+                onChange={e => setFormData(prev => ({ ...prev, attacking: e.target.value }))}
+                placeholder="Write attacking notes..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div>
-                <h3 className="text-xl font-bold text-blue-700 mb-4">Defending</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>Pressing responsibilities (Start the press)</li>
-                  <li>Protect key areas</li>
-                  <li>1 v 1 Defending</li>
-                  <li>Compact shape</li>
-                  <li>Direct play into pressing traps</li>
-                </ul>
-              </div>
+            {/* Defending */}
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Defending</label>
+              <textarea
+                rows={5}
+                value={formData.defending}
+                onChange={e => setFormData(prev => ({ ...prev, defending: e.target.value }))}
+                placeholder="Write defending notes..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-              <div>
-                <h3 className="text-xl font-bold text-blue-700 mb-4">Transition (Attack & Defend)</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li>Quick reactions and early decisions</li>
-                  <li>Angles of press to deny options</li>
-                  <li>Link with wingers and attacking mids</li>
-                  <li>Recovery runs and regain possession</li>
-                </ul>
-              </div>
+            {/* Transition of Defending */}
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Transition of Defending</label>
+              <textarea
+                rows={5}
+                value={formData.transitionDefending}
+                onChange={e => setFormData(prev => ({ ...prev, transitionDefending: e.target.value }))}
+                placeholder="Write notes on defending transitions..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Transition to Attack */}
+            <div>
+              <label className="block font-semibold text-gray-800 mb-2">Transition to Attack</label>
+              <textarea
+                rows={5}
+                value={formData.transitionAttacking}
+                onChange={e => setFormData(prev => ({ ...prev, transitionAttacking: e.target.value }))}
+                placeholder="Write notes on transition to attack..."
+                className="w-full text-sm border border-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
           </div>
 
           {/* Submit Button */}
-          <div className="text-center pt-6">
-            <button
-              type="submit"
-              className="bg-blue-700 hover:bg-blue-800 text-white text-lg font-semibold px-8 py-3 rounded-lg transition"
-            >
-              Submit Evaluation
-            </button>
-          </div>
+          <div className="text-right mt-6">
+        <button
+          onClick={handleSubmit}
+          disabled={submitting}
+          className="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition"
+        >
+          {submitting ? 'Submitting...' : 'Submit Evaluation'}
+        </button>
+      </div>
         </form>
       </div>
     </div>

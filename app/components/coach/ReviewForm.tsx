@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
-import Map from "../individuals/Map";
 import PlayerSearchPage from "../individuals/Playerindividual";
+// import Map from "../individuals/Map";
 
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function Playerdata() {
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7 w-[1000px]">
      <PlayerSearchPage/>
-      <Map />
+      {/* <Map/> */}
       </div>
 
     </div>

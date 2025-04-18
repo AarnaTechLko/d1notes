@@ -278,10 +278,10 @@ const TicketsPage = () => {
 
   return (
     <div>
-       <div>
+       {/* <div>
       Welcome {session?.user?.id}
       {session?.user?.name}
-    </div>
+    </div> */}
       {/* <PageBreadcrumb pageTitle="Ticket" onSearch={setSearchQuery} /> */}
       <div className="flex justify-end items-center mx-10 mt-5 dark:border-white/[0.05] " >
         <button

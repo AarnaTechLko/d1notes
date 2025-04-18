@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 import { getSession } from 'next-auth/react';
 import StarRating from '../components/StarRating';
 import defaultImage from '../../public/default.jpg'
-import { FaFacebook, FaFileAlt, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import {  FaFileAlt } from 'react-icons/fa';
 import { showError } from '../components/Toastr';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";

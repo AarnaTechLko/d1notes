@@ -21,11 +21,12 @@ import Swal from 'sweetalert2';
 import { showError } from '@/app/components/Toastr';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { useRef } from "react";
-
+import { useRouter } from 'next/navigation';
 
 
 
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
+  const [submittedEvaluations, setSubmittedEvaluations] = useState<number[]>([]);
 
   if (!isOpen) return null;
 
@@ -117,9 +118,11 @@ const Dashboard: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<string>('0');
   const [data, setData] = useState<Evaluation[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
+  
+  const [submittedEvaluations, setSubmittedEvaluations] = useState<number[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentDescription, setCurrentDescription] = useState<string>("");
+  const router = useRouter();
 
   const openEvalModal = () => {
     console.log("Going to open")
@@ -166,6 +169,19 @@ const Dashboard: React.FC = () => {
   const handleCloseModal = () => {
     setModalOpen(false); // Close modal
   };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('submittedEvaluations');
+    if (saved) {
+      setSubmittedEvaluations(JSON.parse(saved));
+    }
+  }, []);
+  
+  useEffect(() => {
+    localStorage.setItem('submittedEvaluations', JSON.stringify(submittedEvaluations));
+  }, [submittedEvaluations]);
+  
+  
   const fetchEvaluations = async (status: string) => {
     const session = await getSession();
     const coachId = session?.user.id;
@@ -392,12 +408,25 @@ const Dashboard: React.FC = () => {
                     Evaluate
                   </button>
                   <button
-                   
-                    onClick={() => NewhandleAcceptedAction(evaluation)}
-                    className="bg-green-500 text-white px-3 py-1 rounded text-xs"
-                  >
-                    New Evaluate
-                  </button>
+  onClick={() => {
+    if (submittedEvaluations.includes(evaluation.evaluationId)) {
+      router.push(`/newevaluationdetails?evaluationId=${evaluation.evaluationId}`);
+    } else {
+      NewhandleAcceptedAction(evaluation);
+    }
+  }}
+  className={`${
+    submittedEvaluations.includes(evaluation.evaluationId)
+      ? "bg-blue-500"
+      : "bg-green-500"
+  } text-white px-3 py-1 rounded text-xs`}
+>
+  {submittedEvaluations.includes(evaluation.evaluationId) ? "View" : "New Evaluate"}
+</button>
+
+
+
+
                 </div>
 
               </>
@@ -467,6 +496,8 @@ const Dashboard: React.FC = () => {
     setCoachId(evaluation.coachId);
     setPlayerId(evaluation.playerId);
     setEvaluationData(evaluation);
+    setSubmittedEvaluations(prev => [...prev, evaluation.evaluationId]);
+
     console.log("evaluation: ", evaluation);
     setIsNewEvFormOpen(true);
   };

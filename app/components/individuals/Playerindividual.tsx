@@ -59,10 +59,10 @@ export default function PlayerSearchPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto font-sans">
+    <div className=" max-w-5xl mx-auto font-sans">
       {/* <h1 className="text-3xl font-bold mb-6 text-gray-800">🔍 Search Player By ID</h1> */}
      {/*  <Image src={evaluation.photo} alt="Player" width={60} height={60} className="rounded-full" /> */}
-      <div className="flex gap-4 items-center mb-6">
+      {/* <div className="flex gap-4 items-center mb-6">
         <input
           type="number"
           placeholder="Search Player By ID"
@@ -76,7 +76,7 @@ export default function PlayerSearchPage() {
         >
           Search
         </button>
-      </div>
+      </div> */}
 
       {loading && <p className="text-blue-600 font-medium">Loading...</p>}
       {error && <p className="text-red-600 font-medium">{error}</p>}
