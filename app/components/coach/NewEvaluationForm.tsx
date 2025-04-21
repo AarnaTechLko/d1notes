@@ -139,57 +139,65 @@ const [submitting, setSubmitting] = useState(false);
     setSkillRatings(newRatings);
   };
 
-  const handleSubmit = async () => {
-    setSubmitting(true);
-  
-    // Flatten the ratings object
-    const { ratings, ...rest } = formData;
-    const payload = {
-      ...rest,
-      ...ratings,
-      playerId,
-      coachId,       // Make sure this is available
-      evaluationId,
-      speed: headerRatings[0],
-      ability: headerRatings[1],
-      codWithBall: headerRatings[2],
-      codWithoutBall: headerRatings[3],
-      counterMoveJump: headerRatings[4],
-      // map skills
-      ...radarSkills.reduce((acc, skill, i) => {
-        acc[skill.key] = skillRatings[i];
-        return acc;
-      }, {} as any),  // Make sure this is available
-    };
-    
-  
-    try {
-      const res = await fetch('/api/radarEvaluation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Unknown error');
-      }
-  
-      const responseData = await res.json();
-      console.log('Evaluation submitted:', responseData);
-      Swal.fire("Success", "Evaluation submitted successfully!", "success");
-      setSubmittedEvaluations(prev => 
-        typeof evaluationId === 'number' ? [...prev, evaluationId] : prev
-      );
-      
-      onClose(); // close the modal
-    } catch (error) {
-      console.error('Error submitting radar evaluation:', error);
-      Swal.fire("Error", "Something went wrong. Please check console.", "error");
-    }
+const handleSubmit = async () => {
+  setSubmitting(true);
+
+  const { ratings, ...rest } = formData;
+  const payload = {
+    ...rest,
+    ...ratings,
+    playerId,
+    coachId,
+    evaluationId,
+    speed: headerRatings[0],
+    ability: headerRatings[1],
+    codWithBall: headerRatings[2],
+    codWithoutBall: headerRatings[3],
+    counterMoveJump: headerRatings[4],
+    ...radarSkills.reduce((acc, skill, i) => {
+      acc[skill.key] = skillRatings[i];
+      return acc;
+    }, {} as any),
   };
+
+  try {
+    const res = await fetch('/api/radarEvaluation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Unknown error');
+    }
+
+    const responseData = await res.json();
+    console.log('New Evaluation submitted:', responseData);
+
+    Swal.fire("Success", "New Evaluation submitted successfully!", "success");
+
+    // ✅ Add to submittedEvaluations state and localStorage
+    if (typeof evaluationId === 'number') {
+      const updated = [...submittedEvaluations, evaluationId];
+      setSubmittedEvaluations(updated);
+      localStorage.setItem('submittedEvaluations', JSON.stringify(updated));
+    }
+
+    onClose(); // close modal
+
+    // ✅ Reload page to reflect button change (New Evaluate → View)
+    window.location.reload();
+  } catch (error) {
+    console.error('Error submitting radar evaluation:', error);
+    Swal.fire("Error", "Something went wrong. Please check console.", "error");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 const chartData = radarSkills.map((skill, i) => ({
     subject: skill.label,
     A: skillRatings[i],
@@ -207,9 +215,7 @@ const chartData = radarSkills.map((skill, i) => ({
         }
       }, []);
       
-      useEffect(() => {
-        localStorage.setItem('submittedEvaluations', JSON.stringify(submittedEvaluations));
-      }, [submittedEvaluations]);
+
   if (!isOpen) return null;
 
 

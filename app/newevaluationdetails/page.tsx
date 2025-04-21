@@ -59,10 +59,7 @@ const NewEvaluationPage: React.FC<NewEvaluationPageProps> = ({ searchParams
     const [userType, setUserType] = useState<string | null>(null);
     const [playerId, setPlayerId] = useState<number>(0);
 
-    const [rating, setRating] = useState<number>(0);
-    const [hover, setHover] = useState<number>(0);
-    const [remarks, setRemarks] = useState<string>('');
-    const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
+
 
     const formattedDate = evaluationData?.updated_at ? format(new Date(evaluationData.updated_at), 'MM/dd/yyyy') : '';
 
@@ -103,30 +100,7 @@ const NewEvaluationPage: React.FC<NewEvaluationPageProps> = ({ searchParams
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save("download.pdf");
     };
-    const handleSubmitRating = async () => {
-        if (rating <= 0) {
-            showError("Please select rating");
-            return
-        }
-        try {
-            const response = await fetch('/api/submitRating', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ evaluationId, rating, remarks, playerId }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to submit rating');
-            }
-
-            setIsRatingSubmitted(true);
-        } catch (error) {
-            console.error('Error submitting rating:', error);
-            // Handle error, e.g., show an error message
-        }
-    }
+  
 
     const fetchEvaluationData = async () => {
         setLoading(true);
@@ -243,7 +217,9 @@ const NewEvaluationPage: React.FC<NewEvaluationPageProps> = ({ searchParams
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                         {/* Player Information */}
                         <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
-                            <h3 className="text-lg font-semibold mb-4">{evaluationData?.review_title}</h3>
+
+                            <h3 className="text-lg font-semibold mb-4">  Review Title:{" "}
+                                <span>{evaluationData?.reviewTitle}</span></h3>
                             <div className="flex items-center mb-4">
                                 <strong className="mr-2">Player:</strong>
                                 {evaluationData?.image && evaluationData?.image !== 'null' && (
@@ -265,22 +241,23 @@ const NewEvaluationPage: React.FC<NewEvaluationPageProps> = ({ searchParams
                                     />
                                 )}
                                 <span className="text-gray-700">
-                                    <a href={`/players/${evaluationData?.playerSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
+                                    <a href={`/players/${evaluationData?.playerSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.playerFirstName} {evaluationData?.playerLastName}
+                                    </a></span>
 
                             </div>
 
                             <div className="flex items-center mb-4">
                                 <strong className="mr-2">Coach:</strong>
-                                {evaluationData?.coachimage && evaluationData?.coachimage !== 'null' && (
+                                {evaluationData?.coachImage && evaluationData?.coachImage !== 'null' && (
                                     <Image
-                                        src={evaluationData?.coachimage}
+                                        src={evaluationData?.coachImage}
                                         alt="Player Avatar"
                                         className='w-12 h-12 mr-3 rounded-full object-cover'
                                         width={30}
                                         height={30}
                                     />
                                 )}
-                                {(!evaluationData?.coachimage || evaluationData?.coachimage === 'null') && (
+                                {(!evaluationData?.coachImage || evaluationData?.coachImage === 'null') && (
                                     <Image
                                         src={defaultImage}
                                         alt="Player Avatar"

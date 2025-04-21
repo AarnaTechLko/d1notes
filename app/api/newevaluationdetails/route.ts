@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { radarEvaluation, users, coaches, playerEvaluation } from '@/lib/schema';
@@ -68,11 +67,38 @@ export async function GET(request: NextRequest) {
         coachImage: coaches.image,
         coachSlug: coaches.slug,
 
-        // Evaluation Meta
+        // Evaluation Meta (all camelCase ✅)
         reviewTitle: playerEvaluation.review_title,
         status: playerEvaluation.status,
         position: playerEvaluation.position,
         created_at: playerEvaluation.created_at,
+
+        // Video 1
+        
+        updated_at:playerEvaluation.updated_at,
+
+        videoOneTiming: playerEvaluation.videoOneTiming,
+        jerseyColorOne: playerEvaluation.jerseyColorOne,
+        jerseyNumber: playerEvaluation.jerseyNumber,
+        positionOne: playerEvaluation.positionOne,
+        video_description: playerEvaluation.video_description,
+        primary_video_link: playerEvaluation.primary_video_link,
+
+        // Video 2
+        video_link_two: playerEvaluation.video_link_two,
+        videoTwoTiming: playerEvaluation.videoTwoTiming,
+        jerseyColorTwo: playerEvaluation.jerseyColorTwo,
+        jerseyNumberTwo: playerEvaluation.jerseyNumberTwo,
+        positionTwo: playerEvaluation.positionTwo,
+        video_descriptionTwo: playerEvaluation.video_descriptionTwo,
+
+        // Video 3
+        video_link_three: playerEvaluation.video_link_three,
+        videoThreeTiming: playerEvaluation.videoThreeTiming,
+        jerseyNumberThree: playerEvaluation.jerseyNumberThree,
+        jerseyColorThree: playerEvaluation.jerseyColorThree,
+        positionThree: playerEvaluation.positionThree,
+        video_descriptionThree: playerEvaluation.video_descriptionThree,
       })
       .from(radarEvaluation)
       .innerJoin(users, eq(users.id, radarEvaluation.playerId))
@@ -89,9 +115,4 @@ export async function GET(request: NextRequest) {
     console.error('❌ GET Radar Evaluation Error:', error);
     return NextResponse.json({ error: 'Failed to fetch radar evaluation data' }, { status: 500 });
   }
-
 }
-
-
-
-

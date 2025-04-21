@@ -169,6 +169,20 @@
       "when": 1744875765032,
       "tag": "0023_remarkable_preak",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1745223419145,
+      "tag": "0024_right_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1745224596380,
+      "tag": "0025_tired_morlocks",
+      "breakpoints": true
     }
   ]
 }

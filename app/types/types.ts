@@ -40,6 +40,8 @@ export interface Evaluation {
   videoThreeTiming: string;
   coachFirstName: string;
   coachLastName: string;
+  playerFirstName: string;
+  playerLastName: string;
   coachSlug: string;
   updated_at: string;
   accepted_at: string;
@@ -57,7 +59,10 @@ export interface Evaluation {
   video_descriptionThree: string;
 document:string;
 thingsToWork:string;
+coachImage:string;
 coachimage:string;
+playerImage:string;
+reviewTitle:string;
 
 }
 

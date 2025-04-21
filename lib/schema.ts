@@ -8,6 +8,8 @@ import {
   varchar,
   uniqueIndex,
   date,
+  uuid,
+
   decimal,
   boolean,
   pgEnum,
@@ -646,3 +648,39 @@ export const radarEvaluation = pgTable('radar_evaluation', {
 });
 
 
+export const notifications = pgTable('notifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  type: uuid('type').notNull(), // 'coach', 'player', 'organization'
+  message: text('message').notNull(),
+  country: text('country'),
+  state: text('state'),
+  city: text('city'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const coachNotifications = pgTable('coach_notifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  coachId: uuid('coach_id').notNull(),
+  notificationId: uuid('notification_id')
+    .notNull()
+    .references(() => notifications.id, { onDelete: 'cascade' }),
+  read: boolean('read').default(false),
+});
+
+export const playerNotifications = pgTable('player_notifications', {
+  id: serial('id').primaryKey(),
+  playerId: uuid('player_id').notNull(), // Change to `uuid` if player IDs are UUIDs
+  notificationId: uuid('notification_id')
+    .notNull()
+    .references(() => notifications.id, { onDelete: 'cascade' }),
+  read: boolean('read').default(false),
+});
+
+export const organizationNotifications = pgTable('organization_notifications', {
+  id: serial('id').primaryKey(),
+  organizationId: uuid('organization_id').notNull(), // Change to `uuid` if organization IDs are UUIDs
+  notificationId: uuid('notification_id')
+    .notNull()
+    .references(() => notifications.id, { onDelete: 'cascade' }),
+  read: boolean('read').default(false),
+});

@@ -26,7 +26,6 @@ import { useRouter } from 'next/navigation';
 
 
 const DetailsModal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
-  const [submittedEvaluations, setSubmittedEvaluations] = useState<number[]>([]);
 
   if (!isOpen) return null;
 
@@ -177,9 +176,7 @@ const Dashboard: React.FC = () => {
     }
   }, []);
   
-  useEffect(() => {
-    localStorage.setItem('submittedEvaluations', JSON.stringify(submittedEvaluations));
-  }, [submittedEvaluations]);
+
   
   
   const fetchEvaluations = async (status: string) => {
@@ -499,7 +496,7 @@ const Dashboard: React.FC = () => {
     setSubmittedEvaluations(prev => [...prev, evaluation.evaluationId]);
 
     console.log("evaluation: ", evaluation);
-    setIsNewEvFormOpen(true);
+    // setIsNewEvFormOpen(true);
   };
 
 
