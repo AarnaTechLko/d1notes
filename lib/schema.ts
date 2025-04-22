@@ -263,6 +263,45 @@ export const evaluationResults = pgTable('evaluation_results', {
   position:text('position'),
   sport:text('sport'),
   thingsToWork:text('thingsToWork'),
+  speed: integer('speed'),
+  ability: integer('ability'),
+  codWithBall: integer('cod_with_ball'),
+  codWithoutBall: integer('cod_without_ball'),
+  counterMoveJump: integer('counter_move_jump'),
+  receivingFirstTouch: integer('receiving_first_touch'),
+  shotsOnGoal: integer('shots_on_goal'),
+  finishingTouches: integer('finishing_touches'),
+  combinationPlay: integer('combination_play'),
+  workrate: integer('workrate'),
+  pressingFromFront: integer('pressing_from_front'),
+  oneVOneDomination: integer('one_v_one_domination'),
+  goalThreat: integer('goal_threat'),
+  beingAGoodTeammate: integer('being_a_good_teammate'),
+  decisionMakingScore: integer('decision_making_score'),
+  touchesInFinalThird: integer('touches_in_final_third'),
+  offTheBallMovement: integer('off_the_ball_movement'),
+  spaceInBoxAbility: integer('space_in_box_ability'),
+  forwardRuns: integer('forward_runs'),
+  comm_persistence: text('persistence'),
+  comm_aggression: text('aggression'),
+  comm_alertness: text('alertness'),
+  exe_scoring: text('scoring'),
+  exe_receiving: text('receiving'),
+  exe_passing: text('passing'),
+  dec_mobility: text('mobility'),
+  dec_anticipation: text('anticipation'),
+  dec_pressure: text('pressure'),
+  soc_speedEndurance: text('speed_endurance'),
+  soc_strength: text('strength'),
+  soc_explosiveMovements: text('explosive_movements'),
+  superStrengths: text('super_strengths'),
+  developmentAreas: text('development_areas'),
+  idpGoals: text('idp_goals'),
+  keySkills: text('key_skills'),
+  attacking: text('attacking'),
+  defending: text('defending'),
+  transitionDefending: text('transition_defending'),
+  transitionAttacking: text('transition_attacking'),
 });
 
 export const otps = pgTable('otps', {
@@ -645,42 +684,4 @@ export const radarEvaluation = pgTable('radar_evaluation', {
   defending: text('defending'),
   transitionDefending: text('transition_defending'),
   transitionAttacking: text('transition_attacking'),
-});
-
-
-export const notifications = pgTable('notifications', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  type: uuid('type').notNull(), // 'coach', 'player', 'organization'
-  message: text('message').notNull(),
-  country: text('country'),
-  state: text('state'),
-  city: text('city'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const coachNotifications = pgTable('coach_notifications', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  coachId: uuid('coach_id').notNull(),
-  notificationId: uuid('notification_id')
-    .notNull()
-    .references(() => notifications.id, { onDelete: 'cascade' }),
-  read: boolean('read').default(false),
-});
-
-export const playerNotifications = pgTable('player_notifications', {
-  id: serial('id').primaryKey(),
-  playerId: uuid('player_id').notNull(), // Change to `uuid` if player IDs are UUIDs
-  notificationId: uuid('notification_id')
-    .notNull()
-    .references(() => notifications.id, { onDelete: 'cascade' }),
-  read: boolean('read').default(false),
-});
-
-export const organizationNotifications = pgTable('organization_notifications', {
-  id: serial('id').primaryKey(),
-  organizationId: uuid('organization_id').notNull(), // Change to `uuid` if organization IDs are UUIDs
-  notificationId: uuid('notification_id')
-    .notNull()
-    .references(() => notifications.id, { onDelete: 'cascade' }),
-  read: boolean('read').default(false),
 });
