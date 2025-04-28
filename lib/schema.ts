@@ -685,3 +685,12 @@ export const radarEvaluation = pgTable('radar_evaluation', {
   transitionDefending: text('transition_defending'),
   transitionAttacking: text('transition_attacking'),
 });
+
+export const ability = pgTable('ability', {
+  id: serial('id').primaryKey(),
+  evaluationId: integer('evaluation_id').notNull(),
+  filename: text('filename').notNull(),
+  comments: text('comments'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});

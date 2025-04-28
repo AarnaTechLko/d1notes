@@ -4,6 +4,8 @@ const nextConfig = { reactStrictMode: true,
       domains: [
         'fcpuyl3posiztzia.public.blob.vercel-storage.com', // Add the domain here
         // Other domains...
+        'tjcflen0aawylolt.public.blob.vercel-storage.com', // ← add this one!
+
       ],
     },}
 

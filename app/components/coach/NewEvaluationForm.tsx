@@ -58,12 +58,12 @@ const RatingInput: React.FC<RatingInputProps> = ({ value, onChange }) => (
   <select
     value={value}
     onChange={onChange}
-    className="w-full border border-gray-300 rounded-md p-2 text-sm"
+    className="w-full border border-gray-300 rounded-md p-2 text-xs"
   >
-    <option value="">Select</option>
-    <option value="EXCELLENT">EXCELLENT</option>
-    <option value="POSITIVE">POSITIVE</option>
-    <option value="NEUTRAL">NEUTRAL</option>
+    <option value=""className="font-bold">Select</option>
+    <option value="EXCELLENT" className=" text-black text-xs ">EXCELLENT</option>
+    <option value="POSITIVE" className=" text-black text-xs ">POSITIVE</option>
+    <option value="NEUTRAL" className=" text-black text-xs ">NEUTRAL</option>
   </select>
 );
 
@@ -469,9 +469,9 @@ const chartData = radarSkills.map((skill, i) => ({
             <div>
               <h2 className="text-3xl font-bold text-gray-700">CHARACTERISTICS</h2>
               <div className="text-sm mt-2 flex gap-4 flex-wrap">
-                <span className="bg-yellow-400 text-black px-2 py-0.5 rounded">EXCELLENT</span>
-                <span className="bg-cyan-400 text-black px-2 py-0.5 rounded">POSITIVE</span>
-                <span className="bg-blue-300 text-black px-2 py-0.5 rounded">NEUTRAL</span>
+                <span className="bg-yellow-400 text-white px-2 py-0.5 rounded">EXCELLENT</span>
+                <span className="bg-cyan-400 text-white px-2 py-0.5 rounded">POSITIVE</span>
+                <span className="bg-blue-300 text-white px-2 py-0.5 rounded">NEUTRAL</span>
               </div>
             </div>
           </div>

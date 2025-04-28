@@ -63,7 +63,8 @@ coachImage:string;
 coachimage:string;
 playerImage:string;
 reviewTitle:string;
-
+comments:string;
+filename:string;
 }
 
 export interface EvaluationsByStatus {

@@ -11,7 +11,7 @@ import { and } from 'drizzle-orm';
 import next from 'next';
 
 
- 
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     const evaluationId = Number(url.searchParams.get('evaluationId'));
     const result = await db
-    .select({
+      .select({
         finalRemarks: evaluationResults.finalRemarks,
         physicalRemarks: evaluationResults.physicalRemarks,
         tacticalRemarks: evaluationResults.tacticalRemarks,
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
         technicalScores: evaluationResults.technicalScores,
         sport: evaluationResults.sport,
         position: evaluationResults.position,
- 
+
 
         organizationScores: evaluationResults.organizationScores,
         distributionScores: evaluationResults.distributionScores,
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
         distributionRemarks: evaluationResults.distributionRemarks,
         document: evaluationResults.document,
         thingsToWork: evaluationResults.thingsToWork,
-       
+
         evaluationId: playerEvaluation.id,
         playerId: playerEvaluation.player_id,
         reviewTitle: playerEvaluation.review_title,
@@ -50,29 +50,69 @@ export async function GET(request: NextRequest) {
         paymentStatus: playerEvaluation.payment_status,
         createdAt: playerEvaluation.created_at,
         updatedAt: playerEvaluation.updated_at,
-        first_name:users.first_name,
-        last_name:users.last_name,
-        image:users.image,
-        coachimage:coaches.image,
-       
-        team:users.team,
-        number:users.number,
-        primary_video_link:playerEvaluation.primary_video_link,
-        video_link_two:playerEvaluation.video_link_two,
-        video_link_three:playerEvaluation.video_link_three,
-        video_description:playerEvaluation.video_description,
-        video_descriptionTwo:playerEvaluation.video_descriptionTwo,
-        video_descriptionThree:playerEvaluation.video_descriptionThree,
-        rating:playerEvaluation.rating,
-        evaluationposition:playerEvaluation.position, 
+        first_name: users.first_name,
+        last_name: users.last_name,
+        image: users.image,
+        coachimage: coaches.image,
+
+        speed: evaluationResults.speed,
+        ability: evaluationResults.ability,
+        codWithBall: evaluationResults.codWithBall,
+        codWithoutBall: evaluationResults.codWithoutBall,
+        counterMoveJump: evaluationResults.counterMoveJump,
+        receivingFirstTouch: evaluationResults.receivingFirstTouch,
+        shotsOnGoal: evaluationResults.shotsOnGoal,
+        finishingTouches: evaluationResults.finishingTouches,
+        combinationPlay: evaluationResults.combinationPlay,
+        workrate: evaluationResults.workrate,
+        pressingFromFront: evaluationResults.pressingFromFront,
+        oneVOneDomination: evaluationResults.oneVOneDomination,
+        goalThreat: evaluationResults.goalThreat,
+        beingAGoodTeammate: evaluationResults.beingAGoodTeammate,
+        decisionMakingScore: evaluationResults.decisionMakingScore,
+        touchesInFinalThird: evaluationResults.touchesInFinalThird,
+        offTheBallMovement: evaluationResults.offTheBallMovement,
+        spaceInBoxAbility: evaluationResults.spaceInBoxAbility,
+        forwardRuns: evaluationResults.forwardRuns,
+        comm_persistence: evaluationResults.comm_persistence,
+        comm_aggression: evaluationResults.comm_aggression,
+        comm_alertness: evaluationResults.comm_alertness,
+        exe_scoring: evaluationResults.exe_scoring,
+        exe_receiving: evaluationResults.exe_receiving,
+        exe_passing: evaluationResults.exe_passing,
+        dec_mobility: evaluationResults.dec_mobility,
+        dec_anticipation: evaluationResults.dec_anticipation,
+        dec_pressure: evaluationResults.dec_pressure,
+        soc_speedEndurance: evaluationResults.soc_speedEndurance,
+        soc_strength: evaluationResults.soc_strength,
+        soc_explosiveMovements: evaluationResults.soc_explosiveMovements,
+        superStrengths: evaluationResults.superStrengths,
+        developmentAreas: evaluationResults.developmentAreas,
+        idpGoals: evaluationResults.idpGoals,
+        keySkills: evaluationResults.keySkills,
+        attacking: evaluationResults.attacking,
+        defending: evaluationResults.defending,
+        transitionDefending: evaluationResults.transitionDefending,
+        transitionAttacking: evaluationResults.transitionAttacking,
+
+        team: users.team,
+        number: users.number,
+        primary_video_link: playerEvaluation.primary_video_link,
+        video_link_two: playerEvaluation.video_link_two,
+        video_link_three: playerEvaluation.video_link_three,
+        video_description: playerEvaluation.video_description,
+        video_descriptionTwo: playerEvaluation.video_descriptionTwo,
+        video_descriptionThree: playerEvaluation.video_descriptionThree,
+        rating: playerEvaluation.rating,
+        evaluationposition: playerEvaluation.position,
         videoOneTiming: playerEvaluation.videoOneTiming,
         videoTwoTiming: playerEvaluation.videoTwoTiming,
         videoThreeTiming: playerEvaluation.videoThreeTiming,
-        coachFirstName:coaches.firstName,
-        coachLastName:coaches.lastName,
-        coachSlug:coaches.slug,
-        playerSlug:users.slug,
-        updated_at:playerEvaluation.updated_at,
+        coachFirstName: coaches.firstName,
+        coachLastName: coaches.lastName,
+        coachSlug: coaches.slug,
+        playerSlug: users.slug,
+        updated_at: playerEvaluation.updated_at,
         positionOne: playerEvaluation.positionOne,
         positionTwo: playerEvaluation.positionTwo,
         positionThree: playerEvaluation.positionThree,
@@ -82,18 +122,18 @@ export async function GET(request: NextRequest) {
         jerseyColorOne: playerEvaluation.jerseyColorOne,
         jerseyColorTwo: playerEvaluation.jerseyColorTwo,
         jerseyColorThree: playerEvaluation.jerseyColorThree,
-    }) // Explicitly select the fields
-    .from(evaluationResults)
-    .innerJoin(playerEvaluation, eq(playerEvaluation.id, evaluationResults.evaluationId))
-    .innerJoin(users, eq(users.id, evaluationResults.playerId))
-    .innerJoin(coaches, eq(coaches.id, evaluationResults.coachId))
-    .where(eq(evaluationResults.evaluationId,evaluationId)) // Spread the conditions array
-    .limit(1)
-    .execute();
+      }) // Explicitly select the fields
+      .from(evaluationResults)
+      .innerJoin(playerEvaluation, eq(playerEvaluation.id, evaluationResults.evaluationId))
+      .innerJoin(users, eq(users.id, evaluationResults.playerId))
+      .innerJoin(coaches, eq(coaches.id, evaluationResults.coachId))
+      .where(eq(evaluationResults.evaluationId, evaluationId)) // Spread the conditions array
+      .limit(1)
+      .execute();
 
     return NextResponse.json({
       result: result[0],
-       
+
     });
   } catch (error) {
     console.error('Error details:', error); // Log the error for debugging

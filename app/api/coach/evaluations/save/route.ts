@@ -29,7 +29,48 @@ export async function POST(req: NextRequest) {
       organizationScores,
       sport,
       position,
-      thingsToWork
+      thingsToWork,
+      // speed,
+      // ability,
+      // codWithBall,
+      // codWithoutBall,
+      // counterMoveJump,
+      // receivingFirstTouch,
+      // shotsOnGoal,
+
+
+      // finishingTouches,
+      // combinationPlay,
+      // workrate,
+      // pressingFromFront,
+      // oneVOneDomination,
+      // goalThreat,
+      // beingAGoodTeammate,
+      // decisionMakingScore,
+      // touchesInFinalThird,
+      // offTheBallMovement,
+      // spaceInBoxAbility,
+      // forwardRuns,
+      // comm_persistence,
+      // comm_aggression,
+      // comm_alertness,
+      // exe_scoring,
+      // exe_receiving,
+      // exe_passing,
+      // dec_mobility,
+      // dec_anticipation,
+      // dec_pressure,
+      // soc_speedEndurance,
+      // soc_strength,
+      // soc_explosiveMovements,
+      // superStrengths,
+      // developmentAreas,
+      // idpGoals,
+      // keySkills,
+      // attacking,
+      // defending,
+      // transitionDefending,
+      // transitionAttacking,
     } = data;
 
 
@@ -60,10 +101,49 @@ export async function POST(req: NextRequest) {
         distributionScores: distributionScores,
         organizationalRemarks: organizationalRemarks,
         distributionRemarks: distributionRemarks,
-        thingsToWork: thingsToWork
+        thingsToWork: thingsToWork,
+        // speed:speed,
+        // ability:ability,
+        // codWithBall:codWithBall,
+        // codWithoutBall:codWithoutBall,
+        // counterMoveJump:counterMoveJump,
+        // receivingFirstTouch:receivingFirstTouch,
+        // shotsOnGoal:shotsOnGoal,
+        // finishingTouches:finishingTouches,
+        // combinationPlay:combinationPlay,
+        // workrate:workrate,
+        // pressingFromFront:pressingFromFront,
+        // oneVOneDomination:oneVOneDomination,
+        // goalThreat:goalThreat,
+        // beingAGoodTeammate:beingAGoodTeammate,
+        // decisionMakingScore:decisionMakingScore,
+        // touchesInFinalThird:touchesInFinalThird,
+        // offTheBallMovement:offTheBallMovement,
+        // spaceInBoxAbility:spaceInBoxAbility,
+        // forwardRuns:forwardRuns,
+        // comm_persistence:comm_persistence,
+        // comm_aggression:comm_aggression,
+        // comm_alertness:comm_alertness,
+        // exe_scoring:exe_scoring,
+        // exe_receiving:exe_receiving,
+        // exe_passing:exe_passing,
+        // dec_mobility:dec_mobility,
+        // dec_anticipation:dec_anticipation,
+        // dec_pressure:dec_pressure,
+        // soc_speedEndurance:soc_speedEndurance,
+        // soc_strength:soc_strength,
+        // soc_explosiveMovements:soc_explosiveMovements,
+        // superStrengths:superStrengths,
+        // developmentAreas:developmentAreas,
+        // idpGoals:idpGoals,
+        // keySkills:keySkills,
+        // attacking:attacking,
+        // defending:defending,
+        // transitionDefending:transitionDefending,
+        // transitionAttacking:transitionAttacking,
       })
-      .where(eq(evaluationResults.evaluationId, evaluationId))
-      .returning();
+        .where(eq(evaluationResults.evaluationId, evaluationId))
+        .returning();
     }
     else {
       const insertedData = await db.insert(evaluationResults).values({
@@ -83,13 +163,52 @@ export async function POST(req: NextRequest) {
         distributionScores: distributionScores,
         organizationalRemarks: organizationalRemarks,
         distributionRemarks: distributionRemarks,
-        sport:sport,
-        position:position,
-        thingsToWork: thingsToWork
+        sport: sport,
+        position: position,
+        thingsToWork: thingsToWork,
+        // speed:speed,
+        // ability:ability,
+        // codWithBall:codWithBall,
+        // codWithoutBall:codWithoutBall,
+        // counterMoveJump:counterMoveJump,
+        // receivingFirstTouch:receivingFirstTouch,
+        // shotsOnGoal:shotsOnGoal,
+        // finishingTouches:finishingTouches,
+        // combinationPlay:combinationPlay,
+        // workrate:workrate,
+        // pressingFromFront:pressingFromFront,
+        // oneVOneDomination:oneVOneDomination,
+        // goalThreat:goalThreat,
+        // beingAGoodTeammate:beingAGoodTeammate,
+        // decisionMakingScore:decisionMakingScore,
+        // touchesInFinalThird:touchesInFinalThird,
+        // offTheBallMovement:offTheBallMovement,
+        // spaceInBoxAbility:spaceInBoxAbility,
+        // forwardRuns:forwardRuns,
+        // comm_persistence:comm_persistence,
+        // comm_aggression:comm_aggression,
+        // comm_alertness:comm_alertness,
+        // exe_scoring:exe_scoring,
+        // exe_receiving:exe_receiving,
+        // exe_passing:exe_passing,
+        // dec_mobility:dec_mobility,
+        // dec_anticipation:dec_anticipation,
+        // dec_pressure:dec_pressure,
+        // soc_speedEndurance:soc_speedEndurance,
+        // soc_strength:soc_strength,
+        // soc_explosiveMovements:soc_explosiveMovements,
+        // superStrengths:superStrengths,
+        // developmentAreas:developmentAreas,
+        // idpGoals:idpGoals,
+        // keySkills:keySkills,
+        // attacking:attacking,
+        // defending:defending,
+        // transitionDefending:transitionDefending,
+        // transitionAttacking:transitionAttacking,
       }).returning();
     }
 
-// updating player evaluation status and setting it to 4
+    // updating player evaluation status and setting it to 4
     if (status) {
 
 
@@ -106,7 +225,7 @@ export async function POST(req: NextRequest) {
     }
     else {
 
-// updating player evaluation status and setting it to 2
+      // updating player evaluation status and setting it to 2
       const updateEvaluation = await db
         .update(playerEvaluation)
         .set({
@@ -115,7 +234,7 @@ export async function POST(req: NextRequest) {
         .where(eq(playerEvaluation.id, evaluationId))
         .returning();
 
-// setting evaluation status as "Completed"
+      // setting evaluation status as "Completed"
       await db
         .update(coachearnings)
         .set({
@@ -150,24 +269,24 @@ export async function POST(req: NextRequest) {
       const coachData = await db.select().from(coaches).where(eq(coaches.id, coachId));
       const playerData = await db.select().from(users).where(eq(users.id, playerId));
 
-let subject;
+      let subject;
 
-let mailmessage;
-let coachsubject;
-let coachmailmessage;
+      let mailmessage;
+      let coachsubject;
+      let coachmailmessage;
 
-const protocol = req.headers.get('x-forwarded-proto') || 'http';
-const host = req.headers.get('host');
-const baseUrl = `${protocol}://${host}`;
+      const protocol = req.headers.get('x-forwarded-proto') || 'http';
+      const host = req.headers.get('host');
+      const baseUrl = `${protocol}://${host}`;
       const message = "Your Evaluation has been submitted by me. Please check.";
-       
-      subject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
-    
-      mailmessage=`Dear ${playerData[0].first_name}! Your evaluation was completed by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Login</a> to your player account and view your Dashboard to access the evaluation. Feel free to follow up with any Messages or Rating or Testimonial. Let’s go! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
 
-      coachsubject=`D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
-    
-      coachmailmessage=`Dear ${coachData[0].firstName}! Your completed evaluation was sent to  ${playerData[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your coach account to check on your Earnings History and any Messages or Rating or Testimonial! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
+      subject = `D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
+
+      mailmessage = `Dear ${playerData[0].first_name}! Your evaluation was completed by ${coachData[0].firstName}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue; ">Login</a> to your player account and view your Dashboard to access the evaluation. Feel free to follow up with any Messages or Rating or Testimonial. Let’s go! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
+
+      coachsubject = `D1 NOTES Evaluation Request Completed by ${coachData[0].firstName}`;
+
+      coachmailmessage = `Dear ${coachData[0].firstName}! Your completed evaluation was sent to  ${playerData[0].first_name}. <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">Login</a> to your coach account to check on your Earnings History and any Messages or Rating or Testimonial! <p  className="mt-10">Regards<br>D1 Notes Team</p>`
 
 
 
@@ -183,44 +302,44 @@ const baseUrl = `${protocol}://${host}`;
 
       const emailResultPlayer = await sendEmail({
         to: playerData[0].email,
-        subject:subject,
+        subject: subject,
         text: subject,
         html: mailmessage || '',
       });
 
       const emailResultCoach = await sendEmail({
         to: coachData[0].email || '',
-        subject:coachsubject,
-        text:coachsubject,
+        subject: coachsubject,
+        text: coachsubject,
         html: coachmailmessage || '',
       });
 
-    // checkin if there are multiple entries of coach earning
-    const payment = await db.select().from(coachearnings).where(eq(coachearnings.coach_id, coachId)).execute();
-    if (payment.length >=1) {
-      ///return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
+      // checkin if there are multiple entries of coach earning
+      const payment = await db.select().from(coachearnings).where(eq(coachearnings.coach_id, coachId)).execute();
+      if (payment.length >= 1) {
+        ///return NextResponse.json({ message: 'No payment record found for this evaluationId' }, { status: 400 });
 
-      // if multiple entries found, doing something.
-      const totalBalance = await db
-      .select({ value: sum(coachearnings.commision_amount) })
-      .from(coachearnings)
-      .where(eq(coachearnings.coach_id, coachId))
-        .execute();
+        // if multiple entries found, doing something.
+        const totalBalance = await db
+          .select({ value: sum(coachearnings.commision_amount) })
+          .from(coachearnings)
+          .where(eq(coachearnings.coach_id, coachId))
+          .execute();
 
-    await db.update(coachaccount)
-      .set({ amount: totalBalance[0].value?.toString() })
-      .where(eq(coachaccount.coach_id, coachId));
+        await db.update(coachaccount)
+          .set({ amount: totalBalance[0].value?.toString() })
+          .where(eq(coachaccount.coach_id, coachId));
 
-    const updatecoachearnings = await db
-      .update(coachearnings)
-      .set({
-        status: 'Released'
-      })
-      .where(eq(coachearnings.evaluation_id, evaluationId))
-      .returning();
-    }
+        const updatecoachearnings = await db
+          .update(coachearnings)
+          .set({
+            status: 'Released'
+          })
+          .where(eq(coachearnings.evaluation_id, evaluationId))
+          .returning();
+      }
 
-      
+
 
     }
 

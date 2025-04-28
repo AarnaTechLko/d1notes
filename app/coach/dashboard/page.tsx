@@ -404,7 +404,7 @@ const Dashboard: React.FC = () => {
                   >
                     Evaluate
                   </button>
-                  <button
+                  {/* <button
   onClick={() => {
     if (submittedEvaluations.includes(evaluation.evaluationId)) {
       router.push(`/newevaluationdetails?evaluationId=${evaluation.evaluationId}`);
@@ -419,7 +419,7 @@ const Dashboard: React.FC = () => {
   } text-white px-3 py-1 rounded text-xs`}
 >
   {submittedEvaluations.includes(evaluation.evaluationId) ? "View" : "New Evaluate"}
-</button>
+</button> */}
 
 
 
@@ -496,7 +496,7 @@ const Dashboard: React.FC = () => {
     setSubmittedEvaluations(prev => [...prev, evaluation.evaluationId]);
 
     console.log("evaluation: ", evaluation);
-    // setIsNewEvFormOpen(true);
+    setIsNewEvFormOpen(true);
   };
 
 
