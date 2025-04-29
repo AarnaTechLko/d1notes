@@ -28,10 +28,11 @@ type EvaluationPageProps = {
 
   };
 };
+
+
 type AbilityData = {
   filename: string;
   comments: string;
-  // optional if you have timestamp
 };
 const position = "Goalkeeper"; // or any dynamic value
 
@@ -68,6 +69,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   const [userType, setUserType] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<number>(0);
   const [ability, setAbility] = useState<AbilityData | null>(null);
+  // const [abilities, setAbilities] = useState<AbilityData[]>([]);
 
 
   const [rating, setRating] = useState<number>(0);
@@ -153,6 +155,71 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
     pdf.save("evaluation-detail.pdf");
   };
 
+  // useEffect(() => {
+  //   const fetchAbility = async () => {
+  //     if (!evaluationId) {
+  //       setError("Missing evaluation ID");
+  //       setLoading(false);
+  //       return;
+  //     }
+  
+  //     try {
+  //       const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
+  //       const data = await response.json();
+  
+  //       if (!response.ok) {
+  //         setError(data.error || "Error fetching ability");
+  //         return;
+  //       }
+  
+  //       if (Array.isArray(data.ability)) {
+  //         setAbilities(data.ability);
+  //       } else {
+  //         setAbilities([]); // or setError("Expected an array");
+  //       }
+  //     } catch (err: any) {
+  //       setError(err.message || "Something went wrong");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   fetchAbility();
+  // }, [evaluationId]);
+  
+
+  // useEffect(() => {
+  //   const fetchAbility = async () => {
+  //     if (!evaluationId) {
+  //       setError("Missing evaluation ID");
+  //       setLoading(false);
+  //       return;
+  //     }
+  
+  //     try {
+  //       const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
+  //       const data = await response.json();
+  
+  //       if (response.ok) {
+  //         if (data.ability && Array.isArray(data.ability) && data.ability.length > 0) {
+  //           setAbilities(data.ability); // Set entire array
+  //         } else {
+  //           setError("No ability found for this evaluation.");
+  //         }
+  //       } else {
+  //         setError(data.error || "Error fetching ability");
+  //       }
+  //     } catch (err: any) {
+  //       setError(err.message || "Something went wrong");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   fetchAbility();
+  // }, [evaluationId]);
+  
+  
 
   useEffect(() => {
     const fetchAbility = async () => {
@@ -172,6 +239,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
           } else {
             setError("No ability found for this evaluation.");
           }
+          
         } else {
           setError(data.error || "Error fetching ability");
         }
@@ -914,35 +982,99 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
 
 
           {ability && (
-            <div className="mt-5 grid grid-cols-2 gap-4">
-              <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-  <label htmlFor="filename" className="text-sm font-medium">Filename:</label>
-  <div>
-    {ability.filename.split('\n').map((file, idx) => (
-      <p key={idx} className="text-sm">
-        {file}
-      </p>
-    ))}
+  <div className="mt-5 grid grid-cols-2 gap-4">
+    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+      <label htmlFor="filename" className="text-sm font-medium">Filename:</label>
+      {(() => {
+        try {
+          const filenames = JSON.parse(
+            ability.filename
+              .replaceAll("'", '"')
+              .replaceAll('{', '[')
+              .replaceAll('}', ']')
+          );
+          return filenames.map((file: string, index: number) => (
+            <p key={index} className="text-sm truncate">{file}</p>
+          ));
+        } catch {
+          return <p className="text-sm">{ability.filename}</p>; // fallback
+        }
+      })()}
+    </div>
+
+    <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
+      <label htmlFor="comments" className="text-sm font-medium">Comments:</label>
+      {(() => {
+        try {
+          const comments = JSON.parse(
+            ability.comments
+              .replaceAll("'", '"')
+              .replaceAll('{', '[')
+              .replaceAll('}', ']')
+          );
+          return comments.map((comment: string, index: number) => (
+            <p key={index} className="text-sm">{comment}</p>
+          ));
+        } catch {
+          return <p className="text-sm">{ability.comments}</p>; // fallback
+        }
+      })()}
+    </div>
   </div>
-</div>
+)}
 
+          
+{/* {abilities.length > 0 && (
+  <div className="mt-5 space-y-4">
+    {abilities.map((ability, index) => {
+      let filenames: string[] = [];
+      try {
+        // Convert Postgres-style array string to a JSON-parsable array
+        filenames = JSON.parse(
+          ability.filename
+            .replaceAll("'", '"')     // replace single quotes with double quotes
+            .replaceAll("{", "[")     // convert curly braces to square brackets
+            .replaceAll("}", "]")     // "
+        );
+      } catch (err) {
+        console.error("Failed to parse filenames:", ability.filename, err);
+        filenames = [ability.filename]; // fallback to raw string if parse fails
+      }
 
-              {/* <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-                <label htmlFor="comments" className="text-sm font-medium">Comments:</label>
-                <p>{ability.comments}</p>
-              </div> */}
-              <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
-              <label htmlFor="comments" className="text-sm font-medium">Comments:</label>
-  {ability.comments.split('\n').map((line, idx) => (
-    <span key={idx}>
-      {line}
-      <br />
-    </span>
-  ))}
-</div>
-
+      return (
+        <div
+          key={index}
+          className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
+        >
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col text-gray-900">
+              <label className="text-sm font-semibold">Filename</label>
+              {filenames.map((file, i) => (
+                <p key={i} className="text-sm truncate">
+                  {file}[]
+                </p>
+              ))}
             </div>
-          )}
+            <div className="flex flex-col text-gray-900">
+              <label className="text-sm font-semibold">Comments</label>
+              <p className="text-sm">{ability.comments}</p>
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)} */}
+
+
+
+
+
+
+
+
+
+
 
           {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (
 

@@ -486,38 +486,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
+    // setSubmitting(true);
     setLoadSubmit(true);
 
-    try {
-      const res = await fetch('/api/ability', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          evaluationId: evaluationData?.evaluationId,
-          filename: documents,
-          comments: comments,
-        }),
-      });
-      console.log('Submitting form...');
-      console.log('evaluationId:', evaluationData?.evaluationId);
-      console.log('filename:', documents);
-      console.log('comments:', comments);
-
-      if (!res.ok) throw new Error('Failed to save ability');
-
-      // alert('Ability saved successfully!');
-      setDocuments([]); // ✅ reset properly
-
-      setFilename('');
-      // setComments('');
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert('Error saving ability');
-    }
+ 
 
     try {
       // Set IDs from evaluationData
@@ -629,7 +601,35 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       // };
 
 
-
+      try {
+        const res = await fetch('/api/ability', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            evaluationId: evaluationData?.evaluationId,
+            filename: documents,
+            comments: comments,
+          }),
+        });
+        console.log('Submitting form...');
+        console.log('evaluationId:', evaluationData?.evaluationId);
+        console.log('filename:', documents);
+        console.log('comments:', comments);
+  
+        if (!res.ok) throw new Error('Failed to save ability');
+  
+        // alert('Ability saved successfully!');
+        setDocuments([]); // ✅ reset properly
+  
+        setFilename('');
+        // setComments('');
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        alert('Error saving ability');
+      }
 
       // ✅ Submit Player Evaluation
       await fetch("/api/coach/evaluations/save", {
@@ -2374,7 +2374,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                 <p className="text-red-500 text-sm h-5">{errors.thingsToWorkOnRemarks ? "Required." : ""}</p>
 
               </div>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4">
+              {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4"> */}
                 {fields.map((index) => (
                   <div className="grid grid-cols-2 gap-4" key={index}>
                     <div>
@@ -2387,12 +2387,10 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         ref={fileInputRefs[index]}
 
                       />
+                       {fileUploading[index] && <FileUploader />}
+
                     </div>
-                    {fileUploading[index] ? (
-                      <FileUploader /> // Add your file uploader component here
-                    ) : (
-                      <></>
-                    )}
+
                     <div>
                       <label className="block font-medium">Comments</label>
                       <textarea
@@ -2403,7 +2401,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     </div>
                   </div>
                 ))}
-                <div className="flex justify-end text-xs  space-x-2 pt-2">
+                {/* <div className="flex justify-end text-xs  space-x-2 pt-2">
 
                   {fields.length < 3 && (
                     <button
@@ -2424,9 +2422,9 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       Less One
                     </button>
                   )}
-                </div>
+                </div> */}
 
-              </form>
+              {/* </form> */}
               {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4">
                 {false && (
                   <div>
@@ -2521,11 +2519,11 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     />
                   </div>
                 </div>
-              </form> *}
+              </form> */}
 
 
-              {/* {session?.user.club_id && ( */}
-              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              {/* {session?.user.club_id && ( 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                 <div className="mt-6">
                   <label
                     htmlFor="final-remarks"
@@ -2541,16 +2539,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                     ref={fileInputRef}
                   />
                 </div>
-              </div> */}
-              {/* {fileUploading ? (
+              </div>
+               {fileUploading ? (
                 <>
                   <FileUploader />
                 </>
               ) : (
                 <></>
-              )} */}
+              )} 
 
-              {/* )} */}
+
+
+
+              
+
+               )} */}
               <div className="flex justify-end space-x-2 pt-6">
                 <button
                   type="submit"
