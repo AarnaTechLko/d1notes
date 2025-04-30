@@ -52,9 +52,21 @@ const radarSkills =
   { label: 'Physical Average', key: 'physicalAverage' }
 ];
 
+// type FileKey = 'file1' | 'file2' | 'file3' | 'file4' | 'file5';
 
+type FileData = {
+  filename: string;
+  comments: string;
+};
+type FileKey = string;
 
-
+// const defaultFiles: Record<FileKey, FileData> = {
+//   file1: { filename: '', comments: '' },
+//   file2: { filename: '', comments: '' },
+//   file3: { filename: '', comments: '' },
+//   file4: { filename: '', comments: '' },
+//   file5: { filename: '', comments: '' },
+// };
 type EvaluationFormProps = {
   evaluationId?: number | null; // Optional or null
   evaluationData?: Evaluation | null; // Update to accept Evaluation or null
@@ -189,13 +201,14 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const [thingsToWork, setThingsToWork] = useState("");
   const [filename, setFilename] = useState('');
   const router = useRouter();
-
+  const [files, setFiles] = useState<Record<FileKey, FileData>>({});
+  const [fields, setFields] = useState<FileKey[]>(['file1']);
   const [position, setPosition] = useState("Goalkeeper");
   const [sport, setSport] = useState("");
 
   const [document, setDocument] = useState("");
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [fileUploading, setFileUploading] = useState<{ [key: number]: boolean }>({});
+  // const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [fileUploading, setFileUploading] = useState<Record<number, boolean>>({});
   const [loadSubmit, setLoadSubmit] = useState<boolean>(false);
   const [playerID, setPlayerID] = useState<number | undefined>(undefined); // Allowing for undefined
   const [coachID, setCoachID] = useState<number | undefined>(undefined);
@@ -252,15 +265,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>({});
   const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>({});
   const [mode, setMode] = useState<modeTypes>(modeTypes.Add);
-  const [files, setFiles] = useState<(File | null)[]>([null, null, null]);
-  const [comments, setComments] = useState<string[]>([]);
-  const [fields, setFields] = useState([0]); 
-
+   const [comments, setComments] = useState<string[]>([]);
+   const [localEvaluationId, setLocalEvaluationId] = useState<number | string>('');
+  const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState<string[]>([]);
-  const fileInputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
-  //   const [fileInputRefs, setFileInputRefs] = useState<React.RefObject<HTMLInputElement>[]>([
-  //     useRef<HTMLInputElement>(null),
-  //  ]);
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const validationErrors = {
     technicalRemarks: technicalRemarks.trim() === "",
     tacticalRemarks: tacticalRemarks.trim() === "",
@@ -277,6 +287,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     organizationScores: position === "Goalkeeper" && Object.values(organizationScores).every(value => value === "N/A"),
     distributionScores: position === "Goalkeeper" && Object.values(distributionScores).every(value => value === "N/A"),
   };
+
+
 
   const formattedDate = evaluationData?.created_at
     ? format(new Date(evaluationData.created_at), "MM/dd/yyyy")
@@ -363,6 +375,48 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     setFinalRemarks("");
     setThingsToWork("");
   };
+  useEffect(() => {
+    if (evaluationId) {
+      setLocalEvaluationId(evaluationId);
+    }
+  }, [evaluationId]);
+
+ 
+
+  // Handle file input change
+  // const handleFileChange = (
+  //   key: keyof typeof defaultFiles,
+  //   value: string,
+  //   field: keyof FileData
+  // ) => {
+  //   setFiles((prevFiles) => ({
+  //     ...prevFiles,
+  //     [key]: {
+  //       ...prevFiles[key],
+  //       [field]: value,
+  //     },
+  //   }));
+  // };
+  const handleFileChange = (key: string, file: File | null) => {
+    if (file) {
+      setFiles((prev) => ({
+        ...prev,
+        [key]: {
+          ...prev[key],
+          filename: file.name, // ✅ Only filename
+        },
+      }));
+    }
+  };const handleCommentChange = (key: string, comment: string) => {
+    setFiles((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        comments: comment,
+      },
+    }));
+  };
+  
 
   const fetchEvaluationResultData = async () => {
     try {
@@ -600,36 +654,84 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       //   }, {} as any),
       // };
 
-
+      // const data = {
+      //   evaluationId: localEvaluationId,
+      //   ...fields.reduce((acc, key) => {
+      //     acc[key] = files[key];
+      //     return acc;
+      //   }, {} as typeof files),
+      // };
+    
+      const data = {
+        evaluationId: localEvaluationId,
+        ...fields.reduce((acc, key) => {
+          const file = files[key];
+          if (file && file.filename) {
+            acc[key] = {
+              filename: file.filename,
+              comments: file.comments || '',
+            };
+          }
+          return acc;
+        }, {} as Record<string, FileData>),
+      };
+      
+      
+  
       try {
-        const res = await fetch('/api/ability', {
+        const response = await fetch('/api/ability', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            evaluationId: evaluationData?.evaluationId,
-            filename: documents,
-            comments: comments,
-          }),
+          body: JSON.stringify(data),
         });
-        console.log('Submitting form...');
-        console.log('evaluationId:', evaluationData?.evaluationId);
-        console.log('filename:', documents);
-        console.log('comments:', comments);
   
-        if (!res.ok) throw new Error('Failed to save ability');
-  
-        // alert('Ability saved successfully!');
-        setDocuments([]); // ✅ reset properly
-  
-        setFilename('');
-        // setComments('');
-        router.refresh();
-      } catch (error) {
-        console.error(error);
-        alert('Error saving ability');
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+        } else {
+          alert(result.error || 'Something went wrong');
+        }
+      } catch (error:any) {
+        alert('Error submitting form: ' + error.message);
+      } finally {
+        setLoading(false);
       }
+
+    
+  
+
+
+      // try {
+      //   const res = await fetch('/api/ability', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({
+      //       evaluationId: evaluationData?.evaluationId,
+      //       filename: documents,
+      //       comments: comments,
+      //     }),
+      //   });
+      //   console.log('Submitting form...');
+      //   console.log('evaluationId:', evaluationData?.evaluationId);
+      //   console.log('filename:', documents);
+      //   console.log('comments:', comments);
+  
+      //   if (!res.ok) throw new Error('Failed to save ability');
+  
+      //   // alert('Ability saved successfully!');
+      //   setDocuments([]); // ✅ reset properly
+  
+      //   setFilename('');
+      //   // setComments('');
+      //   router.refresh();
+      // } catch (error) {
+      //   console.error(error);
+      //   alert('Error saving ability');
+      // }
 
       // ✅ Submit Player Evaluation
       await fetch("/api/coach/evaluations/save", {
@@ -665,53 +767,100 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       setLoadSubmit(false);
     }
   };
-  const handleShowMore = () => {
-    if (fields.length < 3) {
-      setFields([...fields, fields.length]); // Add one more field
-      setComments([...comments, ""]); // Add an empty comment for the new field
+ // Show more files
+ const handleShowMore = () => {
+  setFields((prev) => {
+    const nextIndex = prev.length + 1;
+    if (nextIndex <= 5) {
+      const newKey = `file${nextIndex}` as FileKey;
+      return [...prev, newKey];
     }
-  };
+    return prev;
+  });
+};
 
-  // Handles "Show Less" button click
-  const handleShowLess = () => {
-    if (fields.length > 1) {
-      const newFields = fields.slice(0, fields.length - 1); // Remove one field
-      const newComments = comments.slice(0, fields.length - 1); // Remove the corresponding comment
-      setFields(newFields);
-      setComments(newComments);
-    }
-  };;
-  const handleCommentChange = (index: number, e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newComments = [...comments];
-    newComments[index] = e.target.value;
-    setComments(newComments);
-  };
+// Show less files
+
+const handleShowLess = () => {
+  if (fields.length > 1) {
+    setFields(prev => prev.slice(0, -1));
+  }
+};
+  // const handleCommentChange = (index: number, e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   const newComments = [...comments];
+  //   newComments[index] = e.target.value;
+  //   setComments(newComments);
+  // };
 
   // handle document change for specific index
-  const handleDocumentChange = async (index: number) => {
-    const fileInputRef = fileInputRefs[index];
-    if (!fileInputRef.current?.files) {
+  // const handleDocumentChange = async (key: string, index: number) => {
+  //   const fileInputRef = fileInputRefs.current[index];
+  //   if (!fileInputRef.files) {
+  //     throw new Error("No file selected");
+  //   }
+  //   setFileUploading(prev => ({ ...prev, [index]: true }));
+  //   const file = fileInputRef.files[0];
+  //   console.log("file existing:", file);
+
+  //   try {
+  //     const newBlob = await upload(file.name, file, {
+  //       access: "public",
+  //       handleUploadUrl: "/api/uploads/documentupload",
+  //     });
+  //     setFileUploading(prev => ({ ...prev, [index]: false }));
+  //     const imageUrl = newBlob.url;
+  //     console.log("file upload:", imageUrl);
+
+  //     setFiles((prev) => ({
+  //       ...prev,
+  //       [key]: {
+  //         filename: file.name,
+  //         comments: prev[key]?.comments || '',
+  //       },
+  //     }));
+
+  //     const newDocuments = [...documents];
+  //     newDocuments[index] = file.name;
+  //     setDocuments(newDocuments);
+
+  //   } catch (error) {
+  //     setFileUploading(prev => ({ ...prev, [index]: false }));
+  //     console.error("Error uploading file:", error);
+  //   }
+  // };
+  const handleDocumentChange = async (key: string, index: number) => {
+    const fileInputRef = fileInputRefs.current[index];
+
+    // Check if fileInputRef is not null
+    if (!fileInputRef || !fileInputRef.files) {
       throw new Error("No file selected");
     }
-    setFileUploading(prev => ({ ...prev, [index]: true }));
-    const file = fileInputRef.current.files[0];
-    console.log("file existing:", file);
+
+    setFileUploading((prev) => ({ ...prev, [index]: true }));
+    const file = fileInputRef.files[0];
+    console.log("File selected:", file);
 
     try {
+      // Replace with your upload logic
       const newBlob = await upload(file.name, file, {
         access: "public",
         handleUploadUrl: "/api/uploads/documentupload",
       });
-      setFileUploading(prev => ({ ...prev, [index]: false }));
+
+      setFileUploading((prev) => ({ ...prev, [index]: false }));
       const imageUrl = newBlob.url;
-      console.log("file upload:", imageUrl);
+      console.log("File uploaded:", imageUrl);
 
-      const newDocuments = [...documents];
-      newDocuments[index] = file.name;
-      setDocuments(newDocuments);
-
+      // Update the files object with the correct FileData
+      setFiles((prev) => ({
+        ...prev,
+        [key]: {
+          filename: imageUrl,
+          comments: prev[key]?.comments || '',
+        },
+      }));
     } catch (error) {
-      setFileUploading(prev => ({ ...prev, [index]: false }));
+      setFileUploading((prev) => ({ ...prev, [index]: false }));
       console.error("Error uploading file:", error);
     }
   };
@@ -952,37 +1101,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         A: averageValue, // Use the calculated average value
       };
     });
-  // const chartData = radarSkills
-  //   .map((skill) => {
-  //     let averageValue = 0;
-
-  //     // Get the average value for each skill
-  //     switch (skill.key) {
-  //       case "technicalAverage":
-  //         averageValue = calculateAverage(technicalScores); // Use the average for technical scores
-  //         break;
-  //       case "tacticalAverage":
-  //         averageValue = calculateAverage(tacticalScores); // Use the average for tactical scores
-  //         break;
-  //       case "distributionAverage":
-  //         averageValue = calculateAverage(distributionScores); // Use the average for distribution scores
-  //         break;
-  //       case "physicalAverage":
-  //         averageValue = calculateAverage(physicalScores); // Use the average for physical scores
-  //         break;
-  //       case "organizationAverage":
-  //         averageValue = calculateAverage(organizationScores); // Use the average for organization scores
-  //         break;
-  //       default:
-  //         averageValue = 0; // Default to 0 if no match
-  //     }
-
-  //     return {
-  //       subject: skill.label,
-  //       A: averageValue, // Use the calculated average value
-  //     };
-  //   });
-
+ 
 
   const calculateOverallAverage = () => {
     let total = 0;
@@ -2375,6 +2494,9 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
               </div>
               {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4"> */}
+                
+                
+{/*                 
                 {fields.map((index) => (
                   <div className="grid grid-cols-2 gap-4" key={index}>
                     <div>
@@ -2400,7 +2522,86 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                       />
                     </div>
                   </div>
-                ))}
+                ))} */}
+
+<div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Evaluation ID:</label>
+          <input
+            type="text"
+            value={localEvaluationId}
+            onChange={(e) => setLocalEvaluationId(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="space-y-4">
+  {fields.map((key, index) => (
+    <div key={key} className="grid grid-cols-2 gap-4">
+      <div>
+        <label className="block mb-1 font-medium">Filename:</label>
+        <input
+          type="file"
+          className="w-full border border-gray-300 rounded px-3 py-2"
+          // Update callback ref to not return anything
+          ref={(el) => { fileInputRefs.current[index] = el; }}
+          onChange={() => handleDocumentChange(key, index)}
+          required
+        />
+        {fileUploading[index] && <span>Uploading...</span>}
+      </div>
+      <div>
+        <label className="block mb-1 font-medium"> Comments:</label>
+        <input
+          type="text"
+          className="w-full border border-gray-300 rounded px-3 py-2"
+          value={files[key]?.comments || ''}
+          onChange={(e) =>
+            setFiles((prev) => ({
+              ...prev,
+              [key]: {
+                ...prev[key],
+                comments: e.target.value,
+              },
+            }))
+          }
+          required
+        />
+      </div>
+    </div>
+  ))}
+</div>
+
+
+        {/* Add More / Less One Buttons */}
+        <div className="flex justify-end text-xs space-x-2 pt-2">
+          {fields.length < 5 && (
+            <button
+              type="button"
+              onClick={handleShowMore}
+              className="mt-4 p-2 bg-blue-500 text-white rounded"
+            >
+              Add More
+            </button>
+          )}
+
+          {fields.length > 1 && (
+            <button
+              type="button"
+              onClick={handleShowLess}
+              className="mt-4 p-2 bg-red-500 text-white rounded"
+            >
+              Less One
+            </button>
+          )}
+        </div>
+
+      
+      </form>
+    </div>
+
+
                 {/* <div className="flex justify-end text-xs  space-x-2 pt-2">
 
                   {fields.length < 3 && (

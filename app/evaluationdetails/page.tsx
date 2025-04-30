@@ -28,11 +28,20 @@ type EvaluationPageProps = {
 
   };
 };
-
-
-type AbilityData = {
+type FileData = {
   filename: string;
   comments: string;
+};
+
+type AbilityData = {
+  evaluationId: string;
+  files: {
+    file1?: FileData;
+    file2?: FileData;
+    file3?: FileData;
+    file4?: FileData;
+    file5?: FileData;
+  };
 };
 const position = "Goalkeeper"; // or any dynamic value
 
@@ -68,7 +77,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [userType, setUserType] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<number>(0);
-  const [ability, setAbility] = useState<AbilityData | null>(null);
+  const [data, setData] = useState<AbilityData | null>(null);
   // const [abilities, setAbilities] = useState<AbilityData[]>([]);
 
 
@@ -162,16 +171,16 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   //       setLoading(false);
   //       return;
   //     }
-  
+
   //     try {
   //       const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
   //       const data = await response.json();
-  
+
   //       if (!response.ok) {
   //         setError(data.error || "Error fetching ability");
   //         return;
   //       }
-  
+
   //       if (Array.isArray(data.ability)) {
   //         setAbilities(data.ability);
   //       } else {
@@ -183,10 +192,10 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   //       setLoading(false);
   //     }
   //   };
-  
+
   //   fetchAbility();
   // }, [evaluationId]);
-  
+
 
   // useEffect(() => {
   //   const fetchAbility = async () => {
@@ -195,11 +204,11 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   //       setLoading(false);
   //       return;
   //     }
-  
+
   //     try {
   //       const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
   //       const data = await response.json();
-  
+
   //       if (response.ok) {
   //         if (data.ability && Array.isArray(data.ability) && data.ability.length > 0) {
   //           setAbilities(data.ability); // Set entire array
@@ -215,43 +224,63 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   //       setLoading(false);
   //     }
   //   };
-  
+
   //   fetchAbility();
   // }, [evaluationId]);
-  
-  
 
+
+
+  // useEffect(() => {
+  //   const fetchAbility = async () => {
+  //     if (!evaluationId) {
+  //       setError("Missing evaluation ID");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
+  //       const data = await response.json();
+
+  //       if (response.ok) {
+  //         if (data.ability && data.ability.length > 0) {
+  //           setAbility(data.ability[0]); // Assuming you want the first ability if multiple
+  //         } else {
+  //           setError("No ability found for this evaluation.");
+  //         }
+
+  //       } else {
+  //         setError(data.error || "Error fetching ability");
+  //       }
+  //     } catch (err: any) {
+  //       setError(err.message || "Something went wrong");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchAbility();
+  // }, [evaluationId]);
   useEffect(() => {
-    const fetchAbility = async () => {
-      if (!evaluationId) {
-        setError("Missing evaluation ID");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/ability?evaluationId=${evaluationId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          if (data.ability && data.ability.length > 0) {
-            setAbility(data.ability[0]); // Assuming you want the first ability if multiple
+    if (evaluationId) {
+      fetch(`/api/ability?evaluationId=${evaluationId}`)
+        .then((res) => res.json())
+        .then((result) => {
+          console.log("API result:", result); // Log the full response
+          if (result.ability) {
+            setData(result.ability); // If ability data exists, update the state
           } else {
-            setError("No ability found for this evaluation.");
+            alert('Unable to fetch data');
           }
-          
-        } else {
-          setError(data.error || "Error fetching ability");
-        }
-      } catch (err: any) {
-        setError(err.message || "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAbility();
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+          alert('Error fetching data');
+        });
+    }
   }, [evaluationId]);
+
+
 
   const handleSubmitRating = async () => {
     if (rating <= 0) {
@@ -980,7 +1009,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             {evaluationData?.thingsToWork}
           </div>
 
-
+          {/* 
           {ability && (
   <div className="mt-5 grid grid-cols-2 gap-4">
     <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
@@ -1021,50 +1050,118 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
       })()}
     </div>
   </div>
-)}
+)} */}
+          {/* {data && data.files && (
+  <div className="w-full mx-auto p-4">
+        <h1 className="text-xl   mb-4">Evaluation ID: {data.evaluationId}</h1>
 
-          
-{/* {abilities.length > 0 && (
-  <div className="mt-5 space-y-4">
-    {abilities.map((ability, index) => {
-      let filenames: string[] = [];
-      try {
-        // Convert Postgres-style array string to a JSON-parsable array
-        filenames = JSON.parse(
-          ability.filename
-            .replaceAll("'", '"')     // replace single quotes with double quotes
-            .replaceAll("{", "[")     // convert curly braces to square brackets
-            .replaceAll("}", "]")     // "
-        );
-      } catch (err) {
-        console.error("Failed to parse filenames:", ability.filename, err);
-        filenames = [ability.filename]; // fallback to raw string if parse fails
-      }
+    <div className="space-y-4 w-full">
+      
+      {Object.entries(data.files).map(([key, file]) =>
+        file ? (
+          <div key={key} className="grid grid-cols-2 gap-4 border p-4 rounded">
+            <div className='text-sm'>
+            <a href={file.filename} target="_blank" rel="noopener noreferrer">{file.filename}</a>
 
-      return (
-        <div
-          key={index}
-          className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col text-gray-900">
-              <label className="text-sm font-semibold">Filename</label>
-              {filenames.map((file, i) => (
-                <p key={i} className="text-sm truncate">
-                  {file}[]
-                </p>
-              ))}
+              
             </div>
-            <div className="flex flex-col text-gray-900">
-              <label className="text-sm font-semibold">Comments</label>
-              <p className="text-sm">{ability.comments}</p>
+            <div className='text-sm'>
+              <strong> Comments:</strong>
+              <p>{file.comments}</p>
             </div>
           </div>
-        </div>
-      );
-    })}
+        ) : null
+      )}
+    </div>
   </div>
 )} */}
+
+
+{data && data.files && (
+  <div className="w-full mx-auto p-4">
+    <h1 className="text-xl mb-4">Evaluation ID: {data.evaluationId}</h1>
+
+    <div className="space-y-4 w-full">
+      {Object.entries(data.files).map(([key, file]) =>
+        file ? (
+          <div key={key} className="grid grid-cols-2 gap-4 border p-4 rounded">
+            <div className="text-sm space-y-2">
+              {file.filename.match(/\.(jpg|jpeg|png)$/i) ? (
+                <div className="flex items-center">
+                  <img
+                    src={file.filename}
+                    alt="uploaded file"
+                    className="w-32 h-32 object-cover border"
+                  />
+                <p className="text-xs mt-2">
+                    <a
+                      href={file.filename}
+                      download
+                      className="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600"
+                    >
+                      <i className="fas fa-download mr-2"></i> Download
+                    </a>
+                  </p>
+                </div>
+              ) : file.filename.endsWith('.pdf') ? (
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://www.iconpacks.net/icons/2/free-pdf-download-icon-2617-thumb.png"
+                    alt="pdf icon"
+                    className="w-28 h-28"
+                  />
+                <p className="text-xs mt-2">
+                    <a
+                      href={file.filename}
+                      download
+                      className="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600"
+                    >
+                      <i className="fas fa-download mr-2"></i> Download
+                    </a>
+                  </p>
+                </div>
+              ) : file.filename.match(/\.(mp4)$/i) ? (
+                <div>
+                  <div className="mt-4">
+                    <video controls width="50%" height="auto">
+                      <source src={file.filename} type="video/mp4" />
+                    </video>
+                  </div>
+
+                  <p className="text-xs mt-2">
+                    <a
+                      href={file.filename}
+                      download
+                      className="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600"
+                    >
+                      <i className="fas fa-download mr-2"></i> Download
+                    </a>
+                  </p>
+                </div>
+              ) : (
+                <a
+                  href={file.filename}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  {file.filename}
+                </a>
+              )}
+            </div>
+
+            <div className="text-sm">
+              <strong>Comments:</strong>
+              <p>{file.comments}</p>
+            </div>
+          </div>
+        ) : null
+      )}
+    </div>
+  </div>
+)}
+
+
 
 
 
