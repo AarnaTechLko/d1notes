@@ -32,25 +32,25 @@ const position = "Goalkeeper"; // or any dynamic value
 
 const headerMetrics =
   position === "Goalkeeper"
-    ? 
-  ['Technical Average', 'Tactical Average', 'Distribution Average', 'Physical Average', 'Organization Average']
-: ['Technical Average', 'Tactical Average', 'Physical Average'];
+    ?
+    ['Technical Average', 'Tactical Average', 'Distribution Average', 'Physical Average', 'Organization Average']
+    : ['Technical Average', 'Tactical Average', 'Physical Average'];
 
 const radarSkills =
   position === "Goalkeeper"
-    ? 
-  [
-    { label: 'Technical Average', key: 'technicalAverage' },
-    { label: 'Tactical Average', key: 'tacticalAverage' },
-    { label: 'Distribution Average', key: 'distributionAverage' },
-    { label: 'Physical Average', key: 'physicalAverage' },
-    { label: 'Organization Average', key: 'organizationAverage' }
-  ]
-: [
-  { label: 'Technical Average', key: 'technicalAverage' },
-  { label: 'Tactical Average', key: 'tacticalAverage' },
-  { label: 'Physical Average', key: 'physicalAverage' }
-];
+    ?
+    [
+      { label: 'Technical Average', key: 'technicalAverage' },
+      { label: 'Tactical Average', key: 'tacticalAverage' },
+      { label: 'Distribution Average', key: 'distributionAverage' },
+      { label: 'Physical Average', key: 'physicalAverage' },
+      { label: 'Organization Average', key: 'organizationAverage' }
+    ]
+    : [
+      { label: 'Technical Average', key: 'technicalAverage' },
+      { label: 'Tactical Average', key: 'tacticalAverage' },
+      { label: 'Physical Average', key: 'physicalAverage' }
+    ];
 
 // type FileKey = 'file1' | 'file2' | 'file3' | 'file4' | 'file5';
 
@@ -265,8 +265,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
   const [distributionScores, setDistributionScores] = useState<{ [key: string]: string }>({});
   const [organizationScores, setOrganizationScores] = useState<{ [key: string]: string }>({});
   const [mode, setMode] = useState<modeTypes>(modeTypes.Add);
-   const [comments, setComments] = useState<string[]>([]);
-   const [localEvaluationId, setLocalEvaluationId] = useState<number | string>('');
+  const [comments, setComments] = useState<string[]>([]);
+  const [localEvaluationId, setLocalEvaluationId] = useState<number | string>('');
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState<string[]>([]);
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -381,7 +381,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     }
   }, [evaluationId]);
 
- 
+
 
   // Handle file input change
   // const handleFileChange = (
@@ -407,7 +407,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         },
       }));
     }
-  };const handleCommentChange = (key: string, comment: string) => {
+  }; const handleCommentChange = (key: string, comment: string) => {
     setFiles((prev) => ({
       ...prev,
       [key]: {
@@ -416,7 +416,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       },
     }));
   };
-  
+
 
   const fetchEvaluationResultData = async () => {
     try {
@@ -543,7 +543,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     // setSubmitting(true);
     setLoadSubmit(true);
 
- 
+
 
     try {
       // Set IDs from evaluationData
@@ -661,7 +661,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       //     return acc;
       //   }, {} as typeof files),
       // };
-    
+
       const data = {
         evaluationId: localEvaluationId,
         ...fields.reduce((acc, key) => {
@@ -675,9 +675,9 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
           return acc;
         }, {} as Record<string, FileData>),
       };
-      
-      
-  
+
+
+
       try {
         const response = await fetch('/api/ability', {
           method: 'POST',
@@ -686,21 +686,21 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
           },
           body: JSON.stringify(data),
         });
-  
+
         const result = await response.json();
         if (response.ok) {
           alert(result.message);
         } else {
           alert(result.error || 'Something went wrong');
         }
-      } catch (error:any) {
+      } catch (error: any) {
         alert('Error submitting form: ' + error.message);
       } finally {
         setLoading(false);
       }
 
-    
-  
+
+
 
 
       // try {
@@ -719,12 +719,12 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       //   console.log('evaluationId:', evaluationData?.evaluationId);
       //   console.log('filename:', documents);
       //   console.log('comments:', comments);
-  
+
       //   if (!res.ok) throw new Error('Failed to save ability');
-  
+
       //   // alert('Ability saved successfully!');
       //   setDocuments([]); // ✅ reset properly
-  
+
       //   setFilename('');
       //   // setComments('');
       //   router.refresh();
@@ -767,25 +767,25 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       setLoadSubmit(false);
     }
   };
- // Show more files
- const handleShowMore = () => {
-  setFields((prev) => {
-    const nextIndex = prev.length + 1;
-    if (nextIndex <= 5) {
-      const newKey = `file${nextIndex}` as FileKey;
-      return [...prev, newKey];
+  // Show more files
+  const handleShowMore = () => {
+    setFields((prev) => {
+      const nextIndex = prev.length + 1;
+      if (nextIndex <= 5) {
+        const newKey = `file${nextIndex}` as FileKey;
+        return [...prev, newKey];
+      }
+      return prev;
+    });
+  };
+
+  // Show less files
+
+  const handleShowLess = () => {
+    if (fields.length > 1) {
+      setFields(prev => prev.slice(0, -1));
     }
-    return prev;
-  });
-};
-
-// Show less files
-
-const handleShowLess = () => {
-  if (fields.length > 1) {
-    setFields(prev => prev.slice(0, -1));
-  }
-};
+  };
   // const handleCommentChange = (index: number, e: React.ChangeEvent<HTMLTextAreaElement>) => {
   //   const newComments = [...comments];
   //   newComments[index] = e.target.value;
@@ -1101,7 +1101,7 @@ const handleShowLess = () => {
         A: averageValue, // Use the calculated average value
       };
     });
- 
+
 
   const calculateOverallAverage = () => {
     let total = 0;
@@ -1170,171 +1170,109 @@ const handleShowLess = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {/* Player Information */}
                 <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Review Title:{" "}
-                    <span className="font-normal">
-                      {evaluationData?.review_title}
-                    </span>
-                  </h3>
-                  <div className="flex items-center mb-4">
-                    <strong className="mr-2">Player:</strong>
-                    {evaluationData?.image &&
-                      evaluationData?.image !== "null" && (
-                        <Image
-                          src={evaluationData?.image}
-                          alt="Player Avatar"
-                          className="w-12 h-12 mr-3 rounded-full object-cover"
-                          width={30}
-                          height={30}
-                        />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* LEFT COLUMN */}
+                    <div className="space-y-4">
+                      {/* Review Title */}
+                      <div className="mb-8">
+                        <h3 className="text-lg font-semibold">
+                          Review Title:{" "}
+                          <span className="font-normal">
+                            {evaluationData?.review_title || "N/A"}
+                          </span>
+                        </h3>
+                      </div>
+
+                      {/* Player Info */}
+                      <div className="flex items-center mb-8">
+                        <strong className="mr-2">Player:</strong>
+                        {evaluationData?.image && evaluationData.image !== "null" ? (
+                          <Image
+                            src={evaluationData.image}
+                            alt="Player Avatar"
+                            className="w-12 h-12 mr-3 rounded-full object-cover"
+                            width={30}
+                            height={30}
+                          />
+                        ) : (
+                          <Image
+                            src={defaultImage}
+                            alt="Player Avatar"
+                            className="w-12 h-12 mr-3 rounded-full object-cover"
+                            width={30}
+                            height={30}
+                          />
+                        )}
+                        <span className="text-gray-700">
+                          <a
+                            href={`/players/${evaluationData?.playerSlug}`}
+                            className="text-blue-700"
+                            target="_blank"
+                          >
+                            {evaluationData?.first_name} {evaluationData?.last_name}
+                          </a>
+                        </span>
+                      </div>
+
+                      {/* Coach + Rate */}
+                      {!session?.user.club_id && (
+                        <div className="mb-8">
+                          <strong className="mr-2">Evaluation Rate:</strong>{" "}
+                          <span>${evaluationData?.expectedCharge}</span>
+                        </div>
                       )}
-                    {(!evaluationData?.image ||
-                      evaluationData?.image === "null") && (
-                        <Image
-                          src={defaultImage}
-                          alt="Player Avatar"
-                          className="w-12 h-12 mr-3 rounded-full object-cover"
-                          width={30}
-                          height={30}
-                        />
-                      )}
-                    {/* {evaluationData?.image ? (
-                <Image
-                    src={evaluationData.image}
-                    alt="Player Avatar"
-                    className='w-12 h-12 mr-3 rounded-full object-cover'
-                    width={30}
-                    height={30}
-                />
-            ) : (
-                <div>No Image Available</div>
-            )} */}
-                    <span className="text-gray-700">
-                      <a
-                        href={`/players/${evaluationData?.playerSlug}`}
-                        className=" text-blue-700"
-                        target="_blank"
-                      >
-                        {evaluationData?.first_name} {evaluationData?.last_name}
-                      </a>
-                    </span>
-                  </div>
-                  {!session?.user.club_id && (
-                    <div className="mb-4">
-                      <strong className="mr-2">Evaluation Rate:</strong>{" "}
-                      <span>${evaluationData?.expectedCharge}</span>
+
+                      {/* Date */}
+                      <div className="mb-8">
+                        <strong className="mr-2">Date Requested:</strong>{" "}
+                        <span>{formattedDate}</span>
+                      </div>
                     </div>
-                  )}
+                    
 
-                  <div className="mb-4">
-                    <strong className="mr-2">Date Requested:</strong>{" "}
-                    <span>{formattedDate}</span>
+                    {/* RIGHT COLUMN */}
+                    <div className="relative">
+                      {/* Overall Score Box Fixed to Top Right */}
+                      <div className="absolute top-0 right-0 m-4">
+                        <div className="text-center border rounded-xl p-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-40">
+                          <div className="text-base font-semibold mb-2">Overall Score</div>
+                          <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-xl shadow-inner w-20 h-20 flex items-center justify-center mx-auto">
+                            {calculateOverallAverage()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
 
-                  <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-                    <legend className="text-lg font-semibold text-gray-700">
-                      Video 1
-                    </legend>
-                    <div className="mb-4">
-                      <strong className="mr-2">Link:</strong>{" "}
+                  {/* VIDEO SECTION (Moved Outside Column Layout) */}
+                  <fieldset className="border border-gray-300 rounded-md p-4 mt-6">
+                    <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
+                    <div className="mb-2">
+                      <strong className="mr-2">Link:</strong>
                       <a
                         href={evaluationData?.primary_video_link}
                         className="text-blue-500"
                         target="_blank"
                       >
                         Link to video
-                      </a>{" "}
+                      </a>
                       <span className="mx-2">|</span>
-                      <strong>Length:</strong> {evaluationData?.videoOneTiming}{" "}
-                      min.
+                      <strong>Length:</strong> {evaluationData?.videoOneTiming} min
                       <span className="mx-2">|</span>
-                      <strong>Jersey Color:</strong>{" "}
-                      {evaluationData?.jerseyColorOne}
+                      <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}
                       <span className="mx-2">|</span>
-                      <strong>Jersey Number:</strong>{" "}
-                      {evaluationData?.jerseyNumber}{" "}
+                      <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber}
                       <span className="mx-2">|</span>
-                      <strong>Position(s):</strong>{" "}
-                      {evaluationData?.positionOne}
+                      <strong>Position(s):</strong> {evaluationData?.positionOne}
                     </div>
-                    <div className="mb-4">
+                    <div>
                       <strong>Description: </strong>
                       {evaluationData?.video_description}
                     </div>
                   </fieldset>
-
-                  {evaluationData?.video_link_two && (
-                    <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-                      <legend className="text-lg font-semibold text-gray-700">
-                        Video 2
-                      </legend>
-
-                      <div className="mb-4">
-                        <strong className="mr-2">Link:</strong>{" "}
-                        <a
-                          href={evaluationData?.video_link_two}
-                          className="text-blue-500"
-                          target="_blank"
-                        >
-                          Link to video
-                        </a>{" "}
-                        <span className="mx-2">|</span>
-                        <strong>Length:</strong>{" "}
-                        {evaluationData?.videoTwoTiming} min.
-                        <span className="mx-2">|</span>
-                        <strong>Jersey Color:</strong>{" "}
-                        {evaluationData?.jerseyColorTwo}
-                        <span className="mx-2">|</span>
-                        <strong>Jersey Number:</strong>{" "}
-                        {evaluationData?.jerseyNumberTwo}{" "}
-                        <span className="mx-2">|</span>
-                        <strong>Position:</strong> {evaluationData?.positionTwo}
-                      </div>
-
-                      <div className="mb-4">
-                        <strong>Description: </strong>
-                        {evaluationData?.video_descriptionTwo}
-                      </div>
-                    </fieldset>
-                  )}
-                  {evaluationData?.video_link_three && (
-                    <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-                      <legend className="text-lg font-semibold text-gray-700">
-                        Video 3
-                      </legend>
-
-                      <div className="mb-4">
-                        <strong className="mr-2">Link:</strong>{" "}
-                        <a
-                          href={evaluationData?.video_link_three}
-                          className="text-blue-500"
-                          target="_blank"
-                        >
-                          Link to video
-                        </a>{" "}
-                        <span className="mx-2">|</span>
-                        <strong>Length:</strong>{" "}
-                        {evaluationData?.videoThreeTiming} min.
-                        <span className="mx-2">|</span>
-                        <strong>Jersey Color:</strong>{" "}
-                        {evaluationData?.jerseyColorThree}
-                        <span className="mx-2">|</span>
-                        <strong>Jersey Number:</strong>{" "}
-                        {evaluationData?.jerseyNumberThree}{" "}
-                        <span className="mx-2">|</span>
-                        <strong>Position(s):</strong>{" "}
-                        {evaluationData?.positionThree}
-                      </div>
-                      <div className="mb-4">
-                        <strong>Description: </strong>
-                        {evaluationData?.video_descriptionThree}
-                      </div>
-                    </fieldset>
-                  )}
-                  {/* <div className="mb-4">
-            <strong className="mr-2">Position:</strong>{evaluationData?.evaluationposition}  <strong className="mr-2">Game Light:</strong>{evaluationData?.lighttype}  <strong className="mr-2">Part of Game:</strong>{evaluationData?.percentage} %
-        </div> */}
                 </div>
+
 
                 {/* Key Information */}
                 <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
@@ -1422,94 +1360,7 @@ const handleShowLess = () => {
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-xl shadow-lg">
-              {/* Top Section: Header metrics */}
-              <div className="w-full bg-white p-4 rounded-xl shadow mb-6">
-                <table>
-                  <thead> <tr>
-                    <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                      Overall Average
-                    </th>
-                  </tr></thead>
-                  <tbody> <tr>
-                    <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                      {calculateOverallAverage()}
-                    </td>
-                  </tr></tbody>
-                </table>
-                <table className="table-auto border-collapse border-gray-300">
-
-                  <thead>
-
-
-                    <tr>
-                      {position === "Goalkeeper" ? (
-                      <>
-                        <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                          Technical Average
-                        </th>
-                        <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                          Tactical Average
-                        </th>
-                        <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                          Distribution Average
-                        </th>
-                        <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                          Physical Average
-                        </th>
-                        <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                          Organization Average
-                        </th>
-
-                      </>
-                                ) : (
-                        <>
-                           <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                            Technical Average
-                          </th>
-                          <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                             Tactical Average
-                          </th>
-                          <th className="px-4 py-2 text-center text-sm font-semibold text-green-900 border border-gray-300 bg-gray-100">
-                             Physical Average
-                          </th>
-                   
-                      </> 
-                     )} 
-                     </tr> 
-                  </thead>
-                  <tbody>
-
-                    <tr>
-                      <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                        {calculateAverage(technicalScores)}
-                      </td>
-                      <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                        {calculateAverage(tacticalScores)}
-                      </td>
-                      {position === "Goalkeeper" && (
-                      <>
-                        <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                          {calculateAverage(distributionScores)}
-                        </td>
-                      </>
-                      )} 
-                      <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                        {calculateAverage(physicalScores)}
-                      </td>
-                      {position === "Goalkeeper" && (
-                      <>
-                        <td className="px-4 py-2 border border-gray-300 bg-white text-center font-semibold">
-                          {calculateAverage(organizationScores)}
-                        </td>
-                      </>
-                      )} 
-                  
-                    </tr>
-                  </tbody>
-                </table>
-
-              </div>
+            
 
               {/* Body: Skills sidebar + Radar */}
               <div className="p-5 flex flex-row gap-8">
@@ -1517,33 +1368,67 @@ const handleShowLess = () => {
                   {radarSkills.map((skill, i) => (
                     <div key={i} className="flex items-center justify-center gap-2">
                       {/* Conditionally render skills based on position */}
-                       {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && ( 
-                      <div>
+                      {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
+                        <div>
 
-                      </div>
-                       )} 
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
+                </div>
+
+
+
 
                 {/* Radar Chart */}
-                <div className="flex-1 h-[500px] min-w-[400px]">
-                  <ResponsiveContainer>
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                      <PolarGrid />
-                      <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-                      <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} />
-                      <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+             <div className="radar-chart-container px-4 ">
+                     <div
+                       className="flex flex-col md:flex-row gap-8 items-center justify-center"
+                     >
+                       {/* Left: Radar Chart Column */}
+                       <div className="flex-1 min-w-[300px] max-w-[800px] h-[500px] border border-gray-300 rounded-xl shadow-md  bg-white flex flex-col items-center">
+                         {/* <h2 className="text-indigo-700 font-bold text-lg mb-4 text-center">Radar Chart</h2> */}
+                         <ResponsiveContainer width="100%" height="100%">
+                           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                             <PolarGrid />
+                             <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+                             <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
+                             <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
+                           </RadarChart>
+                         </ResponsiveContainer>
+                       </div>
+           
+                       {/* Right: Metrics Table Column */}
+                       <div className="border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center w-full md:w-auto">
+                         {/* <h2 className="text-teal-700 font-bold text-lg mb-4 text-center">Performance Metrics</h2> */}
+                         <div className="grid grid-cols-2 gap-6">
+                           {[
+                             { title: 'Technical', value: calculateAverage(technicalScores) },
+                             { title: 'Tactical', value: calculateAverage(tacticalScores) },
+                             { title: 'Distribution', value: calculateAverage(distributionScores) },
+                             physicalScores && { title: 'Physical', value: calculateAverage(physicalScores) },
+                             organizationScores && { title: 'Organization', value: calculateAverage(organizationScores) },
+                           ]
+                             .filter(Boolean)
+                             .map((metric, index) => (
+                               <div
+                                 key={index}
+                                 className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
+                               >
+                                 <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
+                                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
+                                   <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
+                                 </div>
+                               </div>
+                             ))}
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+            
 
-
-
-            </div>
-
-
+            <h1 className="p-4 text-xl font-bold mt-4">GoalKeeper Evaluation Form </h1>
             <div className="p-4">
               {position !== "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -2494,9 +2379,9 @@ const handleShowLess = () => {
 
               </div>
               {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4"> */}
-                
-                
-{/*                 
+
+
+              {/*                 
                 {fields.map((index) => (
                   <div className="grid grid-cols-2 gap-4" key={index}>
                     <div>
@@ -2524,85 +2409,87 @@ const handleShowLess = () => {
                   </div>
                 ))} */}
 
-<div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Evaluation ID:</label>
-          <input
-            type="text"
-            value={localEvaluationId}
-            onChange={(e) => setLocalEvaluationId(e.target.value)}
-            required
-          />
-        </div>
+              <div>
+                <h1 className='text-xl font-bold mt-4 mb-4'> Evaluation Documents</h1>
 
-        <div className="space-y-4">
-  {fields.map((key, index) => (
-    <div key={key} className="grid grid-cols-2 gap-4">
-      <div>
-        <label className="block mb-1 font-medium">Filename:</label>
-        <input
-          type="file"
-          className="w-full border border-gray-300 rounded px-3 py-2"
-          // Update callback ref to not return anything
-          ref={(el) => { fileInputRefs.current[index] = el; }}
-          onChange={() => handleDocumentChange(key, index)}
-          required
-        />
-        {fileUploading[index] && <span>Uploading...</span>}
-      </div>
-      <div>
-        <label className="block mb-1 font-medium"> Comments:</label>
-        <input
-          type="text"
-          className="w-full border border-gray-300 rounded px-3 py-2"
-          value={files[key]?.comments || ''}
-          onChange={(e) =>
-            setFiles((prev) => ({
-              ...prev,
-              [key]: {
-                ...prev[key],
-                comments: e.target.value,
-              },
-            }))
-          }
-          required
-        />
-      </div>
-    </div>
-  ))}
-</div>
+                {/* <form onSubmit={handleSubmit}> */}
+                <div>
+                  {/* <label>Evaluation ID:</label> */}
+                  <input
+                    type="hidden"
+                    value={localEvaluationId}
+                    onChange={(e) => setLocalEvaluationId(e.target.value)}
+                    required
+                  />
+                </div>
 
-
-        {/* Add More / Less One Buttons */}
-        <div className="flex justify-end text-xs space-x-2 pt-2">
-          {fields.length < 5 && (
-            <button
-              type="button"
-              onClick={handleShowMore}
-              className="mt-4 p-2 bg-blue-500 text-white rounded"
-            >
-              Add More
-            </button>
-          )}
-
-          {fields.length > 1 && (
-            <button
-              type="button"
-              onClick={handleShowLess}
-              className="mt-4 p-2 bg-red-500 text-white rounded"
-            >
-              Less One
-            </button>
-          )}
-        </div>
-
-      
-      </form>
-    </div>
+                <div className="space-y-4">
+                  {fields.map((key, index) => (
+                    <div key={key} className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-1 font-medium">Filename:</label>
+                        <input
+                          type="file"
+                          className="w-full border border-gray-300 rounded px-3 py-2"
+                          // Update callback ref to not return anything
+                          ref={(el) => { fileInputRefs.current[index] = el; }}
+                          onChange={() => handleDocumentChange(key, index)}
+                          required
+                        />
+                        {fileUploading[index] && <span>Uploading...</span>}
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium"> Comments:</label>
+                        <input
+                          type="text"
+                          className="w-full border border-gray-300 rounded px-3 py-2"
+                          value={files[key]?.comments || ''}
+                          onChange={(e) =>
+                            setFiles((prev) => ({
+                              ...prev,
+                              [key]: {
+                                ...prev[key],
+                                comments: e.target.value,
+                              },
+                            }))
+                          }
+                          required
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
 
-                {/* <div className="flex justify-end text-xs  space-x-2 pt-2">
+                {/* Add More / Less One Buttons */}
+                <div className="flex justify-end text-xs space-x-2 pt-2">
+                  {fields.length < 5 && (
+                    <button
+                      type="button"
+                      onClick={handleShowMore}
+                      className="mt-4 p-2 bg-blue-500 text-white rounded"
+                    >
+                      Add More
+                    </button>
+                  )}
+
+                  {fields.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={handleShowLess}
+                      className="mt-4 p-2 bg-red-500 text-white rounded"
+                    >
+                      Remove File
+                    </button>
+                  )}
+                </div>
+
+
+                {/* </form> */}
+              </div>
+
+
+              {/* <div className="flex justify-end text-xs  space-x-2 pt-2">
 
                   {fields.length < 3 && (
                     <button
