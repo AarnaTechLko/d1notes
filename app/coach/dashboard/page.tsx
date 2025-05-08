@@ -282,6 +282,19 @@ const Dashboard: React.FC = () => {
         Header: 'Review Title',
         accessor: 'review_title',
       },
+            {
+              Header: "Ratings",
+              accessor: "rating", // Ensure this key exists on each row object
+              Cell: ({ row }: CellProps<Evaluation>) => {
+                const rating = row.original.rating; // Confirm the correct key here
+                return (
+                  <span className="px-2 py-1 text-sm rounded text-blue-800">
+                    {rating !== null && rating !== undefined ? rating : "N/A"}
+                  </span>
+                );
+              },
+            }
+            ,
       {
         Header: "Video Links",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed

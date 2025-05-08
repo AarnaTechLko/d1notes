@@ -259,6 +259,7 @@ export const evaluationResults = pgTable('evaluation_results', {
   technicalScores: text('technicalScores').notNull(), 
   distributionScores: text('distributionScores'), 
   organizationScores: text('organizationScores'), 
+  overallScores: text('overallScores'), 
   document:text('document'),
   position:text('position'),
   sport:text('sport'),

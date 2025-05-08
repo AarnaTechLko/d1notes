@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
         expectedCharge: coaches.expectedCharge,
         evaluationId: playerEvaluation.id, // Select specific columns from playerEvaluation
         review_title: playerEvaluation.review_title,
+        rating:playerEvaluation.rating,
         turnaroundTime: playerEvaluation.turnaroundTime,
         evaluationStatus: playerEvaluation.status,
         video_description: playerEvaluation.video_description,
@@ -202,6 +203,7 @@ export async function GET(req: NextRequest) {
         video_link_two: playerEvaluation.video_link_two,
         video_link_three: playerEvaluation.video_link_three,
         status: playerEvaluation.status,
+        rating:playerEvaluation.rating,
         rejectremarks: playerEvaluation.rejectremarks,
         player_id: playerEvaluation.player_id,
         video_description: playerEvaluation.video_description,

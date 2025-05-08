@@ -83,5 +83,12 @@ export interface EvaluationData {
   id: number; // Adjust this type based on your actual image data
   first_name: string; // Adjust this type based on your actual image data
   last_name: string; // Adjust this type based on your actual image data
+ 
   remarks: string; // Adjust this type based on your actual image data
+  technicalScores?: number[];  // Optional array of technical scores
+  tacticalScores?: number[];   // Optional array of tactical scores
+  physicalScores?: number[];   // Optional array of physical scores
+  distributionScores?: number[]; // Optional array for distribution scores (for Goalkeeper)
+  organizationScores?: number[]; // Optional array for organization scores (for Goalkeeper)
+  position?: string; 
 }

@@ -255,6 +255,55 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const stars = Array.from({ length: 5 }, (_, i) => (
     <span key={i} className={i < coachData.rating ? 'text-yellow-500' : 'text-gray-300'}>★</span>
   ));
+
+  const calculateAverage = (scores: number[]): number => {
+    if (!scores || scores.length === 0) return 0;
+    const total = scores.reduce((sum, score) => sum + score, 0);
+    return total / scores.length;
+  };
+  const totalRatings = evaluationList.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+const averageRating = evaluationList.length > 0 ? (totalRatings / evaluationList.length).toFixed(1) : "0.0";
+const roundedAvg = Math.round(parseFloat(averageRating)); // FIX: convert to number for star display
+
+const averageStars = Array.from({ length: 5 }, (_, i) => (
+  <span key={i} className={i < roundedAvg ? 'text-yellow-500' : 'text-gray-300'}>
+    ★
+  </span>
+));
+  // const calculateOverallAverage = (evaluation: EvaluationData): string => {
+  //   let total = 0;
+  //   let count = 0;
+  
+  //   // Add averages if they exist (ensuring no undefined values)
+  //   if (evaluation.technicalScores) {
+  //     total += calculateAverage(evaluation.technicalScores);
+  //     count += 1;
+  //   }
+  //   if (evaluation.tacticalScores) {
+  //     total += calculateAverage(evaluation.tacticalScores);
+  //     count += 1;
+  //   }
+  //   if (evaluation.position === "Goalkeeper") {
+  //     if (evaluation.distributionScores) {
+  //       total += calculateAverage(evaluation.distributionScores);
+  //       count += 1;
+  //     }
+  //     if (evaluation.organizationScores) {
+  //       total += calculateAverage(evaluation.organizationScores);
+  //       count += 1;
+  //     }
+  //   }
+  //   if (evaluation.physicalScores) {
+  //     total += calculateAverage(evaluation.physicalScores);
+  //     count += 1;
+  //   }
+  
+  //   // Calculate and return the overall average
+  //   return count > 0 ? (total / count).toFixed(2) : "N/A";
+  // };
+
+
+  
   return (
     <>
       <head>
@@ -326,13 +375,25 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   </a>
                 )}
               </div>
+              
               {/* Rating */}
-              {/* <div className="flex items-center justify-center md:justify-start mt-2">
-      <div className="mt-1">{stars}</div>
-      
-      </div> 
-      <span className="text-yellow-500 text-2xl">{coachData.rating}</span>
-      <span className="ml-2 text-gray-500">/ 5.0</span>*/}
+               <div className="flex items-center justify-center md:justify-start">
+      <div className=" flex mt-1">{averageStars}</div>
+       <p className="text-gray-800 font-semibold">
+    Overall Average Rating: {averageRating} / 5
+  </p>
+      </div>  
+      {/* <div className="flex items-center justify-end mt-2">
+  <div className=" flex mr-2">{averageStars}</div>
+  <p className="text-gray-800 font-semibold">
+  
+    Overall Average Rating: {averageRating} / 5
+  </p>
+</div> */}
+ 
+
+      {/* <span className="text-yellow-500 text-2xl">{coachData.rating}</span>
+      <span className="ml-2 text-gray-500">/ 5.0</span> */}
             </div>
           </div>
 
@@ -609,6 +670,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                       {/* <h3 className="font-semibold text-gray-800">{evaluation.review_title}</h3> */}
                       <p>{evaluation.first_name} {evaluation.last_name}</p>
                     </div>
+                    
 
                     <div className="flex self-center inline-block align-middle h-64 w-1/2 overflow-y-auto break-all p-4 items-start">
                       {/* <h3 className="font-semibold text-gray-800">Testimonial</h3> */}

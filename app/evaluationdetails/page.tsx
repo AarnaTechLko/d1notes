@@ -321,6 +321,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
       setTechnicalScores(JSON.parse(data.result.technicalScores));
       setOrganizationScores(JSON.parse(data.result.organizationScores));
       setDistributionScores(JSON.parse(data.result.distributionScores));
+      setDistributionScores(JSON.parse(data.result.distributionScores));
       setFormData({
         speed: data.result.speed || "",
         comm_persistence: data.result.comm_persistence || "",
@@ -347,6 +348,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
       });
       setHeaderRatings([
         data.result.technicalAverage,
+
         data.result.tacticalAverage,
         data.result.distributionAverage,
         data.result.physicalAverage,
@@ -459,7 +461,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
         </button>
       </div>
       <div ref={pdfRef} className="w-full  mx-auto bg-white">
-      <div className="p-6 border border-gray-300 rounded-lg font-sans" >
+        <div className="p-6 border border-gray-300 rounded-lg font-sans" >
           {/* Evaluation Form Header - Full Width */}
           <div className="w-full mb-0">
             <div className="bg-white p-6 border border-gray-300 rounded-lg">
@@ -468,24 +470,9 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 <div className="flex flex-col items-end">
                   {/* <span className="text-white bg-blue-500  px-3 py-2 rounded ">Completed</span> */}
                   <div
-                    className="
-    bg-green-600 
-    text-white 
-    text-sm 
-    w-24 
-    h-8 
-    leading-8 
-    text-center 
-    rounded 
-    uppercase 
-    shadow-md    
-    cursor-pointer
-  "
-                  >
+                    className=" bg-green-600 text-white text-sm w-24 h-8 leading-8 text-center rounded uppercase shadow-md cursor-pointer">
                     Completed
                   </div>
-
-
 
                 </div>
               </div>
@@ -509,11 +496,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                       </span>
                     </h3>
                   </div>
-
-
-
-
-
                   <div className="flex items-center mb-4">
                     <strong className="mr-2">Player:</strong>
                     {evaluationData?.image && evaluationData?.image !== 'null' && (
@@ -536,9 +518,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     )}
                     <span className="text-gray-700">
                       <a href={`/players/${evaluationData?.playerSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
-
                   </div>
-
                   <div className="flex items-center mb-4">
                     <strong className="mr-2">Coach:</strong>
                     {evaluationData?.coachimage && evaluationData?.coachimage !== 'null' && (
@@ -561,9 +541,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     )}
                     <span className="text-gray-700">
                       <a href={`/coach/${evaluationData?.coachSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.coachFirstName} {evaluationData?.coachLastName}</a></span>
-
                   </div>
-
                   <div className="mt-4">
                     <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span>
                   </div>
@@ -576,7 +554,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                       </a>
                     </div>
                   )}
-
                 </div>
                 {/* RIGHT COLUMN */}
                 <div className="relative">
@@ -590,7 +567,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     </div>
                   </div>
                 </div>
-
               </div>
               <fieldset className="border border-gray-300 rounded-md p-4 mb-4 mt-4">
                 <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
@@ -611,7 +587,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               {evaluationData?.video_link_two && (
                 <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
                   <legend className="text-lg font-semibold text-gray-700">Video 2</legend>
-
                   <div className="mb-4">
                     <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
                     <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
@@ -621,7 +596,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberTwo} <span className="mx-2">|</span>
                     <strong>Position:</strong> {evaluationData?.positionTwo}
                   </div>
-
                   <div className="mb-4">
                     <strong>Description: </strong>{evaluationData?.video_descriptionTwo}
                   </div>
@@ -630,7 +604,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               {evaluationData?.video_link_three && (
                 <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
                   <legend className="text-lg font-semibold text-gray-700">Video 3</legend>
-
                   <div className="mb-4">
                     <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
                     <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
@@ -643,12 +616,9 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                   <div className="mb-4">
                     <strong>Description: </strong>{evaluationData?.video_descriptionThree}
                   </div>
-
-
                 </fieldset>
               )}
             </div>
-
             {/* Key Information */}
             <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
               <h4 className="text-lg font-semibold mb-3">Key</h4>
@@ -667,7 +637,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             </div>
           </div>
         </div>
-
         <div className="radar-chart-container px-4 py-6">
           <div
             ref={pdfRef}
@@ -713,25 +682,26 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             </div>
           </div>
         </div>
-
-
-
-        <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800  border-b border-gray-300">
+        {/* <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800  border-b border-gray-300">
           Goalkeeper Evaluation Form
-        </h1>
-
-
+        </h1> */}
         <div className="p-2">
+                   <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+  {evaluationData?.position?.toString() === 'Goalkeeper'
+    ? 'Goalkeeper Evaluation Form'
+    : 'Player Evaluation Form'}
+</h1>
+
           <div className={`grid grid-cols-1 ${evaluationData?.position.toString() === 'Goalkeeper' ? 'md:grid-cols-5' : 'md:grid-cols-3'} gap-4 mt-6`}>
+ 
             {/* Technical Section */}
             <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
               {/* Heading Row */}
               <div className="bg-blue-600 text-white px-4 py-4">
                 <h1 className="text-sm">Technical</h1>
               </div>
-
               {/* Content Section with fixed height and flex column layout */}
-              <div className="p-4 flex flex-col justify-between h-[440px]">
+              <div className="p-4 flex flex-col justify-between h-[460px]">
                 {/* Score List */}
                 <div className="flex-grow overflow-y-auto">
                   {technicalScores ? (
@@ -746,7 +716,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     <p className="text-sm italic">No Technical scores available.</p>
                   )}
                 </div>
-
                 {/* Comment Section */}
                 <div className="mt-4  w-full border border-gray-300 bg-white rounded-md p-3">
                   <label htmlFor={`remarks-tech`} className="text-sm font-medium font-bold block mb-2">
@@ -758,17 +727,13 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 </div>
               </div>
             </div>
-
-
-
             {/* Tactical Section */}
             <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
               <div className="bg-blue-600 text-white px-4 py-4">
                 <h1 className="text-sm ">Tactical</h1>
               </div>
-
               {/* Main content wrapper to push comments to bottom */}
-              <div className="p-4 flex flex-col justify-between h-[440px]"> {/* Adjust height as needed */}
+              <div className="p-4 flex flex-col justify-between h-[460px]"> {/* Adjust height as needed */}
                 <div className="flex-grow overflow-y-auto">
                   {tacticalScores ? (
                     <ul className="list-disc list-inside space-y-1 text-sm">
@@ -782,7 +747,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     <p>No Tactical scores available.</p>
                   )}
                 </div>
-
                 {/* Comment section at bottom */}
                 <div className="mt-4 border border-gray-300 bg-white rounded-md p-3">
                   <label htmlFor={`remarks-tact`} className="text-sm font-medium">Comments:</label>
@@ -792,15 +756,13 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 </div>
               </div>
             </div>
-
             {evaluationData?.position.toString() === 'Goalkeeper' && (
               <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
                 <div className="bg-blue-600 text-white px-4 py-4">
                   <h1 className="text-sm">Distribution</h1>
                 </div>
-
                 {/* Content section with consistent layout */}
-                <div className="p-4 flex flex-col justify-between h-[440px]">
+                <div className="p-4 flex flex-col justify-between h-[460px]">
                   {/* Score List */}
                   <div className="flex-grow overflow-y-auto">
                     {distributionScores ? (
@@ -815,7 +777,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                       <p className="text-sm italic">No Distribution scores available.</p>
                     )}
                   </div>
-
                   {/* Comment Section */}
                   <div className="mt-4 border border-gray-300 bg-white rounded-md p-3">
                     <label htmlFor={`remarks-distribution`} className="text-sm font-medium block mb-2">
@@ -827,14 +788,12 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                   </div>
                 </div>
               </div>
-
             )}
             <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
               <div className="bg-blue-600 text-white px-4 py-4">
                 <h1 className="text-sm">Physical</h1>
               </div>
-
-              <div className="p-4 flex flex-col justify-between h-[440px]">
+              <div className="p-4 flex flex-col justify-between h-[460px]">
                 {/* Score List */}
                 <div className="flex-grow overflow-y-auto">
                   {physicalScores ? (
@@ -861,14 +820,12 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 </div>
               </div>
             </div>
-
             {evaluationData?.position.toString() === 'Goalkeeper' && (
               <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
                 <div className="bg-blue-600 text-white px-4 py-4">
                   <h1 className="text-sm">Organization</h1>
                 </div>
-
-                <div className="p-4 flex flex-col justify-between h-[440px]">
+                <div className="p-4 flex flex-col justify-between h-[460px]">
                   {/* Score List */}
                   <div className="flex-grow overflow-y-auto">
                     {organizationScores ? (
@@ -883,7 +840,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                       <p className="text-sm italic">No Organization scores available.</p>
                     )}
                   </div>
-
                   {/* Comment Section */}
                   <div className="mt-4 border border-gray-300 bg-white rounded-md p-3">
                     <label htmlFor={`remarks-org`} className="text-sm font-medium block mb-2">Comments:</label>
@@ -893,7 +849,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                   </div>
                 </div>
               </div>
-
             )}
           </div>
 
@@ -1104,7 +1059,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               </label>
               <p className="text-gray-800 text-base leading-relaxed">{evaluationData?.finalRemarks}</p>
             </div>
-
             <div className="text-black p-6 border border-gray-300 rounded-lg shadow-lg">
               <label htmlFor="final-remarks" className="text-sm font-bold text-blue-600 ">
                 Things to Work On:
@@ -1112,10 +1066,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               <p className="text-gray-800 text-base leading-relaxed">{evaluationData?.thingsToWork}</p>
             </div>
           </div>
-
-
-
-
           {data && data.files && (
             <div className="w-full mx-auto p-4">
               <h1 className='p-4 text-xl font-bold mt-8 mb-4 text-start text-gray-800  '> Evaluation Documents</h1>
@@ -1206,7 +1156,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                             </a>
                           )}
                         </div>
-
                         {/* Right Column: Comments */}
                         <div className="text-sm">
                           <strong className="text-sm font-bold text-gray-900 ">Comments:</strong>
@@ -1219,19 +1168,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               </div>
             </div>
           )}
-
-
-
-
-
-
-
-
-
-
-
-
-
           {userType === 'player' && !isRatingSubmitted && evaluationData?.rating === null && (
 
             <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
@@ -1253,13 +1189,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                     <path d="M12 .587l3.668 7.431 8.21 1.192-5.938 5.784 1.404 8.189L12 18.897l-7.344 3.866 1.404-8.189L.122 9.21l8.21-1.192L12 .587z" />
                   </svg>
                 ))}
-
-
-
-
               </div>
-
-
               {/* Remarks Textarea */}
               <textarea
                 className="w-full p-2 border border-gray-300 rounded-md mb-4 resize-none"
@@ -1268,7 +1198,6 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
               />
-
               {/* Submit Button */}
               <button
                 onClick={handleSubmitRating}
@@ -1277,22 +1206,15 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 Submit Feedback
               </button>
             </div>
-
           )}
-
           {userType === 'player' && isRatingSubmitted && (
 
             <div className="p-4 bg-white shadow-md rounded-md max-w-md mx-auto">
               <h3 className="text-lg font-semibold mb-2">Thanks for Your Feedback</h3>
-
             </div>
-
           )}
         </div>
       </div>
-
-
-
     </>
   );
 };

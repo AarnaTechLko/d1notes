@@ -29,6 +29,9 @@ interface Profile {
 interface Player {
   first_name: string;
   last_name: string;
+
+
+  
   image: string;
   graduation: string;
   sport: string;

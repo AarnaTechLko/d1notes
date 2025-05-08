@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
         age_group: users.age_group,
       })
       .from(users)
-      .leftJoin(countries, eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`))
+       .leftJoin(countries, eq(countries.id, sql<number>`CAST(${users.country} AS INTEGER)`))
       .where(eq(users.id, playerId))
       .limit(1)
       .execute();

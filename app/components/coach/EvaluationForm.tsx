@@ -1377,58 +1377,57 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                   ))}
                 </div>
                 </div>
+           {/* Radar Chart */}
+<div className="radar-chart-container px-4">
+  <div className="flex flex-col md:flex-row gap-8 items-stretch justify-center">
+    {/* Left: Radar Chart Column */}
+    <div className="flex-1 min-w-[300px] h-[500px] border border-gray-300 rounded-xl shadow-md bg-white flex flex-col items-center">
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+          <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
+          <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
+        </RadarChart>
+      </ResponsiveContainer>
+    </div>
 
+    {/* Right: Metrics Table Column */}
+    <div className="flex-1 border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center">
+      <div className="grid grid-cols-2 gap-6">
+        {[
+          { title: 'Technical', value: calculateAverage(technicalScores) },
+          { title: 'Tactical', value: calculateAverage(tacticalScores) },
+          position === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
+          { title: 'Physical', value: calculateAverage(physicalScores) },
+          position === 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
+        ]
+        .filter((metric): metric is { title: string; value: number } => metric !== false) // Type Guard
+        .map((metric, index) => (
+            <div
+              key={index}
+              className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
+            >
+              <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
+              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
+                <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  </div>
+</div>
 
-
-
-                {/* Radar Chart */}
-             <div className="radar-chart-container px-4 ">
-                     <div
-                       className="flex flex-col md:flex-row gap-8 items-center justify-center"
-                     >
-                       {/* Left: Radar Chart Column */}
-                       <div className="flex-1 min-w-[300px] max-w-[800px] h-[500px] border border-gray-300 rounded-xl shadow-md  bg-white flex flex-col items-center">
-                         {/* <h2 className="text-indigo-700 font-bold text-lg mb-4 text-center">Radar Chart</h2> */}
-                         <ResponsiveContainer width="100%" height="100%">
-                           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                             <PolarGrid />
-                             <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-                             <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
-                             <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
-                           </RadarChart>
-                         </ResponsiveContainer>
-                       </div>
-           
-                       {/* Right: Metrics Table Column */}
-                       <div className="border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center w-full md:w-auto">
-                         {/* <h2 className="text-teal-700 font-bold text-lg mb-4 text-center">Performance Metrics</h2> */}
-                         <div className="grid grid-cols-2 gap-6">
-                           {[
-                             { title: 'Technical', value: calculateAverage(technicalScores) },
-                             { title: 'Tactical', value: calculateAverage(tacticalScores) },
-                             { title: 'Distribution', value: calculateAverage(distributionScores) },
-                             physicalScores && { title: 'Physical', value: calculateAverage(physicalScores) },
-                             organizationScores && { title: 'Organization', value: calculateAverage(organizationScores) },
-                           ]
-                             .filter(Boolean)
-                             .map((metric, index) => (
-                               <div
-                                 key={index}
-                                 className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
-                               >
-                                 <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
-                                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-                                   <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
-                                 </div>
-                               </div>
-                             ))}
-                         </div>
-                       </div>
-                     </div>
-                   </div>
             
 
-            <h1 className="p-4 text-xl font-bold mt-4">GoalKeeper Evaluation Form </h1>
+            {/* <h1 className="p-4 text-xl font-bold mt-4">GoalKeeper Evaluation Form </h1> */}
+            {position !== 'Goalkeeper' && (
+  <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+   Field  Player Evaluation Form
+  </h1>
+)}
+
             <div className="p-4">
               {position !== "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -1650,9 +1649,17 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
               )}
 
 
+{position === 'Goalkeeper' && (
+  <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+    Goalkeeper Evaluation Form
+  </h1>
+)}
+
 
               {position == "Goalkeeper" && (
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
+     
+
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                     <div className="mb-4">
