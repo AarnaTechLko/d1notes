@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { evaluationResults, ability } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
+import { Console } from 'console';
 
 
 
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { evaluationId, file1, file2, file3, file4, file5 } = body;
+   console.log("evaluation id: ",evaluationId);
 
     if (!evaluationId || !file1 || !file2 || !file3 || !file4 || !file5) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });

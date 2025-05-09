@@ -5,7 +5,7 @@ import React from 'react';
 import '../../globals.css'; // Import CSS module
 import Sidebar from '../../components/coach/Sidebar';
 import { useTable, Column } from 'react-table';
-import { Evaluation, EvaluationsByStatus } from '../../types/types';
+import { Evaluation, EvaluationsByStatus,EvaluationData } from '../../types/types';
 import Modal from '../../components/Modal';
 import AcceptanceModal from '@/app/components/coach/AcceptanceModal';
 import { useSession, signOut } from 'next-auth/react';
@@ -282,19 +282,59 @@ const Dashboard: React.FC = () => {
         Header: 'Review Title',
         accessor: 'review_title',
       },
-            {
-              Header: "Ratings",
-              accessor: "rating", // Ensure this key exists on each row object
-              Cell: ({ row }: CellProps<Evaluation>) => {
-                const rating = row.original.rating; // Confirm the correct key here
-                return (
-                  <span className="px-2 py-1 text-sm rounded text-blue-800">
-                    {rating !== null && rating !== undefined ? rating : "N/A"}
-                  </span>
-                );
-              },
-            }
-            ,
+      // {
+      //   Header: "Overall Average",
+      //   accessor: "rating",
+      //   Cell: ({ row }: CellProps<Evaluation>) => {
+      //     const evaluationData = row.original.evaluation;
+      
+      //     // Early fallback if evaluationData is empty
+      //     if (!evaluationData) {
+      //       return <span className="text-gray-500">No evaluation data</span>;
+      //     }
+      
+      //     let parsedEval;
+      
+      //     try {
+      //       // Only parse if it's a string and not already an object
+      //       parsedEval =
+      //         typeof evaluationData === "string"
+      //           ? JSON.parse(evaluationData)
+      //           : evaluationData;
+      //     } catch (error) {
+      //       return <span className="text-gray-500">Invalid data</span>;
+      //     }
+      
+      //     // Safely extract values with fallback
+      //     const {
+      //       technical = null,
+      //       tactical = null,
+      //       physical = null,
+      //       distribution = null,
+      //       organization = null,
+      //     } = parsedEval || {};
+      
+      //     const scores = [technical, tactical, physical, distribution, organization].filter(
+      //       (score): score is number => typeof score === "number"
+      //     );
+      
+      //     const overallScore =
+      //       scores.length > 0
+      //         ? (scores.reduce((acc, curr) => acc + curr, 0) / scores.length).toFixed(1)
+      //         : "N/A";
+      
+      //     return (
+      //       <span className="px-2 py-1 text-sm rounded text-blue-800">
+      //         {overallScore}
+      //       </span>
+      //     );
+      //   },
+      // }
+      
+      
+      
+      
+            
       {
         Header: "Video Links",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed

@@ -678,59 +678,26 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
 
 
-      try {
-        const response = await fetch('/api/ability', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          alert(result.message);
-        } else {
-          alert(result.error || 'Something went wrong');
-        }
-      } catch (error: any) {
-        alert('Error submitting form: ' + error.message);
-      } finally {
-        setLoading(false);
-      }
-
-
-
-
-
       // try {
-      //   const res = await fetch('/api/ability', {
+      //   const response = await fetch('/api/ability', {
       //     method: 'POST',
       //     headers: {
       //       'Content-Type': 'application/json',
       //     },
-      //     body: JSON.stringify({
-      //       evaluationId: evaluationData?.evaluationId,
-      //       filename: documents,
-      //       comments: comments,
-      //     }),
+      //     body: JSON.stringify(data),
       //   });
-      //   console.log('Submitting form...');
-      //   console.log('evaluationId:', evaluationData?.evaluationId);
-      //   console.log('filename:', documents);
-      //   console.log('comments:', comments);
 
-      //   if (!res.ok) throw new Error('Failed to save ability');
-
-      //   // alert('Ability saved successfully!');
-      //   setDocuments([]); // ✅ reset properly
-
-      //   setFilename('');
-      //   // setComments('');
-      //   router.refresh();
-      // } catch (error) {
-      //   console.error(error);
-      //   alert('Error saving ability');
+      //   const result = await response.json();
+      //   console.log("ability:",result);
+      //   if (response.ok) {
+      //     alert(result.message);
+      //   } else {
+      //     alert(result.error || 'Something went wrong');
+      //   }
+      // } catch (error: any) {
+      //   alert('Error submitting form: ' + error.message);
+      // } finally {
+      //   setLoading(false);
       // }
 
       // ✅ Submit Player Evaluation
@@ -739,7 +706,15 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(playerEvaluationPayload),
       });
+      console.log( playerEvaluationPayload);
 
+
+      await fetch("/api/ability",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(data),
+      });
+      console.log(data)
       // ✅ Submit Radar Evaluation
       // await fetch("/api/radarEvaluation", {
       //   method: "POST",
@@ -757,7 +732,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       }
 
       onClose();
-      window.location.reload();
+       window.location.reload();
     } catch (error) {
       console.error("Error during submission:", error);
       Swal.fire("Error", "Something went wrong. Please check console.", "error");

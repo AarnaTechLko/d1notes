@@ -257,7 +257,8 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
           if (result.ability) {
             setData(result.ability); // If ability data exists, update the state
           } else {
-            alert('Unable to fetch data');
+            // alert('Unable to fetch data');
+            console.log('Unable to fetch data ');
           }
         })
         .catch((error) => {
@@ -480,145 +481,222 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
           </div>
 
           {/* Player Information and Key Information - Side by Side */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
             {/* Player Information */}
 
-            <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-2 ">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* LEFT COLUMN */}
-                <div className="space-y-4">
-                  {/* Review Title */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold">
-                      Review Title:{" "}
-                      <span className="font-normal">
-                        {evaluationData?.reviewTitle || "N/A"}
-                      </span>
-                    </h3>
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <strong className="mr-2">Player:</strong>
-                    {evaluationData?.image && evaluationData?.image !== 'null' && (
-                      <Image
-                        src={evaluationData?.image}
-                        alt="Player Avatar"
-                        className='w-12 h-12 mr-3 rounded-full object-cover'
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    {(!evaluationData?.image || evaluationData?.image === 'null') && (
-                      <Image
-                        src={defaultImage}
-                        alt="Player Avatar"
-                        className='w-12 h-12 mr-3 rounded-full object-cover'
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    <span className="text-gray-700">
-                      <a href={`/players/${evaluationData?.playerSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.first_name} {evaluationData?.last_name}</a></span>
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <strong className="mr-2">Coach:</strong>
-                    {evaluationData?.coachimage && evaluationData?.coachimage !== 'null' && (
-                      <Image
-                        src={evaluationData?.coachimage}
-                        alt="Player Avatar"
-                        className='w-12 h-12 mr-3 rounded-full object-cover'
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    {(!evaluationData?.coachimage || evaluationData?.coachimage === 'null') && (
-                      <Image
-                        src={defaultImage}
-                        alt="Player Avatar"
-                        className='w-12 h-12 mr-3 rounded-full object-cover'
-                        width={30}
-                        height={30}
-                      />
-                    )}
-                    <span className="text-gray-700">
-                      <a href={`/coach/${evaluationData?.coachSlug}`} className='text-blue-700' target='_blank'>{evaluationData?.coachFirstName} {evaluationData?.coachLastName}</a></span>
-                  </div>
-                  <div className="mt-4">
-                    <strong className="mr-2">Date Completed:</strong> <span>{formattedDate}</span>
-                  </div>
-                  {evaluationData?.document && (
-                    <div className="mb-4 flex items-center space-x-2">
-                      <strong>View / Download Additional Document:</strong>
-                      <a className="text-[15px] text-blue-700  flex items-center space-x-1" target='_blank' href={evaluationData?.document}>
-                        <FaFileAlt />
-                        <span>Download</span>
-                      </a>
-                    </div>
-                  )}
-                </div>
-                {/* RIGHT COLUMN */}
-                <div className="relative">
-                  {/* Overall Score Box Fixed to Top Right */}
-                  <div className="absolute top-0 right-0 m-4">
-                    <div className="flex flex-col items-center justify-center border rounded-xl p-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-40">
-                      <div className="text-base font-semibold mb-2">Overall Score</div>
-                      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-xl shadow-inner w-20 h-20 flex items-center justify-center mx-auto">
-                        {calculateOverallAverage()}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <fieldset className="border border-gray-300 rounded-md p-4 mb-4 mt-4">
-                <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
-                <div className="mb-4">
-                  <strong className="mr-2">Link:</strong> <a href={evaluationData?.primary_video_link} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
-                  <strong>Length:</strong> {evaluationData?.videoOneTiming} min.
-                  <span className="mx-2">|</span>
-                  <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}
-                  <span className="mx-2">|</span>
-                  <strong>Jersey Number:</strong> {evaluationData?.jerseyNumber} <span className="mx-2">|</span>
-                  <strong>Position(s):</strong> {evaluationData?.positionOne}
-                </div>
-                <div className="mb-4">
-                  <strong>Description: </strong>{evaluationData?.video_description}
-                </div>
-              </fieldset>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 sm:p-6">
+  {/* Player Information Section */}
+  {/* <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2 relative"> */}
+  <div className="relative bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2">
 
-              {evaluationData?.video_link_two && (
-                <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-                  <legend className="text-lg font-semibold text-gray-700">Video 2</legend>
-                  <div className="mb-4">
-                    <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_two} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
-                    <strong>Length:</strong> {evaluationData?.videoTwoTiming} min.
-                    <span className="mx-2">|</span>
-                    <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo}
-                    <span className="mx-2">|</span>
-                    <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberTwo} <span className="mx-2">|</span>
-                    <strong>Position:</strong> {evaluationData?.positionTwo}
-                  </div>
-                  <div className="mb-4">
-                    <strong>Description: </strong>{evaluationData?.video_descriptionTwo}
-                  </div>
-                </fieldset>
-              )}
-              {evaluationData?.video_link_three && (
-                <fieldset className="border border-gray-300 rounded-md p-4 mb-4">
-                  <legend className="text-lg font-semibold text-gray-700">Video 3</legend>
-                  <div className="mb-4">
-                    <strong className="mr-2">Link:</strong> <a href={evaluationData?.video_link_three} className="text-blue-500" target='_blank'>Link to video</a> <span className="mx-2">|</span>
-                    <strong>Length:</strong> {evaluationData?.videoThreeTiming} min.
-                    <span className="mx-2">|</span>
-                    <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree}
-                    <span className="mx-2">|</span>
-                    <strong>Jersey Number:</strong> {evaluationData?.jerseyNumberThree} <span className="mx-2">|</span>
-                    <strong>Position:</strong> {evaluationData?.positionThree}
-                  </div>
-                  <div className="mb-4">
-                    <strong>Description: </strong>{evaluationData?.video_descriptionThree}
-                  </div>
-                </fieldset>
-              )}
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* LEFT COLUMN */}
+      <div className="space-y-4">
+        {/* Review Title */}
+        <div>
+          <h3 className="text-lg font-semibold break-words">
+            Review Title:{" "}
+            <span className="font-normal">
+              {evaluationData?.reviewTitle || "N/A"}
+            </span>
+          </h3>
+        </div>
+
+        {/* Player Info */}
+        <div className="flex items-center gap-3">
+          <strong>Player:</strong>
+          <Image
+            src={
+              evaluationData?.image && evaluationData?.image !== "null"
+                ? evaluationData?.image
+                : defaultImage
+            }
+            alt="Player Avatar"
+            className="w-12 h-12 rounded-full object-cover"
+            width={48}
+            height={48}
+          />
+          <span className="text-gray-700 break-words">
+            <a
+              href={`/players/${evaluationData?.playerSlug}`}
+              className="text-blue-700"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {evaluationData?.first_name} {evaluationData?.last_name}
+            </a>
+          </span>
+        </div>
+
+        {/* Coach Info */}
+        <div className="flex items-center gap-3">
+          <strong>Coach:</strong>
+          <Image
+            src={
+              evaluationData?.coachimage &&
+              evaluationData?.coachimage !== "null"
+                ? evaluationData?.coachimage
+                : defaultImage
+            }
+            alt="Coach Avatar"
+            className="w-12 h-12 rounded-full object-cover"
+            width={48}
+            height={48}
+          />
+          <span className="text-gray-700 break-words">
+            <a
+              href={`/coach/${evaluationData?.coachSlug}`}
+              className="text-blue-700"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {evaluationData?.coachFirstName} {evaluationData?.coachLastName}
+            </a>
+          </span>
+        </div>
+
+        <div>
+          <strong>Date Completed:</strong> <span>{formattedDate}</span>
+        </div>
+
+        {evaluationData?.document && (
+          <div className="flex flex-wrap items-center gap-2">
+            <strong>View / Download Additional Document:</strong>
+            <a
+              href={evaluationData?.document}
+              className="text-blue-700 text-sm flex items-center gap-1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFileAlt />
+              <span>Download</span>
+            </a>
+          </div>
+        )}
+      </div>
+
+      {/* RIGHT COLUMN - Score Box */}
+{/* RIGHT COLUMN */}
+<div className="md:relative">
+  {/* Only shows at md and up: top-right */}
+  <div className="hidden md:block absolute top-0 right-0 m-4">
+    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-36 md:w-40">
+      <div className="text-sm md:text-base font-semibold mb-2 text-center">Overall Average</div>
+      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg md:text-xl shadow-inner w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+        {calculateOverallAverage()}
+      </div>
+    </div>
+  </div>
+
+  {/* Only shows on small screens: below Date Completed */}
+  <div className="block md:hidden mt-4">
+    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-full max-w-xs mx-auto">
+      <div className="text-sm font-semibold mb-2 text-center">Overall Average</div>
+      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg shadow-inner w-16 h-16 flex items-center justify-center">
+        {calculateOverallAverage()}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    </div>
+
+    {/* Videos */}
+    <div className="mt-6 space-y-6">
+      {/* Video 1 */}
+      <fieldset className="border border-gray-300 rounded-md p-4">
+        <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
+        <div className="mb-2 text-sm text-gray-800">
+          <strong>Link:</strong>{" "}
+          <a
+            href={evaluationData?.primary_video_link}
+            className="text-blue-500 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Video
+          </a>{" "}
+          <span className="mx-1">|</span>
+          <strong>Length:</strong> {evaluationData?.videoOneTiming} min{" "}
+          <span className="mx-1">|</span>
+          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}{" "}
+          <span className="mx-1">|</span>
+          <strong>Number:</strong> {evaluationData?.jerseyNumber}{" "}
+          <span className="mx-1">|</span>
+          <strong>Position(s):</strong> {evaluationData?.positionOne}
+        </div>
+        <div className="text-sm text-gray-700">
+          <strong>Description:</strong> {evaluationData?.video_description}
+        </div>
+      </fieldset>
+
+      {/* Video 2 */}
+      {evaluationData?.video_link_two && (
+        <fieldset className="border border-gray-300 rounded-md p-4">
+          <legend className="text-lg font-semibold text-gray-700">
+            Video 2
+          </legend>
+          <div className="mb-2 text-sm text-gray-800">
+            <strong>Link:</strong>{" "}
+            <a
+              href={evaluationData?.video_link_two}
+              className="text-blue-500 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Video
+            </a>{" "}
+            <span className="mx-1">|</span>
+            <strong>Length:</strong> {evaluationData?.videoTwoTiming} min{" "}
+            <span className="mx-1">|</span>
+            <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo}{" "}
+            <span className="mx-1">|</span>
+            <strong>Number:</strong> {evaluationData?.jerseyNumberTwo}{" "}
+            <span className="mx-1">|</span>
+            <strong>Position:</strong> {evaluationData?.positionTwo}
+          </div>
+          <div className="text-sm text-gray-700">
+            <strong>Description:</strong> {evaluationData?.video_descriptionTwo}
+          </div>
+        </fieldset>
+      )}
+
+      {/* Video 3 */}
+      {evaluationData?.video_link_three && (
+        <fieldset className="border border-gray-300 rounded-md p-4">
+          <legend className="text-lg font-semibold text-gray-700">
+            Video 3
+          </legend>
+          <div className="mb-2 text-sm text-gray-800">
+            <strong>Link:</strong>{" "}
+            <a
+              href={evaluationData?.video_link_three}
+              className="text-blue-500 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Video
+            </a>{" "}
+            <span className="mx-1">|</span>
+            <strong>Length:</strong> {evaluationData?.videoThreeTiming} min{" "}
+            <span className="mx-1">|</span>
+            <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree}{" "}
+            <span className="mx-1">|</span>
+            <strong>Number:</strong> {evaluationData?.jerseyNumberThree}{" "}
+            <span className="mx-1">|</span>
+            <strong>Position:</strong> {evaluationData?.positionThree}
+          </div>
+          <div className="text-sm text-gray-700">
+            <strong>Description:</strong>{" "}
+            {evaluationData?.video_descriptionThree}
+          </div>
+        </fieldset>
+      )}
+    </div>
+  </div>
+{/* </div> */}
+
             {/* Key Information */}
             <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
               <h4 className="text-lg font-semibold mb-3">Key</h4>
@@ -701,7 +779,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 <h1 className="text-sm">Technical</h1>
               </div>
               {/* Content Section with fixed height and flex column layout */}
-              <div className="p-4 flex flex-col justify-between h-[460px]">
+              <div className="p-4 flex flex-col justify-between h-auto">
                 {/* Score List */}
                 <div className="flex-grow overflow-y-auto">
                   {technicalScores ? (
@@ -733,7 +811,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 <h1 className="text-sm ">Tactical</h1>
               </div>
               {/* Main content wrapper to push comments to bottom */}
-              <div className="p-4 flex flex-col justify-between h-[460px]"> {/* Adjust height as needed */}
+              <div className="p-4 flex flex-col justify-between h-auto"> {/* Adjust height as needed */}
                 <div className="flex-grow overflow-y-auto">
                   {tacticalScores ? (
                     <ul className="list-disc list-inside space-y-1 text-sm">
@@ -762,7 +840,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                   <h1 className="text-sm">Distribution</h1>
                 </div>
                 {/* Content section with consistent layout */}
-                <div className="p-4 flex flex-col justify-between h-[460px]">
+                <div className="p-4 flex flex-col justify-between h-auto">
                   {/* Score List */}
                   <div className="flex-grow overflow-y-auto">
                     {distributionScores ? (
@@ -793,7 +871,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
               <div className="bg-blue-600 text-white px-4 py-4">
                 <h1 className="text-sm">Physical</h1>
               </div>
-              <div className="p-4 flex flex-col justify-between h-[460px]">
+              <div className="p-4 flex flex-col justify-between h-auto">
                 {/* Score List */}
                 <div className="flex-grow overflow-y-auto">
                   {physicalScores ? (
@@ -825,7 +903,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 <div className="bg-blue-600 text-white px-4 py-4">
                   <h1 className="text-sm">Organization</h1>
                 </div>
-                <div className="p-4 flex flex-col justify-between h-[460px]">
+                <div className="p-4 flex flex-col justify-between h-auto">
                   {/* Score List */}
                   <div className="flex-grow overflow-y-auto">
                     {organizationScores ? (

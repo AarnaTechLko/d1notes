@@ -236,6 +236,7 @@ export default function Login() {
         window.location.href = '/coach/completeprofile';
       }
     }
+    
   }, [session]);
 
   return (

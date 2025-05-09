@@ -262,6 +262,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     return total / scores.length;
   };
   const totalRatings = evaluationList.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+  
 const averageRating = evaluationList.length > 0 ? (totalRatings / evaluationList.length).toFixed(1) : "0.0";
 const roundedAvg = Math.round(parseFloat(averageRating)); // FIX: convert to number for star display
 
@@ -377,12 +378,20 @@ const averageStars = Array.from({ length: 5 }, (_, i) => (
               </div>
               
               {/* Rating */}
-               <div className="flex items-center justify-center md:justify-start">
+              <div className="text-left md:text-left">
+              <h1 className=" font-bold text-gray-800 animate-bounce-once">
+             Rating Average: {averageRating} / 5
+              </h1>
+              <p className="text-gray-600 text-lg">
+                {/* {coachData.sport} Coach at  */}{averageStars}
+              </p>
+              </div>
+               {/* <div className="flex items-center justify-center md:justify-start">
       <div className=" flex mt-1">{averageStars}</div>
        <p className="text-gray-800 font-semibold">
     Overall Average Rating: {averageRating} / 5
-  </p>
-      </div>  
+  </p> */}
+      {/* </div>   */}
       {/* <div className="flex items-center justify-end mt-2">
   <div className=" flex mr-2">{averageStars}</div>
   <p className="text-gray-800 font-semibold">

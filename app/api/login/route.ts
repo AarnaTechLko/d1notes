@@ -9,9 +9,11 @@ import { eq } from "drizzle-orm";
 import { SECRET_KEY } from "@/lib/constants";
 import jwt from "jsonwebtoken";
 
+
 export async function POST(req: NextRequest) {
   const logError = debug("app:error");
 
+   
   try {
     const { email, password, loginAs } = await req.json();
 

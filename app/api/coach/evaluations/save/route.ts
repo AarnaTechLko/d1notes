@@ -146,6 +146,7 @@ export async function POST(req: NextRequest) {
         .returning();
     }
     else {
+      
       const insertedData = await db.insert(evaluationResults).values({
         evaluationId: evaluationId,
         playerId: playerId,
