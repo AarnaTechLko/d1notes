@@ -29,6 +29,7 @@ export interface Evaluation {
   finalRemarks: string;
   organizationalRemarks: string;
   rating: number;
+  overallAverage:number;
   percentage: number;
   lighttype: number;
   evaluationposition: number;

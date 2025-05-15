@@ -10,6 +10,8 @@ import ProfileCard from "../components/ProfileCard";
 import { calculateHoursFromNow } from "@/lib/clientHelpers";
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
 import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
+import EvaluationForm from '@/app/components/coach/EvaluationForm';
+
 import PromptComponent from "../components/Prompt";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import  { useRef } from "react";
@@ -98,7 +100,11 @@ const Dashboard: React.FC = () => {
   const [freeEvaluations, setFreeEvaluations] = useState(0);
   const [allowedFreeRequests, setAllowedFreeRequests] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [evaluationData, setEvaluationData] = useState<Evaluation | undefined>(undefined);
+  const [evaluationId, setEvaluationId] = useState<number | undefined>(undefined);
+  const [coachId, setCoachId] = useState<number | undefined>(undefined);
+  const [playerId, setPlayerId] = useState<number | undefined>(undefined);
+  const [isEvFormOpen, setIsEvFormOpen] = useState(false);
 
 
 
@@ -411,12 +417,12 @@ const Dashboard: React.FC = () => {
       { Header: "Review Title", accessor: "review_title" },
       {
         Header: "Ratings",
-        accessor: "rating", // Ensure this key exists on each row object
+        accessor: "overallAverage", // Ensure this key exists on each row object
         Cell: ({ row }: CellProps<Evaluation>) => {
-          const rating = row.original.rating; // Confirm the correct key here
+          const overallAverage = row.original.overallAverage; // Confirm the correct key here
           return (
             <span className="px-2 py-1 text-sm rounded text-blue-800">
-              {rating !== null && rating !== undefined ? rating : "N/A"}
+              {overallAverage !== null && overallAverage !== undefined ? overallAverage : "N/A"}
             </span>
           );
         },
@@ -551,12 +557,12 @@ const Dashboard: React.FC = () => {
 
 const openEvalModal = () => {
     console.log("Going to open")
-    setEvFormOpen(true);
+    setIsEvFormOpen(true);
   };
 
 const closeEvform = () => {
   console.log("Going to close")
-  setEvFormOpen(false);
+  setIsEvFormOpen(false);
 }
 
   // Create table instance
@@ -716,6 +722,14 @@ const closeEvform = () => {
             </button>
             
           </div>
+              <EvaluationForm
+                  evaluationId={evaluationId ?? null}
+                  evaluationData={evaluationData ?? null}
+                  coachId={coachId ?? null}
+                  playerId={playerId ?? null}
+                  isOpen={isEvFormOpen}
+                  onClose={closeEvform}
+                />
 
           <FakeEvaluationForm
             evaluationId={null}

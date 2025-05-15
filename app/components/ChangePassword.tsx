@@ -8,6 +8,11 @@ import { FaCheck, FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 const ChangePassword: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
+
+
+
+
+  
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");

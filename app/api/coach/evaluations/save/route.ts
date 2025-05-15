@@ -30,6 +30,8 @@ export async function POST(req: NextRequest) {
       sport,
       position,
       thingsToWork,
+      overallAverage,
+
       // speed,
       // ability,
       // codWithBall,
@@ -102,6 +104,9 @@ export async function POST(req: NextRequest) {
         organizationalRemarks: organizationalRemarks,
         distributionRemarks: distributionRemarks,
         thingsToWork: thingsToWork,
+        overallAverage:overallAverage,
+
+
         // speed:speed,
         // ability:ability,
         // codWithBall:codWithBall,
@@ -167,6 +172,8 @@ export async function POST(req: NextRequest) {
         sport: sport,
         position: position,
         thingsToWork: thingsToWork,
+        overallAverage:overallAverage,
+
         // speed:speed,
         // ability:ability,
         // codWithBall:codWithBall,

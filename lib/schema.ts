@@ -9,11 +9,11 @@ import {
   uniqueIndex,
   date,
   uuid,
-
   decimal,
   boolean,
   pgEnum,
   integer, 
+  numeric,
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
 import { sql } from "drizzle-orm"; 
@@ -259,6 +259,7 @@ export const evaluationResults = pgTable('evaluation_results', {
   technicalScores: text('technicalScores').notNull(), 
   distributionScores: text('distributionScores'), 
   organizationScores: text('organizationScores'), 
+overallAverage: numeric('overallAverage', { precision: 5, scale: 2 }),
   document:text('document'),
   position:text('position'),
   sport:text('sport'),

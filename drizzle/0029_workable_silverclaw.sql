@@ -1,0 +1,1 @@
+ALTER TABLE "evaluation_results" ALTER COLUMN "overallAverage" SET DATA TYPE numeric(5, 2);

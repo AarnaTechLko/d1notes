@@ -7,11 +7,21 @@ import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
 import { eq,isNotNull,and, inArray ,between, lt,ilike,sql } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // For public access — use specific origin in production
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+// Handle CORS preflight request
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 
 export async function POST(req: NextRequest) {
   const logError = debug('app:error');
   const logInfo = debug('app:info');
-
+  
   try {
     logInfo('Starting the registration process');
     
@@ -216,6 +226,7 @@ D1 Notes Team</p>`,
 
 }
 export async function GET(req: NextRequest) {
+  
   const { searchParams } = new URL(req.url);
   const country = searchParams.get('country') || ''; // Keep the search as a string
   const state = searchParams.get('state') || '';  
@@ -328,16 +339,13 @@ const coachlist = await query.execute();
         evaluationCount:coach.evaluationCount,
       }));
     // Return the coach list as a JSON response
-    return NextResponse.json(formattedCoachList);
+    return NextResponse.json(formattedCoachList, { status: 200, headers: corsHeaders });
 
   } catch (error) {
     const err = error as any;
     console.error('Error fetching coaches:', error);
 
     // Return an error response if fetching fails
-    return NextResponse.json(
-      { message: 'Failed to fetch coaches' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Failed to fetch coaches' }, { status: 500, headers: corsHeaders });
   }
 }

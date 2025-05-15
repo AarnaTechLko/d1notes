@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { playerEvaluation, users, coaches } from '../../../lib/schema'
+import { playerEvaluation, evaluationResults,users, coaches } from '../../../lib/schema'
 import { like } from 'drizzle-orm';
 import { eq,or,desc } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
@@ -41,9 +41,14 @@ export async function POST(req: NextRequest) {
         videoThreeTiming: playerEvaluation.videoThreeTiming,
         accepted_at: playerEvaluation.accepted_at,
         slug: coaches.slug,
+       overallAverage: evaluationResults.overallAverage, // ✅ Add this
+
       })
       .from(playerEvaluation)  // This selects from the `playerEvaluation` table
+      
       .innerJoin(coaches, eq(playerEvaluation.coach_id, coaches.id)) // Inner join with the `users` table
+      .leftJoin(evaluationResults, eq(playerEvaluation.id, evaluationResults.evaluationId)) // ✅ Join for average
+
       .where(
         or(
           and(
@@ -119,9 +124,13 @@ export async function GET(request: NextRequest) {
         videoOneTiming: playerEvaluation.videoOneTiming,
         videoTwoTiming: playerEvaluation.videoTwoTiming,
         videoThreeTiming: playerEvaluation.videoThreeTiming,
+        overallAverage: evaluationResults.overallAverage, // ✅ Include overallAverage here too
+
       })
       .from(playerEvaluation)
       .innerJoin(coaches, eq(playerEvaluation.coach_id, coaches.id))
+       .leftJoin(evaluationResults, eq(playerEvaluation.id, evaluationResults.evaluationId))
+
       .where(and(...conditions)) // Apply the conditions array
       .limit(limit);
 

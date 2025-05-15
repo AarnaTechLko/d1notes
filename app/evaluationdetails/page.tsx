@@ -482,220 +482,220 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
 
           {/* Player Information and Key Information - Side by Side */}
           {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
-            {/* Player Information */}
+          {/* Player Information */}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 sm:p-6">
-  {/* Player Information Section */}
-  {/* <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2 relative"> */}
-  <div className="relative bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 sm:p-6">
+            {/* Player Information Section */}
+            {/* <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2 relative"> */}
+            <div className="relative bg-white p-4 sm:p-6 border border-gray-300 rounded-lg md:col-span-2">
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* LEFT COLUMN */}
-      <div className="space-y-4">
-        {/* Review Title */}
-        <div>
-          <h3 className="text-lg font-semibold break-words">
-            Review Title:{" "}
-            <span className="font-normal">
-              {evaluationData?.reviewTitle || "N/A"}
-            </span>
-          </h3>
-        </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* LEFT COLUMN */}
+                <div className="space-y-4">
+                  {/* Review Title */}
+                  <div>
+                    <h3 className="text-lg font-semibold break-words">
+                      Review Title:{" "}
+                      <span className="font-normal">
+                        {evaluationData?.reviewTitle || "N/A"}
+                      </span>
+                    </h3>
+                  </div>
 
-        {/* Player Info */}
-        <div className="flex items-center gap-3">
-          <strong>Player:</strong>
-          <Image
-            src={
-              evaluationData?.image && evaluationData?.image !== "null"
-                ? evaluationData?.image
-                : defaultImage
-            }
-            alt="Player Avatar"
-            className="w-12 h-12 rounded-full object-cover"
-            width={48}
-            height={48}
-          />
-          <span className="text-gray-700 break-words">
-            <a
-              href={`/players/${evaluationData?.playerSlug}`}
-              className="text-blue-700"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {evaluationData?.first_name} {evaluationData?.last_name}
-            </a>
-          </span>
-        </div>
+                  {/* Player Info */}
+                  <div className="flex items-center gap-3">
+                    <strong>Player:</strong>
+                    <Image
+                      src={
+                        evaluationData?.image && evaluationData?.image !== "null"
+                          ? evaluationData?.image
+                          : defaultImage
+                      }
+                      alt="Player Avatar"
+                      className="w-12 h-12 rounded-full object-cover"
+                      width={48}
+                      height={48}
+                    />
+                    <span className="text-gray-700 break-words">
+                      <a
+                        href={`/players/${evaluationData?.playerSlug}`}
+                        className="text-blue-700"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {evaluationData?.first_name} {evaluationData?.last_name}
+                      </a>
+                    </span>
+                  </div>
 
-        {/* Coach Info */}
-        <div className="flex items-center gap-3">
-          <strong>Coach:</strong>
-          <Image
-            src={
-              evaluationData?.coachimage &&
-              evaluationData?.coachimage !== "null"
-                ? evaluationData?.coachimage
-                : defaultImage
-            }
-            alt="Coach Avatar"
-            className="w-12 h-12 rounded-full object-cover"
-            width={48}
-            height={48}
-          />
-          <span className="text-gray-700 break-words">
-            <a
-              href={`/coach/${evaluationData?.coachSlug}`}
-              className="text-blue-700"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {evaluationData?.coachFirstName} {evaluationData?.coachLastName}
-            </a>
-          </span>
-        </div>
+                  {/* Coach Info */}
+                  <div className="flex items-center gap-3">
+                    <strong>Coach:</strong>
+                    <Image
+                      src={
+                        evaluationData?.coachimage &&
+                          evaluationData?.coachimage !== "null"
+                          ? evaluationData?.coachimage
+                          : defaultImage
+                      }
+                      alt="Coach Avatar"
+                      className="w-12 h-12 rounded-full object-cover"
+                      width={48}
+                      height={48}
+                    />
+                    <span className="text-gray-700 break-words">
+                      <a
+                        href={`/coach/${evaluationData?.coachSlug}`}
+                        className="text-blue-700"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {evaluationData?.coachFirstName} {evaluationData?.coachLastName}
+                      </a>
+                    </span>
+                  </div>
 
-        <div>
-          <strong>Date Completed:</strong> <span>{formattedDate}</span>
-        </div>
+                  <div>
+                    <strong>Date Completed:</strong> <span>{formattedDate}</span>
+                  </div>
 
-        {evaluationData?.document && (
-          <div className="flex flex-wrap items-center gap-2">
-            <strong>View / Download Additional Document:</strong>
-            <a
-              href={evaluationData?.document}
-              className="text-blue-700 text-sm flex items-center gap-1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaFileAlt />
-              <span>Download</span>
-            </a>
-          </div>
-        )}
-      </div>
+                  {evaluationData?.document && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <strong>View / Download Additional Document:</strong>
+                      <a
+                        href={evaluationData?.document}
+                        className="text-blue-700 text-sm flex items-center gap-1"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaFileAlt />
+                        <span>Download</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
 
-      {/* RIGHT COLUMN - Score Box */}
-{/* RIGHT COLUMN */}
-<div className="md:relative">
-  {/* Only shows at md and up: top-right */}
-  <div className="hidden md:block absolute top-0 right-0 m-4">
-    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-36 md:w-40">
-      <div className="text-sm md:text-base font-semibold mb-2 text-center">Overall Average</div>
-      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg md:text-xl shadow-inner w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
-        {calculateOverallAverage()}
-      </div>
-    </div>
-  </div>
+                {/* RIGHT COLUMN - Score Box */}
+                {/* RIGHT COLUMN */}
+                <div className="md:relative">
+                  {/* Only shows at md and up: top-right */}
+                  <div className="hidden md:block absolute top-0 right-0 m-4">
+                    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-36 md:w-40">
+                      <div className="text-sm md:text-base font-semibold mb-2 text-center">Overall Average</div>
+                      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg md:text-xl shadow-inner w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+                        {calculateOverallAverage()}
+                      </div>
+                    </div>
+                  </div>
 
-  {/* Only shows on small screens: below Date Completed */}
-  <div className="block md:hidden mt-4">
-    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-full max-w-xs mx-auto">
-      <div className="text-sm font-semibold mb-2 text-center">Overall Average</div>
-      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg shadow-inner w-16 h-16 flex items-center justify-center">
-        {calculateOverallAverage()}
-      </div>
-    </div>
-  </div>
-</div>
+                  {/* Only shows on small screens: below Date Completed */}
+                  <div className="block md:hidden mt-4">
+                    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-full max-w-xs mx-auto">
+                      <div className="text-sm font-semibold mb-2 text-center">Overall Average</div>
+                      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg shadow-inner w-16 h-16 flex items-center justify-center">
+                        {calculateOverallAverage()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
-    </div>
+              </div>
 
-    {/* Videos */}
-    <div className="mt-6 space-y-6">
-      {/* Video 1 */}
-      <fieldset className="border border-gray-300 rounded-md p-4">
-        <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
-        <div className="mb-2 text-sm text-gray-800">
-          <strong>Link:</strong>{" "}
-          <a
-            href={evaluationData?.primary_video_link}
-            className="text-blue-500 underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Video
-          </a>{" "}
-          <span className="mx-1">|</span>
-          <strong>Length:</strong> {evaluationData?.videoOneTiming} min{" "}
-          <span className="mx-1">|</span>
-          <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}{" "}
-          <span className="mx-1">|</span>
-          <strong>Number:</strong> {evaluationData?.jerseyNumber}{" "}
-          <span className="mx-1">|</span>
-          <strong>Position(s):</strong> {evaluationData?.positionOne}
-        </div>
-        <div className="text-sm text-gray-700">
-          <strong>Description:</strong> {evaluationData?.video_description}
-        </div>
-      </fieldset>
+              {/* Videos */}
+              <div className="mt-6 space-y-6">
+                {/* Video 1 */}
+                <fieldset className="border border-gray-300 rounded-md p-4">
+                  <legend className="text-lg font-semibold text-gray-700">Video 1</legend>
+                  <div className="mb-2 text-sm text-gray-800">
+                    <strong>Link:</strong>{" "}
+                    <a
+                      href={evaluationData?.primary_video_link}
+                      className="text-blue-500 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Video
+                    </a>{" "}
+                    <span className="mx-1">|</span>
+                    <strong>Length:</strong> {evaluationData?.videoOneTiming} min{" "}
+                    <span className="mx-1">|</span>
+                    <strong>Jersey Color:</strong> {evaluationData?.jerseyColorOne}{" "}
+                    <span className="mx-1">|</span>
+                    <strong>Number:</strong> {evaluationData?.jerseyNumber}{" "}
+                    <span className="mx-1">|</span>
+                    <strong>Position(s):</strong> {evaluationData?.positionOne}
+                  </div>
+                  <div className="text-sm text-gray-700">
+                    <strong>Description:</strong> {evaluationData?.video_description}
+                  </div>
+                </fieldset>
 
-      {/* Video 2 */}
-      {evaluationData?.video_link_two && (
-        <fieldset className="border border-gray-300 rounded-md p-4">
-          <legend className="text-lg font-semibold text-gray-700">
-            Video 2
-          </legend>
-          <div className="mb-2 text-sm text-gray-800">
-            <strong>Link:</strong>{" "}
-            <a
-              href={evaluationData?.video_link_two}
-              className="text-blue-500 underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Video
-            </a>{" "}
-            <span className="mx-1">|</span>
-            <strong>Length:</strong> {evaluationData?.videoTwoTiming} min{" "}
-            <span className="mx-1">|</span>
-            <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo}{" "}
-            <span className="mx-1">|</span>
-            <strong>Number:</strong> {evaluationData?.jerseyNumberTwo}{" "}
-            <span className="mx-1">|</span>
-            <strong>Position:</strong> {evaluationData?.positionTwo}
-          </div>
-          <div className="text-sm text-gray-700">
-            <strong>Description:</strong> {evaluationData?.video_descriptionTwo}
-          </div>
-        </fieldset>
-      )}
+                {/* Video 2 */}
+                {evaluationData?.video_link_two && (
+                  <fieldset className="border border-gray-300 rounded-md p-4">
+                    <legend className="text-lg font-semibold text-gray-700">
+                      Video 2
+                    </legend>
+                    <div className="mb-2 text-sm text-gray-800">
+                      <strong>Link:</strong>{" "}
+                      <a
+                        href={evaluationData?.video_link_two}
+                        className="text-blue-500 underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Video
+                      </a>{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Length:</strong> {evaluationData?.videoTwoTiming} min{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Jersey Color:</strong> {evaluationData?.jerseyColorTwo}{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Number:</strong> {evaluationData?.jerseyNumberTwo}{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Position:</strong> {evaluationData?.positionTwo}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>Description:</strong> {evaluationData?.video_descriptionTwo}
+                    </div>
+                  </fieldset>
+                )}
 
-      {/* Video 3 */}
-      {evaluationData?.video_link_three && (
-        <fieldset className="border border-gray-300 rounded-md p-4">
-          <legend className="text-lg font-semibold text-gray-700">
-            Video 3
-          </legend>
-          <div className="mb-2 text-sm text-gray-800">
-            <strong>Link:</strong>{" "}
-            <a
-              href={evaluationData?.video_link_three}
-              className="text-blue-500 underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Video
-            </a>{" "}
-            <span className="mx-1">|</span>
-            <strong>Length:</strong> {evaluationData?.videoThreeTiming} min{" "}
-            <span className="mx-1">|</span>
-            <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree}{" "}
-            <span className="mx-1">|</span>
-            <strong>Number:</strong> {evaluationData?.jerseyNumberThree}{" "}
-            <span className="mx-1">|</span>
-            <strong>Position:</strong> {evaluationData?.positionThree}
-          </div>
-          <div className="text-sm text-gray-700">
-            <strong>Description:</strong>{" "}
-            {evaluationData?.video_descriptionThree}
-          </div>
-        </fieldset>
-      )}
-    </div>
-  </div>
-{/* </div> */}
+                {/* Video 3 */}
+                {evaluationData?.video_link_three && (
+                  <fieldset className="border border-gray-300 rounded-md p-4">
+                    <legend className="text-lg font-semibold text-gray-700">
+                      Video 3
+                    </legend>
+                    <div className="mb-2 text-sm text-gray-800">
+                      <strong>Link:</strong>{" "}
+                      <a
+                        href={evaluationData?.video_link_three}
+                        className="text-blue-500 underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Video
+                      </a>{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Length:</strong> {evaluationData?.videoThreeTiming} min{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Jersey Color:</strong> {evaluationData?.jerseyColorThree}{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Number:</strong> {evaluationData?.jerseyNumberThree}{" "}
+                      <span className="mx-1">|</span>
+                      <strong>Position:</strong> {evaluationData?.positionThree}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <strong>Description:</strong>{" "}
+                      {evaluationData?.video_descriptionThree}
+                    </div>
+                  </fieldset>
+                )}
+              </div>
+            </div>
+            {/* </div> */}
 
             {/* Key Information */}
             <div className="bg-white p-6 border border-gray-300 rounded-lg md:col-span-1">
@@ -715,63 +715,93 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             </div>
           </div>
         </div>
+        {/* Body: Skills sidebar + Radar */}
+        <div className="p-5 flex flex-row gap-8">
+          <div className="flex flex-col gap-2">
+            {radarSkills.map((skill, i) => (
+              <div key={i} className="flex items-center justify-center gap-2">
+                {/* Conditionally render skills based on position */}
+                {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
+                  <div>
+
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="radar-chart-container px-4 py-6">
           <div
             ref={pdfRef}
-            className="flex flex-col md:flex-row gap-8 items-center justify-center"
+            className="flex flex-col md:flex-row gap-8 items-stretch justify-center"
           >
             {/* Left: Radar Chart Column */}
-            <div className="flex-1 min-w-[300px] max-w-[800px] h-[500px] border border-gray-300 rounded-xl shadow-md  bg-white flex flex-col items-center">
-              {/* <h2 className="text-indigo-700 font-bold text-lg mb-4 text-center">Radar Chart</h2> */}
+            <div className="w-full sm:w-[75%] md:w-[45%] lg:w-[50%] xl:w-[40%] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[450px] xl:h-[500px] border border-gray-300 rounded-xl shadow-md bg-white flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                <RadarChart
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="50%"
+                  data={chartData}
+                >
                   <PolarGrid />
                   <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
                   <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
-                  <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
+                  <Radar
+                    name="Player"
+                    dataKey="A"
+                    stroke="#1e40af"
+                    fill="#3b82f6"
+                    fillOpacity={0.5}
+                  />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Right: Metrics Table Column */}
-            <div className="border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center w-full md:w-auto">
-              {/* <h2 className="text-teal-700 font-bold text-lg mb-4 text-center">Performance Metrics</h2> */}
-              <div className="grid grid-cols-2 gap-6">
+            <div className="flex-1 border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 ">
                 {[
                   { title: 'Technical', value: calculateAverage(technicalScores) },
                   { title: 'Tactical', value: calculateAverage(tacticalScores) },
-                  { title: 'Distribution', value: calculateAverage(distributionScores) },
-                  physicalScores && { title: 'Physical', value: calculateAverage(physicalScores) },
-                  organizationScores && { title: 'Organization', value: calculateAverage(organizationScores) },
+                  position === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
+                  { title: 'Physical', value: calculateAverage(physicalScores) },
+                  position === 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
                 ]
-                  .filter(Boolean)
+                  .filter((metric): metric is { title: string; value: number } => metric !== false)
                   .map((metric, index) => (
                     <div
                       key={index}
-                      className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
+                      className="aspect-square w-[160px] h-[140px]  p-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
                     >
-                      <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
-                      <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-                        <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
+                      <div className="text-white font-semibold text-sm mb-2 text-center">
+                        {metric.title} Average
+                      </div>
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white flex items-center justify-center">
+                        <span className="text-blue-700 font-bold text-lg sm:text-xl">
+                          {metric.value}
+                        </span>
                       </div>
                     </div>
                   ))}
               </div>
             </div>
           </div>
+
+
         </div>
         {/* <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800  border-b border-gray-300">
           Goalkeeper Evaluation Form
         </h1> */}
         <div className="p-2">
-                   <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
-  {evaluationData?.position?.toString() === 'Goalkeeper'
-    ? 'Goalkeeper Evaluation Form'
-    : 'Player Evaluation Form'}
-</h1>
+          <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+            {evaluationData?.position?.toString() === 'Goalkeeper'
+              ? 'Goalkeeper Evaluation Form'
+              : 'Player Evaluation Form'}
+          </h1>
 
-          <div className={`grid grid-cols-1 ${evaluationData?.position.toString() === 'Goalkeeper' ? 'md:grid-cols-5' : 'md:grid-cols-3'} gap-4 mt-6`}>
- 
+          <div className={` ${evaluationData?.position.toString() === 'Goalkeeper' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'} gap-4 mt-6`}>
+
             {/* Technical Section */}
             <div className="text-black border border-gray-300 rounded-md flex flex-col overflow-hidden shadow-md">
               {/* Heading Row */}
@@ -1127,10 +1157,8 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             </div>
           </div>
         </div> 
-
-
                     {/* Final Remarks Section */}
-          <div className="mt-12  mb-4 grid grid-cols-2 gap-6">
+          <div className="mt-12 mb-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="text-black p-6 border border-gray-300 rounded-lg shadow-lg">
               <label htmlFor="final-remarks" className="text-sm font-bold text-blue-600 ">
                 Additional Comments:
@@ -1152,14 +1180,14 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                   file ? (
                     // Check if file size is below the 9MB limit
                     file.size && file.size > MAX_FILE_SIZE ? (
-                      <div key={key} className="grid grid-cols-2 gap-4 border-b p-4 rounded">
+                      <div key={key} className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b p-4 rounded">
                         <div className="text-sm flex flex-col items-start space-y-2">
                           <strong>Filename:</strong>
                           <p className="text-red-600">File size exceeds 9MB. Unable to display or download.</p>
                         </div>
                       </div>
                     ) : (
-                      <div key={key} className="grid grid-cols-2 gap-4 border p-4 rounded">
+                      <div key={key} className="grid grid-cols-1 md:grid-cols-2  gap-4 border p-4 rounded">
                         {/* Left Column: File preview + download */}
                         <div className="text-sm flex flex-col items-start space-y-2">
                           <strong className="text-sm font-bold text-gray-900 ">Filename:</strong>

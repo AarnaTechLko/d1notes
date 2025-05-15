@@ -543,6 +543,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
     // setSubmitting(true);
     setLoadSubmit(true);
 
+  const overallAverage = calculateOverallAverage();
 
 
     try {
@@ -621,6 +622,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         document,
         position,
         sport,
+        overallAverage, 
+
         thingsToWork,
         ...rest,
         ...ratings,
@@ -677,42 +680,19 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       };
 
 
-
-      // try {
-      //   const response = await fetch('/api/ability', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(data),
-      //   });
-
-      //   const result = await response.json();
-      //   console.log("ability:",result);
-      //   if (response.ok) {
-      //     alert(result.message);
-      //   } else {
-      //     alert(result.error || 'Something went wrong');
-      //   }
-      // } catch (error: any) {
-      //   alert('Error submitting form: ' + error.message);
-      // } finally {
-      //   setLoading(false);
-      // }
-
       // ✅ Submit Player Evaluation
       await fetch("/api/coach/evaluations/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(playerEvaluationPayload),
       });
-      console.log( playerEvaluationPayload);
+      console.log("average",playerEvaluationPayload);
 
 
-      await fetch("/api/ability",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(data),
+      await fetch("/api/ability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
       console.log(data)
       // ✅ Submit Radar Evaluation
@@ -732,7 +712,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       }
 
       onClose();
-       window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("Error during submission:", error);
       Swal.fire("Error", "Something went wrong. Please check console.", "error");
@@ -831,6 +811,8 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
         ...prev,
         [key]: {
           filename: imageUrl,
+          fileNameOriginal: file.name, // optional: for display
+
           comments: prev[key]?.comments || '',
         },
       }));
@@ -1203,15 +1185,25 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                         <span>{formattedDate}</span>
                       </div>
                     </div>
-                    
+
 
                     {/* RIGHT COLUMN */}
-                    <div className="relative">
-                      {/* Overall Score Box Fixed to Top Right */}
-                      <div className="absolute top-0 right-0 m-4">
-                        <div className="text-center border rounded-xl p-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-40">
-                          <div className="text-base font-semibold mb-2">Overall Score</div>
-                          <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-xl shadow-inner w-20 h-20 flex items-center justify-center mx-auto">
+                    <div className="md:relative">
+                      {/* Only shows at md and up: top-right */}
+                      <div className="hidden md:block absolute top-0 right-0 m-4">
+                        <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-36 md:w-40">
+                          <div className="text-sm md:text-base font-semibold mb-2 text-center">Overall Average</div>
+                          <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg md:text-xl shadow-inner w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+                            {calculateOverallAverage()}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Only shows on small screens: below Date Completed */}
+                      <div className="block md:hidden mt-4">
+                        <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-full max-w-xs mx-auto">
+                          <div className="text-sm font-semibold mb-2 text-center">Overall Average</div>
+                          <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg shadow-inner w-16 h-16 flex items-center justify-center">
                             {calculateOverallAverage()}
                           </div>
                         </div>
@@ -1335,77 +1327,80 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
               </div>
             </div>
 
-            
 
-              {/* Body: Skills sidebar + Radar */}
-              <div className="p-5 flex flex-row gap-8">
-                <div className="flex flex-col gap-2">
-                  {radarSkills.map((skill, i) => (
-                    <div key={i} className="flex items-center justify-center gap-2">
-                      {/* Conditionally render skills based on position */}
-                      {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
-                        <div>
 
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                </div>
-           {/* Radar Chart */}
-<div className="radar-chart-container px-4">
-  <div className="flex flex-col md:flex-row gap-8 items-stretch justify-center">
-    {/* Left: Radar Chart Column */}
-    <div className="flex-1 min-w-[300px] h-[500px] border border-gray-300 rounded-xl shadow-md bg-white flex flex-col items-center">
-      <ResponsiveContainer width="100%" height="100%">
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-          <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
-          <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
-        </RadarChart>
-      </ResponsiveContainer>
-    </div>
+            {/* Body: Skills sidebar + Radar */}
+            <div className="p-5 flex flex-row gap-8">
+              <div className="flex flex-col gap-2">
+                {radarSkills.map((skill, i) => (
+                  <div key={i} className="flex items-center justify-center gap-2">
+                    {/* Conditionally render skills based on position */}
+                    {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
+                      <div>
 
-    {/* Right: Metrics Table Column */}
-    <div className="flex-1 border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center">
-      <div className="grid grid-cols-2 gap-6">
-        {[
-          { title: 'Technical', value: calculateAverage(technicalScores) },
-          { title: 'Tactical', value: calculateAverage(tacticalScores) },
-          position === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
-          { title: 'Physical', value: calculateAverage(physicalScores) },
-          position === 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
-        ]
-        .filter((metric): metric is { title: string; value: number } => metric !== false) // Type Guard
-        .map((metric, index) => (
-            <div
-              key={index}
-              className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
-            >
-              <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
-              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-                <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-      </div>
-    </div>
-  </div>
-</div>
+            {/* Radar Chart */}
+            <div className="radar-chart-container px-4 py-6">
+              <div className="flex flex-col md:flex-row gap-8 items-stretch justify-center">
+                {/* Left: Radar Chart Column */}
+  <div className="w-full sm:w-[75%] md:w-[45%] lg:w-[50%] xl:w-[40%] h-[250px] sm:h-[300px] md:h-[400px] lg:h-[450px] xl:h-[500px] border border-gray-300 rounded-xl shadow-md bg-white flex items-center justify-center">
+        
+         <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="50%" data={chartData}>
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+                      <PolarRadiusAxis angle={80} domain={[0, 10]} tickCount={11} tick={{ fontSize: 10 }} />
+                      <Radar name="Player" dataKey="A" stroke="#1e40af" fill="#3b82f6" fillOpacity={0.5} />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
 
-            
+                {/* Right: Metrics Table Column */}
+                <div className="flex-1 border border-gray-300 rounded-xl shadow-md p-6 bg-white flex flex-col items-center">
+                  <div className="grid grid-cols-2 gap-6">
+                    {[
+                      { title: 'Technical', value: calculateAverage(technicalScores) },
+                      { title: 'Tactical', value: calculateAverage(tacticalScores) },
+                      position === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
+                      { title: 'Physical', value: calculateAverage(physicalScores) },
+                      position === 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
+                    ]
+                      .filter((metric): metric is { title: string; value: number } => metric !== false) // Type Guard
+                      .map((metric, index) => (
+                        <div
+                          key={index}
+                          className="w-[160px] h-[140px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex flex-col items-center justify-center shadow-md"
+                        >
+                          <div className="text-white font-semibold text-sm mb-2">{metric.title} Average</div>
+                          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
+                            <span className="text-blue-700 font-bold text-xl">{metric.value}</span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
 
             {/* <h1 className="p-4 text-xl font-bold mt-4">GoalKeeper Evaluation Form </h1> */}
             {position !== 'Goalkeeper' && (
-  <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
-   Field  Player Evaluation Form
-  </h1>
-)}
+              <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+                Field  Player Evaluation Form
+              </h1>
+            )}
 
             <div className="p-4">
               {position !== "Goalkeeper" && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                // <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
                     <h1 className="text-xl mb-4">
@@ -1624,16 +1619,16 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
               )}
 
 
-{position === 'Goalkeeper' && (
-  <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
-    Goalkeeper Evaluation Form
-  </h1>
-)}
+              {position === 'Goalkeeper' && (
+                <h1 className="p-4 text-xl font-bold mt-6 text-start text-gray-800 border-b border-gray-300">
+                  Goalkeeper Evaluation Form
+                </h1>
+              )}
 
 
               {position == "Goalkeeper" && (
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-1 mt-6">
-     
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 mt-6">
+
 
                   {/* Technical Section */}
                   <div className="text-black p-4 border border-gray-300 rounded-md flex flex-col">
@@ -1810,6 +1805,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                             htmlFor={`dropdown-dis-${dis.id}`}
                             className="text-sm font-medium"
                           >
+
                             {dis.label}
                           </label>
                         </div>
@@ -2407,17 +2403,38 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
 
                 <div className="space-y-4">
                   {fields.map((key, index) => (
-                    <div key={key} className="grid grid-cols-2 gap-4">
+                    <div key={key} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block mb-1 font-medium">Filename:</label>
-                        <input
+
+    
+                        {/* <input
                           type="file"
                           className="w-full border border-gray-300 rounded px-3 py-2"
                           // Update callback ref to not return anything
                           ref={(el) => { fileInputRefs.current[index] = el; }}
                           onChange={() => handleDocumentChange(key, index)}
                           required
-                        />
+                        /> */}
+                      {files[key]?.filename ? (
+  <input
+    type="text"
+    value={files[key].filename}  // just the file name like 'report.pdf'
+    readOnly
+    className="w-full border border-gray-300 rounded px-3 py-2 cursor-pointer mt-2"
+  />
+) : (
+  <input
+    type="file"
+    className="w-full border border-gray-300 rounded px-3 py-2"
+    ref={(el) => { fileInputRefs.current[index] = el; }}
+    onChange={() => handleDocumentChange(key, index)}
+    required
+  />
+)}
+
+
+
                         {fileUploading[index] && <span>Uploading...</span>}
                       </div>
                       <div>
@@ -2470,160 +2487,6 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
                 {/* </form> */}
               </div>
 
-
-              {/* <div className="flex justify-end text-xs  space-x-2 pt-2">
-
-                  {fields.length < 3 && (
-                    <button
-                      type="button"
-                      onClick={handleShowMore}
-                      className="mt-4 p-2 bg-blue-500 text-white rounded"
-                    >
-                      Add More
-                    </button>
-                  )}
-
-                  {fields.length > 1 && fields.length <= 3 && (
-                    <button
-                      type="button"
-                      onClick={handleShowLess}
-                      className="mt-4 p-2 bg-red-500 text-white rounded"
-                    >
-                      Less One
-                    </button>
-                  )}
-                </div> */}
-
-              {/* </form> */}
-              {/* <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mx-auto p-4">
-                {false && (
-                  <div>
-                    <label className="block font-medium">EvaluationId</label>
-
-                    <span className="font-normal">
-                      {evaluationData?.evaluationId}
-                    </span>
-                  </div>
-                )}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-medium">Filename</label>
-                    <input
-                      type="file"
-                      name="document"
-                      className="border p-4 rounded w-full"
-                      onChange={handleDocumentChange}
-                      ref={fileInputRef}
-                    />
-                  </div>
-                  {fileUploading ? (
-                    <>
-                      <FileUploader />
-                    </>
-                  ) : (
-                    <></>
-                  )}
-
-                  <div>
-                    <label className="block font-medium">Comments</label>
-                    <textarea
-                      value={comments}
-                      onChange={(e) => setComments(e.target.value)}
-                      className="border p-2 rounded w-full"
-                    />
-                  </div>
-                </div>
-                  <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-medium">Filename</label>
-                    <input
-                      type="file"
-                      name="document"
-                      className="border p-4 rounded w-full"
-                      onChange={handleDocumentChange}
-                      ref={fileInputRef}
-                    />
-                  </div>
-                  {fileUploading ? (
-                    <>
-                      <FileUploader />
-                    </>
-                  ) : (
-                    <></>
-                  )}
-
-                  <div>
-                    <label className="block font-medium">Comments</label>
-                    <textarea
-                      value={comments}
-                      onChange={(e) => setComments(e.target.value)}
-                      className="border p-2 rounded w-full"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block font-medium">Filename</label>
-                    <input
-                      type="file"
-                      name="document"
-                      className="border p-4 rounded w-full"
-                      onChange={handleDocumentChange}
-                      ref={fileInputRef}
-                    />
-                  </div>
-                  {fileUploading ? (
-                    <>
-                      <FileUploader />
-                    </>
-                  ) : (
-                    <> </>
-                  )}
-
-                  <div>
-                    <label className="block font-medium">Comments</label>
-                    <textarea
-                      value={comments}
-                      onChange={(e) => setComments(e.target.value)}
-                      className="border p-2 rounded w-full"
-                    />
-                  </div>
-                </div>
-              </form> */}
-
-
-              {/* {session?.user.club_id && ( 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="mt-6">
-                  <label
-                    htmlFor="final-remarks"
-                    className="text-sm font-medium"
-                  >
-                    Upload Document:
-                  </label>
-                  <input
-                    type="file"
-                    name="document"
-                    className=""
-                    onChange={handleDocumentChange}
-                    ref={fileInputRef}
-                  />
-                </div>
-              </div>
-               {fileUploading ? (
-                <>
-                  <FileUploader />
-                </>
-              ) : (
-                <></>
-              )} 
-
-
-
-
-              
-
-               )} */}
               <div className="flex justify-end space-x-2 pt-6">
                 <button
                   type="submit"

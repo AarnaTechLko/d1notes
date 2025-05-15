@@ -56,8 +56,10 @@ export async function POST(req: NextRequest) {
     console.log(rows);
 
     await db.insert(ability).values(rows);
+return NextResponse.json({ ability: rows }, { status: 201 });
 
-    return NextResponse.json({ message: 'All abilities saved successfully' ,ability:rows}, { status: 201 });
+
+    // return NextResponse.json({ message: 'All abilities saved successfully' ,ability:rows}, { status: 201 });
   } catch (error: any) {
     console.error('Error saving abilities:', error.message);
     return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });

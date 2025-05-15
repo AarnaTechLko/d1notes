@@ -1,0 +1,1 @@
+ALTER TABLE "evaluation_results" ADD COLUMN "overallAverage" text;
