@@ -66,7 +66,9 @@ export const users = pgTable(
     status: varchar("status").default("Pending"),
     visibility: varchar("visibility").default("off"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
-    isCompletedProfile: boolean("isCompletedProfile").default(false)
+    isCompletedProfile: boolean("isCompletedProfile").default(false),
+            is_deleted: integer("is_deleted").default(1).notNull(),
+
   },
   (users) => {
     return {
@@ -120,7 +122,9 @@ export const coaches = pgTable(
     license:text("license"),
     status: varchar("status").default("Pending"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
-    isCompletedProfile: boolean("isCompletedProfile").default(false)
+    isCompletedProfile: boolean("isCompletedProfile").default(false),
+            is_deleted: integer("is_deleted").default(1).notNull(),
+
   },
   (coaches) => {
     return {
@@ -177,6 +181,8 @@ export const playerEvaluation = pgTable(
     percentage:text('percentage'),
     rejectremarks: text("rejectremarks"),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
+    is_deleted: integer("is_deleted").default(1).notNull(),
+
   }
 );
 
@@ -199,6 +205,7 @@ export const coachearnings = pgTable(
     discount_amount:decimal("discount_amount"),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
+
   }
 );
 
@@ -226,6 +233,8 @@ export const payments = pgTable(
     payment_info: text("payment_info"),
     created_at: timestamp("created_at").defaultNow().notNull(),
     description: text("description"),
+    is_deleted: integer("is_deleted").default(1).notNull(),
+
   },
   (payments) => {
     return {
@@ -341,6 +350,8 @@ export const enterprises=pgTable('enterprises', {
   website: text('website'),
   status: text('status').default('Active'),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
+          is_deleted: integer("is_deleted").default(1).notNull(),
+
 });
 
 //What is this for?

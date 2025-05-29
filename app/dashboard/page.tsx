@@ -241,6 +241,7 @@ const Dashboard: React.FC = () => {
       ...prev,
       [status]: evaluationsData, // Assuming evaluationsData is an array
     }));
+console.log("free",evaluationsData)
 
     setData(evaluationsData); // Set the data for the table
     setLoading(false); // Set loading to false after data is fetched
@@ -275,8 +276,6 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-
-    setCoaches(coachData);
 
     setLoading(false); // Set loading to false after data is fetched
   };

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users, coaches, coachearnings, playerEvaluation, coachaccount } from "@/lib/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq,and, sql } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
@@ -37,8 +37,10 @@ export async function GET(req: NextRequest) {
         }).from(coachearnings)
             .leftJoin(users, eq(coachearnings.player_id, users.id))
             .leftJoin(playerEvaluation, eq(coachearnings.evaluation_id, playerEvaluation.id))
-            .where(eq(coachearnings.coach_id, parsedCoachId));
-
+   .where(and(
+                eq(coachearnings.coach_id, parsedCoachId),
+                eq(playerEvaluation.is_deleted, 1)
+            ));
         const accounts = await db
             .select({ amount: coachaccount.amount })
             .from(coachaccount)

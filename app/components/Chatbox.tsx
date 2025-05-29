@@ -609,6 +609,7 @@ const ChatBox: React.FC = () => {
                                 </>
                             )}
 
+
                             {loggedInUserType == 'coach' && (
                                 <>
                                     <h2 className="text-xl font-semibold mb-4 hidden md:block">Player Profile</h2>

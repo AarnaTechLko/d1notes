@@ -48,19 +48,22 @@ export async function POST(req: NextRequest) {
       
       .innerJoin(coaches, eq(playerEvaluation.coach_id, coaches.id)) // Inner join with the `users` table
       .leftJoin(evaluationResults, eq(playerEvaluation.id, evaluationResults.evaluationId)) // ✅ Join for average
-
-      .where(
-        or(
-          and(
-            eq(playerEvaluation.player_id, userId),   // First condition
-            eq(playerEvaluation.status, status)       // Second condition
-          ),
-          and(
-            eq(playerEvaluation.parent_id, userId),   // First condition
-            eq(playerEvaluation.status, status)       // Second condition
-          )     // OR condition
-        )
+.where(
+  and(
+    eq(playerEvaluation.is_deleted, 1), // ✅ Only include soft-deleted rows
+    or(
+      and(
+        eq(playerEvaluation.player_id, userId),
+        eq(playerEvaluation.status, status)
+      ),
+      and(
+        eq(playerEvaluation.parent_id, userId),
+        eq(playerEvaluation.status, status)
       )
+    )
+  )
+)
+
       .orderBy(desc(playerEvaluation.id))
       .execute();
 
@@ -92,12 +95,13 @@ export async function GET(request: NextRequest) {
     }
 
      
-    const conditions = [
-      or(
-        eq(playerEvaluation.player_id, playerId),
-        eq(playerEvaluation.parent_id, playerId)
-      ),
-    ];
+ const conditions = [
+  or(
+    eq(playerEvaluation.player_id, playerId),
+    eq(playerEvaluation.parent_id, playerId)
+  ),
+  eq(playerEvaluation.is_deleted, 1), // ✅ Add this
+];
 
      
     if (status) {

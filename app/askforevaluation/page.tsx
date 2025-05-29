@@ -33,6 +33,7 @@ const Dashboard: React.FC = () => {
     phoneNumber: string;
     qualifications: string;
     expectedCharge: number;
+    is_deleted: number;
   }
   const [selectedTab, setSelectedTab] = useState<string>("0");
   const [data, setData] = useState<Evaluation[]>([]); // State to hold the data for the table
@@ -41,14 +42,14 @@ const Dashboard: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentDescription, setCurrentDescription] = useState<string>("");
   const [coaches, setCoaches] = useState<Profile[]>([]);
-  const [playerClubId,setPlayerClubid]=useState<string>('')
-  const [freeEvaluations,setFreeEvaluations]=useState(0);
-  const [allowedFreeRequests,setAllowedFreeRequests]=useState(0);
-  
+  const [playerClubId, setPlayerClubid] = useState<string>('')
+  const [freeEvaluations, setFreeEvaluations] = useState(0);
+  const [allowedFreeRequests, setAllowedFreeRequests] = useState(0);
+
   const Modal: React.FC<{ isOpen: boolean, onClose: () => void, description: string }> = ({ isOpen, onClose, description }) => {
     console.log("Modal isOpen: ", isOpen); // Log the open state for debugging
     if (!isOpen) return null;
-  
+
     return (
       <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
@@ -63,24 +64,24 @@ const Dashboard: React.FC = () => {
   };
   const fetchRequests = async () => {
     const session = await getSession();
-    const clubId =session?.user.club_id;
+    const clubId = session?.user.club_id;
     if (!clubId) {
       console.error("Club ID is not available.");
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/freerequests?clubId=${clubId}`);
-      
+
       if (!response.ok) {
         throw new Error(`Error fetching data: ${response.statusText} (Status: ${response.status})`);
       }
-  
+
       const textResponse = await response.text(); // Read response as text
       if (!textResponse) {
         throw new Error("Empty response body received.");
       }
-  
+
       const body = JSON.parse(textResponse); // Parse text as JSON
       if (body && body.requests) {
         setAllowedFreeRequests(body.requests);
@@ -95,7 +96,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const userId = session?.user.id;
-     
+
 
     if (!userId) {
       throw new Error("User not authenticated");
@@ -146,7 +147,7 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({
         clubId,
-        
+
       }),
     });
 
@@ -156,9 +157,9 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setCoaches(coachData);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
 
@@ -167,7 +168,7 @@ const Dashboard: React.FC = () => {
     setLoading(true); // Set loading to true before fetching data
     const session = await getSession();
     const player_id = session?.user.id;
-    
+
 
     const response = await fetch("/api/freeevaluations", {
       method: "POST",
@@ -176,7 +177,7 @@ const Dashboard: React.FC = () => {
       },
       body: JSON.stringify({
         player_id,
-        
+
       }),
     });
 
@@ -186,17 +187,17 @@ const Dashboard: React.FC = () => {
     }
 
     const coachData = await response.json();
-    
+
     setFreeEvaluations(coachData.countRecords);
- 
+
     setLoading(false); // Set loading to false after data is fetched
   };
-  
+
   const handleReadMore = (description: string) => {
     setCurrentDescription(description);
-   
+
     setModalOpen(true); // Open modal with full description
-     
+
   };
 
   const handleCloseModal = () => {
@@ -215,23 +216,23 @@ const Dashboard: React.FC = () => {
     () => [
       {
         Header: 'Date',
-    accessor: 'created_at',
-    Cell: ({ value }: CellProps<Evaluation>) => {
-      // Format the date to 'dd-mm-yyyy'
-      const date = new Date(value);
-      return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
-    },
-        
+        accessor: 'created_at',
+        Cell: ({ value }: CellProps<Evaluation>) => {
+          // Format the date to 'dd-mm-yyyy'
+          const date = new Date(value);
+          return date.toLocaleDateString('en-US'); // This formats the date to 'dd/mm/yyyy'
+        },
+
       },
       {
         Header: "Coach Name",
         accessor: "first_name",
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="space-y-2"> {/* Stack links vertically with spacing */}
-          <a href={`coach/${row.original.slug}`} target="_blank" rel="noopener noreferrer">
-   {row.original.first_name} {row.original.last_name}
-</a>
-         </div>
+            <a href={`coach/${row.original.slug}`} target="_blank" rel="noopener noreferrer">
+              {row.original.first_name} {row.original.last_name}
+            </a>
+          </div>
         ),
       },
       { Header: "Review Title", accessor: "review_title" }, // Use the correct accessor
@@ -244,7 +245,7 @@ const Dashboard: React.FC = () => {
               Primary
             </a>
             <a href={row.original.video_link_two} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">
-             Link#2
+              Link#2
             </a>
             <a href={row.original.video_link_three} target="_blank" rel="noopener noreferrer" className="block w-full text-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md text-base font-medium mt-2">
               Link#3
@@ -257,9 +258,9 @@ const Dashboard: React.FC = () => {
         accessor: "video_description",
         Cell: ({ cell }) => {
           const description = cell.value ?? ""; // Default to an empty string if undefined
-      
+
           const truncatedDescription = description.length > 30 ? description.substring(0, 30) + "..." : description;
-      
+
           return (
             <div>
               <span>{truncatedDescription}</span>
@@ -275,18 +276,18 @@ const Dashboard: React.FC = () => {
       { Header: "Payment Status", accessor: "payment_status" },
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
-            {
-              Header: "View Evaluation",
-              Cell: ({ row }: CellProps<Evaluation>) => (
-                <button
-                  onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
-                  className="text-blue-500"
-                >
-                  <FaEye className="inline" /> {/* Render the view icon */}
-                </button>
-              ),
-            },
-          ]
+          {
+            Header: "View Evaluation",
+            Cell: ({ row }: CellProps<Evaluation>) => (
+              <button
+                onClick={() => handleEvaluationDetails(row.original)} // Pass the evaluation object
+                className="text-blue-500"
+              >
+                <FaEye className="inline" /> {/* Render the view icon */}
+              </button>
+            ),
+          },
+        ]
         : []),
     ],
     [selectedTab]
@@ -305,47 +306,49 @@ const Dashboard: React.FC = () => {
   // Create table instance
   const tableInstance = useTable({ columns, data });
 
-  return ( 
+  return (
     <div className="flex h-screen">
       <Modal
-  isOpen={modalOpen}
-  onClose={handleCloseModal}
-  description={currentDescription}
-/>
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        description={currentDescription}
+      />
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
-    
- 
+
+
         <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
           <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Coaches</h3></div>
-        
-      {coaches.map((profile) => (
-                <div className="w-full lg:w-auto" key={profile.id}>
-                  <ProfileCard
-                    key={profile.id}
-                    id={profile.id}
-                    name={profile.firstName}
-                    organization={profile.clubName}
-                    image={profile.image ?? '/default.jpg'}
-                    rating={profile.rating}
-                    freeEvaluations={freeEvaluations}
-                    expectedCharge={profile.expectedCharge}
-                    allowedFreeRequests={allowedFreeRequests}
-                    slug={profile.slug}
-                    usedIn='playerlogin'
-                    playerClubId={Number(playerClubId)}
-                    coachClubId={profile.enterprise_id}
-                  />
-                </div>
-              ))}
+
+          {coaches.map((profile) => (
+            <div className="w-full lg:w-auto" key={profile.id}>
+              <ProfileCard
+                key={profile.id}
+                id={profile.id}
+                name={profile.firstName}
+                organization={profile.clubName}
+                image={profile.image ?? '/default.jpg'}
+                rating={profile.rating}
+                freeEvaluations={freeEvaluations}
+                expectedCharge={profile.expectedCharge}
+                allowedFreeRequests={allowedFreeRequests}
+                slug={profile.slug}
+                usedIn='playerlogin'
+                playerClubId={Number(playerClubId)}
+
+                is_deleted={profile.is_deleted}
+                coachClubId={profile.enterprise_id}
+              />
+            </div>
+          ))}
 
 
-       
-        </div> 
+
+        </div>
       </main>
 
 
-      
+
     </div>
   );
 };

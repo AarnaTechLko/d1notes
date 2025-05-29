@@ -25,10 +25,15 @@ interface Profile {
   weight: number;
 
 }
+interface AverageRating {
+  playerId: number;
+  averageRating: number;
+}
 
 interface Player {
   first_name: string;
   last_name: string;
+  id: number; // ✅ Add this line
 
 
 
@@ -140,6 +145,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   const [isRequested, setIsRequested] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isJoinRequestModalOpen, setIsJoinRequestModalOpen] = useState(false);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   function toSentenceCase(str: string): string {
     if (!str) return '';
@@ -157,6 +163,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         });
 
         const responseData = await response.json();
+        setAverageRating(responseData.averageRating); // Assuming the API includes this
 
         if (!response.ok) {
           setError(responseData.error);
@@ -176,8 +183,29 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
           setClubName(responseData.clubname.clubname);
         }
 
+        // } catch (err) {
+        //   setError('Some error occurred : ' + err);
+        // } finally {
+        //   setLoading(false);
+        // }
+
+
+        // ✅ Fetch average rating here after playerData is available
+        if (responseData.clubdata?.id) {
+          const res = await fetch("/api/player/profile");
+          const ratings: AverageRating[] = await res.json();
+
+          const currentPlayerRating = ratings.find(
+            (item) => item.playerId === responseData.clubdata.id
+          );
+
+          if (currentPlayerRating) {
+            setAverageRating(currentPlayerRating.averageRating);
+          }
+        }
+
       } catch (err) {
-        setError('Some error occurred : ' + err);
+        setError('Some error occurred: ' + err);
       } finally {
         setLoading(false);
       }
@@ -208,6 +236,20 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   //   month: 'long',
   //   day: 'numeric',
   // });
+  // If playerData contains an id field
+
+  const roundedAvg = averageRating !== null ? Math.round(averageRating) : 0;
+
+  // Create stars dynamically based on roundedAvg
+  const averageStars = [];
+  for (let i = 0; i < roundedAvg; i++) {
+    averageStars.push(
+      <span key={i} className="text-yellow-500">
+        ★
+      </span>
+    );
+  }
+
 
   return (
     <>
@@ -242,17 +284,34 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
 
             </div>
-
             {/* Coach Info */}
             <div className="text-left md:text-left">
-              <h3 className="text-4xl font-semibold text-blue-500 text-stroke mt-8">
-                {playerData?.jersey && (
-                  <span className="bg-blue-500 text-xl text-white px-4 py-2 rounded-full w-10 h-10 inline-flex items-center justify-center">
-                    #{playerData.jersey || '-'}
-                  </span>
-                )}{" "}
-                {playerData?.first_name} {playerData?.last_name}
-              </h3>
+              <div className="flex items-center justify-between flex-wrap gap-4 ">
+
+                <h3 className="text-4xl font-semibold text-blue-500 text-stroke ">
+                  {playerData?.jersey && (
+                    <span className="bg-blue-500 text-xl text-white px-4 py-2 rounded-full w-10 h-10 inline-flex items-center justify-center">
+                      #{playerData.jersey || '-'}
+                    </span>
+                  )}{" "}
+                  {playerData?.first_name} {playerData?.last_name}
+                </h3>
+                {averageRating !== null && (
+                  // <h1 className="font-bold text-gray-800  m-4">
+                  //   Rating Average: {averageRating} 
+                  // </h1>
+                  <div className="hidden md:flex justify-end px-10 ">
+                    <div className="flex flex-col items-center justify-center border rounded-xl p-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg w-36 md:w-40">
+                      <div className="text-sm md:text-base font-semibold mb-2 text-center">
+                        Overall Average
+                      </div>
+                      <div className="bg-white text-blue-700 border-4 border-white rounded-full font-bold text-lg md:text-xl shadow-inner w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+                        {averageRating}
+                      </div>
+                    </div>
+                  </div>
+)}
+</div>
 
               <div className="flex space-x-4 ml-11  mt-3 mb-3 h-5">
                 {playerData?.facebook && (

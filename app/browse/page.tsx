@@ -31,6 +31,7 @@ interface Profile {
   license_type?: string;
   evaluation_rate: number;
   evaluationCount?: number;
+  is_deleted:number;
 }
 
 const Home = () => {
@@ -133,7 +134,9 @@ const Home = () => {
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
-              {filteredProfiles.map((profile) => (
+              {filteredProfiles
+              .filter((profile) => profile.is_deleted !== 0) // ✅ only render non-deleted
+              .map((profile) => (
                 <div className="w-full lg:w-auto" key={profile.id}>
                   <ProfileCard
                     key={profile.id}
@@ -149,7 +152,7 @@ const Home = () => {
                     evaluation_rate={profile?.evaluation_rate}
                     youtube={profile?.youtube}
                     evaluationCount={profile?.evaluationCount}
-
+                    is_deleted={profile.is_deleted}
                   />
                 </div>
               ))}

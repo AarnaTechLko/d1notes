@@ -156,7 +156,7 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
               <div>
                 <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once teamname">
-                  {coachData.team_name} 
+                  {coachData.team_name}
                 </h1>
                 <p className=" text-black p-2"><span><b>Sport: </b> Soccer</span></p>
                 {/* <p className="text-black p-2">
@@ -174,8 +174,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
 
                 )}
                 {coachData.leage && (
-                <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
-              )}
+                  <p className=" text-black p-2"><span><b>League: </b> {coachData.leage}</span></p>
+                )}
               </div>
             </div>
 
@@ -260,6 +260,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                   image={item.image ?? "/default.jpg"}
                   rating={5}
                   slug={item.slug}
+
+                  is_deleted={item.is_deleted}
                   evaluation_rate={item.expectedCharge}
                 />
               ))
@@ -299,6 +301,8 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
                     linkedin={profile.linkedin}
                     youtube={profile.youtube}
                     xlink={profile.xlink}
+                    is_deleted={profile.is_deleted}
+
                   />
                 </div>
               ))

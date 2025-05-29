@@ -652,7 +652,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.facebook}</p>
+                  <p className="block text-gray-700 text-sm font-semibold  mb-2 break-words">{profileData.facebook}</p>
                 )}
               </div>
 
@@ -668,7 +668,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.instagram}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2 break-words">{profileData.instagram}</p>
                 )}
               </div>
 
@@ -684,7 +684,7 @@ const Profile: React.FC = () => {
                     className="mt-2 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-500"
                   />
                 ) : (
-                  <p className="block text-gray-700 text-sm font-semibold mb-2">{profileData.linkedin}</p>
+                  <p className="block text-gray-700 text-sm font-semibold mb-2 break-words">{profileData.linkedin}</p>
                 )}
                 </div>
               </div>

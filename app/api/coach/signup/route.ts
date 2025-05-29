@@ -291,6 +291,7 @@ export async function GET(req: NextRequest) {
       xlink: coaches.xlink,
       youtube: coaches.youtube,
       website: coaches.website,
+      is_deleted:coaches.is_deleted,
       expectedCharge: coaches.expectedCharge,
       license_type: coaches.license_type,
       evaluationCount: sql<number>`
@@ -337,6 +338,7 @@ const coachlist = await query.execute();
         evaluation_rate:coach.expectedCharge,
         license_type:coach.license_type,
         evaluationCount:coach.evaluationCount,
+        is_deleted:coach.is_deleted,
       }));
     // Return the coach list as a JSON response
     return NextResponse.json(formattedCoachList, { status: 200, headers: corsHeaders });

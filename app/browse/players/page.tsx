@@ -30,7 +30,7 @@ interface Profile {
   sport: string;
   age_group: string;
   birth_year: string;
-
+is_deleted:number;
 
 }
 
@@ -128,7 +128,9 @@ const Home = () => {
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
-              {filteredProfiles.map((profile) => (
+              {filteredProfiles
+              .filter((profile) => profile.is_deleted !== 0) // ✅ only render non-deleted
+              .map((profile) => (
                 <div className="w-full lg:w-auto" key={profile.slug}>
                   <ProfileCard
                     key={profile.slug}
@@ -154,6 +156,7 @@ const Home = () => {
                     sport={profile.sport}
                     birth_year={profile.birth_year}
                     age_group={profile.age_group}
+                    is_deleted={profile.is_deleted}
                   />
 
 

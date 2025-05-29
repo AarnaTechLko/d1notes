@@ -16,7 +16,7 @@ interface Profile {
   logo: string;
   slug: string;
   club_id: string;
-  
+  is_deleted:number;
 }
 
 const Home = () => {
@@ -65,8 +65,9 @@ const Home = () => {
 
   useEffect(() => {
     setFilteredProfiles(
-      profiles.filter((profile) => {
-        
+      profiles
+      .filter((profile) => {
+
         const organizationName = `${profile.organizationName} ${profile.countryName} ${profile.state} ${profile.city}`.toLowerCase();
        
     
@@ -102,21 +103,24 @@ const Home = () => {
             <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
-              {filteredProfiles.map((profile) => (
-                <div className="w-full lg:w-auto" key={profile.slug}>
-                  <ProfileCard
-                    key={profile.slug}
-                    id={profile.club_id}
-                    organization={profile.organizationName}
-                    logo={profile.logo ?? '/default.jpg'}
-                    country={profile.country}
-                    countryName={profile.countryName}
-                    state={profile.state}
-                    city={profile.city}
-                    slug={profile.slug}
-                  />
-                </div>
-              ))}
+           {filteredProfiles
+  .filter((profile) => profile.is_deleted !== 0) // ✅ only render non-deleted
+  .map((profile) => (
+    <div className="w-full lg:w-auto" key={profile.slug}>
+      <ProfileCard
+        id={profile.club_id}
+        organization={profile.organizationName}
+        logo={profile.logo ?? '/default.jpg'}
+        country={profile.country}
+        countryName={profile.countryName}
+        state={profile.state}
+        city={profile.city}
+        slug={profile.slug}
+        is_deleted={profile.is_deleted}
+      />
+    </div>
+))}
+
             </div>
           </div>
         </div>

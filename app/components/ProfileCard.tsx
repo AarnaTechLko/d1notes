@@ -29,9 +29,15 @@ interface ProfileCardProps {
   youtube?:string;
   evaluation_rate?:number;
   evaluationCount?:number;
+  is_deleted:number;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, organization, image, rating,slug,usedIn,expectedCharge,id,playerClubId,coachClubId,freeEvaluations,allowedFreeRequests,facebook,instagram,linkedin,xlink,evaluation_rate,youtube,evaluationCount }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ 
+  name, organization, image, rating,slug,usedIn,
+  expectedCharge,id,playerClubId,coachClubId,
+  freeEvaluations,allowedFreeRequests,facebook,
+  instagram,linkedin,xlink,evaluation_rate,youtube
+  ,evaluationCount,is_deleted }) => {
   const handleRedirect = (slug: string) => {
     //console.log(slug);
     window.open(`/coach/${slug}`, '_blank');
@@ -53,6 +59,7 @@ useEffect(()=>{
 });
 
 
+    if (is_deleted !== 1) return null;
 
   return (
     <>

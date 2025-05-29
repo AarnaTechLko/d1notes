@@ -163,6 +163,7 @@ export default function Home(): JSX.Element {
           evaluation_rate={coach?.evaluation_rate}
           youtube={coach?.youtube}
           evaluationCount={coach?.evaluationCount}
+          is_deleted={coach?.is_deleted}
         />
       </div>
     ))}

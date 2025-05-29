@@ -74,7 +74,8 @@ export async function POST(req: NextRequest) {
         and(
           eq(playerEvaluation.coach_id, coachId),
           eq(playerEvaluation.status, status),
-          eq(playerEvaluation.payment_status, "Paid")
+          eq(playerEvaluation.payment_status, "Paid"),
+          eq(playerEvaluation.is_deleted, 1)
         )
       )
       .orderBy(playerEvaluation.updated_at)
@@ -175,7 +176,10 @@ export async function GET(req: NextRequest) {
 
     
     // Define an initial condition with the playerId
-    const conditions = [eq(playerEvaluation.coach_id, coachId)];
+    const conditions = [eq(playerEvaluation.coach_id, coachId),
+        eq(playerEvaluation.is_deleted, 1)  // ✅ Only include items where is_deleted = 1
+
+    ];
 
     // Conditionally add status filter
     if (status) {

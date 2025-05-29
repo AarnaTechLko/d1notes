@@ -261,16 +261,28 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
     const total = scores.reduce((sum, score) => sum + score, 0);
     return total / scores.length;
   };
-  const totalRatings = evaluationList.reduce((acc, curr) => acc + (curr.rating || 0), 0);
-  
-const averageRating = evaluationList.length > 0 ? (totalRatings / evaluationList.length).toFixed(1) : "0.0";
-const roundedAvg = Math.round(parseFloat(averageRating)); // FIX: convert to number for star display
+ // Filter out evaluations that don't have a rating
+const ratedEvaluations = evaluationList.filter(e => typeof e.rating === 'number');
 
-const averageStars = Array.from({ length: 5 }, (_, i) => (
-  <span key={i} className={i < roundedAvg ? 'text-yellow-500' : 'text-gray-300'}>
-    ★
-  </span>
+// Sum only the valid ratings
+const totalRatings = ratedEvaluations.reduce((acc, curr) => acc + (curr.rating ?? 0), 0);
+
+// Compute the average from rated items only
+const averageRating = ratedEvaluations.length > 0
+  ? (totalRatings / ratedEvaluations.length)
+  : 0;
+
+// Round to 1 decimal if needed
+const formattedAverage = averageRating.toFixed(1);
+
+// Use the rounded integer value to display stars
+const roundedAvg = Math.round(averageRating);
+
+// Dynamically generate stars based on actual average (not fixed length)
+const averageStars = Array.from({ length: roundedAvg }, (_, i) => (
+  <span key={i} className="text-yellow-500">★</span>
 ));
+
   // const calculateOverallAverage = (evaluation: EvaluationData): string => {
   //   let total = 0;
   //   let count = 0;
@@ -349,7 +361,7 @@ const averageStars = Array.from({ length: 5 }, (_, i) => (
               <p className="text-gray-600 text-lg">
                 {/* {coachData.sport} Coach at  */}{coachData.clubName}
               </p>
-              <div className="flex space-x-4  mt-3 mb-3 h-5">
+              {/* <div className="flex space-x-4  mt-3 mb-3 h-5">
                 {coachData.facebook && (
                   <a href={coachData.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
                     <FaFacebook size={40} />
@@ -375,12 +387,12 @@ const averageStars = Array.from({ length: 5 }, (_, i) => (
                     <FaYoutube size={40} />
                   </a>
                 )}
-              </div>
+              </div> */}
               
               {/* Rating */}
               <div className="text-left md:text-left">
-              <h1 className=" font-bold text-gray-800 animate-bounce-once">
-             Rating Average: {averageRating} / 5
+              <h1 className=" font-bold text-gray-800 ">
+             Rating Average: {averageRating} 
               </h1>
               <p className="text-gray-600 text-lg">
                 {/* {coachData.sport} Coach at  */}{averageStars}

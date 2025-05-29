@@ -14,9 +14,11 @@ interface ProfileCardProps {
   countryName: string;
   state: string;
   city: string;
+    is_deleted: number; // 👈 Add this line
+
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country, countryName, id, state, city }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, country, countryName, id, state, city,is_deleted }) => {
   
 
 
@@ -69,6 +71,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ organization, logo, slug, cou
     
     }
   };
+  if (is_deleted !== 1) return null;
 
   return (
     <><div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group">

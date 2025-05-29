@@ -282,6 +282,20 @@ const Dashboard: React.FC = () => {
         Header: 'Review Title',
         accessor: 'review_title',
       },
+     {
+  Header: 'Ratings',
+  accessor: 'rating',
+  Cell: ({ row }: CellProps<Evaluation>) => {
+    // row.original contains the entire data object for the row
+    const rating = row.original.rating;
+
+    // Now you can display or format rating as you want
+    return <span>              
+      {rating !== null && rating !== undefined ? rating : "N/A"}
+</span>;
+  }
+},
+
       // {
       //   Header: "Overall Average",
       //   accessor: "rating",

@@ -62,8 +62,8 @@ export async function GET(req: NextRequest) {
             city:enterprises.city,
             logo: enterprises.logo,
             slug: enterprises.slug,
-            club_id:enterprises.id
-          
+            club_id:enterprises.id,
+          is_deleted:enterprises.is_deleted,
         })
         .from(enterprises)
         .leftJoin(countries, eq(countries.id, sql<number>`CAST(${enterprises.country} AS INTEGER)`))
@@ -82,7 +82,9 @@ export async function GET(req: NextRequest) {
             city: coach.city,
             logo:coach.logo,
             slug:coach.slug,
-            club_id:coach.club_id
+            club_id:coach.club_id,
+            is_deleted: coach.is_deleted, // ✅ Include this field
+
            
         }));
       // Return the coach list as a JSON response

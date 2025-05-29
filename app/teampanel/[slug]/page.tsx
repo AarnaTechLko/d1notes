@@ -108,10 +108,10 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
   ));
   return (
     <>
-     <head>
-    <title>Club Roster - D1 NOTES</title>
-    <meta name="description" content="This is the home page of my Next.js application." />
-  </head>
+      <head>
+        <title>Club Roster - D1 NOTES</title>
+        <meta name="description" content="This is the home page of my Next.js application." />
+      </head>
       <div className="container mx-auto px-4 py-8 animate-fadeIn" >
 
 
@@ -120,27 +120,27 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
             {/* Left Section */}
             <div className="flex flex-col items-center justify-center md:items-end">
 
-             
 
-{coachData.logo && coachData.logo !== 'null' && (
-              <Image
-                src={coachData.logo}
-                alt={`${coachData.organizationName}`}
-                width={150}
-                height={150}
-                className="rounded-full object-cover"
-              />
-            )}
-            {(!coachData.logo || coachData.logo === 'null') && (
-              <Image
-                src={defaultImage}
-                alt={`${coachData.organizationName}`}
-                width={150}
-                height={150}
-                className="rounded-full object-cover"
-              />
 
-            )}
+              {coachData.logo && coachData.logo !== 'null' && (
+                <Image
+                  src={coachData.logo}
+                  alt={`${coachData.organizationName}`}
+                  width={150}
+                  height={150}
+                  className="rounded-full object-cover"
+                />
+              )}
+              {(!coachData.logo || coachData.logo === 'null') && (
+                <Image
+                  src={defaultImage}
+                  alt={`${coachData.organizationName}`}
+                  width={150}
+                  height={150}
+                  className="rounded-full object-cover"
+                />
+
+              )}
             </div>
             <div className="flex flex-col items-center md:items-start">
               <h1 className="text-3xl font-bold text-gray-800 animate-bounce-once">
@@ -221,31 +221,31 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
           <div className="flex flex-col md:flex-row md:space-x-8">
-          {teamData?.map((item: any) => {
-            console.log(item); // Check the structure of item
-            // return (
-            //   <ProfileCard
-            //     key={item?.teamSlug}
-            //     creatorname={item.creatorName}
-            //     teamName={item.teamName} // Ensure `team_name` is correct
-            //     logo={item.logo ?? '/default.jpg'}
-            //     rating={5}
-            //     slug={item.slug}
-            //   />
-            // );
-            return (
-              <ProfileCard
-                key={item.teams?.teamSlug ?? item.teamSlug}
-                teamId={item.teams?.id ?? item.id}
-                teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
-                logo={item.teams?.logo ?? item.logo  ??'/default.jpg'}
-                rating={5}
-                slug={item.teams?.slug ?? item.slug}
-                playerId = {item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
-              /> 
-            );
+            {teamData?.map((item: any) => {
+              console.log(item); // Check the structure of item
+              // return (
+              //   <ProfileCard
+              //     key={item?.teamSlug}
+              //     creatorname={item.creatorName}
+              //     teamName={item.teamName} // Ensure `team_name` is correct
+              //     logo={item.logo ?? '/default.jpg'}
+              //     rating={5}
+              //     slug={item.slug}
+              //   />
+              // );
+              return (
+                <ProfileCard
+                  key={item.teams?.teamSlug ?? item.teamSlug}
+                  teamId={item.teams?.id ?? item.id}
+                  teamName={item.teams?.team_name ?? item.team_name} // Ensure `team_name` is correct
+                  logo={item.teams?.logo ?? item.logo ?? '/default.jpg'}
+                  rating={5}
+                  slug={item.teams?.slug ?? item.slug}
+                  playerId={item.teamCoaches?.teamId ?? item.teamPlayers?.teamId ?? 0}
+                />
+              );
 
-          })}
+            })}
 
           </div>
         </section>
@@ -256,19 +256,21 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <section className="bg-white-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:shadow-lg animate-fadeInDelay">
 
           <div className="flex flex-col md:flex-row md:space-x-8">
-          {coachList?.map((item: any) => {
-            
-            return (
-              <CoachProfileCard
-                key={item?.teamSlug}
-                name={item.firstName}
-                organization={item.clubName} // Ensure `team_name` is correct
-                image={item.image ?? '/default.jpg'}
-                rating={5}
-                slug={item.slug}
-              />
-            );
-          })}
+            {coachList?.map((item: any) => {
+
+              return (
+                <CoachProfileCard
+                  key={item?.teamSlug}
+                  name={item.firstName}
+                  organization={item.clubName} // Ensure `team_name` is correct
+                  image={item.image ?? '/default.jpg'}
+                  rating={5}
+                  slug={item.slug}
+                  is_deleted={item.is_deleted}
+
+                />
+              );
+            })}
 
           </div>
         </section>
@@ -283,17 +285,17 @@ const CoachProfile = ({ params }: CoachProfileProps) => {
         <LoginModal isOpen={isModalOpen} coachslug={coachData.slug} onClose={() => setIsModalOpen(false)} />
       )}
 
-      {isJoinRequestModalOpen  && playerId && (
-        <JoinRequestModal 
-        isOpen={isJoinRequestModalOpen} 
-        requestToID={coachData?.id}
-        onRequest={()=> setIsRequested(1)}
-        type="club"
-        onClose={() => setIsJoinRequestModalOpen(false)}
+      {isJoinRequestModalOpen && playerId && (
+        <JoinRequestModal
+          isOpen={isJoinRequestModalOpen}
+          requestToID={coachData?.id}
+          onRequest={() => setIsRequested(1)}
+          type="club"
+          onClose={() => setIsJoinRequestModalOpen(false)}
         />
       )}
 
-     
+
 
     </>
   );

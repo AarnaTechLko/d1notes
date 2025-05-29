@@ -1,36 +1,22 @@
-// app/api/register/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
-import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { playerEvaluation, users, coaches, payments } from '../../../lib/schema'
-import { like } from 'drizzle-orm';
-import { eq, sql, desc } from 'drizzle-orm';
-import { getServerSession } from 'next-auth';
-import { and } from 'drizzle-orm';
-import next from 'next';
-
-
-
-
+import { playerEvaluation, coaches, payments } from '../../../lib/schema';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {
     const url = request.nextUrl;
 
     const playerId = Number(url.searchParams.get('playerId'));
-
-    const search = url.searchParams.get('search') || '';
     const page = Number(url.searchParams.get('page')) || 1;
     const limit = Number(url.searchParams.get('limit')) || 10;
-    const sort = url.searchParams.get('sort') || '';
 
     if (isNaN(playerId)) {
       return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 });
     }
 
-    // Build the initial query
-    let query = db
+    // Query with is_deleted = 1 filter
+    const evaluationsData = await db
       .select({
         firstName: coaches.firstName,
         lastName: coaches.lastName,
@@ -41,27 +27,29 @@ export async function GET(request: NextRequest) {
         currency: payments.currency,
         slug: coaches.slug,
         image: coaches.image
-
       })
       .from(payments)
       .leftJoin(coaches, eq(
-        sql`CAST(${coaches.id} AS TEXT)`, // Cast the integer to text if needed
-        sql`CAST(${payments.coach_id} AS TEXT)` // Cast the other field as text
+        sql`CAST(${coaches.id} AS TEXT)`,
+        sql`CAST(${payments.coach_id} AS TEXT)`
       ))
-      .leftJoin(playerEvaluation, eq(playerEvaluation.id, payments.evaluation_id)).orderBy(desc(payments.id));
-
-    const evaluationsData = await query.where(eq(payments.player_id, playerId)).limit(limit).execute();
-
-    let filteredData = evaluationsData;
-
-
+      .leftJoin(playerEvaluation, eq(playerEvaluation.id, payments.evaluation_id))
+      .where(
+        and(
+          eq(payments.player_id, playerId),
+          eq(payments.is_deleted, 1) // Show only deleted coaches
+        )
+      )
+      .orderBy(desc(payments.id))
+      .limit(limit)
+      .execute();
 
     return NextResponse.json({
-      data: filteredData,
-      total: filteredData.length,
+      data: evaluationsData,
+      total: evaluationsData.length,
     });
   } catch (error) {
-    console.error('Error details:', error); // Log the error for debugging
-    return NextResponse.json({ error: "error" }, { status: 500 });
+    console.error('Error details:', error);
+    return NextResponse.json({ error: 'error' }, { status: 500 });
   }
 }

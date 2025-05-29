@@ -38,10 +38,12 @@ export async function POST(req: NextRequest) {
             and(
                 or(
                     eq(playerEvaluation.player_id, player_id),
-                    eq(playerEvaluation.parent_id, player_id)
+                    eq(playerEvaluation.parent_id, player_id),
+                    eq(playerEvaluation.is_deleted, 1)
                 ),
                 eq(playerEvaluation.status, 3),
-                eq(playerEvaluation.coach_id, coachId)
+                eq(playerEvaluation.coach_id, coachId),
+                eq(playerEvaluation.is_deleted, 1)
             )
         );
 
@@ -78,6 +80,7 @@ export async function POST(req: NextRequest) {
             jerseyColorTwo:jerseyColorTwo,
             jerseyColorThree:jerseyColorThree,
             lighttype:lighttype,
+            is_deleted:1,
             created_at: new Date(),
             updated_at: new Date(),
         }).returning();
@@ -155,7 +158,6 @@ export async function PATCH(req:NextRequest) {
         return NextResponse.json({ message: body }, { status: 500 });        
     }
 }
-
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const playerId = url.searchParams.get('playerId')?.trim();
@@ -174,7 +176,11 @@ export async function GET(req: NextRequest) {
         }
 
         // Create an array to hold the conditions
-        const conditions = [eq(playerEvaluation.player_id, numericPlayerId)];
+       const conditions = [
+  eq(playerEvaluation.player_id, numericPlayerId),
+  eq(playerEvaluation.is_deleted, 1),  // only include records with is_deleted = 1
+];
+
 
         // Add evaluation status condition if it is defined and valid
         if (numericStatus !== null && !isNaN(numericStatus)) {
@@ -192,6 +198,7 @@ export async function GET(req: NextRequest) {
                 videoDescription: playerEvaluation.video_description,
                 coachId: playerEvaluation.coach_id,
                 status: playerEvaluation.status,
+                is_deleted: playerEvaluation.is_deleted,
                 paymentStatus: playerEvaluation.payment_status,
                 createdAt: playerEvaluation.created_at,
                 updatedAt: playerEvaluation.updated_at,

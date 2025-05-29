@@ -6,9 +6,12 @@ import fs from "fs/promises";
 import path from "path";
 import { db } from '../../../../lib/db';
 import { eq } from "drizzle-orm";
+
+
 import { users } from '../../../../lib/schema';
 
-// Define the type of your CSV rows
+// Define the type of your 
+//  rows
 interface CSVRow {
     FirstName: string; // Replace with actual column names and types
     LastName: string; // Replace as needed

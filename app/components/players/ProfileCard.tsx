@@ -31,13 +31,16 @@ interface ProfileCardProps {
   sport?: string;
   age_group?: string;
   birth_year?: string;
+  is_deleted:number;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName, lastName, image, slug, rating, position, grade_level, location, height, weight, graduation, birthdate, facebook,
   instagram,
   linkedin,
   youtube,
-  xlink, sport, age_group,birth_year }) => {
+  xlink,
+  is_deleted,
+  sport, age_group,birth_year }) => {
   //const positions = getInitialsAfterComma(position);
   const positions = position;
   const handleRedirect = (slug: string) => {
@@ -69,6 +72,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ coachName, jersey, firstName,
   };
 
   const formattedDate = formatDate(birthdate);
+    if (is_deleted !== 1) return null;
+
   return (
     <>
       <div className="max-w-sm bg-white rounded-lg shadow-lg p-6 relative group h-full">
