@@ -12,8 +12,6 @@ import { useSession } from 'next-auth/react';
 import { Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
 
-
-
 interface Ticket {
   id: number;
   name: string;
