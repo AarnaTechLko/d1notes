@@ -11,58 +11,60 @@ import { calculateHoursFromNow } from "@/lib/clientHelpers";
 import TeamProfileCard from '@/app/components/teams/ProfileCard';
 import FakeEvaluationForm from '@/app/components/coach/FakeEvaluationForm';
 import EvaluationForm from '@/app/components/coach/EvaluationForm';
+import { useSession } from 'next-auth/react';
 
 import PromptComponent from "../components/Prompt";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import  { useRef } from "react";
+import { useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const Dashboard: React.FC = () => {
   const tableContainerRef = useRef<HTMLDivElement>(null); // ✅ Correct usage of useRef
-   const [isMiddle, setIsMiddle] = useState(false);
-    const [IsStart, setIsStart] = useState(false);
-    const [isEnd, setIsEnd] = useState(false);
-    const [evFormOpen, setEvFormOpen] = useState(false);
+  const [isMiddle, setIsMiddle] = useState(false);
+  const [IsStart, setIsStart] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
+  const [evFormOpen, setEvFormOpen] = useState(false);
+  const { data: session } = useSession();
 
 
-    // Scroll handlers
-    const scrollLeft = () => {
+  // Scroll handlers
+  const scrollLeft = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
+    }
+  };
+
+  const scrollRight = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft += 200;
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
       if (tableContainerRef.current) {
-        tableContainerRef.current.scrollLeft -= 200; // Adjust as needed
-      }
-    };
-  
-    const scrollRight = () => {
-      if (tableContainerRef.current) {
-        tableContainerRef.current.scrollLeft += 200;
-      }
-    };
-    
-    useEffect(() => {
-      const handleScroll = () => {
-        if (tableContainerRef.current) {
-          const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
-          const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
-  
-          
-          setIsStart(scrollLeft === 0);
+        const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+        const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+
+
+        setIsStart(scrollLeft === 0);
         setIsEnd(scrollLeft + clientWidth >= scrollWidth);
         setIsMiddle(scrollPercentage >= 40);
-  
-        }
-      };
-  
-      const container = tableContainerRef.current;
-      if (container) {
-        container.addEventListener("scroll", handleScroll);
+
       }
-  
-      return () => {
-        if (container) {
-          container.removeEventListener("scroll", handleScroll);
-        }
-      };
-    }, []); // Empty dependency array means it runs only once after mount
+    };
+
+    const container = tableContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []); // Empty dependency array means it runs only once after mount
   const [evaluations, setEvaluations] = useState<EvaluationsByStatus>({
     Requested: [],
     Accepted: [],
@@ -126,24 +128,24 @@ const Dashboard: React.FC = () => {
   };
 
 
-  const refund = async (evaluationId: number) =>{
+  const refund = async (evaluationId: number) => {
 
     // console.log("evaluation: ", evaluationId)
 
     try {
 
-        // console.log("Hi")
+      // console.log("Hi")
       const response = await fetch(`/api/player/refund?evaluation_id=${evaluationId}`);
 
       if (!response.ok) {
         throw new Error(`Failed to refund player`);
       }
-      
+
       const result = await response.json()
       console.log("Refund complete")
 
     }
-    catch (error){
+    catch (error) {
       console.error("Failed to refund customer:", error);
     }
 
@@ -241,7 +243,7 @@ const Dashboard: React.FC = () => {
       ...prev,
       [status]: evaluationsData, // Assuming evaluationsData is an array
     }));
-console.log("free",evaluationsData)
+    console.log("free", evaluationsData)
 
     setData(evaluationsData); // Set the data for the table
     setLoading(false); // Set loading to false after data is fetched
@@ -397,10 +399,10 @@ console.log("free",evaluationsData)
         Cell: ({ row }: CellProps<Evaluation>) => (
           <div className="flex items-center space-x-2">
             <img
-  src={(!row.original.image || row.original.image === 'null') ? '/default.jpg' : row.original.image}
-  alt={row.original.first_name}
-  className="w-8 h-8 rounded-full"
-/>
+              src={(!row.original.image || row.original.image === 'null') ? '/default.jpg' : row.original.image}
+              alt={row.original.first_name}
+              className="w-8 h-8 rounded-full"
+            />
             <a
               href={`/coach/${row.original.slug}`}
               className=" font-bold text-blue-700"
@@ -412,7 +414,7 @@ console.log("free",evaluationsData)
           </div>
         ),
       }
-    ,
+      ,
       { Header: "Review Title", accessor: "review_title" },
       {
         Header: "Ratings",
@@ -427,7 +429,7 @@ console.log("free",evaluationsData)
         },
       }
       ,
-      
+
       {
         Header: "Video Links",  // Combine all video links under this column
         accessor: "primary_video_link",  // Or just leave it as undefined if it's not needed
@@ -503,24 +505,24 @@ console.log("free",evaluationsData)
       },
       { Header: "Payment Status", accessor: "payment_status" },
 
-        ...(selectedTab === "0"
+      ...(selectedTab === "0"
         ? [
           {
             Header: "Cancel Request",
 
-            Cell: ({row}: CellProps<Evaluation>) => {
+            Cell: ({ row }: CellProps<Evaluation>) => {
 
-              return(
+              return (
                 <div>
-                    <button onClick={() => {retrieveEvaluationIdForRefund(row.original)}}>
-                        Get Refund
-                    </button>
-                    {/* <p>{row.evaluation.evaluationId}</p> */}
+                  <button onClick={() => { retrieveEvaluationIdForRefund(row.original) }}>
+                    Get Refund
+                  </button>
+                  {/* <p>{row.evaluation.evaluationId}</p> */}
                 </div>
               )
             }
           }
-        ]: []),
+        ] : []),
       ...(selectedTab === "2" // Check if the current tab is "Completed"
         ? [
           {
@@ -540,7 +542,7 @@ console.log("free",evaluationsData)
     [selectedTab]
   );
 
-  const retrieveEvaluationIdForRefund = (evaluation: Evaluation) =>{
+  const retrieveEvaluationIdForRefund = (evaluation: Evaluation) => {
     refund(evaluation.evaluationId)
   }
 
@@ -554,15 +556,15 @@ console.log("free",evaluationsData)
     // You could navigate to another page, open a modal, etc.
   };
 
-const openEvalModal = () => {
+  const openEvalModal = () => {
     console.log("Going to open")
     setIsEvFormOpen(true);
   };
 
-const closeEvform = () => {
-  console.log("Going to close")
-  setIsEvFormOpen(false);
-}
+  const closeEvform = () => {
+    console.log("Going to close")
+    setIsEvFormOpen(false);
+  }
 
   // Create table instance
   const tableInstance = useTable({ columns, data });
@@ -573,30 +575,64 @@ const closeEvform = () => {
   );
 
   // console.log("Filtered Rows: ", filteredRows);
-  
+
   return (
-    <div className="flex h-screen">
-      <Modal
-        isOpen={modalOpen}
-        onClose={handleCloseModal}
-        description={currentDescription}
-      />
-      <Sidebar />
+    <>
+      {session?.user.suspend === 0 ? (
+       <div className="h-screen flex items-center justify-center">
+  <div className="p-4 text-center text-red-400 font-semibold max-w-md">
+    <p>Your account is suspended. Please contact Admin.</p>
+    <p>For technical difficulties and other feedback, email us at</p>
+    <p className="text-blue-500">support@d1notes.com</p>
+  </div>
+</div>
 
-      <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
-        <div className="bg-white shadow-md rounded-lg p-6 ">
-          <h3 className='font-bold text-lg'>Evaluation Tracker</h3>
-          <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your payment information to send funds by clicking on Payment Information in the left side menu if you plan to purchase evaluations from D1’s public marketplace of Coaches. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team offering free evaluations. Otherwise, start your journey to greatness by finding a Coach who will give you that edge you have been missing!" />
+      ) : (
+        <div className="flex h-screen">
+          <Modal
+            isOpen={modalOpen}
+            onClose={handleCloseModal}
+            description={currentDescription}
+          />
+          <Sidebar />
 
-          <div className="block md:hidden mb-4">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
-            >
-              {['Requested', 'Accepted', 'Completed', 'Declined', 'Drafted'][parseInt(selectedTab)]} ▼
-            </button>
-            {isDropdownOpen && (
-              <ul className="bg-white shadow-lg rounded mt-2">
+          <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
+            <div className="bg-white shadow-md rounded-lg p-6 ">
+              <h3 className='font-bold text-lg'>Evaluation Tracker</h3>
+              <PromptComponent marginleft={0} stepstext="Let’s get started! First, upload your payment information to send funds by clicking on Payment Information in the left side menu if you plan to purchase evaluations from D1’s public marketplace of Coaches. Next, if you are part of an Organization or Team participating in D1 Notes, check Join Requests to see if you received an invite from your Organization or Team offering free evaluations. Otherwise, start your journey to greatness by finding a Coach who will give you that edge you have been missing!" />
+
+              <div className="block md:hidden mb-4">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full text-left"
+                >
+                  {['Requested', 'Accepted', 'Completed', 'Declined', 'Drafted'][parseInt(selectedTab)]} ▼
+                </button>
+                {isDropdownOpen && (
+                  <ul className="bg-white shadow-lg rounded mt-2">
+                    {[
+                      { name: 'Requested', value: '0' },
+                      { name: 'Accepted', value: '1' },
+                      { name: 'Completed', value: '2' },
+                      { name: 'Declined', value: '3' },
+
+                    ].map((tab) => (
+                      <li key={tab.value}>
+                        <button
+                          onClick={() => {
+                            setSelectedTab(tab.value);
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                        >
+                          {tab.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="hidden md:flex space-x-4 mb-4">
                 {[
                   { name: 'Requested', value: '0' },
                   { name: 'Accepted', value: '1' },
@@ -604,210 +640,134 @@ const closeEvform = () => {
                   { name: 'Declined', value: '3' },
 
                 ].map((tab) => (
-                  <li key={tab.value}>
-                    <button
-                      onClick={() => {
-                        setSelectedTab(tab.value);
-                        setIsDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                    >
-                      {tab.name}
-                    </button>
-                  </li>
+                  <button
+                    key={tab.value}
+                    onClick={() => setSelectedTab(tab.value)}
+                    className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
+                  >
+                    {tab.name}
+                  </button>
                 ))}
-              </ul>
-            )}
-          </div>
-          <div className="hidden md:flex space-x-4 mb-4">
-            {[
-              { name: 'Requested', value: '0' },
-              { name: 'Accepted', value: '1' },
-              { name: 'Completed', value: '2' },
-              { name: 'Declined', value: '3' },
+              </div>
 
-            ].map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setSelectedTab(tab.value)}
-                className={`p-2 border-b-2 ${selectedTab === tab.value ? 'border-blue-500 font-bold' : 'border-transparent'}`}
-              >
-                {tab.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Table to display evaluations */}
-          <div ref={tableContainerRef}className=" overflow-x-auto max-h-[400px] overflow-y-auto">
-            <input
-              type="text"
-              placeholder="Search by Keywords..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-            />
-            <button
-              onClick={scrollLeft}
-              className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${
-                IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
-              }`}
-            >
-              <FaArrowLeft />
-            </button>
-            <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
-              <thead>
-                {tableInstance.headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        {...column.getHeaderProps()}
-                        key={column.id}
-                        className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
-                        style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
-                      >
-                        {column.render('Header')}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...tableInstance.getTableBodyProps()}>
-                {loading ? (
-                  <tr>
-                    <td colSpan={columns.length} className="text-center py-4">
-                      Loading Evaluations...
-                    </td>
-                  </tr>
-                ) : filteredRows.length === 0 ? (
-                  <tr>
-                    <td colSpan={columns.length} className=" py-4 text-gray-500">
-                      No Entries...
-                    </td>
-                  </tr>
-                ) : (
-                  filteredRows.map((row) => {
-                    tableInstance.prepareRow(row);
-                    return (
-                      <tr {...row.getRowProps()} key={row.id}>
-                        {row.cells.map((cell) => (
-                          <td
-                            {...cell.getCellProps()}
-                            key={`${row.id}-${cell.column.id}`}
-                            className="border-b border-gray-200 px-4 py-2"
+              {/* Table to display evaluations */}
+              <div ref={tableContainerRef} className=" overflow-x-auto max-h-[400px] overflow-y-auto">
+                <input
+                  type="text"
+                  placeholder="Search by Keywords..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                />
+                <button
+                  onClick={scrollLeft}
+                  className={`absolute left-4 top-1/2 p-3 text-white transform -translate-y-1/2 rounded-full shadow-md z-10 transition-colors duration-300 w-10 h-10 flex items-center justify-center bg-gray-500 lg:hidden ${IsStart ? "bg-gray-400 cursor-not-allowed" : isMiddle ? "bg-green-500" : "bg-blue-500"
+                    }`}
+                >
+                  <FaArrowLeft />
+                </button>
+                <table {...tableInstance.getTableProps()} className="min-w-full bg-white border border-gray-300">
+                  <thead>
+                    {tableInstance.headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                        {headerGroup.headers.map((column) => (
+                          <th
+                            {...column.getHeaderProps()}
+                            key={column.id}
+                            className="border-b-2 border-gray-200 bg-gray-100 px-4 py-2 text-left text-gray-600"
+                            style={{ whiteSpace: 'nowrap' }} // Ensure headers don't wrap
                           >
-                            <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
-                          </td>
+                            {column.render('Header')}
+                          </th>
                         ))}
                       </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-            <button
-              onClick={scrollRight}
-              disabled={isEnd} 
-              style={{
-                backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
-                color: "white",
-                padding: "10px",
-                border: "none",
-                cursor: isEnd ? "not-allowed" : "pointer",
-              }}
-              className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
+                    ))}
+                  </thead>
+                  <tbody {...tableInstance.getTableBodyProps()}>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={columns.length} className="text-center py-4">
+                          Loading Evaluations...
+                        </td>
+                      </tr>
+                    ) : filteredRows.length === 0 ? (
+                      <tr>
+                        <td colSpan={columns.length} className=" py-4 text-gray-500">
+                          No Entries...
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredRows.map((row) => {
+                        tableInstance.prepareRow(row);
+                        return (
+                          <tr {...row.getRowProps()} key={row.id}>
+                            {row.cells.map((cell) => (
+                              <td
+                                {...cell.getCellProps()}
+                                key={`${row.id}-${cell.column.id}`}
+                                className="border-b border-gray-200 px-4 py-2"
+                              >
+                                <div className="truncate w-auto min-w-0">{cell.render('Cell')}</div>
+                              </td>
+                            ))}
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+                <button
+                  onClick={scrollRight}
+                  disabled={isEnd}
+                  style={{
+                    backgroundColor: isEnd ? "grey" : isMiddle ? "#22c55e" : "#22c55e", // Tailwind green-500 and blue-500
+                    color: "white",
+                    padding: "10px",
+                    border: "none",
+                    cursor: isEnd ? "not-allowed" : "pointer",
+                  }}
+                  className={`absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md z-10 lg:hidden
               `}
-            >
-              <FaArrowRight />
-            </button>
-            
-          </div>
+                >
+                  <FaArrowRight />
+                </button>
+
+              </div>
               <EvaluationForm
-                  evaluationId={evaluationId ?? null}
-                  evaluationData={evaluationData ?? null}
-                  coachId={coachId ?? null}
-                  playerId={playerId ?? null}
-                  isOpen={isEvFormOpen}
-                  onClose={closeEvform}
-                />
+                evaluationId={evaluationId ?? null}
+                evaluationData={evaluationData ?? null}
+                coachId={coachId ?? null}
+                playerId={playerId ?? null}
+                isOpen={isEvFormOpen}
+                onClose={closeEvform}
+              />
 
-          <FakeEvaluationForm
-            evaluationId={null}
-            evaluationData={null}
-            coachId={null}
-            playerId={null}
-            isOpen={evFormOpen}
-            onClose={closeEvform}
-          />
+              <FakeEvaluationForm
+                evaluationId={null}
+                evaluationData={null}
+                coachId={null}
+                playerId={null}
+                isOpen={evFormOpen}
+                onClose={closeEvform}
+              />
+            </div>
+            <div className="grid grid-cols-1 bg-white  mt-4 p-6">
+              <h3 className='font-bold text-lg'>Quick Tips</h3>
 
+              <h3 className='font-bold text-lg mt-4'>Request an Evaluation</h3>
+              <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive an evaluation, it will look like <button onClick={() => openEvalModal()} className="text-blue-600 hover:text-blue-800 ">this</button>. If your Public Visibility is on, a coach (or the public) may find you in Player Profiles and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach (and only that coach may contact you). If your Public Visibility is off, you will not show up in the player marketplace.</p>
 
+              <h3 className='font-bold text-lg mt-4'>Organization Explanation</h3>
+              <p className="text-justify">Only if you have been added by an organization or single team that is using D1 Notes’ Organizatons’ (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/yourteams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. Only by going through Your Teams will you automatically not be charged any rate as your organization / team has already paid for them.</p>
+              <p></p>
+              <h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
+              <p className="text-justify">The Messages function in the menu allows you to communicate with any coach in Your Teams as well as communicate further with any coach in the marketplace that has accepted an evaluation request from you.</p>
+
+            </div>
+          </main>
         </div>
-        <div className="grid grid-cols-1 bg-white  mt-4 p-6">
-          <h3 className='font-bold text-lg'>Quick Tips</h3>
-
-          <h3 className='font-bold text-lg mt-4'>Request an Evaluation</h3>
-         <p className="text-justify"> In order to search for a coach in the marketplace to request an individual game film evaluation, <a href="/browse" target="_blank" className="text-blue-600 hover:text-blue-800 ">click here</a> or on Coaches in the header. When you receive an evaluation, it will look like <button onClick={() => openEvalModal()} className="text-blue-600 hover:text-blue-800 ">this</button>. If your Public Visibility is on, a coach (or the public) may find you in Player Profiles and see your limited information, but they cannot click through to view all of your details, nor contact you until you request an evaluation from the coach (and only that coach may contact you). If your Public Visibility is off, you will not show up in the player marketplace.</p>
-
-         <h3 className='font-bold text-lg mt-4'>Organization Explanation</h3> 
-<p className="text-justify">Only if you have been added by an organization or single team that is using D1 Notes’ Organizatons’ (white label) capabilities, you can view that organization’s or single team’s internal / private information by <a href="/yourteams" target="_blank" className="text-blue-600 hover:text-blue-800 ">clicking here</a> or on Your Teams in the menu. From here, you can navigate through your team(s)… in order to request an individual game film evaluation from a coach of the organization or single team that added you, view the roster and click on a coach’s profile. Only by going through Your Teams will you automatically not be charged any rate as your organization / team has already paid for them.</p>
-<p></p>
-<h3 className='font-bold text-lg mt-4'>Sending Messages</h3>
-<p className="text-justify">The Messages function in the menu allows you to communicate with any coach in Your Teams as well as communicate further with any coach in the marketplace that has accepted an evaluation request from you.</p>
-
-
-
-
-        </div>
-        {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
-          <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Coaches</h3></div>
-        
-      {coaches.map((profile) => (
-                <div className="w-full lg:w-auto" key={profile.id}>
-                  <ProfileCard
-                    key={profile.id}
-                    id={profile.id}
-                    name={profile.firstName}
-                    organization={profile.clubName}
-                    image={profile.image ?? '/default.jpg'}
-                    rating={profile.rating}
-                    freeEvaluations={freeEvaluations}
-                    expectedCharge={profile.expectedCharge}
-                    allowedFreeRequests={allowedFreeRequests}
-                    slug={profile.slug}
-                    usedIn='playerlogin'
-                    playerClubId={Number(playerClubId)}
-                    coachClubId={profile.enterprise_id}
-                  />
-                </div>
-              ))}
-
-
-       
-        </div> */}
-        {/* <div className="grid grid-cols-1 bg-white sm:grid-cols-1 lg:grid-cols-4 gap-2 mt-4 p-6">
-          <div className="col-span-full"><h3 className="text-lg text-black font-bold w-full clear-both">Your Teams</h3></div>
-        
-      {teams.map((item:any) => (
-                <div className="w-full lg:w-auto" key={item.id}>
-                  <TeamProfileCard
-                     key={item?.teamSlug}
-                     creatorname={item.creatorName}
-                     teamName={item.teamName} // Ensure `team_name` is correct
-                     logo={item.logo ?? '/default.jpg'}
-                     rating={5}
-                     slug={item.teamSlug}
-                  />
-                </div>
-              ))}
-
- 
-       
-        </div>  */}
-      </main>
-
-
-
-    </div>
+      )}
+    </>
   );
 };
-
 export default Dashboard;

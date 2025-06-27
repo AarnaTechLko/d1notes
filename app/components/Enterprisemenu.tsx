@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
-
+import { Bell } from "lucide-react";
+import { useRouter } from "next/navigation";
 interface EnterpriseMenuProps {
     session: any; // Adjust to your actual session type
     closeMenu: () => void;
@@ -23,6 +24,45 @@ const EnterpriseMenu: React.FC<EnterpriseMenuProps> = ({ session, closeMenu, isA
   const [enterpriseOpen, setEnterpriseOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(0);
+  const router = useRouter();
+  
+useEffect(() => {
+    if (!session?.user?.id) return;
+
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await fetch(`/api/notification/unread-count?user_id=${session.user.id}`);
+        const data = await res.json();
+        setUnreadCount(data.unreadCount);
+      } catch (error) {
+        console.error("Failed to fetch unread count:", error);
+      }
+    };
+
+    fetchUnreadCount();
+  }, [session]);
+
+
+  const handleClick = async () => {
+    try {
+      await fetch("/api/notification/mark-read", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: session?.user?.id }),
+      });
+
+      // Optional: refresh the unread count after marking read
+      setUnreadCount(0);
+
+      // Navigate to notification page
+      router.push("/notification");
+    } catch (error) {
+      console.error("Failed to mark notifications as read:", error);
+    }
+  };
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
         if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
@@ -138,6 +178,15 @@ useEffect(() => {
           Dashboard
         </Link>
       </li>
+        <li className="relative">
+        <Link
+          href="/browse/tickets"
+          className={`${isActiveLink("/browse/tickets")} w-full block text-left py-2 text-black hover:text-blue-300`}
+          onClick={closeMenu}
+        >
+          Support
+        </Link>
+      </li>
       
       {/* commented by Harsh 14-03-2025 */}
       {/* <li className="pt-[8px]">
@@ -145,6 +194,19 @@ useEffect(() => {
            {session?.user?.name || "Enterprise"}!
         </Link>
       </li> */}
+         <li className="pt-[8px] relative" onClick={handleClick}>
+        <Link
+          href="/notification"
+          className={`${isActiveLink("/coach/dashboard")} hover:text-blue-500`}
+        >
+          <Bell className="text-black w-6 h-6" />
+          {unreadCount > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {unreadCount}
+            </span>
+          )}
+        </Link>
+      </li>
 
       <li className="pt-[8px]">
                 <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>

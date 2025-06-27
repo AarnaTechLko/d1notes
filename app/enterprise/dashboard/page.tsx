@@ -54,6 +54,17 @@ const Dashboard: React.FC = () => {
       }, []);
 
   return ( 
+      <>
+      {sessions?.user.suspend === 0 ? (
+       <div className="h-screen flex items-center justify-center">
+  <div className="p-4 text-center text-red-400 font-semibold max-w-md">
+    <p>Your account is suspended. Please contact Admin.</p>
+    <p>For technical difficulties and other feedback, email us at</p>
+    <p className="text-blue-500">support@d1notes.com</p>
+  </div>
+</div>
+
+      ) : (
     <div className="flex h-screen">
       <Sidebar />
       <main className="flex-grow bg-gray-100 p-4 overflow-x-auto">
@@ -104,6 +115,8 @@ const Dashboard: React.FC = () => {
 
       </main>
     </div>
+      )}
+      </>
   );
 };
 

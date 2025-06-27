@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
         eq(teamPlayers.teamId,team_id)
     )
   );
-
    }
    if(type=='coach')
     {

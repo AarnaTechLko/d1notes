@@ -16,6 +16,8 @@ const Sidebar: React.FC = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  console.log("Session Data:", session);
+
   const toggleEvaluationList = () => {
     setIsEvaluationListOpen((prev) => !prev);
   };
@@ -127,6 +129,8 @@ const Sidebar: React.FC = () => {
             {/* <p className="text-sm text-gray-400">{session.user.club_name || ''}</p> */}
           </div>
         )}
+
+     
         <nav className="flex-grow">
         <ul className="space-y-2 p-4">
           <li>
@@ -276,6 +280,7 @@ const Sidebar: React.FC = () => {
        
         </ul>
       </nav>
+       
       </aside>
 
       {/* Overlay for mobile view when the sidebar is open */}

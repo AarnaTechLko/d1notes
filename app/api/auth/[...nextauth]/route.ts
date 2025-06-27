@@ -12,6 +12,7 @@ import { SECRET_KEY } from '@/lib/constants';
 // Define the extended user type
 interface ExtendedUser {
   id: string | null;
+  suspend: string | null;
   type: string | null;
   name: string | null;
   email: string | null;
@@ -68,10 +69,10 @@ const handler = NextAuth({
 
           else {
             if (enterprise_id) {
-              newEnterpriseID=enterprise_id;
+              newEnterpriseID = enterprise_id;
             }
-            else{
-              newEnterpriseID=coach[0]?.enterprise_id;
+            else {
+              newEnterpriseID = coach[0]?.enterprise_id;
             }
             return {
               id: coach[0].id.toString(),
@@ -82,6 +83,7 @@ const handler = NextAuth({
               type: 'coach', // Custom field indicating coach or player
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id: coach[0].id,
+              suspend: coach[0].suspend,
               club_id: newEnterpriseID,
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by: null,
@@ -118,7 +120,8 @@ const handler = NextAuth({
               coach_id: user[0].coach_id,
               club_id: enterprise_id ? enterprise_id : user[0]?.enterprise_id ?? '',
               club_name: user[0].team,
-              teamName:user[0].team,
+              teamName: user[0].team,
+              suspend: user[0].suspend,
               added_by: null,
               teamId: teamId,
               visibility: user[0].visibility,
@@ -144,6 +147,7 @@ const handler = NextAuth({
               image: team[0].logo === 'null' ? '/default.jpg' : team[0].logo,
               expectedCharge: 0,
               coach_id: team[0].coach_id,
+              suspend: team[0].suspend,
               visibility: 'on',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '', added_by: null
             };
@@ -153,7 +157,7 @@ const handler = NextAuth({
           const enterprise = await db.select().from(enterprises).where(eq(enterprises.email, email)).execute();
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
             return null; // Invalid credentials
-          } 
+          }
           else if (enterprise[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
           }
@@ -163,6 +167,7 @@ const handler = NextAuth({
               name: enterprise[0].organizationName,
               email: enterprise[0].email,
               package_id: enterprise[0].package_id,
+              suspend: enterprise[0].suspend,
               expectedCharge: 0,
               type: 'enterprise', // Custom field indicating player
               image: enterprise[0].logo,
@@ -196,6 +201,7 @@ const handler = NextAuth({
         token.type = extendedUser.type; // Add user type (coach or player) to the token
         token.image = extendedUser.image;
         token.coach_id = extendedUser.coach_id;
+        token.suspend = extendedUser.suspend;
         token.club_id = extendedUser.club_id;
         token.image = extendedUser.image;
         token.expectedCharge = extendedUser.expectedCharge;
@@ -207,7 +213,7 @@ const handler = NextAuth({
         token.buy_evaluation = extendedUser.buy_evaluation;
         token.view_evaluation = extendedUser.view_evaluation;
         token.isCompletedProfile = extendedUser.isCompletedProfile;
-        
+
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -215,7 +221,7 @@ const handler = NextAuth({
       if (trigger === 'update') {
         return { ...token, isCompletedProfile: session.user.isCompletedProfile, club_id: session.user.club_id };
       }
-      
+
       return token;
     },
     async session({ session, token }) {
@@ -225,7 +231,10 @@ const handler = NextAuth({
         session.user.name = token.name as string; // Add the type to the session
         session.user.coachCurrency = token.coachCurrency as string; // Add the type to the session
         session.user.image = token.image as string | null;
-        session.user.coach_id = token.coach_id as string | null; // Add the type to the session
+        session.user.coach_id = token.coach_id as string | null;
+        session.user.suspend = token.suspend as number;
+
+        // Add the type to the session
         session.user.club_id = token.club_id as string | null;
         // session.user.image = token.image as string | null;
         session.user.expectedCharge = token.expectedCharge as string | null;
@@ -236,7 +245,7 @@ const handler = NextAuth({
         session.user.buy_evaluation = token.buy_evaluation as string | null;
         session.user.view_evaluation = token.view_evaluation as string | null;
         session.user.isCompletedProfile = token.isCompletedProfile as boolean;
-          //token.expectedCharge = extendedUser.expectedCharge;
+        //token.expectedCharge = extendedUser.expectedCharge;
         if (token.package_id) {
           session.user.package_id = token.package_id as string | null; // Add package_id to the session
         }
@@ -247,6 +256,8 @@ const handler = NextAuth({
         if (updatedUser.length > 0) {
           const user = updatedUser[0];
           session.user.name = user.firstName;
+          session.user.suspend = user.suspend;
+
           session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
 
           session.user.visibility = user.visibility;
@@ -257,6 +268,7 @@ const handler = NextAuth({
         if (updatedUser.length > 0) {
           const user = updatedUser[0];
           session.user.name = user.first_name;
+          session.user.suspend = user.suspend;
           session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
 
           session.user.visibility = user.visibility;
@@ -267,12 +279,14 @@ const handler = NextAuth({
         if (updatedUser.length > 0) {
           const user = updatedUser[0];
           session.user.name = user.team_name;
+          session.user.suspend = user.suspend;
+
           session.user.image = user.logo === 'null' ? '/default.jpg' : user.logo;
 
           session.user.visibility = user.visibility;
         }
       }
-      
+
 
 
 

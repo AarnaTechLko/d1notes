@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { chats, coaches, messages, users } from '../../../lib/schema';
+import { chats, coaches, messages, users,admin_message} from '../../../lib/schema';
 import { eq, isNotNull, and, between, lt, ilike, or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
@@ -42,27 +42,6 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    /*----BEFORE POSTING MESSAGE CHECK IF USERS BLOCKED EACH OTHER----- */
-    //retrieve players blocked users
-    const resultPlayer = await db
-      .select({ blockedCoachIds: users.blockedCoachIds })
-      .from(users)
-      .where(eq(users.id, Number(validPlayerId)))
-    const playersBlockedUsers = resultPlayer[0].blockedCoachIds || "";
-    const arrayPlayerBlockedUsers = playersBlockedUsers ? playersBlockedUsers.split(",").map(Number): [];
-    //retrieve coaches blocked users
-    const resultCoach = await db
-      .select({ blockedPlayerIds: coaches.blockedPlayerIds })
-      .from(coaches)
-      .where(eq(coaches.id, Number(validCoachId)))
-    const coachesBlockedUsers = resultCoach[0].blockedPlayerIds || "";
-    const arrayCoachBlockedUsers = coachesBlockedUsers ? coachesBlockedUsers.split(",").map(Number): [];
-    //see if player blocked coach or coach blocked player
-    if (arrayPlayerBlockedUsers.includes(validCoachId) || arrayCoachBlockedUsers.includes(validPlayerId)) {
-      return NextResponse.json({ error: 'User is Blocked' })
-    }
-    /*--------------------------------------------------------------------*/
-
     // Insert chat
     const insertChat = await db.insert(chats).values(chatValues).returning();
 
@@ -111,9 +90,10 @@ export async function POST(req: NextRequest) {
 
 
 
-export async function GET(req: NextRequest) {
+ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const receiver_id = searchParams.get('receiver_id');
+  const receiver_id = searchParams.get('user_id');
+  console.log('user:',receiver_id);
   const type = searchParams.get('type');
   const sentFor = searchParams.get('sentFor');
 
@@ -154,4 +134,75 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(messagesList);
 
 
-}
+ }
+/* export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const receiverId = searchParams.get("user_id"); // could be playerId or coachId
+    const type = searchParams.get("type"); // "player" or "coach"
+    const sentFor = searchParams.get("sentFor"); // optional, opposite user
+//console.log('userid:',receiverId);
+    if (!receiverId || !type) {
+      return NextResponse.json({ error: "receiver_id and type are required" }, { status: 400 });
+    }
+
+    // 1. Get messages for this receiver
+    const messages = await db
+      .select()
+      .from(admin_message)
+      .where(eq(admin_message.receiver_id, Number(receiverId)));
+
+    console.log("All Messages:", messages);
+
+    // 2. Get chat entries based on type
+    let chatResults = [];
+    if (type === "player") {
+      chatResults = await db
+        .select()
+        .from(chats)
+        .where(eq(chats.playerId, Number(receiverId)));
+    } else if (type === "coach") {
+      chatResults = await db
+        .select()
+        .from(chats)
+        .where(eq(chats.coachId, Number(receiverId)));
+    } else {
+      return NextResponse.json({ error: "Invalid type. Must be 'coach' or 'player'." }, { status: 400 });
+    }
+
+    if (!chatResults.length) {
+      return NextResponse.json({ error: "No chats found" }, { status: 404 });
+    }
+
+    console.log("Chat Results:", chatResults);
+
+    // Optional filter: match sentFor if provided
+    const filteredChats = sentFor
+      ? chatResults.filter(chat =>
+          type === "player"
+            ? chat.coachId === Number(sentFor)
+            : chat.playerId === Number(sentFor)
+        )
+      : chatResults;
+
+    console.log("Filtered Chats:", filteredChats);
+
+    // Match messages where receiver_id === playerId in filtered chats
+    const validReceiverIds = filteredChats.map(chat =>
+      type === "player" ? chat.playerId : chat.coachId
+    );
+
+    const filteredMessages = messages.filter(msg =>
+      validReceiverIds.includes(msg.receiver_id)
+    );
+
+    return NextResponse.json({
+      chats: filteredChats,
+      messages: filteredMessages,
+    });
+
+  } catch (error) {
+    console.error("GET /api/messages error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+} */

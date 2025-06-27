@@ -211,6 +211,76 @@
       "when": 1747311011824,
       "tag": "0029_workable_silverclaw",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1750231542860,
+      "tag": "0030_daffy_felicia_hardy",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1750232503843,
+      "tag": "0031_chemical_raza",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1750233131305,
+      "tag": "0032_smart_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1750712956188,
+      "tag": "0033_empty_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1750836596255,
+      "tag": "0034_overrated_shinko_yamashiro",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1750837220347,
+      "tag": "0035_puzzling_power_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1750845106644,
+      "tag": "0036_woozy_pyro",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1750846193772,
+      "tag": "0037_brave_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1750931300622,
+      "tag": "0038_fantastic_radioactive_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1750936807861,
+      "tag": "0039_panoramic_pete_wisdom",
+      "breakpoints": true
     }
   ]
 }
