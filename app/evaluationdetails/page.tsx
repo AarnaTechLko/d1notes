@@ -314,7 +314,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log("data",data);
 
       setEvaluationData(data.result as Evaluation); // Type assertion here
       setPhysicalScores(JSON.parse(data.result.physicalScores));

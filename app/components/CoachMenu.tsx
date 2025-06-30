@@ -218,7 +218,7 @@ const CoachMenu: React.FC<CoachMenuProps> = ({
                         alt="Profile"
                         width={40}
                         height={40}
-                        className="rounded-full h-12 w-12 border-gray-900"
+                        className="rounded-full h-12 w-12 border-gray-900"      
                     />
                 </button>
                 
