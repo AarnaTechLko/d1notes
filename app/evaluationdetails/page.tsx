@@ -297,6 +297,8 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
 
   const fetchEvaluationData = async () => {
     const session = await getSession();
+            console.log("Session object:", session);
+
     if (session) {
       setUserType(session.user.type);
       setPlayerId(Number(session.user.id)); // Assuming 'role' is stored in session

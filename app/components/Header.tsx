@@ -150,7 +150,6 @@ const Header: React.FC = () => {
             onClick={closeMenu}
           >
             <Image src={Logo} className="logo mx-auto md:ml-0" alt="logo" />
-            d1 Notes
           </Link>
 
           {/* Mobile menu button (visible only on small screens) */}
