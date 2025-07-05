@@ -7,7 +7,7 @@ import { showSuccess, showError } from '../components/Toastr';
 import ForgotPassword from '../components/ForgotPassword';
 import crypto from 'crypto';
 import Swal from 'sweetalert2';
-import {FaEye, FaEyeSlash} from "react-icons/fa"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 interface FormValues {
   email: string;
@@ -52,7 +52,7 @@ export default function Login() {
         setRegistrationType(decryptedData.registrationType);
         setTeamId(decryptedData.teamId);
         setReferenceEmail(decryptedData.referenceEmail);
- 
+
         setTeam(decryptedData.teamId);
 
         setFormValues((prevValues) => ({
@@ -61,7 +61,7 @@ export default function Login() {
           teamId: decryptedData.teamId || '',
           loginAs: decryptedData.registrationType || 'coach',
           enterprise_id: decryptedData.userId || '',
-        
+
         }));
 
 
@@ -82,9 +82,9 @@ export default function Login() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-  
 
-    const { email, password,loginAs } = formValues;
+
+    const { email, password, loginAs } = formValues;
     if (!loginAs) {
       showError("Please select a login type.");
       return;
@@ -102,8 +102,8 @@ export default function Login() {
       return;
     }
     setLoading(true);
- 
- 
+
+
     try {
       const response = await signIn('credentials', {
         redirect: false,
@@ -111,12 +111,15 @@ export default function Login() {
         password,
         loginAs: formValues.loginAs,
         teamId: formValues?.teamId,
-        enterprise_id:enterpriseId
+        enterprise_id: enterpriseId
       });
-     
+
       if (!response || !response.ok) {
-        if(response?.error=='Your account has been deactivated.')
-        {
+        if (response?.error?.startsWith("BLOCKED_IP:")) {
+          const blockedIp = response.error.split(":")[1];
+          showError(`Access denied. Your IP address (${blockedIp}) is blocked.`);
+        }
+        if (response?.error == 'Your account has been deactivated.') {
           Swal.fire({
             title: "Your account is deactivated?",
             text: "Do you want to activate your account?",
@@ -148,7 +151,7 @@ export default function Login() {
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({email: email, type: loginAs}),
+                body: JSON.stringify({ email: email, type: loginAs }),
               })
                 .then((response) => response.json())
                 .then((data) => {
@@ -159,12 +162,12 @@ export default function Login() {
                 });
             }
           });
-          
+
         }
-        else{
-          showError("Invalid Email or Password.");
-        }
-        
+        // else{
+        //   showError("Invalid Email or Password.");
+        // }
+
       } else {
         showSuccess('Logged In Successfully.');
       }
@@ -182,20 +185,20 @@ export default function Login() {
   };
 
   const assignTeamToUser = async (session: any) => {
-        if (teamId) {
-          const apiResponse = await fetch('/api/player/assignteam', {
-            method: 'POST',
-            body: JSON.stringify({ teamId:teamId, playerId:session?.user.id, enterpriseId:session?.user.club_id, type:session?.user.type, email:formValues.email }),
-            headers: { 'Content-Type': 'application/json' }
-          });
-          if (!apiResponse.ok) {
-            showError('Error occurred while processing team data.');
-            return;  
-          }
-          const apiData = await apiResponse.json();
-          window.location.href = '/joinrequests';
-          console.log(apiData);
-        }
+    if (teamId) {
+      const apiResponse = await fetch('/api/player/assignteam', {
+        method: 'POST',
+        body: JSON.stringify({ teamId: teamId, playerId: session?.user.id, enterpriseId: session?.user.club_id, type: session?.user.type, email: formValues.email }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!apiResponse.ok) {
+        showError('Error occurred while processing team data.');
+        return;
+      }
+      const apiData = await apiResponse.json();
+      window.location.href = '/joinrequests';
+      console.log(apiData);
+    }
   }
 
   useEffect(() => {
@@ -236,8 +239,9 @@ export default function Login() {
         window.location.href = '/coach/completeprofile';
       }
     }
-    
+
   }, [session]);
+
 
   return (
     <>
@@ -256,7 +260,7 @@ export default function Login() {
                       type="radio"
                       name="loginAs"
                       value="coach"
-                     
+
                       onChange={handleChange}
                       disabled={loading}
                       className="form-radio"
@@ -362,7 +366,7 @@ export default function Login() {
                 href={
                   formValues.loginAs === 'coach' ? '/coach/signup' :
                     formValues.loginAs === 'enterprise' ? '/enterprise/signup' :
-                      formValues.loginAs === 'team' ? '/teampanel/signup':
+                      formValues.loginAs === 'team' ? '/teampanel/signup' :
                         '/register'
                 }
                 className="text-blue-500"

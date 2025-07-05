@@ -1,0 +1,1 @@
+ALTER TABLE "ticket_messages" ADD COLUMN "filename" text NOT NULL;

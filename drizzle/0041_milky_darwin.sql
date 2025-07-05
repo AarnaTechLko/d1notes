@@ -1,0 +1,1 @@
+ALTER TABLE "ability" ALTER COLUMN "filename" DROP NOT NULL;

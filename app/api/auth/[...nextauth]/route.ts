@@ -4,8 +4,8 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db'; // Adjust path based on your directory
-import { users, coaches, enterprises, teams } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
+import { users, coaches, enterprises, teams, ip_logs, block_ips } from '@/lib/schema';
+import { eq, and } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
 
 
@@ -31,6 +31,21 @@ interface ExtendedUser {
   view_evaluation?: string | null;
   isCompletedProfile: boolean;
 }
+function getClientIp(req: { headers?: Record<string, any> }): string {
+  const headers = req.headers || {};
+
+  const forwarded = headers["x-forwarded-for"];
+  if (typeof forwarded === "string") {
+    const ip = forwarded.split(",")[0].trim();
+    if (ip && ip !== "::1") return ip;
+  }
+
+  const realIp = headers["x-real-ip"];
+  if (typeof realIp === "string" && realIp !== "::1") return realIp;
+
+  return "127.0.0.1";
+}
+
 
 const handler = NextAuth({
 
@@ -44,11 +59,30 @@ const handler = NextAuth({
         teamId: { label: 'teamId', type: 'text' },
         enterprise_id: { label: 'enterprise_id', type: 'text' }
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials) {
           return null;
         }
+        const ip = getClientIp(req);
+        const [blockedEntry] = await db
+          .select()
+          .from(block_ips)
+          .where(
+            and(
+              eq(block_ips.block_ip_address, ip),
+              eq(block_ips.status, 'block')
+            )
+          )
+          .execute();
 
+        if (blockedEntry) {
+
+          // Throwing an error shows it in the NextAuth error callback
+          // throw new Error(`Your IP address (${ip}) is blocked.`);     
+          throw new Error(`BLOCKED_IP:${ip}`);
+
+
+        }
         const { email, password, loginAs, teamId, enterprise_id } = credentials;
         let club: any;
         let newEnterpriseID;
@@ -62,7 +96,14 @@ const handler = NextAuth({
           if (coach.length === 0 || !(await bcrypt.compare(password, coach[0].password))) {
             return null; // Invalid credentials
           }
-
+          await db.insert(ip_logs).values({
+            userId: coach[0].id,
+            ip_address: ip.toString(),
+            type: 'coach',
+            login_time: new Date(),
+            logout_time: null,
+            created_at: new Date(),
+          });
           if (coach[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
           }
@@ -103,6 +144,14 @@ const handler = NextAuth({
           if (user.length === 0 || !(await bcrypt.compare(password, user[0].password))) {
             return null; // Invalid credentials
           }
+          await db.insert(ip_logs).values({
+            userId: user[0].id,
+            ip_address: ip.toString(),
+            type: 'player',
+            login_time: new Date(),
+            logout_time: null,
+            created_at: new Date(),
+          });
           if (user[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
           }
@@ -158,7 +207,15 @@ const handler = NextAuth({
           if (enterprise.length === 0 || !(await bcrypt.compare(password, enterprise[0].password))) {
             return null; // Invalid credentials
           }
-          else if (enterprise[0].status === "Deactivated") {
+          await db.insert(ip_logs).values({
+            userId: enterprise[0].id,
+            ip_address: ip.toString(),
+            type: 'Organization',
+            login_time: new Date(),
+            logout_time: null,
+            created_at: new Date(),
+          });
+          if (enterprise[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
           }
           else {

@@ -1,0 +1,1 @@
+ALTER TABLE "ip_logs" ADD COLUMN "type" varchar(20) DEFAULT 'login' NOT NULL;

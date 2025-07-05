@@ -183,7 +183,7 @@ const handleSubmit = async () => {
     if (typeof evaluationId === 'number') {
       const updated = [...submittedEvaluations, evaluationId];
       setSubmittedEvaluations(updated);
-      localStorage.setItem('submittedEvaluations', JSON.stringify(updated));
+      //localStorage.setItem('submittedEvaluations', JSON.stringify(updated));
     }
 
     onClose(); // close modal

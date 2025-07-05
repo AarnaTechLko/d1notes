@@ -708,7 +708,7 @@ const EvaluationForm: React.FC<EvaluationFormProps> = ({
       if (typeof evaluationId === 'number') {
         const updated = [...submittedEvaluations, evaluationId];
         setSubmittedEvaluations(updated);
-        localStorage.setItem("submittedEvaluations", JSON.stringify(updated));
+        ///localStorage.setItem("submittedEvaluations", JSON.stringify(updated));
       }
 
       onClose();

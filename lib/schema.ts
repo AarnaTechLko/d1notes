@@ -679,6 +679,8 @@ export const ticket_messages = pgTable("ticket_messages", {
   message: text("message").notNull(),
   status: varchar("status").default("Pending"),
   createdAt: timestamp("created_at").defaultNow(),
+    filename: text('filename'),
+
 });
 
 export const userOrgStatus = pgTable("userOrgStatus", {
@@ -769,3 +771,27 @@ export const suspendlog = pgTable('suspendlog', {
   suspend_end_date: date('suspend_end_date'),
   created_at: timestamp('created_at').defaultNow(),
 });
+
+export const ip_logs = pgTable("ip_logs", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  ip_address: varchar("ip_address", { length: 45 }).notNull(), // IPv4 + IPv6 support
+  type: varchar("type", { length: 20 }), // 'login', 'logout', 'session', etc.
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  login_time: timestamp("login_time"),
+  logout_time: timestamp("logout_time"),
+});
+
+
+
+
+
+// lib/schema.ts
+
+export const block_ips = pgTable("block_ips", {
+  id: serial("id").primaryKey(),
+  block_ip_address: varchar("block_ip_address", { length: 45 }).notNull(),
+  user_count: integer("user_count").notNull(),
+  status: varchar("status", { length: 10 }).default("block"),
+});
+

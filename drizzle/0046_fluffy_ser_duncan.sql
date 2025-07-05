@@ -1,0 +1,1 @@
+ALTER TABLE "block_ips" RENAME COLUMN "user_id" TO "user_count";
