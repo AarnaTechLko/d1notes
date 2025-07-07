@@ -39,32 +39,55 @@ const Header: React.FC = () => {
   const dropdownRefSignup = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLLIElement>(null);
 
-  const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-    event.preventDefault();
+  // const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  //   event.preventDefault();
 
-    setIsLoggingOut(true);
+  //   setIsLoggingOut(true);
 
-    try {
-      const result = await signOut({
-        redirect: false,
-        // callbackUrl: "/login",
-      });
+  //   try {
+  //     const result = await signOut({
+  //       redirect: false,
+  //       // callbackUrl: "/login",
+  //     });
 
-      // console.log("Results: ", result);
-      // console.log("Session: ", session);
+  //     // console.log("Results: ", result);
+  //     // console.log("Session: ", session);
 
-      router.push("/login");
+  //     router.push("/login");
 
-      // setTimeout(() => {
-        // if (result.url) {
-        //   router.push(result.url); // Use Next.js router for redirection
-        // }
-      // }, 2000);
-    } catch (error) {
-      console.error("Logout error:", error);
-      setIsLoggingOut(false);
-    }
-  };
+  //     // setTimeout(() => {
+  //       // if (result.url) {
+  //       //   router.push(result.url); // Use Next.js router for redirection
+  //       // }
+  //     // }, 2000);
+  //   } catch (error) {
+  //     console.error("Logout error:", error);
+  //     setIsLoggingOut(false);
+  //   }
+  // };
+const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  event.preventDefault();
+  setIsLoggingOut(true);
+
+  try {
+    // ✅ First: Call logout logging API
+    await fetch("/api/log-signout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // ✅ Then: Sign out via NextAuth
+    await signOut({
+      redirect: false,
+    });
+
+    // ✅ Navigate to login page
+    router.push("/login");
+  } catch (error) {
+    console.error("Logout error:", error);
+    setIsLoggingOut(false);
+  }
+};
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

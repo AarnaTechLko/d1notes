@@ -1,6 +1,8 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import TeamMenu from "./TeamMenu";
+import { signOut } from "next-auth/react";
+import router from "next/router";
 
 // Lazy load the menu components
 const FreeMenu = lazy(() => import("./FreeMenu"));
@@ -19,7 +21,32 @@ interface NavBarProps {
     helpOpen:any;
   }
   
-const NavBar: React.FC<NavBarProps> = ({ session, closeMenu, isActiveLink, handleLogout, toggleHelp, toggleDropdown, helpRef, helpOpen, toggleCreateAccount }) => {
+const NavBar: React.FC<NavBarProps> = ({ session, closeMenu, isActiveLink, toggleHelp, toggleDropdown, helpRef, helpOpen, toggleCreateAccount }) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+   const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+     event.preventDefault();
+     setIsLoggingOut(true);
+ 
+     try {
+       // ✅ First: Call logout logging API
+       await fetch("/api/log-signout", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+       });
+ 
+       // ✅ Then: Sign out via NextAuth
+       await signOut({
+         redirect: false,
+       });
+ 
+       // ✅ Navigate to login page
+       router.push("/login");
+     } catch (error) {
+       console.error("Logout error:", error);
+       setIsLoggingOut(false);
+     }
+   };
+ 
   return (
     <nav className="md:flex md:items-center w-full md:w-auto ml-auto flex-row-reverse">
       <ul className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-4 md:mt-0 text-center md:text-left border-b border-gray-300 py-2 md:border-b-0">

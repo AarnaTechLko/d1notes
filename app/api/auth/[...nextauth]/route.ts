@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db'; // Adjust path based on your directory
 import { users, coaches, enterprises, teams, ip_logs, block_ips } from '@/lib/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
 
 
@@ -183,7 +183,6 @@ const handler = NextAuth({
           if (team.length === 0 || !team[0].password || !(await bcrypt.compare(password, team[0].password))) {
             return null; // Invalid credentials
           }
-
           else {
             if (team[0].creator_id) {
               club = await db.select().from(enterprises).where(eq(enterprises.id, Number(team[0].creator_id))).execute();
@@ -235,7 +234,6 @@ const handler = NextAuth({
               visibility: 'on',
               added_by: null
             };
-
           }
         }
         return null;
@@ -249,7 +247,6 @@ const handler = NextAuth({
     secret: SECRET_KEY ?? process.env.NEXTAUTH_SECRET
   },
   callbacks: {
-
     async jwt({ token, user, trigger, session }) {
       // Check if the user exists and is of the correct type
       if (user) {
@@ -270,7 +267,6 @@ const handler = NextAuth({
         token.buy_evaluation = extendedUser.buy_evaluation;
         token.view_evaluation = extendedUser.view_evaluation;
         token.isCompletedProfile = extendedUser.isCompletedProfile;
-
         if (extendedUser.package_id) {
           token.package_id = extendedUser.package_id; // Add package_id to the token if available (enterprise)
         }
@@ -278,7 +274,6 @@ const handler = NextAuth({
       if (trigger === 'update') {
         return { ...token, isCompletedProfile: session.user.isCompletedProfile, club_id: session.user.club_id };
       }
-
       return token;
     },
     async session({ session, token }) {
@@ -290,7 +285,6 @@ const handler = NextAuth({
         session.user.image = token.image as string | null;
         session.user.coach_id = token.coach_id as string | null;
         session.user.suspend = token.suspend as number;
-
         // Add the type to the session
         session.user.club_id = token.club_id as string | null;
         // session.user.image = token.image as string | null;
@@ -327,7 +321,6 @@ const handler = NextAuth({
           session.user.name = user.first_name;
           session.user.suspend = user.suspend;
           session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
-
           session.user.visibility = user.visibility;
         }
       }
@@ -337,9 +330,7 @@ const handler = NextAuth({
           const user = updatedUser[0];
           session.user.name = user.team_name;
           session.user.suspend = user.suspend;
-
           session.user.image = user.logo === 'null' ? '/default.jpg' : user.logo;
-
           session.user.visibility = user.visibility;
         }
       }

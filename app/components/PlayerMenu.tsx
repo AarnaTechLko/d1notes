@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
 import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface PlayerMenuProps {
   session: any; // Adjust to your actual session type
@@ -18,7 +19,7 @@ interface PlayerMenuProps {
   helpOpen: any;
 }
 
-const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLink, handleLogout, toggleHelp, toggleDropdown, helpRef, helpOpen, toggleCreateAccount }) => {
+const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLink, toggleHelp, toggleDropdown, helpRef, helpOpen, toggleCreateAccount }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
@@ -28,8 +29,32 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ session, closeMenu, isActiveLin
   const enterpriseRef = useRef<HTMLLIElement>(null);
   const [supportOpen, setSupportOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const router = useRouter();
+      const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const router = useRouter();
+ const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+        event.preventDefault();
+        setIsLoggingOut(true);
+
+        try {
+            // ✅ First: Call logout logging API
+            await fetch("/api/log-signout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            // ✅ Then: Sign out via NextAuth
+            await signOut({
+                redirect: false,
+            });
+
+            // ✅ Navigate to login page
+            router.push("/login");
+        } catch (error) {
+            console.error("Logout error:", error);
+            setIsLoggingOut(false);
+        }
+    };
   useEffect(() => {
     if (!session?.user?.id) return;
 

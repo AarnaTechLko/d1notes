@@ -782,16 +782,12 @@ export const ip_logs = pgTable("ip_logs", {
   logout_time: timestamp("logout_time"),
 });
 
-
-
-
-
-// lib/schema.ts
-
 export const block_ips = pgTable("block_ips", {
   id: serial("id").primaryKey(),
   block_ip_address: varchar("block_ip_address", { length: 45 }).notNull(),
   user_count: integer("user_count").notNull(),
   status: varchar("status", { length: 10 }).default("block"),
+  is_deleted: integer("is_deleted").default(1), // 1 = not deleted, 0 = deleted
+
 });
 

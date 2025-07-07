@@ -4,19 +4,20 @@ import { useState, useRef, useEffect } from "react";
 import { MdHelpOutline, MdKeyboardArrowDown } from "react-icons/md";
 import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 interface EnterpriseMenuProps {
-    session: any; // Adjust to your actual session type
-    closeMenu: () => void;
-    isActiveLink: (path: string) => string;
-    handleLogout: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-    toggleHelp:()=>void;
-    toggleDropdown:()=>void;
-    toggleCreateAccount:()=>void;
-    helpRef:any;
-    helpOpen:any;
+  session: any; // Adjust to your actual session type
+  closeMenu: () => void;
+  isActiveLink: (path: string) => string;
+  handleLogout: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
+  toggleHelp: () => void;
+  toggleDropdown: () => void;
+  toggleCreateAccount: () => void;
+  helpRef: any;
+  helpOpen: any;
 }
 
-const EnterpriseMenu: React.FC<EnterpriseMenuProps> = ({ session, closeMenu, isActiveLink, handleLogout,toggleHelp,toggleDropdown,helpRef,helpOpen,toggleCreateAccount }) => {
+const EnterpriseMenu: React.FC<EnterpriseMenuProps> = ({ session, closeMenu, isActiveLink, toggleHelp, toggleDropdown, helpRef, helpOpen, toggleCreateAccount }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
@@ -24,10 +25,34 @@ const EnterpriseMenu: React.FC<EnterpriseMenuProps> = ({ session, closeMenu, isA
   const [enterpriseOpen, setEnterpriseOpen] = useState(false);
   const createAccountRef = useRef<HTMLLIElement>(null);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
-    const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
-  
-useEffect(() => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    event.preventDefault();
+    setIsLoggingOut(true);
+
+    try {
+      // ✅ First: Call logout logging API
+      await fetch("/api/log-signout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // ✅ Then: Sign out via NextAuth
+      await signOut({
+        redirect: false,
+      });
+
+      // ✅ Navigate to login page
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
+  };
+
+  useEffect(() => {
     if (!session?.user?.id) return;
 
     const fetchUnreadCount = async () => {
@@ -65,72 +90,72 @@ useEffect(() => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
-            setDropdownOpen(false);
-        }
+      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-}, []);
+  }, []);
 
-// This function toggles the dropdown
-const handleToggleDropdown = () => {
+  // This function toggles the dropdown
+  const handleToggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
-};
-const handleEnterpriseToggle = () => {
-  setEnterpriseOpen((prev) => !prev);
-};
-// Close the dropdown when an option is clicked
-const handleOptionClick = () => {
+  };
+  const handleEnterpriseToggle = () => {
+    setEnterpriseOpen((prev) => !prev);
+  };
+  // Close the dropdown when an option is clicked
+  const handleOptionClick = () => {
     setDropdownOpen(false);
     closeMenu(); // Optional: close the menu if you want
-};
- 
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      createAccountRef.current &&
-      !createAccountRef.current.contains(event.target as Node)
-    ) {
-      setCreateAccountOpen(false);
-    }
-    if (
-      enterpriseRef.current &&
-      !enterpriseRef.current.contains(event.target as Node)
-    ) {
-      setEnterpriseOpen(false);
-    }
   };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        createAccountRef.current &&
+        !createAccountRef.current.contains(event.target as Node)
+      ) {
+        setCreateAccountOpen(false);
+      }
+      if (
+        enterpriseRef.current &&
+        !enterpriseRef.current.contains(event.target as Node)
+      ) {
+        setEnterpriseOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <>
 
-<li className="pt-[8px] border-b-1 md:border-b-0">
-                <Link
-                    href="/browse"
-                    className={`${isActiveLink("/browse")} hover:text-blue-300`}
-                    onClick={closeMenu}
-                >
-                    Find a Coach
-                </Link>
-            </li>
-            <li className="pt-[8px]">
-                <Link
-                    href="/browse/players"
-                    className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
-                    onClick={closeMenu}
-                >
-                    Player Profiles
-                </Link>
-            </li>
-            {/* <li ref={enterpriseRef} className="relative pt-[8px]">
+      <li className="pt-[8px] border-b-1 md:border-b-0">
+        <Link
+          href="/browse"
+          className={`${isActiveLink("/browse")} hover:text-blue-300`}
+          onClick={closeMenu}
+        >
+          Find a Coach
+        </Link>
+      </li>
+      <li className="pt-[8px]">
+        <Link
+          href="/browse/players"
+          className={`${isActiveLink("/browse/players")} hover:text-blue-300`}
+          onClick={closeMenu}
+        >
+          Player Profiles
+        </Link>
+      </li>
+      {/* <li ref={enterpriseRef} className="relative pt-[8px]">
         <button
           onClick={handleEnterpriseToggle}
           className="flex items-center text-black hover:text-blue-300"
@@ -163,22 +188,22 @@ useEffect(() => {
           </div>
         )}
       </li> */}
-            
+
       <li className="pt-[8px]">
-                <Link
-                  href="/browse/clubs"
-                  // className="block px-4 py-2 text-black hover:text-blue-300"
-                  className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
-                  onClick={handleOptionClick}>
-                  Organization Profiles
-                </Link>
-      </li> 
+        <Link
+          href="/browse/clubs"
+          // className="block px-4 py-2 text-black hover:text-blue-300"
+          className={`${isActiveLink("/browse/clubs")} hover:text-blue-300`}
+          onClick={handleOptionClick}>
+          Organization Profiles
+        </Link>
+      </li>
       <li className="pt-[8px]">
         <Link href="/enterprise/dashboard" className={`${isActiveLink("/enterprise/dashboard")} hover:text-blue-300`} onClick={closeMenu}>
           Dashboard
         </Link>
       </li>
-        <li className="relative">
+      <li className="relative">
         <Link
           href="/browse/tickets"
           className={`${isActiveLink("/browse/tickets")} w-full block text-left py-2 text-black hover:text-blue-300`}
@@ -187,14 +212,14 @@ useEffect(() => {
           Support
         </Link>
       </li>
-      
+
       {/* commented by Harsh 14-03-2025 */}
       {/* <li className="pt-[8px]">
         <Link href="/enterprise/dashboard" className=" text-black font-bold py-2 px-4 rounded  cursor-default" onClick={closeMenu}>
            {session?.user?.name || "Enterprise"}!
         </Link>
       </li> */}
-         <li className="pt-[8px] relative" onClick={handleClick}>
+      <li className="pt-[8px] relative" onClick={handleClick}>
         <Link
           href="/notification"
           className={`${isActiveLink("/coach/dashboard")} hover:text-blue-500`}
@@ -209,8 +234,8 @@ useEffect(() => {
       </li>
 
       <li className="pt-[8px]">
-                <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
-            </li>
+        <Link href="#" onClick={handleLogout} className={`${isActiveLink("/coach/dashboard")} hover:text-blue-300`}>Log Out</Link>
+      </li>
 
       {/* <li className="relative text-center items-center" ref={dropdownRef}>
   <button
@@ -228,7 +253,7 @@ useEffect(() => {
   
 </li> */}
 
-    
+
     </>
   );
 };

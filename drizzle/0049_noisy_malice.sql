@@ -1,0 +1,1 @@
+ALTER TABLE "block_ips" ADD COLUMN "is_deleted" integer DEFAULT 1;
