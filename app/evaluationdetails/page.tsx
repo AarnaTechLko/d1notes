@@ -49,7 +49,11 @@ type AbilityData = {
 };
 const position = "Goalkeeper"; // or any dynamic value
 
-const headerMetrics = ['Technical Average', 'Tactical Average', 'Distribution Average', 'Physical Average', 'Organization Average'];
+const headerMetrics =
+  position === "Goalkeeper"
+    ?
+    ['Technical Average', 'Tactical Average', 'Distribution Average', 'Physical Average', 'Organization Average']
+    : ['Technical Average', 'Tactical Average', 'Physical Average'];
 
 const radarSkills =
   position === "Goalkeeper"
@@ -384,7 +388,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
   const chartData = radarSkills
     .filter((skill) => {
       // Filter skills based on position
-      if (position === "Goalkeeper") {
+      if (evaluationData?.position.toString() === "Goalkeeper") {
         return true; // Include all skills for Goalkeeper
       }
       // Exclude Distribution and Organization for non-Goalkeepers
@@ -433,7 +437,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
       total += calculateAverage(tacticalScores);
       count += 1;
     }
-    if (position === "Goalkeeper") {
+    if (evaluationData?.position.toString()=== "Goalkeeper") {
       if (distributionScores) {
         total += calculateAverage(distributionScores);
         count += 1;
@@ -721,7 +725,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
             {radarSkills.map((skill, i) => (
               <div key={i} className="flex items-center justify-center gap-2">
                 {/* Conditionally render skills based on position */}
-                {(position === "Goalkeeper" || (position !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
+                {(evaluationData?.position.toString() === "Goalkeeper" || (evaluationData?.position.toString() !== "Goalkeeper" && skill.key !== "distributionAverage" && skill.key !== "organizationAverage")) && (
                   <div>
 
                   </div>
@@ -764,9 +768,9 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ searchParams }) => {
                 {[
                   { title: 'Technical', value: calculateAverage(technicalScores) },
                   { title: 'Tactical', value: calculateAverage(tacticalScores) },
-                  position === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
+                  evaluationData?.position.toString() === 'Goalkeeper' && { title: 'Distribution', value: calculateAverage(distributionScores) },
                   { title: 'Physical', value: calculateAverage(physicalScores) },
-                  position === 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
+                  evaluationData?.position.toString()=== 'Goalkeeper' && { title: 'Organization', value: calculateAverage(organizationScores) },
                 ]
                   .filter((metric): metric is { title: string; value: number } => metric !== false)
                   .map((metric, index) => (
