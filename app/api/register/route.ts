@@ -1,9 +1,8 @@
 // app/api/register/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { users, otps, teams, teamPlayers, coaches, licenses, invitations } from '../../../lib/schema'
+import { users, otps, teams, teamPlayers, coaches, licenses, invitations, block_ips } from '../../../lib/schema'
 import debug from 'debug';
 import { eq, and, gt } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -14,43 +13,62 @@ import jwt from 'jsonwebtoken';
 import next from 'next';
 
 
+async function getGeoLocation(): Promise<any> {
+  try {
+    const token = '750b64ff1566ad';
+    const res = await fetch(`https://ipinfo.io/json?token=${token}`);
+    if (!res.ok) throw new Error("Failed to fetch IP info");
+    const data = await res.json();
+    return data; // contains ip, city, region, country, etc.
+  } catch (error) {
+    console.error("IPINFO fetch error:", error);
+    return null;
+  }
+}
+
 
 export async function POST(req: NextRequest) {
-
   const logError = debug('app:error');
   const body = await req.json();
   const { email, password, otp, sendedBy, enterprise_id, teamId } = body;
- 
+
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 500 });
   }
 
+  const datag = await getGeoLocation();
+         //  alert(ip);
+         console.log("ip Address", datag.ip.trim());
+         const [blockedEntry] = await db
+           .select()
+           .from(block_ips)
+           .where(
+             and(
+               eq(block_ips.block_ip_address, datag.ip.trim()),
+               eq(block_ips.status, 'block')
+             )
+           )
+           .execute();
+ 
+        if (blockedEntry) {
+  return NextResponse.json(
+    { message: `Access denied: Your IP (${datag.ip}) is blocked.`, blocked: true },
+    { status: 403 }
+  );
+}
+
+
+  // Step 3: Email check (only if IP is not blocked)
   const checkEmail = await db.select().from(users).where(eq(users.email, email)).execute();
-
   if (checkEmail.length > 0) {
-
     return NextResponse.json({ message: 'This email already exists.' }, { status: 500 });
   }
- 
-   
-  const team_id=teamId;
-  
-   
-  // const existingOtp = await db
-  //   .select()
-  //   .from(otps)
-  //   .where(and(
-  //     eq(otps.email, email), 
-  //     eq(otps.otp, otp)
-  //   ))
-  //   .limit(1)
-  //   .execute();
 
- 
+  // Step 4: Proceed with user registration
   const hashedPassword = await hash(password, 10);
 
   try {
-    let userValues: any = {
+    const userValues: any = {
       first_name: null,
       last_name: null,
       grade_level: null,
@@ -68,7 +86,7 @@ export async function POST(req: NextRequest) {
       state: null,
       city: null,
       enterprise_id: enterprise_id,
-      team_id: team_id,
+      team_id: teamId,
       jersey: null,
       slug: null,
       visibility: "on",
@@ -76,60 +94,50 @@ export async function POST(req: NextRequest) {
       createdAt: new Date(),
     };
 
-    
     const insertedUser = await db.insert(users).values(userValues).returning();
-     
-   
-if(teamId)
-{
-  try {
-    await db.insert(teamPlayers).values(
-      {
-        teamId: Number(teamId),
-        playerId: Number(insertedUser[0].id),
-        enterprise_id: Number(userValues.enterprise_id),
+
+    // Add to team if applicable
+    if (teamId) {
+      try {
+        await db.insert(teamPlayers).values({
+          teamId: Number(teamId),
+          playerId: Number(insertedUser[0].id),
+          enterprise_id: Number(userValues.enterprise_id),
+        });
+
+        await db.update(invitations).set({ status: 'Joined' }).where(
+          and(
+            eq(invitations.team_id, Number(teamId)),
+            eq(invitations.email, email),
+            eq(invitations.enterprise_id, Number(userValues.enterprise_id))
+          )
+        );
+      } catch (error) {
+        return NextResponse.json({ message: String(error) }, { status: 500 });
       }
+    }
 
-    );
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
 
-    await db.update(invitations).set({
-      status:'Joined'
-    }).where(and(
-      eq(invitations.team_id, Number(teamId)),
-      eq(invitations.email, email),
-      eq(invitations.enterprise_id, Number(userValues.enterprise_id))
-    ));
-  }
-  catch (error) {
-
-    const err = error as any;
-
-    return NextResponse.json({ message: err }, { status: 500 });
-
-  }
-}
-    
-const protocol = req.headers.get('x-forwarded-proto') || 'http';
-const host = req.headers.get('host');
-const baseUrl = `${protocol}://${host}`;
-const emailResult = await sendEmail({
-  to:  email,
-  subject: "D1 NOTES Player Registration Follow Up",
-  text: "D1 NOTES Player Registration Follow Up", 
-  html: `<p>Dear Player! Your D1 Notes <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">login</a> account has been created. If you have not done so already, please complete your profile in order to take advantage of all D1 Notes has to offer!</p><p className="mt-10">Regards,<br>
-D1 Notes Team</p>`,
-});
+    await sendEmail({
+      to: email,
+      subject: "D1 NOTES Player Registration Follow Up",
+      text: "D1 NOTES Player Registration Follow Up",
+      html: `<p>Dear Player! Your D1 Notes <a href="${baseUrl}/login" style="font-weight: bold; color: blue;">login</a> account has been created. If you have not done so already, please complete your profile in order to take advantage of all D1 Notes has to offer!</p><p className="mt-10">Regards,<br>D1 Notes Team</p>`,
+    });
 
     return NextResponse.json({ id: insertedUser }, { status: 200 });
 
-  } catch (error) {
-
-    const err = error as any;
-    if (err.constraint == 'users_email_unique') {
+  } catch (error: any) {
+    if (error.constraint === 'users_email_unique') {
       return NextResponse.json({ message: "This Email ID is already in use." }, { status: 500 });
     }
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
 
 
 export async function PUT(req: NextRequest, res: NextResponse) {
@@ -228,23 +236,23 @@ export async function PUT(req: NextRequest, res: NextResponse) {
       .where(eq(users.id, playerIDAsNumber))
       .execute()
       .then(result => result[0]);
-      const protocol = req.headers.get('x-forwarded-proto') || 'http';
-      const host = req.headers.get('host');
-      const baseUrl = `${protocol}://${host}`;
-      const emailResult = await sendEmail({
-        to:  user.email,
-        subject: `D1 NOTES Registration Completed for ${firstName}`,
-        text: `D1 NOTES Registration Completed for ${firstName}`,
-        html: `<p>Dear ${firstName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue">Click here</a>  to get started!
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    const emailResult = await sendEmail({
+      to: user.email,
+      subject: `D1 NOTES Registration Completed for ${firstName}`,
+      text: `D1 NOTES Registration Completed for ${firstName}`,
+      html: `<p>Dear ${firstName}! Congratulations, your D1 Notes profile has been completed and you are now ready to take advantage of all D1 Notes has to offer! <a href="${baseUrl}/login" style="font-weight: bold; color: blue">Click here</a>  to get started!
         </p><p className="mt-10">Regards,<br>
   D1 Notes Team</p>`,
     });
 
-  
+
     return NextResponse.json({ message: "Profile Completed", image: imageFile }, { status: 200 });
   }
-  catch (error:any) {
-    return NextResponse.json({ message:error.message }, { status: 500 });
+  catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
 
   }
 

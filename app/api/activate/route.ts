@@ -1,5 +1,4 @@
 // app/api/banners/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db'; // Adjust the path as per your setup
 import { coaches, enterprises, playerbanner, teamCoaches, teamPlayers, teams, users } from '@/lib/schema'; // Import the playerbanner schema

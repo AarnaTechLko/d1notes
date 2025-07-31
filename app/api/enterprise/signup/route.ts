@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { enterprises, otps } from '../../../../lib/schema';
+import { block_ips, enterprises, otps } from '../../../../lib/schema';
 import debug from 'debug';
 import { eq, and, gt } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
@@ -10,7 +10,18 @@ import { SECRET_KEY } from '@/lib/constants';
 import nodemailer from "nodemailer";
 import jwt from 'jsonwebtoken';
 import next from 'next';
-
+async function getGeoLocation(): Promise<any> {
+  try {
+    const token = '750b64ff1566ad';
+    const res = await fetch(`https://ipinfo.io/json?token=${token}`);
+    if (!res.ok) throw new Error("Failed to fetch IP info");
+    const data = await res.json();
+    return data; // contains ip, city, region, country, etc.
+  } catch (error) {
+    console.error("IPINFO fetch error:", error);
+    return null;
+  }
+}
 export async function POST(req: NextRequest) {
     
     const formData = await req.formData();
@@ -40,6 +51,26 @@ export async function POST(req: NextRequest) {
     if(emailCkeck.length>0){
         return NextResponse.json({ message: "Email already exists" }, { status: 500 });
     }
+const datag = await getGeoLocation();
+            //  alert(ip);
+            console.log("ip Address", datag.ip.trim());
+            const [blockedEntry] = await db
+              .select()
+              .from(block_ips)
+              .where(
+                and(
+                  eq(block_ips.block_ip_address, datag.ip.trim()),
+                  eq(block_ips.status, 'block')
+                )
+              )
+              .execute();
+    
+          if (blockedEntry) {
+  return NextResponse.json(
+    { message: `Access denied: Your IP (${datag.ip}) is blocked.`, blocked: true },
+    { status: 403 }
+  );
+}
 
     try {
         // Hash the password before storing it in the database

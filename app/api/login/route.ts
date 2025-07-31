@@ -3,17 +3,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { db } from "../../../lib/db";
-import { users, coaches } from "../../../lib/schema";
+import { users, coaches,block_ips } from "../../../lib/schema";
 import debug from "debug";
-import { eq } from "drizzle-orm";
+import { eq ,and} from "drizzle-orm";
 import { SECRET_KEY } from "@/lib/constants";
 import jwt from "jsonwebtoken";
 
 
+ 
+
 export async function POST(req: NextRequest) {
   const logError = debug("app:error");
 
-   
   try {
     const { email, password, loginAs } = await req.json();
 

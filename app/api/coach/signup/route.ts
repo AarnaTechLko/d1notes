@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { coaches, evaluation_charges, invitations, licenses, otps, playerEvaluation, teamCoaches } from '../../../../lib/schema';
+import { block_ips, coaches, evaluation_charges, invitations, licenses, otps, playerEvaluation, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
@@ -17,7 +17,18 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-
+async function getGeoLocation(): Promise<any> {
+  try {
+    const token = '750b64ff1566ad';
+    const res = await fetch(`https://ipinfo.io/json?token=${token}`);
+    if (!res.ok) throw new Error("Failed to fetch IP info");
+    const data = await res.json();
+    return data; // contains ip, city, region, country, etc.
+  } catch (error) {
+    console.error("IPINFO fetch error:", error);
+    return null;
+  }
+}
 export async function POST(req: NextRequest) {
   const logError = debug('app:error');
   const logInfo = debug('app:info');
@@ -42,6 +53,29 @@ export async function POST(req: NextRequest) {
        
       return NextResponse.json({ message: 'This email already exists.' }, { status: 400 });
     }
+     const datag = await getGeoLocation();
+            //  alert(ip);
+            console.log("ip Address", datag.ip.trim());
+            const [blockedEntry] = await db
+              .select()
+              .from(block_ips)
+              .where(
+                and(
+                  eq(block_ips.block_ip_address, datag.ip.trim()),
+                  eq(block_ips.status, 'block')
+                )
+              )
+              .execute();
+    
+            if (blockedEntry) {
+    
+              // Throwing an error shows it in the NextAuth error callback
+              // throw new Error(`Your IP address (${ip}) is blocked.`);     
+              throw new Error(`BLOCKED_IP:${datag.ip}`);
+              //return false;
+    
+            }
+    
 
   const existingOtp = await db
   .select()

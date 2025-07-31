@@ -31,19 +31,19 @@ interface ExtendedUser {
   view_evaluation?: string | null;
   isCompletedProfile: boolean;
 }
-function getClientIp(req: { headers?: Record<string, any> }): string {
-  const headers = req.headers || {};
 
-  const forwarded = headers["x-forwarded-for"];
-  if (typeof forwarded === "string") {
-    const ip = forwarded.split(",")[0].trim();
-    if (ip && ip !== "::1") return ip;
+
+async function getGeoLocation(): Promise<any> {
+  try {
+    const token = '750b64ff1566ad';
+    const res = await fetch(`https://ipinfo.io/json?token=${token}`);
+    if (!res.ok) throw new Error("Failed to fetch IP info");
+    const data = await res.json();
+    return data; // contains ip, city, region, country, etc.
+  } catch (error) {
+    console.error("IPINFO fetch error:", error);
+    return null;
   }
-
-  const realIp = headers["x-real-ip"];
-  if (typeof realIp === "string" && realIp !== "::1") return realIp;
-
-  return "127.0.0.1";
 }
 
 
@@ -63,13 +63,15 @@ const handler = NextAuth({
         if (!credentials) {
           return null;
         }
-        const ip = getClientIp(req);
+        const datag = await getGeoLocation();
+        //  alert(ip);
+        console.log("ip Address", datag.ip.trim());
         const [blockedEntry] = await db
           .select()
           .from(block_ips)
           .where(
             and(
-              eq(block_ips.block_ip_address, ip),
+              eq(block_ips.block_ip_address, datag.ip.trim()),
               eq(block_ips.status, 'block')
             )
           )
@@ -79,8 +81,8 @@ const handler = NextAuth({
 
           // Throwing an error shows it in the NextAuth error callback
           // throw new Error(`Your IP address (${ip}) is blocked.`);     
-          throw new Error(`BLOCKED_IP:${ip}`);
-
+          throw new Error(`BLOCKED_IP:${datag.ip}`);
+          //return false;
 
         }
         const { email, password, loginAs, teamId, enterprise_id } = credentials;
@@ -98,7 +100,7 @@ const handler = NextAuth({
           }
           await db.insert(ip_logs).values({
             userId: coach[0].id,
-            ip_address: ip.toString(),
+            ip_address: datag.ip.toString(),
             type: 'coach',
             login_time: new Date(),
             logout_time: null,
@@ -146,7 +148,7 @@ const handler = NextAuth({
           }
           await db.insert(ip_logs).values({
             userId: user[0].id,
-            ip_address: ip.toString(),
+            ip_address: datag.ip.toString(),
             type: 'player',
             login_time: new Date(),
             logout_time: null,
@@ -208,7 +210,7 @@ const handler = NextAuth({
           }
           await db.insert(ip_logs).values({
             userId: enterprise[0].id,
-            ip_address: ip.toString(),
+            ip_address: datag.ip.toString(),
             type: 'Organization',
             login_time: new Date(),
             logout_time: null,
