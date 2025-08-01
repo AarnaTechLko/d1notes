@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db'; // Adjust path based on your directory
 import { users, coaches, enterprises, teams, ip_logs, block_ips } from '@/lib/schema';
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and, or } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
 
 
@@ -45,6 +45,20 @@ async function getGeoLocation(): Promise<any> {
     return null;
   }
 }
+// function getClientIp(req: { headers?: Record<string, any> }): string {
+//   const headers = req.headers || {};
+
+//   const forwarded = headers["x-forwarded-for"];
+//   if (typeof forwarded === "string") {
+//     const ip = forwarded.split(",")[0].trim();
+//     if (ip && ip !== "::1") return ip;
+//   }
+
+//   const realIp = headers["x-real-ip"];
+//   if (typeof realIp === "string" && realIp !== "::1") return realIp;
+
+//   return "127.0.0.1";
+// }
 
 
 const handler = NextAuth({
@@ -66,25 +80,37 @@ const handler = NextAuth({
         const datag = await getGeoLocation();
         //  alert(ip);
         console.log("ip Address", datag.ip.trim());
-        const [blockedEntry] = await db
-          .select()
-          .from(block_ips)
-          .where(
-            and(
-              eq(block_ips.block_ip_address, datag.ip.trim()),
-              eq(block_ips.status, 'block')
-            )
-          )
-          .execute();
+       const [blockedEntry] = await db
+  .select()
+  .from(block_ips)
+  .where(
+    and(
+      eq(block_ips.status, 'block'),
+      or(
+        eq(block_ips.block_ip_address, datag.ip.trim()),
+        eq(block_ips.block_ip_address, datag.country?.trim() || ''),
+        eq(block_ips.block_ip_address, datag.city?.trim() || ''),
+        eq(block_ips.block_ip_address, datag.region?.trim() || '')
+      )
+    )
+  )
+  .execute();
 
-        if (blockedEntry) {
+if (blockedEntry) {
+  // Check which field caused the block
+  if (blockedEntry.block_ip_address === datag.ip.trim()) {
+    throw new Error(`BLOCKED_IP:${datag.ip}`);
+  } else if (blockedEntry.block_ip_address === datag.country?.trim()) {
+    throw new Error(`BLOCKED_COUNTRY:${datag.country}`);
+  } else if (blockedEntry.block_ip_address === datag.city?.trim()) {
+    throw new Error(`BLOCKED_CITY:${datag.city}`);
+  } else if (blockedEntry.block_ip_address === datag.region?.trim()) {
+    throw new Error(`BLOCKED_REGION:${datag.region}`);
+  } else {
+    throw new Error('BLOCKED_LOCATION'); // Fallback, in case of mismatch
+  }
+}
 
-          // Throwing an error shows it in the NextAuth error callback
-          // throw new Error(`Your IP address (${ip}) is blocked.`);     
-          throw new Error(`BLOCKED_IP:${datag.ip}`);
-          //return false;
-
-        }
         const { email, password, loginAs, teamId, enterprise_id } = credentials;
         let club: any;
         let newEnterpriseID;
@@ -105,6 +131,13 @@ const handler = NextAuth({
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
+              city: datag.city || null,
+  region: datag.region || null,
+  country: datag.country || null,
+  postal: datag.postal || null,
+  org: datag.org || null,
+  loc: datag.loc || null,
+  timezone: datag.timezone || null,
           });
           if (coach[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
@@ -153,6 +186,13 @@ const handler = NextAuth({
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
+              city: datag.city || null,
+  region: datag.region || null,
+  country: datag.country || null,
+  postal: datag.postal || null,
+  org: datag.org || null,
+  loc: datag.loc || null,
+  timezone: datag.timezone || null,
           });
           if (user[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
@@ -215,6 +255,13 @@ const handler = NextAuth({
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
+              city: datag.city || null,
+  region: datag.region || null,
+  country: datag.country || null,
+  postal: datag.postal || null,
+  org: datag.org || null,
+  loc: datag.loc || null,
+  timezone: datag.timezone || null,
           });
           if (enterprise[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");

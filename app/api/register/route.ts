@@ -2,9 +2,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../lib/db';
-import { users, otps, teams, teamPlayers, coaches, licenses, invitations, block_ips } from '../../../lib/schema'
+import { users, otps, teams, teamPlayers, coaches, licenses, invitations, block_ips, ip_logs } from '../../../lib/schema'
 import debug from 'debug';
-import { eq, and, gt } from 'drizzle-orm';
+import { eq, and, gt,or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 
 import { SECRET_KEY } from '@/lib/constants';
@@ -19,11 +19,27 @@ async function getGeoLocation(): Promise<any> {
     const res = await fetch(`https://ipinfo.io/json?token=${token}`);
     if (!res.ok) throw new Error("Failed to fetch IP info");
     const data = await res.json();
+    console.log("data",data);
     return data; // contains ip, city, region, country, etc.
   } catch (error) {
     console.error("IPINFO fetch error:", error);
     return null;
   }
+}
+
+function getClientIp(req: { headers?: Record<string, any> }): string {
+  const headers = req.headers || {};
+
+  const forwarded = headers["x-forwarded-for"];
+  if (typeof forwarded === "string") {
+    const ip = forwarded.split(",")[0].trim();
+    if (ip && ip !== "::1") return ip;
+  }
+
+  const realIp = headers["x-real-ip"];
+  if (typeof realIp === "string" && realIp !== "::1") return realIp;
+
+  return "127.0.0.1";
 }
 
 
@@ -35,28 +51,81 @@ export async function POST(req: NextRequest) {
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 500 });
   }
+  // const clientIp = getClientIp(req);
+  // console.log('Client IP:', clientIp);
+
+  // // Step 2: Get geolocation details
+  // const geoData = await getGeoLocation(clientIp);
+  // const ipAddress = geoData?.ip?.trim() || clientIp;
+
+  // // Step 3: Blocked IP check
+  // const [blockedEntry] = await db
+  //   .select()
+  //   .from(block_ips)
+  //   .where(
+  //     and(
+  //       eq(block_ips.block_ip_address, ipAddress),
+  //       eq(block_ips.status, 'block')
+  //     )
+  //   )
+  //   .execute();
+
+  // if (blockedEntry) {
+  //   return NextResponse.json(
+  //     { message: `Access denied: Your IP (${ipAddress}) is blocked.`, blocked: true },
+  //     { status: 403 }
+  //   );
+  // }
 
   const datag = await getGeoLocation();
-         //  alert(ip);
-         console.log("ip Address", datag.ip.trim());
-         const [blockedEntry] = await db
-           .select()
-           .from(block_ips)
-           .where(
-             and(
-               eq(block_ips.block_ip_address, datag.ip.trim()),
-               eq(block_ips.status, 'block')
-             )
-           )
-           .execute();
- 
-        if (blockedEntry) {
+
+if (!datag || !datag.ip) {
   return NextResponse.json(
-    { message: `Access denied: Your IP (${datag.ip}) is blocked.`, blocked: true },
-    { status: 403 }
+    { message: 'Unable to determine your IP/location.', blocked: true },
+    { status: 400 }
   );
 }
 
+const trimmedIp = datag.ip.trim();
+const trimmedCountry = datag.country?.trim() || '';
+const trimmedCity = datag.city?.trim() || '';
+const trimmedRegion = datag.region?.trim() || '';
+
+console.log("Geo Data:", { trimmedIp, trimmedCountry, trimmedCity, trimmedRegion });
+
+const [blockedEntry] = await db
+  .select()
+  .from(block_ips)
+  .where(
+    and(
+      eq(block_ips.status, 'block'),
+      or(
+        eq(block_ips.block_ip_address, trimmedIp),
+        eq(block_ips.block_ip_address, trimmedCountry),
+        eq(block_ips.block_ip_address, trimmedCity),
+        eq(block_ips.block_ip_address, trimmedRegion)
+      )
+    )
+  )
+  .execute();
+
+if (blockedEntry) {
+  const blockedValue = blockedEntry.block_ip_address;
+
+  const blockReasons: Record<string, string> = {
+    [trimmedIp]: `Access denied: Your IP (${trimmedIp}) is blocked.`,
+    [trimmedCountry]: `Access denied: Your country (${trimmedCountry}) is blocked.`,
+    [trimmedCity]: `Access denied: Your city (${trimmedCity}) is blocked.`,
+    [trimmedRegion]: `Access denied: Your region (${trimmedRegion}) is blocked.`
+  };
+
+  const message = blockReasons[blockedValue] || 'Access denied: Your location is blocked.';
+
+  return NextResponse.json(
+    { message, blocked: true },
+    { status: 403 }
+  );
+}
 
   // Step 3: Email check (only if IP is not blocked)
   const checkEmail = await db.select().from(users).where(eq(users.email, email)).execute();
@@ -112,6 +181,21 @@ export async function POST(req: NextRequest) {
             eq(invitations.enterprise_id, Number(userValues.enterprise_id))
           )
         );
+         await db.insert(ip_logs).values({
+      userId: insertedUser[0].id,
+      ip_address: datag.ip.toString(),
+      type: 'coach',
+      login_time: new Date(),
+      logout_time: null,
+      created_at: new Date(),
+      city: datag.city || null,
+      region: datag.region || null,
+      country: datag.country || null,
+      postal: datag.postal || null,
+      org: datag.org || null,
+      loc: datag.loc || null,
+      timezone: datag.timezone || null,
+    });
       } catch (error) {
         return NextResponse.json({ message: String(error) }, { status: 500 });
       }

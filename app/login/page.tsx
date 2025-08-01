@@ -115,10 +115,24 @@ export default function Login() {
       });
 
       if (!response || !response.ok) {
-        if (response?.error?.startsWith("BLOCKED_IP:")) {
-          const blockedIp = response.error.split(":")[1];
-          showError(`Access denied. Your IP address (${blockedIp}) is blocked.`);
-        }
+      if (response?.error?.startsWith("BLOCKED_IP:")) {
+  const blockedIp = response.error.split(":")[1];
+  showError(`Access denied. Your IP address (${blockedIp}) is blocked.`);
+} else if (response?.error?.startsWith("BLOCKED_COUNTRY:")) {
+  const country = response.error.split(":")[1];
+  showError(`Access denied. Logins from your country (${country}) are blocked.`);
+} else if (response?.error?.startsWith("BLOCKED_CITY:")) {
+  const city = response.error.split(":")[1];
+  showError(`Access denied. Logins from your city (${city}) are blocked.`);
+} else if (response?.error?.startsWith("BLOCKED_REGION:")) {
+  const region = response.error.split(":")[1];
+  showError(`Access denied. Logins from your region (${region}) are blocked.`);
+} else if (response?.error?.startsWith("BLOCKED_LOCATION")) {
+  showError("Access denied. Your location is blocked.");
+} else if (response?.error) {
+  showError(response.error); // fallback for other errors
+}
+
         if (response?.error == 'Your account has been deactivated.') {
           Swal.fire({
             title: "Your account is deactivated?",

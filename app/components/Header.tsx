@@ -172,7 +172,7 @@ const handleLogout = async (event: React.MouseEvent<HTMLButtonElement | HTMLAnch
             className="text-black text-2xl font-bold flex-shrink-0"
             onClick={closeMenu}
           >
-            <Image src={Logo} className="logo mx-auto md:ml-0" alt="logo" />d1 Notes
+            <Image src={Logo} className="logo mx-auto md:ml-0" alt="logo" />
           </Link>
 
           {/* Mobile menu button (visible only on small screens) */}

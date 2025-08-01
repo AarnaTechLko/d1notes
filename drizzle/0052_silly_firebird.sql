@@ -1,0 +1,1 @@
+ALTER TABLE "block_ips" ALTER COLUMN "block_type" DROP NOT NULL;

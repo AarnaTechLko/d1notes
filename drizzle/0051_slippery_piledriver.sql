@@ -1,0 +1,1 @@
+ALTER TABLE "block_ips" ADD COLUMN "block_type" varchar(20) NOT NULL;

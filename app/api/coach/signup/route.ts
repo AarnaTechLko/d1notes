@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { db } from '../../../../lib/db';
-import { block_ips, coaches, evaluation_charges, invitations, licenses, otps, playerEvaluation, teamCoaches } from '../../../../lib/schema';
+import { block_ips, coaches, evaluation_charges, invitations, ip_logs, licenses, otps, playerEvaluation, teamCoaches } from '../../../../lib/schema';
 import debug from 'debug';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '@/lib/constants';
-import { eq,isNotNull,and, inArray ,between, lt,ilike,sql } from 'drizzle-orm';
+import { eq,isNotNull,and, inArray ,between, lt,ilike,sql, or } from 'drizzle-orm';
 import { sendEmail } from '@/lib/helpers';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*', // For public access — use specific origin in production
@@ -53,30 +53,55 @@ export async function POST(req: NextRequest) {
        
       return NextResponse.json({ message: 'This email already exists.' }, { status: 400 });
     }
-     const datag = await getGeoLocation();
-            //  alert(ip);
-            console.log("ip Address", datag.ip.trim());
-            const [blockedEntry] = await db
-              .select()
-              .from(block_ips)
-              .where(
-                and(
-                  eq(block_ips.block_ip_address, datag.ip.trim()),
-                  eq(block_ips.status, 'block')
-                )
-              )
-              .execute();
-    
-            if (blockedEntry) {
-    
-              // Throwing an error shows it in the NextAuth error callback
-              // throw new Error(`Your IP address (${ip}) is blocked.`);     
-              throw new Error(`BLOCKED_IP:${datag.ip}`);
-              //return false;
-    
-            }
-    
-
+    const datag = await getGeoLocation();
+   
+   if (!datag || !datag.ip) {
+     return NextResponse.json(
+       { message: 'Unable to determine your IP/location.', blocked: true },
+       { status: 400 }
+     );
+   }
+   
+   const trimmedIp = datag.ip.trim();
+   const trimmedCountry = datag.country?.trim() || '';
+   const trimmedCity = datag.city?.trim() || '';
+   const trimmedRegion = datag.region?.trim() || '';
+   
+   console.log("Geo Data:", { trimmedIp, trimmedCountry, trimmedCity, trimmedRegion });
+   
+   const [blockedEntry] = await db
+     .select()
+     .from(block_ips)
+     .where(
+       and(
+         eq(block_ips.status, 'block'),
+         or(
+           eq(block_ips.block_ip_address, trimmedIp),
+           eq(block_ips.block_ip_address, trimmedCountry),
+           eq(block_ips.block_ip_address, trimmedCity),
+           eq(block_ips.block_ip_address, trimmedRegion)
+         )
+       )
+     )
+     .execute();
+   
+   if (blockedEntry) {
+     const blockedValue = blockedEntry.block_ip_address;
+   
+     const blockReasons: Record<string, string> = {
+       [trimmedIp]: `Access denied: Your IP (${trimmedIp}) is blocked.`,
+       [trimmedCountry]: `Access denied: Your country (${trimmedCountry}) is blocked.`,
+       [trimmedCity]: `Access denied: Your city (${trimmedCity}) is blocked.`,
+       [trimmedRegion]: `Access denied: Your region (${trimmedRegion}) is blocked.`
+     };
+   
+     const message = blockReasons[blockedValue] || 'Access denied: Your location is blocked.';
+   
+     return NextResponse.json(
+       { message, blocked: true },
+       { status: 403 }
+     );
+   }
   const existingOtp = await db
   .select()
   .from(otps)
@@ -102,6 +127,21 @@ export async function POST(req: NextRequest) {
     };
  
     const insertedUser = await db.insert(coaches).values(userValues).returning();
+    await db.insert(ip_logs).values({
+  userId: insertedUser[0].id,
+  ip_address: datag.ip?.toString() || '',
+  type: 'coach',
+  login_time: new Date(),
+  logout_time: null,
+  created_at: new Date(),
+  city: datag.city || null,
+  region: datag.region || null,
+  country: datag.country || null,
+  postal: datag.postal || null,
+  org: datag.org || null,
+  loc: datag.loc || null,
+  timezone: datag.timezone || null,
+});
     
     if(teamId)
     {

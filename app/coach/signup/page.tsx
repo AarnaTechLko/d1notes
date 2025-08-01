@@ -210,6 +210,7 @@ export default function Register() {
 
   return (
     <>
+     {" "}
       <head>
         <title>Coach Signup - D1 NOTES</title>
         <meta name="description" content="This is the home page of my Next.js application." />
@@ -379,7 +380,7 @@ export default function Register() {
           <Image
             src={Brand}
             alt="brand"
-            layout="responsive"
+            // layout="responsive"
             width={500}
             height={500}
             className="object-cover"
