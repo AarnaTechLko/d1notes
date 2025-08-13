@@ -372,6 +372,20 @@
       "when": 1754032351443,
       "tag": "0052_silly_firebird",
       "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1754465475949,
+      "tag": "0053_spooky_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1754467022736,
+      "tag": "0054_white_captain_universe",
+      "breakpoints": true
     }
   ]
 }

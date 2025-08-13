@@ -14,6 +14,8 @@ import {
   pgEnum,
   integer,
   numeric,
+  bigint,
+  index,
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
 import { sql } from "drizzle-orm";
@@ -635,6 +637,7 @@ export const admin = pgTable("admin", {
   }).notNull(),
   password_hash: text("password_hash").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
+  is_deleted: integer("is_deleted").default(1).notNull(),
 });
 
 
@@ -812,4 +815,19 @@ export const block_ips = pgTable("block_ips", {
   block_type: varchar("block_type", { length: 20 }), // 'ip address', 'country', 'city', 'region'
 
 });
+export const role = pgTable("role", {
+  id: serial("id").primaryKey(),
+  
+  user_id: integer("user_id").notNull(),
+  role: bigint("role", { mode: "number" }),
+  role_name: varchar("role_name", { length: 100 }),
 
+  change_password: integer("change_password").default(0),
+    refund: integer("refund").default(0),
+    monitor_activity: integer("monitor_activity").default(0),
+    view_finance: integer("view_finance").default(0),
+    access_ticket: integer("access_ticket").default(0),
+
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});

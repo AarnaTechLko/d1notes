@@ -21,7 +21,8 @@ declare module 'next-auth' {
       view_evaluation?: string | null;
       buy_evaluation?: string | null;
       isCompletedProfile?: boolean;
-      suspend?:number|null;
+      suspend?: number | null;
+      suspend_end_date?: string | null;
     }
   }
 }

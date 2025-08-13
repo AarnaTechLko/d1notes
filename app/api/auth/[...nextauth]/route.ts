@@ -8,14 +8,14 @@ import { users, coaches, enterprises, teams, ip_logs, block_ips } from '@/lib/sc
 import { eq, and, or } from 'drizzle-orm';
 import { SECRET_KEY } from '@/lib/constants';
 
-
 // Define the extended user type
 interface ExtendedUser {
   id: string | null;
   suspend: string | null;
+  suspend_end_date: string | null;
   type: string | null;
   name: string | null;
-  email: string | null;
+  email: string | null;   
   image: string | null;
   teamName: string | null;
   coach_id?: string | null;
@@ -80,36 +80,36 @@ const handler = NextAuth({
         const datag = await getGeoLocation();
         //  alert(ip);
         console.log("ip Address", datag.ip.trim());
-       const [blockedEntry] = await db
-  .select()
-  .from(block_ips)
-  .where(
-    and(
-      eq(block_ips.status, 'block'),
-      or(
-        eq(block_ips.block_ip_address, datag.ip.trim()),
-        eq(block_ips.block_ip_address, datag.country?.trim() || ''),
-        eq(block_ips.block_ip_address, datag.city?.trim() || ''),
-        eq(block_ips.block_ip_address, datag.region?.trim() || '')
-      )
-    )
-  )
-  .execute();
+        const [blockedEntry] = await db
+          .select()
+          .from(block_ips)
+          .where(
+            and(
+              eq(block_ips.status, 'block'),
+              or(
+                eq(block_ips.block_ip_address, datag.ip.trim()),
+                eq(block_ips.block_ip_address, datag.country?.trim() || ''),
+                eq(block_ips.block_ip_address, datag.city?.trim() || ''),
+                eq(block_ips.block_ip_address, datag.region?.trim() || '')
+              )
+            )
+          )
+          .execute();
 
-if (blockedEntry) {
-  // Check which field caused the block
-  if (blockedEntry.block_ip_address === datag.ip.trim()) {
-    throw new Error(`BLOCKED_IP:${datag.ip}`);
-  } else if (blockedEntry.block_ip_address === datag.country?.trim()) {
-    throw new Error(`BLOCKED_COUNTRY:${datag.country}`);
-  } else if (blockedEntry.block_ip_address === datag.city?.trim()) {
-    throw new Error(`BLOCKED_CITY:${datag.city}`);
-  } else if (blockedEntry.block_ip_address === datag.region?.trim()) {
-    throw new Error(`BLOCKED_REGION:${datag.region}`);
-  } else {
-    throw new Error('BLOCKED_LOCATION'); // Fallback, in case of mismatch
-  }
-}
+        if (blockedEntry) {
+          // Check which field caused the block
+          if (blockedEntry.block_ip_address === datag.ip.trim()) {
+            throw new Error(`BLOCKED_IP:${datag.ip}`);
+          } else if (blockedEntry.block_ip_address === datag.country?.trim()) {
+            throw new Error(`BLOCKED_COUNTRY:${datag.country}`);
+          } else if (blockedEntry.block_ip_address === datag.city?.trim()) {
+            throw new Error(`BLOCKED_CITY:${datag.city}`);
+          } else if (blockedEntry.block_ip_address === datag.region?.trim()) {
+            throw new Error(`BLOCKED_REGION:${datag.region}`);
+          } else {
+            throw new Error('BLOCKED_LOCATION'); // Fallback, in case of mismatch
+          }
+        }
 
         const { email, password, loginAs, teamId, enterprise_id } = credentials;
         let club: any;
@@ -131,13 +131,13 @@ if (blockedEntry) {
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
-              city: datag.city || null,
-  region: datag.region || null,
-  country: datag.country || null,
-  postal: datag.postal || null,
-  org: datag.org || null,
-  loc: datag.loc || null,
-  timezone: datag.timezone || null,
+            city: datag.city || null,
+            region: datag.region || null,
+            country: datag.country || null,
+            postal: datag.postal || null,
+            org: datag.org || null,
+            loc: datag.loc || null,
+            timezone: datag.timezone || null,
           });
           if (coach[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
@@ -160,6 +160,7 @@ if (blockedEntry) {
               image: coach[0].image === 'null' ? '/default.jpg' : coach[0].image,
               coach_id: coach[0].id,
               suspend: coach[0].suspend,
+              suspend_end_date: coach[0].suspend_end_date,
               club_id: newEnterpriseID,
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '',
               added_by: null,
@@ -186,13 +187,13 @@ if (blockedEntry) {
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
-              city: datag.city || null,
-  region: datag.region || null,
-  country: datag.country || null,
-  postal: datag.postal || null,
-  org: datag.org || null,
-  loc: datag.loc || null,
-  timezone: datag.timezone || null,
+            city: datag.city || null,
+            region: datag.region || null,
+            country: datag.country || null,
+            postal: datag.postal || null,
+            org: datag.org || null,
+            loc: datag.loc || null,
+            timezone: datag.timezone || null,
           });
           if (user[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
@@ -213,6 +214,7 @@ if (blockedEntry) {
               club_name: user[0].team,
               teamName: user[0].team,
               suspend: user[0].suspend,
+              suspend_end_date: user[0].suspend_end_date,
               added_by: null,
               teamId: teamId,
               visibility: user[0].visibility,
@@ -238,6 +240,7 @@ if (blockedEntry) {
               expectedCharge: 0,
               coach_id: team[0].coach_id,
               suspend: team[0].suspend,
+              suspend_end_date: team[0].suspend_end_date,
               visibility: 'on',
               club_name: club && club.length > 0 ? club[0].organizationName ?? '' : '', added_by: null
             };
@@ -255,13 +258,13 @@ if (blockedEntry) {
             login_time: new Date(),
             logout_time: null,
             created_at: new Date(),
-              city: datag.city || null,
-  region: datag.region || null,
-  country: datag.country || null,
-  postal: datag.postal || null,
-  org: datag.org || null,
-  loc: datag.loc || null,
-  timezone: datag.timezone || null,
+            city: datag.city || null,
+            region: datag.region || null,
+            country: datag.country || null,
+            postal: datag.postal || null,
+            org: datag.org || null,
+            loc: datag.loc || null,
+            timezone: datag.timezone || null,
           });
           if (enterprise[0].status === "Deactivated") {
             throw new Error("Your account has been deactivated.");
@@ -273,6 +276,7 @@ if (blockedEntry) {
               email: enterprise[0].email,
               package_id: enterprise[0].package_id,
               suspend: enterprise[0].suspend,
+              suspend_end_date: enterprise[0].suspend_end_date,
               expectedCharge: 0,
               type: 'enterprise', // Custom field indicating player
               image: enterprise[0].logo,
@@ -305,6 +309,7 @@ if (blockedEntry) {
         token.image = extendedUser.image;
         token.coach_id = extendedUser.coach_id;
         token.suspend = extendedUser.suspend;
+        token.suspend_end_date = extendedUser.suspend_end_date;
         token.club_id = extendedUser.club_id;
         token.image = extendedUser.image;
         token.expectedCharge = extendedUser.expectedCharge;
@@ -334,6 +339,7 @@ if (blockedEntry) {
         session.user.image = token.image as string | null;
         session.user.coach_id = token.coach_id as string | null;
         session.user.suspend = token.suspend as number;
+        session.user.suspend_end_date = token.suspend_end_date as string;
         // Add the type to the session
         session.user.club_id = token.club_id as string | null;
         // session.user.image = token.image as string | null;
@@ -357,6 +363,7 @@ if (blockedEntry) {
           const user = updatedUser[0];
           session.user.name = user.firstName;
           session.user.suspend = user.suspend;
+          session.user.suspend_end_date = user.suspend_end_date;
 
           session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
 
@@ -369,6 +376,7 @@ if (blockedEntry) {
           const user = updatedUser[0];
           session.user.name = user.first_name;
           session.user.suspend = user.suspend;
+          session.user.suspend_end_date = user.suspend_end_date;
           session.user.image = user.image === 'null' ? '/default.jpg' : user.image;
           session.user.visibility = user.visibility;
         }
@@ -379,6 +387,7 @@ if (blockedEntry) {
           const user = updatedUser[0];
           session.user.name = user.team_name;
           session.user.suspend = user.suspend;
+          session.user.suspend_end_date = user.suspend_end_date;
           session.user.image = user.logo === 'null' ? '/default.jpg' : user.logo;
           session.user.visibility = user.visibility;
         }
